@@ -25,6 +25,7 @@ const CustomInput = (props) => {
 
   return (
     <>
+      {console.log("inputProps>>",inputProps)}
       <TextInput
         style={[
           styles.textInput,

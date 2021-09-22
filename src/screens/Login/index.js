@@ -15,51 +15,42 @@ let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 import { Field, Formik } from 'formik';
 import CustomInput from '../../components/CustomInput';
-import { postAPIs } from '../../utills/api';
+import { postAPIs, postNoToken } from '../../utills/api';
+import { ToastError, ToastSuccess } from '../../utills/Methods';
 
 
 export default function Dashboard(props) {
   const defaultColor = "";
   const blackColor = "";
   const [login,setLogin] = React.useState({
-    email : "",
-    password : ""
+    email : "leo@denzel.com",
+    password : "asd123def"
   })
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
   const loginMethod = async () => {
     try{
-      console.log("Login---||||",login.email)
+      console.log("Yes 0000")
       if(!login.email || login.email.trim() === "" || !login.password
         || login.password.trim() === ""
       ){
-        return showMessage({
-          message: 'Error',
-          description: 'All Fields are required',
-          type: 'error',
-        });
+        return ToastError("All fields are requird")
       }
-      return alert("Yes")
-      console.log("loading_---")
+      let fd = {
+        email : login.email,
+        password : login.password
+      }
+      console.log("----|||----",fd)
       dispatch(setLoaderVisible(true));
-      
-      let user = await postAPIs('/accounts/auth/employees/login/',login);
-      setTimeout(() => {
-        showMessage({
-          message: 'Success',
-          description: 'Succfully logged In',
-          type: 'success',
-        });
-        dispatch(setLoaderVisible(false));
-        dispatch(login({userName: 'John Doe'}));
-      }, 1500);
+      let user = await postNoToken('/accounts/auth/employees/login/',fd);
+      return console.log("user|||",user)
+      ToastSuccess("Login was successful")
+      dispatch(setLoaderVisible(false));
+      dispatch(login({userName: 'John Doe'}));
     }catch(err){
       console.log("errr",err);
-      return showMessage({
-        message: 'Error',
-        description: 'Something went wrong. Please retry.',
-        type: 'error',
-      });
+      dispatch(setLoaderVisible(false));
+      ToastError("Something went wrong. Please retry");
     }
   };
   return (
@@ -115,7 +106,9 @@ export default function Dashboard(props) {
           name="password"
           placeholder="Password"
           value={login.password}
+          secure={true}
           onChange={(value)=>setLogin({...login,password : value})}
+          secureTextEntry={true}
           />
         <View style={{width: '100%'}}>
           <CustomButton

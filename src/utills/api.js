@@ -1,5 +1,6 @@
+import axios from "axios";
 
-export const endPoint = 'https://coolowo.com/';
+export const endPoint = 'https://coolowo.com';
 
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {
