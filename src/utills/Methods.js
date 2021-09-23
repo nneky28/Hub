@@ -1,6 +1,11 @@
 
+import React from "react"
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
+import { useEffect } from 'react';
 import { showMessage } from 'react-native-flash-message';
+import {useDispatch} from 'react-redux';
+import {logout} from '../Redux/Actions/Auth';
 export function debounce(func, wait, immediate) {
     var timeout;
     return function () {
@@ -16,13 +21,15 @@ export function debounce(func, wait, immediate) {
     };
 };
 
-export const ToastError  = (msg) => (
+export const ToastError  = (msg) => {
+  return msg === "Given token not valid for any token type" ? <LogUserOut /> : (
     showMessage({
         message: 'Error',
         description: msg,
-        type: 'error',
+        type: 'danger',
     })
-);
+  )
+};
 
 export const ToastSuccess = (msg) =>(
     showMessage({
@@ -41,6 +48,15 @@ export const storeData = async (key, value) => {
       return false;
     }
   };
+
+  const LogUserOut = () => {
+    console.log("Yes>>>>")
+    const dispatch = useDispatch();
+    useEffect(()=>{
+      dispatch(logout())
+    },[])
+    return(<> </>)
+  }
   
   export const getData = async key => {
     try {
@@ -49,4 +65,24 @@ export const storeData = async (key, value) => {
     } catch (e) {
       return false;
     }
+  };
+
+  export const getGreetingTime = () => {
+    const splitAfternoon = 12; // 24hr time to split the afternoon
+    const splitEvening = 17; // 24hr time to split the evening
+    const currentHour = parseFloat(moment().format('HH'));
+    if (currentHour >= splitAfternoon && currentHour <= splitEvening) {
+      // Between 12 PM and 5PM
+      return 'Good afternoon';
+    } else if (currentHour >= splitEvening) {
+      // Between 5PM and Midnight
+      return 'Good evening';
+    }
+    // Between dawn and noon
+    return 'Good morning';
+  }
+
+  export const Capitalize = string => {
+    string = string.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase());
+    return string;
   };

@@ -2,6 +2,14 @@ import axios from "axios";
 
 export const endPoint = 'https://coolowo.com';
 
+export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
+export const APIFunction = {
+  my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/assets/`,
+  benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
+  whos_out : (business_id) => `/c/${business_id}/timeoff_taken/widgets/whos_out/`,
+  birthdays : (business_id) => `/c/${business_id}/employees/dashboard/birthdays/`
+}
+
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {
       let split = path.split("/?");

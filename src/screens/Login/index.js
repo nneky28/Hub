@@ -15,15 +15,18 @@ let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 import { Field, Formik } from 'formik';
 import CustomInput from '../../components/CustomInput';
-import { postAPIs, postNoToken } from '../../utills/api';
-import { ToastError, ToastSuccess } from '../../utills/Methods';
+import { employees_me, getAPIs, postAPIs, postNoToken } from '../../utills/api';
+import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 
 
 export default function Dashboard(props) {
   const defaultColor = "";
   const blackColor = "";
-  const [login,setLogin] = React.useState({
+  const [data,setData] = React.useState({
+    // email : "jane@email.com",
+    // password : "jane12345"
     email : "leo@denzel.com",
+    //email : "temiloluwaodumosu25@gmail.com",
     password : "asd123def"
   })
   const user = useSelector((state) => state.Auth.user);
@@ -31,26 +34,41 @@ export default function Dashboard(props) {
   const loginMethod = async () => {
     try{
       console.log("Yes 0000")
-      if(!login.email || login.email.trim() === "" || !login.password
-        || login.password.trim() === ""
+      if(!data.email || data.email.trim() === "" || !data.password
+        || data.password.trim() === ""
       ){
         return ToastError("All fields are requird")
       }
       let fd = {
-        email : login.email,
-        password : login.password
+        email : data.email,
+        password : data.password
       }
-      console.log("----|||----",fd)
-      dispatch(setLoaderVisible(true));
-      let user = await postNoToken('/accounts/auth/employees/login/',fd);
-      return console.log("user|||",user)
+      //dispatch(setLoaderVisible(true));
+      let res = await postNoToken('/accounts/auth/employees/login/',fd);
+      let token  = res.access_token ? res.access_token : null;
+      let business = res.user.employee_user_memberships && 
+      Array.isArray(res.user.employee_user_memberships) && 
+      res.user.employee_user_memberships.length > 0 ? 
+      res.user.employee_user_memberships[0] : null;
+      console.log("res___",res)
+      if(!business) return ToastError("No business connected to this account");
+      let employees_me_url = employees_me(business.business_id);
+      let about_me = await getAPIs(employees_me_url,token);
+      await storeData("about_me",about_me)
+      await storeData("token",token)
+      await storeData("user",res.user);
       ToastSuccess("Login was successful")
-      dispatch(setLoaderVisible(false));
-      dispatch(login({userName: 'John Doe'}));
+      //dispatch(setLoaderVisible(false));
+      //dispatch(login({userName: 'John Doe'}));
     }catch(err){
       console.log("errr",err);
       dispatch(setLoaderVisible(false));
-      ToastError("Something went wrong. Please retry");
+      let msg = "";
+      if(err.msg && err.msg.code === "invalid_credentials"){
+        msg = "Unable to login with the provided credentials"
+      }
+      msg = err.msg && err.msg.code && typeof(err.msg.code) == "string" ? err.msg.code  : "Something went wrong. Please retry"
+      ToastError(msg)
     }
   };
   return (
@@ -98,16 +116,16 @@ export default function Dashboard(props) {
           component={CustomInput}
           name="email"
           placeholder="Email"
-          value={login.email}
-          onChange={(value)=>setLogin({...login,email : value})}
+          value={data.email}
+          onChange={(value)=>setData({...data,email : value})}
         />
           <Field
           component={CustomInput}
           name="password"
           placeholder="Password"
-          value={login.password}
+          value={data.password}
           secure={true}
-          onChange={(value)=>setLogin({...login,password : value})}
+          onChange={(value)=>setData({...data,password : value})}
           secureTextEntry={true}
           />
         <View style={{width: '100%'}}>

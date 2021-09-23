@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useDispatch} from 'react-redux';
 import {
   StyleSheet,
@@ -21,27 +21,49 @@ import {
 } from '../assets/images';
 import {showMessage} from 'react-native-flash-message';
 import { FontFamily } from '../utills/FontFamily';
+import { getData, ToastSuccess } from '../utills/Methods';
+import AsyncStorage from '@react-native-community/async-storage';
 const Drawer = ({navigation, ...props}) => {
   const dispatch = useDispatch();
-  const logoutMethod = () => {
-    showMessage({
-      message: 'Logged Out',
-      description: 'Succfully logged out',
-      type: 'danger',
-    });
+  const [about,setAbout] =  React.useState(null);
+  const [user,setUser] = React.useState(null);
+  const [bizs,setBiz] = React.useState(null);
+  const logoutMethod = async () => {
+
+    // showMessage({
+    //   message: 'Logged Out',
+    //   description: '',
+    //   type: 'danger',
+    // });
+    let keys = await AsyncStorage.getAllKeys()
+    await AsyncStorage.multiRemove(keys);
+    ToastSuccess("Successfully logged out")
     dispatch(logout());
   };
-  const renderItem = ({item}) => {
+  const getUserDetails = async () => {
+    let about_me = await getData("about_me");
+    let user = await getData("user");
+    console.log("------",user,about_me)
+    let biz = user.employee_user_memberships &&
+    Array.isArray(user.employee_user_memberships) ? user.employee_user_memberships : []
+    setBiz(biz);
+    setUser(user)
+    setAbout(about_me);
+  }
+  useEffect(()=>{
+    getUserDetails();
+  },[])
+  const BusinessBox = ({item}) => {
     return (
       <TouchableOpacity style={styles.itemContainer} activeOpacity={0.8}>
         <View style={styles.row}>
           <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
           <View style={styles.margin}>
             <Text numberOfLines={1} style={styles.text1}>
-              Belarus
+              {item && item.business_name ? item.business_name : "" }
             </Text>
             <Text numberOfLines={2} style={styles.text2}>
-              belarusng@bizedge.com
+              {user && user.email ? user.email : ""}
             </Text>
           </View>
         </View>
@@ -65,13 +87,15 @@ const Drawer = ({navigation, ...props}) => {
       <Text style={styles.text}>Businesses</Text>
       <View style={styles.line} />
       <View style={{height: height(63)}}>
+        {console.log("biz>>>",bizs)}
         <FlatList
-          data={['', '']}
+          data={bizs ? bizs : []}
+          extraData={bizs ? bizs : []}
           keyExtractor={() => Math.random()}
           contentContainerStyle={styles.itemList}
           ItemSeparatorComponent={() => <View style={{marginTop: height(2)}} />}
           showsVerticalScrollIndicator={false}
-          renderItem={renderItem}
+          renderItem={({item,index})=><BusinessBox item={item} index={index}/>}
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   FlatList,
@@ -16,6 +16,8 @@ import Button from '../Button';
 import {giftIcon, placeholderIcon, upIcon} from '../../assets/images';
 import styles from './styles';
 import {height} from 'react-native-dimension';
+import { getData } from '../../utills/Methods';
+import { getAPIs } from '../../utills/api';
 
 if (
   Platform.OS === 'android' &&
@@ -93,6 +95,33 @@ const RenderItem = ({item}) => {
       return !show;
     });
   };
+
+
+  const getTasks = async () => {
+    try{
+      setLoading(true);
+      let token = await getData("token");
+      let user =  await getData("user");
+      let about_me = await getData("about_me")
+      let biz_id = user.employee_user_memberships &&
+      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
+      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0].business_id : null;
+      let whos_out_url = APIFunction.whos_out(biz_id,about_me.id)
+      let birthdays_url = APIFunction.whos_out(biz_id);
+      let whos_out_res = await getAPIs(whos_out_url,token)
+      let birthdays_res = await getAPIs(birthdays_url,token);
+      console.log("whos_out_res",whos_out_res,birthdays_res)
+      setLoading(false);
+    }catch(err){
+      console.log("err|||",err)
+      ToastError("Something went wrong. Please retry")
+    }
+
+  }
+  useEffect(()=>{
+    //getTasks()
+  },[])
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{title}</Text>

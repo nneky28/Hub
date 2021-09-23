@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Benefits from '../screens/Benefits';
@@ -26,18 +26,26 @@ import Onboard from '../screens/Onboard/onboard';
 import Training from '../screens/Training';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
+import { getData } from '../utills/Methods';
 
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 export default function Routes() {
-  const isLogin = useSelector((state) => state.Auth.isLogin);
-  
+  //const isLogin = useSelector((state) => state.Auth.isLogin);
+  const [login,setLogin] = React.useState(null);
+  const getLogin = async () => {
+    let user = await getData("user")
+    setLogin(user)
+  }
+  useEffect(()=>{
+    getLogin()
+  },[])
   return (
     <NavigationContainer>
       <Loader />
-      {!isLogin ? (
+      {!login ? (
         <Stack.Navigator
           initialRouteName="Onboard"
           screenOptions={{headerMode: false}}>

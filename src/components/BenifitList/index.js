@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
 import { width } from 'react-native-dimension';
 import { rightIcon, twoMenIcon } from '../../assets/images';
+import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
+import { getData } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
 
 const BenifitList = ({data, horizontal}) => {
+  const getBenefits = async () => {
+    try{
+      setLoading(true);
+      let token = await getData("token");
+      let user =  await getData("user");
+      let about_me = await getData("about_me")
+      let biz_id = user.employee_user_memberships &&
+      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
+      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0].business_id : null;
+      let benefits_url = APIFunction.benefits(biz_id,about_me.id);
+      let benefits_res = await getAPIs(benefits_url,token);
+      console.log("benefits_res",benefits_res)
+      setLoading(false);
+    }catch(err){
+      console.log("err|||",err)
+      ToastError("Something went wrong. Please retry")
+    }
+
+  }
+  useEffect(()=>{
+    //getBenefits()
+  },[])
   return (
     <FlatList
       data={data}
