@@ -9,6 +9,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { scrollToPosition } from '../../Redux/Actions/Config';
 import CommonStyles from '../../utills/CommonStyles';
 import { profileData } from '../../utills/data/profileData';
+import { Capitalize, getData } from '../../utills/Methods';
 import styles from './styles';
 
 
@@ -22,8 +23,13 @@ export default function Profile({navigation}) {
     const dispatch = useDispatch();
     const [modal, setModal] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
-
+    const [about,setAbout] = useState(null)
+    const getUser = async () => {
+      let about = await getData("about_me");
+      setAbout(about)
+    }
     useEffect(() => {
+      getUser()
       return dispatch(scrollToPosition({x: 0, y: 0}))
     }, []);
     const TopBottomText = ({topText, bottomText, containerStyle}) => {
@@ -37,7 +43,7 @@ export default function Profile({navigation}) {
 
    
 
-    const RenderList = ({item, index}) => {
+    const RenderList = ({item, index,about}) => {
         
         const handleClick = (index) => {
           if (selectedIndex == index) {
@@ -73,18 +79,19 @@ export default function Profile({navigation}) {
                 />
                 
             </TouchableOpacity>
+            {console.log("about---",about)}
             {isExpanded && 
                 <>
                 <View style={[styles.line, CommonStyles.marginTop_2]} />
                 {item.title.includes('Person') &&
                   <View style={CommonStyles.marginBottom_3}>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
-                      <TopBottomText topText={data[0]} bottomText={data[1]}/>
-                      <TopBottomText topText={data[2]} bottomText={data[3]}/>
-                      <TopBottomText topText={data[4]} bottomText={data[5]}/>
+                      <TopBottomText topText={data[0]} bottomText={`${about && about.region ? Capitalize(about.region):  ""}`}/>
+                      <TopBottomText topText={data[2]} bottomText={`${about && about.gender ? Capitalize(about.gender):  ""}`}/>
+                      <TopBottomText topText={data[4]} bottomText={`${about && about.marital_status ? Capitalize(about.marital_status) :  ""}`}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[6]} bottomText={data[7]}/>
+                      <TopBottomText topText={data[6]} bottomText={`${about && about.birth_date ? moment(about.birth_date).format("DD MMM YYYY") :  ""}`}/>
                     </View>
                   </View> 
                 }
@@ -179,12 +186,26 @@ export default function Profile({navigation}) {
 
             <View style={styles.mainViewContainer}>
                 <View style={styles.userInfoContainer}>
-                    <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle} />   
-                    <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>Jessica Stones</Text>
-                    <Text numberOfLines={1} style={[styles.designationText, CommonStyles.marginTop_05]}>Senior Developer</Text>
+                  {
+                    about && about.photo ? (
+                      <Image uri={about.photo} style={styles.avatarStyle} />   
+                    ) : (
+                      <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle} />   
+                    )
+                  }
+                    
+                    <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
+                      {`${about && about.first_name ? Capitalize(about.first_name):  ""}`} {" "}
+                      {`${about && about.last_name ? Capitalize(about.last_name):  ""}`}
+                    </Text>
+                    <Text numberOfLines={1} style={[styles.designationText, CommonStyles.marginTop_05]}>
+                    {`${about && about.title ? Capitalize(about.title):  ""}`}
+                    </Text>
                     <View style={[CommonStyles.rowAlignItemCenter, CommonStyles.marginTop_05]}>
-                        <Text numberOfLines={1} style={styles.designationText}>Tech and Design | </Text>
-                        <Text numberOfLines={1} style={[styles.designationText, {fontWeight: 'bold'}]}>ED001</Text>
+                        <Text numberOfLines={1} style={styles.designationText}>{`${about && about.title_display ? Capitalize(about.title_display):  ""}`} | </Text>
+                        <Text numberOfLines={1} style={[styles.designationText, {fontWeight: 'bold'}]}>
+                        {`${about && about.level ? about.level :  ""}`}
+                        </Text>
                     </View>
                 </View>
                 <View style={[CommonStyles.rowJustifySpaceBtw, {width: width(90)}, CommonStyles.marginBottom_2]}>
@@ -203,7 +224,7 @@ export default function Profile({navigation}) {
                 </View>
                 <FlatList
                 data={profileData}
-                renderItem={RenderList}
+                renderItem={({item,index})=><RenderList about={about} item={item} index={index}/>}
                 ItemSeparatorComponent={() => <View />}
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled={true}

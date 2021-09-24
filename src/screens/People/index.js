@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import { totalSize, width } from 'react-native-dimension'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,7 +21,7 @@ import styles from './styles'
 
 
 
-export default function People({navigation}) {
+export default function People({route,navigation}) {
     
     var [selected, setSelected] = useState('All');
     const [isListView, setIsListView] = useState(false);
@@ -42,7 +42,11 @@ export default function People({navigation}) {
     const handleFilter = (selectedFilter) => {
         
     }
-
+    useEffect(()=>{
+        console.log("route---",route)
+        let {tab} = route.params ? route.params : {tab : "All"}
+        setSelected(tab);
+    },[])
     const CelebrationItem = ({item, section}) => {
         let bgColor, borderColor;
         const {date} = section;

@@ -1,5 +1,6 @@
 import React from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
+import LottieView from 'lottie-react-native';
 import Svg, {
     Circle,
     Ellipse,
@@ -40,5 +41,20 @@ export const PageLoader = props => {
           <Rect x="29" y="116" rx="0" ry="0" width="749" height="32" />
         </ContentLoader>
       ))
+    )
+  }
+
+  export const LottieIcon = ({icon,size}) => {
+    console.log("size,",size,icon)
+    return(
+      <LottieView 
+          source={icon}
+          autoPlay={true}
+          style={{
+              width: size || 150,
+              height: size || 150
+          }}
+          loop={true}
+      />
     )
   }

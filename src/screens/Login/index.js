@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text,StyleSheet,Dimensions,ScrollView} from 'react-native';
+import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView} from 'react-native';
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
@@ -17,6 +17,7 @@ import { Field, Formik } from 'formik';
 import CustomInput from '../../components/CustomInput';
 import { employees_me, getAPIs, postAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
+import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 
 
 export default function Dashboard(props) {
@@ -58,8 +59,8 @@ export default function Dashboard(props) {
       await storeData("token",token)
       await storeData("user",res.user);
       ToastSuccess("Login was successful")
-      //dispatch(setLoaderVisible(false));
-      //dispatch(login({userName: 'John Doe'}));
+      dispatch(setLoaderVisible(false));
+      dispatch(login({userName: 'John Doe'}));
     }catch(err){
       console.log("errr",err);
       dispatch(setLoaderVisible(false));
@@ -72,17 +73,17 @@ export default function Dashboard(props) {
     }
   };
   return (
-    <View style={styles.Container}>
+    <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
       <ScrollView contentContainerStyle={styles.inner}>
         <View style={styles.bodyWrap}>
           <Formik>
               <React.Fragment>
-              <Image
+              {/* <Image
           ImageUri={
             'https://res.cloudinary.com/coolowo/image/upload/v1630094478/mobile/modulist/Group_1119_yoan7f.png'
           }
           imageStyle={styles.Image1Sty}
-        />
+        /> */}
         <View
           style={{
             width: '100%',
@@ -128,7 +129,7 @@ export default function Dashboard(props) {
           onChange={(value)=>setData({...data,password : value})}
           secureTextEntry={true}
           />
-        <View style={{width: '100%'}}>
+        <View style={{width: '100%', marginTop : '5%'}}>
           <CustomButton
             btnText={'Sign In'}
             handelButtonPress={loginMethod}
@@ -139,7 +140,7 @@ export default function Dashboard(props) {
           </Formik>
       </View>
     </ScrollView>
-    </View>
+    </KeyboardAvoidingScrollView>
   );
 }
 
@@ -177,6 +178,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     display: 'flex',
     alignItems: 'center',
+    justifyContent : 'center'
     // marginTop: 40,
   },
   signUpWrap: {

@@ -8,7 +8,7 @@ import AppColors from '../../utills/AppColors';
 
 const GenButton = (props) => {
   const {colors} = props.theme;
-  console.log("color||||---",props)
+  console.log("color||||---",colors)
   return (
     // <Button
     //   //
@@ -22,11 +22,11 @@ const GenButton = (props) => {
       onPress={props.handelButtonPress}
       rippleColor="transparent">
       <Button
-        // contentStyle={{width: '100%'}}
+        //= contentStyle={{width: '100%'}}
         mode="contained"
         style={{
           ...{backgroundColor: AppColors.green},
-          ...(props.btnStyle || styles.GeneralBtnSty),
+          //...(props.btnStyle || styles.GeneralBtnSty),
         }}
         onPress={props.handelButtonPress}
         loading={props.isloading || false}

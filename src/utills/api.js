@@ -7,9 +7,9 @@ export const APIFunction = {
   my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/assets/`,
   benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
   whos_out : (business_id) => `/c/${business_id}/timeoff_taken/widgets/whos_out/`,
-  birthdays : (business_id) => `/c/${business_id}/employees/dashboard/birthdays/`
+  birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`
 }
-
+//https://coolowo.com/c/d3a29566-49a3-4003-b772-230017324a83/employees/dashboard/birthdays/?status=upcoming
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {
       let split = path.split("/?");

@@ -1,7 +1,7 @@
 import {LOGIN, LOGOUT} from '../Types';
 const intialState = {
   user: {},
-  isLogin: true,
+  isLogin: false,
 };
 const reducer = (state = intialState, action) => {
   switch (action.type) {

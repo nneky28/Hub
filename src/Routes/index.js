@@ -33,19 +33,20 @@ const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 export default function Routes() {
-  //const isLogin = useSelector((state) => state.Auth.isLogin);
-  const [login,setLogin] = React.useState(null);
-  const getLogin = async () => {
-    let user = await getData("user")
-    setLogin(user)
-  }
-  useEffect(()=>{
-    getLogin()
-  },[])
+  const isLogin = useSelector((state) => state.Auth.isLogin);
+  console.log("isLogin>>>",isLogin)
+  // const [login,setLogin] = React.useState(null);
+  // const getLogin = async () => {
+  //   let user = await getData("user")
+  //   setLogin(user)
+  // }
+  // useEffect(()=>{
+  //   getLogin()
+  // },[])
   return (
     <NavigationContainer>
       <Loader />
-      {!login ? (
+      {!isLogin ? (
         <Stack.Navigator
           initialRouteName="Onboard"
           screenOptions={{headerMode: false}}>
@@ -82,8 +83,8 @@ export default function Routes() {
                   {() => (
                       <Stack.Navigator
                         screenOptions={{headerMode: false}}>
+                          <Stack.Screen name="People" component={People} />
                         <Stack.Screen name="Time off" component={TimeOff} />
-                        <Stack.Screen name="People" component={People} />
                         <Stack.Screen name="Payslip" component={Payslips} />
                         <Stack.Screen name="Benefits" component={Benefits} />
                         <Stack.Screen name="Documents" component={Documents} />

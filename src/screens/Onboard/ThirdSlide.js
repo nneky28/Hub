@@ -117,12 +117,12 @@ const ThirdSlide = (props) => {
               btnText={'Sign In'}
               handelButtonPress={() => navigation.navigate('Login')}
             />
-            <CustomButton
+            {/* <CustomButton
               btnStyle={styles.GeneralBtnSty2}
               textStyle={styles.GeneralTextSty2}
               btnText={'Get Started'}
               handelButtonPress={() => navigation.navigate('Login')}
-            />
+            /> */}
           </View>
         </View>
       </ScrollView>

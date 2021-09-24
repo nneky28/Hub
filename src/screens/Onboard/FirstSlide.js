@@ -114,7 +114,7 @@ const FirstSlide = (props) => {
               //handelButtonPress={() => console.log("---|||Testing")}
               //navigation.navigate('Login')
             />
-            <CustomButton
+            {/* <CustomButton
               btnStyle={{
                 ...styles.GeneralBtnSty2,
                 ...{backgroundColor: colors.whiteColor},
@@ -125,7 +125,7 @@ const FirstSlide = (props) => {
               }}
               btnText={'Get Started'}
               handelButtonPress={() => navigation.navigate("Login")}
-            />
+            /> */}
           </View>
           {/* <View style={{width: '100%', paddingLeft: 20, paddingRight: 20}}>
             

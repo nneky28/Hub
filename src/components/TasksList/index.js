@@ -16,8 +16,12 @@ import Button from '../Button';
 import {giftIcon, placeholderIcon, upIcon} from '../../assets/images';
 import styles from './styles';
 import {height} from 'react-native-dimension';
-import { getData } from '../../utills/Methods';
+import { Capitalize, getData } from '../../utills/Methods';
 import { getAPIs } from '../../utills/api';
+import moment from 'moment';
+import { LottieIcon } from '../../utills/components';
+import Birthdayjson from '../../assets/lottie/birthday.json'
+import { useNavigation } from '@react-navigation/core';
 
 if (
   Platform.OS === 'android' &&
@@ -25,7 +29,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TasksList = ({data}) => {
+const TasksList = ({data,whos_out,birthdays,navigate}) => {
   return (
     <FlatList
       data={data}
@@ -34,11 +38,14 @@ const TasksList = ({data}) => {
       contentContainerStyle={styles.flatList}
       showsHorizontalScrollIndicator={false}
       nestedScrollEnabled={true}
-      renderItem={({item}) => <RenderItem item={item} />}
+      renderItem={({item}) => <RenderItem item={item} birthdays={birthdays}
+        whos_out={whos_out}
+        navigate={navigate}
+      />}
     />
   );
 };
-const RenderItem = ({item}) => {
+const RenderItem = ({item,whos_out,birthdays,navigate}) => {
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
   var [selected, setSelected] = useState(headings[0]);
@@ -53,6 +60,8 @@ const RenderItem = ({item}) => {
     }),
   );
   const showMore = () => {
+    
+    return navigate("Modules",{tab : "Celebrations"})
     setArr((a) => [...a, '', '', '', '']);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     setHasMore(false);
@@ -96,32 +105,6 @@ const RenderItem = ({item}) => {
     });
   };
 
-
-  const getTasks = async () => {
-    try{
-      setLoading(true);
-      let token = await getData("token");
-      let user =  await getData("user");
-      let about_me = await getData("about_me")
-      let biz_id = user.employee_user_memberships &&
-      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0].business_id : null;
-      let whos_out_url = APIFunction.whos_out(biz_id,about_me.id)
-      let birthdays_url = APIFunction.whos_out(biz_id);
-      let whos_out_res = await getAPIs(whos_out_url,token)
-      let birthdays_res = await getAPIs(birthdays_url,token);
-      console.log("whos_out_res",whos_out_res,birthdays_res)
-      setLoading(false);
-    }catch(err){
-      console.log("err|||",err)
-      ToastError("Something went wrong. Please retry")
-    }
-
-  }
-  useEffect(()=>{
-    //getTasks()
-  },[])
-
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{title}</Text>
@@ -139,29 +122,45 @@ const RenderItem = ({item}) => {
       </ScrollView>
 
       <View style={styles.line} />
-      {selected == 'Birthdays' && (
-        <>
-          <View style={styles.birthdayContainer}>
-            <Image source={placeholderIcon} style={styles.image} />
-            <View style={{width: '68%'}}>
-              <Text numberOfLines={1} style={styles.text3}>
-                Naomi’s birthday is today
-              </Text>
-              <Text numberOfLines={1} style={styles.text1}>
-                Lead Designer
-              </Text>
-            </View>
-            <View style={{alignItems: 'center'}}>
-              <Image
-                resizeMode="contain"
-                style={styles.icon}
-                source={giftIcon}
-              />
-              <Text numberOfLines={1} style={styles.birthday}>
-                Jan 23
-              </Text>
-            </View>
-          </View>
+      {console.log("birthday---",birthdays)}
+      {selected == 'Birthdays' ? (
+        <React.Fragment>
+                {
+                  birthdays && Array.isArray(birthdays) ? birthdays.filter((item)=>(
+                    new Date(item.birth_date).getDay() !== new Date().getDay()
+                    && new Date(item.birth_date).getMonth() !== new Date().getMonth()
+                  )).map((item,index)=>(
+                    <View style={styles.birthdayContainer} key={index}>
+                      {
+                        item && item.photo ? (
+                          <Image uri={item.photo} style={styles.image} />
+                        ) : (
+                          <Image source={placeholderIcon} style={styles.image} />
+                        )
+                      }
+                      <View style={{width: '68%'}}>
+                        <Text numberOfLines={1} style={styles.text3}>
+                          {item.first_name ? `${Capitalize(item.first_name)}"'s"` : ""} birthday is today
+                        </Text>
+                        <Text numberOfLines={1} style={styles.text1}>
+                          Lead Designer
+                        </Text>
+                      </View>
+                      <View style={{alignItems: 'center'}}>
+                        <Image
+                          resizeMode="contain"
+                          style={styles.icon}
+                          source={giftIcon}
+                        />
+                        <Text numberOfLines={1} style={styles.birthday}>
+                          {item && item.birth_date ? moment(item.birth_date).format("MMM DD") : ""}
+                        </Text>
+                      </View>
+                    </View>
+                  )) : (
+                    <LottieIcon icon={Birthdayjson} />
+                  )
+                }
           <TouchableOpacity onPress={hide} style={styles.row}>
             <Text style={styles.upcomming}>Upcoming Birthdays</Text>
             <Animated.Image
@@ -171,12 +170,12 @@ const RenderItem = ({item}) => {
             />
           </TouchableOpacity>
           <View style={[styles.line, {marginTop: height(0.5)}]} />
-        </>
-      )}
+        </React.Fragment>
+      ) : null}
       {show ? (
         <>
           <FlatList
-            data={arr}
+            data={birthdays && Array.isArray(birthdays) ? birthdays : []}
             numColumns={2}
             style={styles.margin1}
             keyExtractor={(item) => String(Math.random())}
@@ -188,7 +187,7 @@ const RenderItem = ({item}) => {
                   <Image source={placeholderIcon} style={styles.image} />
                   <View style={styles.details}>
                     <Text numberOfLines={1} style={styles.text3}>
-                      Aderinsola Derin
+                      {item && item.first_name ? Capitalize(item.first_name) : ""}
                     </Text>
                     <Text numberOfLines={1} style={styles.text1}>
                       Lead Designer
@@ -196,7 +195,7 @@ const RenderItem = ({item}) => {
 
                     {selected == 'Birthdays' ? (
                       <Text numberOfLines={1} style={styles.text1}>
-                        Jan 14
+                        {item && item.birth_date ? moment(item.birth_date).format("MMM DD") : ""}
                       </Text>
                     ) : (
                       <Button
