@@ -26,7 +26,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [assets,setAssets] = React.useState(null)
   const [benefits,setBenefits] = React.useState(null)
   const [whos_out,setWhosOut] = React.useState(null)
-  const [birthdays,setBirthDay] = React.useState(null)
+  const [active_birthdays,setActiveBirthDay] = React.useState(null)
+  const [upcoming_birthdays,setUpcomingBirthDay] = React.useState(null)
   const setButtons = (i) => {
     setIndex(i);
     var margin = i * 30;
@@ -45,20 +46,23 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
       let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
-      let birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      console.log("birthday_url",birthdays_url)
+      let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
+      let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
+      console.log("birthday_url",active_birthdays_url,upcoming_birthdays_url)
       let asset_res = await getAPIs(assets_url,token);
       let benefits_res = await getAPIs(benefits_url,token)
       let whos_out_res = await getAPIs(whos_out_url,token)
-      let birthdays_res = await getAPIs(birthdays_url,token);
-      console.log("birthdays_res",birthdays_res,benefits_res,whos_out_res)
+      let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
+     let active_res = await getAPIs(active_birthdays_url,token);
       setBusiness(biz);
       setAbout(about_me);
       setAssets(asset_res.results)
       setBenefits(benefits_res.results);
-      setBirthDay(birthdays_res.results);
+      setUpcomingBirthDay(upcoming_res.results);
+      setActiveBirthDay(active_res.results);
       setWhosOut(whos_out_res.results)
       setLoading(false);
+
     }catch(err){
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       console.log("err|||",err,msg)
@@ -176,10 +180,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                 <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
                   benefits={benefits}
                 />
-                {console.log("navigate",navigate)}
                 <TasksList data={tasksData} 
                   whos_out={whos_out}
-                  birthdays={birthdays}
+                  birthdays={active_birthdays}
+                  upcoming_birthdays={upcoming_birthdays}
                   navigate={navigate}
                 />
                   </React.Fragment>

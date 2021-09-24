@@ -76,6 +76,7 @@ export default function Routes() {
                         screenOptions={{headerMode: false}}>
                         <Stack.Screen name="Dashboard" component={Dashboard} />
                         <Stack.Screen name="Todos" component={Todos} />
+                        <Stack.Screen name="People" component={People} />
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>

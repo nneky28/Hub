@@ -6,10 +6,12 @@ export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
   my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/assets/`,
   benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
-  whos_out : (business_id) => `/c/${business_id}/timeoff_taken/widgets/whos_out/`,
-  birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`
+  whos_out : (business_id,status) => `/c/${business_id}/timeoff_taken/widgets/whos_out/?status=${status}`,
+  birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,
+  employees : (business_id) => `/c/${business_id}/employees/`,
+  team_members : (business_id,id) => `/c/${business_id}/employees/${id}/team_members/`,
+  basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`
 }
-//https://coolowo.com/c/d3a29566-49a3-4003-b772-230017324a83/employees/dashboard/birthdays/?status=upcoming
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {
       let split = path.split("/?");
@@ -29,10 +31,11 @@ export const getAPIs = (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("error--",error,error.response)
           //logError(endPoint,path,error)
           reject({status: 500, msg: error.response.data});
         });
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      //setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
     });
   };
   

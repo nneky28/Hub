@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { showMessage } from 'react-native-flash-message';
 import {useDispatch} from 'react-redux';
 import {logout} from '../Redux/Actions/Auth';
+
+
 export function debounce(func, wait, immediate) {
     var timeout;
     return function () {
@@ -50,7 +52,7 @@ export const storeData = async (key, value) => {
   };
 
   const LogUserOut = () => {
-    console.log("Yes>>>>")
+    alert("Out!")
     const dispatch = useDispatch();
     useEffect(()=>{
       dispatch(logout())

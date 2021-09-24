@@ -25,6 +25,7 @@ import Svg, {
     SvgUri,
   } from 'react-native-svg';
 import AppColors from './AppColors';
+import { View } from 'native-base';
 
 export const PageLoader = props => {
     return(
@@ -47,7 +48,7 @@ export const PageLoader = props => {
   export const LottieIcon = ({icon,size}) => {
     console.log("size,",size,icon)
     return(
-      <LottieView 
+        <LottieView 
           source={icon}
           autoPlay={true}
           style={{

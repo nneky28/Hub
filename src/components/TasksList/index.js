@@ -29,7 +29,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TasksList = ({data,whos_out,birthdays,navigate}) => {
+const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays}) => {
   return (
     <FlatList
       data={data}
@@ -40,12 +40,13 @@ const TasksList = ({data,whos_out,birthdays,navigate}) => {
       nestedScrollEnabled={true}
       renderItem={({item}) => <RenderItem item={item} birthdays={birthdays}
         whos_out={whos_out}
+        upcoming_birthdays={upcoming_birthdays}
         navigate={navigate}
       />}
     />
   );
 };
-const RenderItem = ({item,whos_out,birthdays,navigate}) => {
+const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
   var [selected, setSelected] = useState(headings[0]);
@@ -59,9 +60,10 @@ const RenderItem = ({item,whos_out,birthdays,navigate}) => {
       outputRange: ['0deg', '180deg'],
     }),
   );
-  const showMore = () => {
-    
-    return navigate("Modules",{tab : "Celebrations"})
+  const showMore = (title,selected) => {
+    //return console.log("showMore",title,selected)
+    let tab = title == "Celebrations" ? title : "Who's out"
+    return navigate("People",{tab})
     setArr((a) => [...a, '', '', '', '']);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     setHasMore(false);
@@ -122,14 +124,10 @@ const RenderItem = ({item,whos_out,birthdays,navigate}) => {
       </ScrollView>
 
       <View style={styles.line} />
-      {console.log("birthday---",birthdays)}
       {selected == 'Birthdays' ? (
         <React.Fragment>
                 {
-                  birthdays && Array.isArray(birthdays) ? birthdays.filter((item)=>(
-                    new Date(item.birth_date).getDay() !== new Date().getDay()
-                    && new Date(item.birth_date).getMonth() !== new Date().getMonth()
-                  )).map((item,index)=>(
+                  birthdays && Array.isArray(birthdays) ? birthdays.map((item,index)=>(
                     <View style={styles.birthdayContainer} key={index}>
                       {
                         item && item.photo ? (
@@ -140,7 +138,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate}) => {
                       }
                       <View style={{width: '68%'}}>
                         <Text numberOfLines={1} style={styles.text3}>
-                          {item.first_name ? `${Capitalize(item.first_name)}"'s"` : ""} birthday is today
+                          {item.first_name ? `${Capitalize(item.first_name)}'s` : ""} birthday is today
                         </Text>
                         <Text numberOfLines={1} style={styles.text1}>
                           Lead Designer
@@ -172,10 +170,14 @@ const RenderItem = ({item,whos_out,birthdays,navigate}) => {
           <View style={[styles.line, {marginTop: height(0.5)}]} />
         </React.Fragment>
       ) : null}
+      {console.log("---||---",whos_out)}
       {show ? (
         <>
           <FlatList
-            data={birthdays && Array.isArray(birthdays) ? birthdays : []}
+            data={item && item.title !== "Celebrations" && whos_out && Array.isArray(whos_out) ?
+            whos_out : 
+              upcoming_birthdays && Array.isArray(upcoming_birthdays) ? upcoming_birthdays : []
+            }
             numColumns={2}
             style={styles.margin1}
             keyExtractor={(item) => String(Math.random())}
@@ -192,8 +194,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate}) => {
                     <Text numberOfLines={1} style={styles.text1}>
                       Lead Designer
                     </Text>
-
-                    {selected == 'Birthdays' ? (
+                    {selected == 'Birthdays' || selected === "Job Anniversary" ? (
                       <Text numberOfLines={1} style={styles.text1}>
                         {item && item.birth_date ? moment(item.birth_date).format("MMM DD") : ""}
                       </Text>
@@ -210,7 +211,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate}) => {
             }}
           />
           {hasMore? (
-            <TouchableOpacity activeOpacity={0.8} onPress={showMore}>
+            <TouchableOpacity activeOpacity={0.8} onPress={()=>showMore(item.title,selected)}>
               <Text style={styles.viewAll}>View all </Text>
             </TouchableOpacity>
           ) : 

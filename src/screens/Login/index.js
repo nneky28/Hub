@@ -44,7 +44,7 @@ export default function Dashboard(props) {
         email : data.email,
         password : data.password
       }
-      //dispatch(setLoaderVisible(true));
+      dispatch(setLoaderVisible(true));
       let res = await postNoToken('/accounts/auth/employees/login/',fd);
       let token  = res.access_token ? res.access_token : null;
       let business = res.user.employee_user_memberships && 
@@ -58,6 +58,7 @@ export default function Dashboard(props) {
       await storeData("about_me",about_me)
       await storeData("token",token)
       await storeData("user",res.user);
+      console.log("Login was successful")
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));
       dispatch(login({userName: 'John Doe'}));
