@@ -35,7 +35,10 @@ const CustomModalDropdown = (props) => {
       defaultValue={name==='gender'? "Gender" : "Marital Status"}
       textStyle={styles.text1}
       dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
-      onSelect={(index,text) => setFieldValue(name, text)}
+      onSelect={(index,text) => {
+        setFieldValue(name, text)
+        props.onChangeData ? props.onChangeData(text) : null
+      }}
       renderRightComponent={() => <Image 
                   resizeMode="contain" 
                   source={downIcon} 

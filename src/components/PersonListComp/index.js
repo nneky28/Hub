@@ -16,7 +16,13 @@ const PersonListComp = ({item, onPressHandle}) => {
     >
         {console.log("PersonListComp",item)}
         <View style={CommonStyles.rowJustifySpaceBtw}>
-            <Image url={item && item.photo ? item.photo : null} style={styles.avatarStyle} />
+        {
+          item.photo ? (
+            <Image url={item && item.photo ? item.photo : null} style={styles.avatarStyle}/>
+          ) : (
+            <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle}/>
+          )
+        }
             <View style={styles.textContainer}>
                 <Text style={styles.titleText}>
                     {item && item.first_name ? Capitalize(item.first_name) : ""} {" "}

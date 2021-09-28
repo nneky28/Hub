@@ -9,8 +9,42 @@ import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
 
 
-const ContactModal = ({isVisible, onHide}) => {
-
+const ContactModal = ({isVisible, onHide,data}) => {
+  email: ""
+first_name: "asha"
+hire_date: "2021-09-21"
+job: Object
+last_name: "abi"
+line_manager: null
+phone_number1: ""
+photo: null
+  const contactData = [
+      {
+          key: '1',
+          title: data && data.email ? data.email : "",
+          iconLeft: require('../../assets/images/icons/message.png'),
+          iconRight: require('../../assets/images/icons/copy.png'),
+      },
+      {
+          key: '2',
+          title: data && data.address && data.address.address1 ? data.address.address1 : 
+          data && data.address ? data.address : "",
+          iconLeft: require('../../assets/images/icons/location.png'),
+          iconRight: require('../../assets/images/icons/copy.png'),
+      },
+      {
+          key: '3',
+          title: data && data.phone_number1 ? data.phone_number1 : "",
+          iconLeft: require('../../assets/images/icons/phone.png'),
+          iconRight: require('../../assets/images/icons/copy.png'),
+      },
+      {
+          key: '4',
+          title: 'linkedin',
+          iconLeft: require('../../assets/images/icons/linked-in.png'),
+          iconRight: null,
+      },
+  ]
   return (
     <Modal
       onBackButtonPress={onHide}

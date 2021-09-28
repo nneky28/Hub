@@ -13,7 +13,7 @@ const CustomDatePicker = (props) => {
   const [dateClicked, setDateClicked] = useState(false);
 
   const {
-    field: { name, onBlur, onChange, value },
+    field: { name, onBlur, onChange, value},
     form: { errors, touched, setFieldTouched, setFieldValue },
     ...inputProps
   } = props
@@ -28,9 +28,11 @@ const CustomDatePicker = (props) => {
           styles.listContainer,
           hasError && styles.errorInput
         ]}
-    onPress={() => setDateClicked(!dateClicked)}
+    onPress={() => {
+      setDateClicked(!dateClicked)
+    }}
     >
-    {touched[name]? <Text style={styles.text1}>{date.toDateString()}</Text> :
+    { !dateClicked ? <Text style={styles.text1}>{date.toDateString()}</Text> :
     <Text style={styles.text1}>Date of Birth</Text>
     }
     <Image resizeMode="contain" source={downIcon} style={[styles.downIcon2]}/>
@@ -40,7 +42,9 @@ const CustomDatePicker = (props) => {
         date={date} 
         onDateChange={(newDate) => {
           setDate(newDate);
-          setFieldValue(name, newDate);
+          console.log("props",props)
+          props.onChangeData ? props.onChangeData(newDate.toDateString()) : null
+          //onChange(newDate.toDateString())
         }} 
         mode="date" 
         maximumDate={new Date()}

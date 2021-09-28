@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
@@ -9,15 +10,22 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
+import { getData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
-
+import {setLoaderVisible} from '../../Redux/Actions/Config';
+import { useDispatch } from 'react-redux';
+import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
+import { ActivityIndicator } from 'react-native-paper';
 
 
 
 export default function EditPhoto({navigation}) {
 
-    const [profilePicture, setProfilePicture] = useState(placeholder5);
-    const [isSaved, setIsSaved] = useState(true);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [isSaved, setIsSaved] = useState(true);
+  const [about,setAbout] = useState(null);
+  const [loading,setLoading] = useState(null);
+  const dispatch = useDispatch();
 
     var cropValues;
     const SvgCircle = (props) => {
@@ -66,33 +74,30 @@ export default function EditPhoto({navigation}) {
           compressImageQuality: 0.7,
           cropping: true,
           cropperCircleOverlay: true
-        }).then((response) => {
-            setProfilePicture({ uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime });
-            setIsSaved(false);
+        }).then(async (response) => {
+            let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
+            setProfilePicture(data);
+        }).catch(err=>{
+          ImagePicker.clean()
         });
     };
 
-    // const cropImage = (image) => {
-    //     let imageHeight = resolveAssetSource(image).height;
-    //     let imageWidth = resolveAssetSource(image).width;
-    //     console.log(imageHeight)
-    //     console.log(imageWidth)
-
-        // let cropX = imageWidth - width(25);
-        // let cropY = imageHeight - width(25); 
-
-        // const cropRegion = { x: cropValues.x, y: cropValues.y, height: cropValues.height, width: cropValues.width };
-        // const targetSize = { size: cropValues.width, height: cropValues.height, width: cropValues.width };
-        
-        // const cropRegion = { x: 0, y: imageHeight*0.1, height: cropValues.height, width: cropValues.width };
-        // const targetSize = { size: cropValues.width, height: cropValues.height, width: cropValues.width };
-
-        // PhotoManipulator.crop(image, cropRegion, targetSize).then(path => {
-        //     console.log(`Result image path: ${path}`);
-        //     setProfilePicture({uri: path})
-        // })
-        // .catch(e => console.error(e));
-    // }
+    const getProfile = async () => {
+      try{
+          const profile = await getData("profile");
+          setAbout(profile.about);
+      }catch(err){
+          console.log("member---",err)
+          let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
+          ToastError(msg)
+      }
+    }
+    
+    useFocusEffect(
+      React.useCallback(()=>{
+        getProfile();
+      },[])
+    )
 
     useEffect(() => {
         //cleanup code
@@ -103,7 +108,38 @@ export default function EditPhoto({navigation}) {
           });
     }, []);
 
-    
+    const updateImage = async () => {
+      try{
+        if(!profilePicture){
+          return ToastError("Please select an image to upload");
+        }
+        // setLoading(true)
+        // setIsSaved(false);
+        let token = await getData("token");
+        //return console.log("token--",token);
+        let about_me = await getData("about_me")
+        let user = await getData("user");
+        let biz = user.employee_user_memberships &&
+        Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
+        && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
+        dispatch(setLoaderVisible(true));
+        let url = await APIFunction.update_photo(biz.business_id,about_me.id)
+        console.log("url---",url,token);
+        let fd = new FormData();
+        fd.append("photo",profilePicture)
+        let res = await storeFilePut(url,token,fd);
+        console.log("res>>",res);
+        setIsSaved(true);
+        setLoading(false);
+        showFlashMessage();
+      }catch(err){
+        let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
+        console.log("err|||",err,msg)
+        dispatch(setLoaderVisible(false));
+        ToastError(msg)
+        setLoading(false)
+      }
+    }
         
     return (
         <ScreenWrapper scrollEnabled={true}>
@@ -112,29 +148,47 @@ export default function EditPhoto({navigation}) {
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
                 </TouchableOpacity>
                 <Text numberOfLines={1} style={styles.screenTitle}>
-                Edit Photo
+                  Edit Photo
                 </Text>
-                <Button 
-                title="save"
-                onPress={() => {
-                    setIsSaved(true);
-                    showFlashMessage()
-                    }} 
-                containerStyle={styles.saveBtnStyle} 
-                textStyle={styles.saveBtnText} 
-                />
+                {console.log("loading--",loading)}
+                {
+                  loading ? (
+                    <ActivityIndicator size={15} color={AppColors.green} />
+                  ) : (
+                    <Button 
+                      title="save"
+                      onPress={() => {
+                          updateImage()
+                        }} 
+                      containerStyle={styles.saveBtnStyle} 
+                      textStyle={styles.saveBtnText} 
+                      />
+                  )
+                }
             </View>
             <View style={styles.line} />
 
             <View style={styles.mainViewContainer}>
                 <View style={styles.imageContainer}>
-                    <ImageBackground 
-                    source={profilePicture} 
-                    resizeMode='contain' 
-                    style={styles.imageStyle}
-                    >
-                        <SvgCircle />
-                    </ImageBackground>
+                    {
+                      about && about.photo && !profilePicture ? (
+                        <ImageBackground
+                          source={{uri : about.photo}}
+                          resizeMode='contain' 
+                          style={styles.imageStyle}
+                          >
+                              <SvgCircle />
+                          </ImageBackground>
+                      ) : (
+                          <ImageBackground 
+                            source={profilePicture || require('../../assets/images/dummy/placeholder.png')} 
+                            resizeMode='contain' 
+                            style={styles.imageStyle}
+                          >
+                              <SvgCircle />
+                          </ImageBackground>
+                      )
+                    }
                 </View>
                 
                 <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_5]}>

@@ -59,3 +59,19 @@ export const PageLoader = props => {
       />
     )
   }
+
+  export const ProfileLoader = () => (
+    <ContentLoader
+      width={400}
+      height={160}
+      viewBox="0 0 400 160"
+      backgroundColor="#f3f3f3"
+      foregroundColor="#ecebeb"
+      // {...props}
+    >
+      <Rect x="80" y="73" rx="3" ry="3" width="254" height="6" />
+      <Rect x="78" y="88" rx="3" ry="3" width="254" height="6" />
+      <Rect x="150" y="103" rx="3" ry="3" width="118" height="6" />
+      <Circle cx="210" cy="40" r="22" />
+    </ContentLoader>
+  )

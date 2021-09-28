@@ -13,7 +13,7 @@ export const profileData = [
         title: 'Job Detail',
         iconLeft: require('../../assets/images/icons/home.png'),
         data: [
-            'Hire Date', '23, Jun 2021', 'Employment Status', 'Full Time', 'Location', 
+            'Hire Date', '23, Jun 2021', 'Employment Status', 'Full Time', 'Title', 
             'Abuja, Lagos', 'Marital Status', 'Married', 'Salary (Monthly)', 'N400,000'
         ],
         iconRight: require('../../assets/images/icons/right.png'),

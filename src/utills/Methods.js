@@ -24,6 +24,7 @@ export function debounce(func, wait, immediate) {
 };
 
 export const ToastError  = (msg) => {
+  console.log("ToastError--",msg)
   return msg === "Given token not valid for any token type" ? <LogUserOut /> : (
     showMessage({
         message: 'Error',

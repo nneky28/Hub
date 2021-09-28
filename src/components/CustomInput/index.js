@@ -9,7 +9,7 @@ import styles from './styles';
 
 const CustomInput = (props) => {
   const {
-    field: { name, onBlur, onChange, value },
+    field: { name, onBlur, onChange, value,data,setData,onChangeData},
     form: { errors, touched, setFieldTouched },
     ...inputProps
   } = props
@@ -25,7 +25,7 @@ const CustomInput = (props) => {
 
   return (
     <>
-      {console.log("inputProps>>",inputProps)}
+      {/* {console.log("inputProps>>",inputProps)} */}
       <TextInput
         style={[
           styles.textInput,
@@ -35,8 +35,11 @@ const CustomInput = (props) => {
         placeholderTextColor={AppColors.black3}
         value={value}
         onChangeText={(text) => {
-          console.log("text>>",text)
-          onChange(text)
+          console.log("Text---",text)
+          if(data){
+            setData({...data,name : text})
+          }
+          props && props.onChangeData ? props.onChangeData(text) : null;
           //onChange(name)(text)
         }}
         onBlur={() => {

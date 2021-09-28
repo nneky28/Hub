@@ -77,6 +77,7 @@ export default function Routes() {
                         <Stack.Screen name="Dashboard" component={Dashboard} />
                         <Stack.Screen name="Todos" component={Todos} />
                         <Stack.Screen name="People" component={People} />
+                        <Stack.Screen name="MemberProfile" component={MemberProfile} />
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>

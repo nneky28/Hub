@@ -131,7 +131,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
                     <View style={styles.birthdayContainer} key={index}>
                       {
                         item && item.photo ? (
-                          <Image uri={item.photo} style={styles.image} />
+                          <Image source={{uri : item.photo}} style={styles.image} />
                         ) : (
                           <Image source={placeholderIcon} style={styles.image} />
                         )

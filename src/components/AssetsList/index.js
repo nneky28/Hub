@@ -21,7 +21,7 @@ const AssetsList = ({data}) => {
             {console.log("item-",item)}
             {
               item && item.image ? (
-                <Image uri={item.image} style={styles.image} />
+                <Image source={{uri : item.image}} style={styles.image} />
               ) : (
                 <Image source={placeholderIcon4} style={styles.image} />
               )

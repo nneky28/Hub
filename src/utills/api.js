@@ -10,7 +10,11 @@ export const APIFunction = {
   birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,
   employees : (business_id) => `/c/${business_id}/employees/`,
   team_members : (business_id,id) => `/c/${business_id}/employees/${id}/team_members/`,
-  basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`
+  basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
+  next_of_kins : (business_id,id) => `/c/${business_id}/employees/${id}/next-of-kin/`,
+  emergency  : (business_id,id) => `/c/${business_id}/employees/${id}/emergency-contact/`,
+  update_photo : (business_id,id) => `/c/${business_id}/employees/${id}/update-photo/`,
+  edit : (business_id,id) => `/c/${business_id}/employees/${id}/`
 }
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {
@@ -161,7 +165,11 @@ export const storeFile = async (path, token, fd) => {
         })
         .catch(error => {
           //logError(endPoint,path,error)
-          reject(error);
+          if (error.response) {
+            reject({status: 500, msg: error.response.data});
+          } else {
+            reject({status: 500, msg: 'Connection Error. Please try again later'});
+          }
         });
     });
   };
@@ -179,14 +187,18 @@ export const storeFilePut = async (path, token, fd) => {
         },
       })
         .then(res => {
-          resolve(res);
+          console.log("res---",res)
+          resolve(res.data);
         })
         .catch(error => {
-          //logError(endPoint,path,error);
-          reject({status: 400, msg: 'Connection Error. Please try again later'});
+          if (error.response) {
+            reject({status: 500, msg: error.response.data});
+          } else {
+            reject({status: 500, msg: 'Connection Error. Please try again later'});
+          }
         });
   
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      //setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
     });
   };
   

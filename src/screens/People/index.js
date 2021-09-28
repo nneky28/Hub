@@ -387,7 +387,7 @@ export default function People({route,navigation}) {
                             numColumns={2}
                             data={personsList}
                             keyExtractor={(item) => item.key}
-                            renderItem={({item}) => <PersonCard item={item} onPressHandle={() => navigation.navigate('MemberProfile')}/>}
+                            renderItem={({item}) => <PersonCard item={item} onPressHandle={() => navigation.navigate('MemberProfile',{member : item})}/>}
                             ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
                             showsVerticalScrollIndicator={false}
                             nestedScrollEnabled={true}
@@ -403,7 +403,7 @@ export default function People({route,navigation}) {
                         <FlatList
                     data={personsList}
                     keyExtractor={(item) => item.key}
-                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={() => navigation.navigate('MemberProfile')}/>}
+                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={() => navigation.navigate('MemberProfile',{member : item})}/>}
                     ItemSeparatorComponent={() => <View style={styles.line}/>}
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}

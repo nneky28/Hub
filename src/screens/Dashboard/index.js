@@ -45,6 +45,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
       let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
       let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
+      console.log("---",benefits_url)
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
       let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
       let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");

@@ -34,7 +34,6 @@ export default function Dashboard(props) {
   const dispatch = useDispatch();
   const loginMethod = async () => {
     try{
-      console.log("Yes 0000")
       if(!data.email || data.email.trim() === "" || !data.password
         || data.password.trim() === ""
       ){
@@ -51,7 +50,6 @@ export default function Dashboard(props) {
       Array.isArray(res.user.employee_user_memberships) && 
       res.user.employee_user_memberships.length > 0 ? 
       res.user.employee_user_memberships[0] : null;
-      console.log("res___",res)
       if(!business) return ToastError("No business connected to this account");
       let employees_me_url = employees_me(business.business_id);
       let about_me = await getAPIs(employees_me_url,token);
@@ -119,7 +117,9 @@ export default function Dashboard(props) {
           name="email"
           placeholder="Email"
           value={data.email}
-          onChange={(value)=>setData({...data,email : value})}
+          onChangeData={(value)=>{
+            setData({...data,email : value})
+          }}
         />
           <Field
           component={CustomInput}
@@ -127,7 +127,9 @@ export default function Dashboard(props) {
           placeholder="Password"
           value={data.password}
           secure={true}
-          onChange={(value)=>setData({...data,password : value})}
+          onChangeData={(value)=>{
+            setData({...data,password : value})
+          }}
           secureTextEntry={true}
           />
         <View style={{width: '100%', marginTop : '5%'}}>
