@@ -1,23 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Text, View
+  Text, View,ScrollView
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
 import { contactData } from '../../utills/data/contactData';
 import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
-
+import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
+import { Field, Formik } from 'formik';
+import CustomText from '../../component2/customText/CustomText';
+import CustomButton from '../../component2/button/Button';
+import CustomInput from '../CustomInput';
+import CustomDatePicker from '../CustomDatePicker';
+import moment from 'moment';
 
 const ContactModal = ({isVisible, onHide,data}) => {
-  email: ""
-first_name: "asha"
-hire_date: "2021-09-21"
-job: Object
-last_name: "abi"
-line_manager: null
-phone_number1: ""
-photo: null
+//   email: ""
+// first_name: "asha"
+// hire_date: "2021-09-21"
+// job: Object
+// last_name: "abi"
+// line_manager: null
+// phone_number1: ""
+// photo: null
   const contactData = [
       {
           key: '1',
@@ -96,6 +102,117 @@ const DocumentModal = ({isVisible, onHide}) => {
   );
 };
 
+const TimeoffModal = ({isVisible, onHide,timeoff_id}) => {
+  console.log("TimeoffModal",timeoff_id)
+  const defaultColor = "";
+  const blackColor = "";
+  const [data,setData] = React.useState({
+      "timeoff": timeoff_id,
+      "start_date": "2021-09-28",
+      "end_date": "2021-09-28",
+      "reason": "string"
+    })
+  const handleSubmit = async () => {
+    try{
+      return console.log("handleSubmit",data,timeoff_id)
+    }catch(err){
+      console.log("err---",err)
+    }
+  }
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{justifyContent: 'flex-end', margin: 0}}
+      isVisible={isVisible}>
+      <View style={styles.container}>
+                    
+        <ScrollView contentContainerStyle={styles.inner}>
+          <View style={styles.bodyWrap}>
+            <Formik>
+              <React.Fragment>
+                <View
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginTop: 25,
+                  }}>
+                    <CustomText
+                      textSize={20}
+                      textWeight={'bold'}
+                      textcolor={defaultColor}
+                      displayText={'Payoff Request'}
+                      textStyle={{
+                        marginTop: -3,
+                      }}
+                    />
+                </View>
+                <CustomText
+                  textSize={12}
+                  textWeight={'normal'}
+                  textcolor={blackColor}
+                  textStyle={{
+                    marginTop: 5,
+                  }}
+                />
+                <Field
+                    name="start_date"
+                    placeholder="Start Date"
+                    component={CustomDatePicker}
+                    value={data.start_date}
+                    onChangeData={(value)=>{
+                      setData({...data,start_date : value})
+                    }}
+                />
+                <Field
+                    name="end_date"
+                    placeholder="End Date"
+                    component={CustomDatePicker}
+                    value={data.end_date}
+                    onChangeData={(value)=>{
+                      setData({...data,end_date : value})
+                    }}
+                />
+                  <Field
+                    component={CustomInput}
+                    name="reason"
+                    placeholder="Reason"
+                    keyboardType="default"
+                    value={data.email}
+                    onChangeData={(value)=>{
+
+                    }}
+                    height={100}
+                    multiline={true}
+                  />
+                  <View style={{width: '100%', padding : '5%'}}>
+                    <CustomButton
+                      btnText={'Submit'}
+                      handelButtonPress={handleSubmit}
+                      //isloading={isprocessing}
+                    />
+                  </View> 
+                </React.Fragment>
+            </Formik>
+        </View>
+      </ScrollView>
+
+
+      </View>
+    </Modal>
+  );
+};
+
 const FilterModal = ({isVisible, onHide, onPressHandle}) => {
 
   return (
@@ -126,5 +243,5 @@ const FilterModal = ({isVisible, onHide, onPressHandle}) => {
   );
 };
 
-export { DocumentModal, FilterModal };
+export { DocumentModal, FilterModal,TimeoffModal };
 export default ContactModal;

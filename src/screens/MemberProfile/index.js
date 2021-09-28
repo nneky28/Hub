@@ -11,7 +11,7 @@ import CommonStyles from '../../utills/CommonStyles';
 import { LottieIcon, PageLoader, ProfileLoader } from '../../utills/components';
 import { persons } from '../../utills/data/persons';
 import { FontFamily } from '../../utills/FontFamily';
-import { Capitalize, getData, ToastError } from '../../utills/Methods';
+import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 import Empty from '../../assets/lottie/empty.json'
 
@@ -46,7 +46,7 @@ export default function MemberProfile({route,navigation}) {
   }
    const getProfile = async () => {
      try{
-        const {member} = route.params;
+        const member = await getData("tmember");
         setLoading(true);
         let token = await getData("token");
         let user =  await getData("user");
@@ -113,7 +113,7 @@ export default function MemberProfile({route,navigation}) {
                       </Text>
                       <Text numberOfLines={1} style={[styles.designationText]}>Tech and Design</Text>
                       <Text numberOfLines={1} style={[styles.designationText, {fontFamily: FontFamily.BlackSansBold}]}>
-                        Full Time | {member && member.hire_date ? Capitalize(moment(member.hire_date).fromNow().replace("ago","")) : ""}
+                        {member && member.type ? Capitalize(member.type.replace("_"," ")) : ""} | {member && member.hire_date ? Capitalize(moment(member.hire_date).fromNow().replace("ago","")) : ""}
                       </Text>
                   </View>
                   <Button 
@@ -150,6 +150,7 @@ export default function MemberProfile({route,navigation}) {
                       />
                     ) : null
                   }
+                  {console.log("member--",member)}
                   <FlatList
                   data={members}
                   horizontal
@@ -157,7 +158,10 @@ export default function MemberProfile({route,navigation}) {
                   renderItem={({item}) => (
                     <PersonCard 
                           item={item} 
-                          onPressHandle={() => {}}
+                          onPressHandle={ async () => {
+                            storeData("tmember",item)
+                            getProfile()
+                          }}
                           containerStyle={styles.horizontalListContainer}
                           titleStyle={styles.headingText}
                           subtitleStyle={styles.subText}

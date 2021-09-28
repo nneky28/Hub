@@ -16,7 +16,10 @@ export const APIFunction = {
   update_photo : (business_id,id) => `/c/${business_id}/employees/${id}/update-photo/`,
   edit : (business_id,id) => `/c/${business_id}/employees/${id}/`,
   trainings : (business_id,id) => `/c/${business_id}/employees/${id}/training/`,
-  training_hist : (business_id,id) => `/c/${business_id}/employees/${id}/training/history/`
+  training_hist : (business_id,id) => `/c/${business_id}/employees/${id}/training/history/`,
+  timeoff : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff/`,
+  timeoff_reqs : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
+  timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`
 }
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {

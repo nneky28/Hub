@@ -49,7 +49,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
       let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
       let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      console.log("birthday_url",active_birthdays_url,upcoming_birthdays_url)
       let asset_res = await getAPIs(assets_url,token);
       let benefits_res = await getAPIs(benefits_url,token)
       let whos_out_res = await getAPIs(whos_out_url,token)

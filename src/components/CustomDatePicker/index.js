@@ -4,6 +4,7 @@ import AppColors from '../../utills/AppColors';
 import styles from './styles';
 import DatePicker from 'react-native-date-picker'
 import { downIcon } from '../../assets/images';
+import moment from 'moment';
 
 
 const CustomDatePicker = (props) => {
@@ -33,7 +34,7 @@ const CustomDatePicker = (props) => {
     }}
     >
     { !dateClicked ? <Text style={styles.text1}>{date.toDateString()}</Text> :
-    <Text style={styles.text1}>Date of Birth</Text>
+    <Text style={styles.text1}>{props.placeholder ? props.placeholder : "Date of Birth"}</Text>
     }
     <Image resizeMode="contain" source={downIcon} style={[styles.downIcon2]}/>
     </TouchableOpacity>
@@ -42,8 +43,7 @@ const CustomDatePicker = (props) => {
         date={date} 
         onDateChange={(newDate) => {
           setDate(newDate);
-          console.log("props",props)
-          props.onChangeData ? props.onChangeData(newDate.toDateString()) : null
+          props.onChangeData ? props.onChangeData(moment(newDate).format("YYYY-MM-DD")) : null
           //onChange(newDate.toDateString())
         }} 
         mode="date" 

@@ -387,7 +387,10 @@ export default function People({route,navigation}) {
                             numColumns={2}
                             data={personsList}
                             keyExtractor={(item) => item.key}
-                            renderItem={({item}) => <PersonCard item={item} onPressHandle={() => navigation.navigate('MemberProfile',{member : item})}/>}
+                            renderItem={({item}) => <PersonCard item={item} onPressHandle={async () => {
+                                await storeData("tmember",item)
+                                navigation.navigate('MemberProfile')
+                            }}/>}
                             ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
                             showsVerticalScrollIndicator={false}
                             nestedScrollEnabled={true}
@@ -395,7 +398,6 @@ export default function People({route,navigation}) {
                         /> 
                     ) : null
                 }
-                {console.log("personList---",personsList)}
                 {
                     (selected === "All" || selected === "My Team") && isListView && personsList && Array.isArray(personsList) 
                     && personsList.length > 0 && !loading
@@ -403,7 +405,10 @@ export default function People({route,navigation}) {
                         <FlatList
                     data={personsList}
                     keyExtractor={(item) => item.key}
-                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={() => navigation.navigate('MemberProfile',{member : item})}/>}
+                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={() =>async () => {
+                        await storeData("tmember",item)
+                        navigation.navigate('MemberProfile')
+                    }}/>}
                     ItemSeparatorComponent={() => <View style={styles.line}/>}
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}

@@ -1,3 +1,5 @@
+import moment from 'moment';
+import numeral from 'numeral';
 import React, { useState } from 'react';
 import {
   Animated,
@@ -9,6 +11,7 @@ import { Circle } from 'react-native-progress';
 import { rightIcon, upIcon } from '../../assets/images';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
+import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
 
@@ -19,18 +22,22 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TimeoffVertical = ({data}) => {
+const TimeoffVertical = ({data,load,setModal}) => {
+  console.log("TimeoffVertical",load)
   return (
     <FlatList
       columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
-      data={data}
+      data={load}
       nestedScrollEnabled={true}
       numColumns={2}
       ItemSeparatorComponent={() => <View style={CommonStyles.marginTop_3} />}
       keyExtractor={(i) => String(Math.random())}
       contentContainerStyle={styles.flatListVertical}
       showsHorizontalScrollIndicator={false}
-      renderItem={({item}) => <RenderItemVertical item={item} />}
+      renderItem={({item}) => <RenderItemVertical 
+        fData={item} item={data} 
+        setModal={setModal}
+      />}
     />
   );
 };
@@ -177,7 +184,7 @@ const RenderItem = ({item}) => {
   );
 };
 
-const RenderItemVertical = ({item}) => {
+const RenderItemVertical = ({item,fData,setModal}) => {
   const spinValue = new Animated.Value(0);
 
   const [show, setShow] = useState(true);
@@ -216,7 +223,11 @@ const RenderItemVertical = ({item}) => {
   return (
     <Animated.View activeOpacity={0.8} style={styles.container}>
       <TouchableOpacity onPress={hide} style={styles.row1}>
-        <Text style={styles.text}>Travel Leave</Text>
+        <Text style={styles.text} numberOfLines={1}>
+          {fData && fData.timeoff && fData.timeoff.title ? Capitalize(fData.timeoff.title)
+           : fData && fData.title ? Capitalize(fData.title) : ""
+          }
+        </Text>
         <Animated.Image
           resizeMode="contain"
           source={rightIcon}
@@ -225,7 +236,12 @@ const RenderItemVertical = ({item}) => {
       </TouchableOpacity>
       {show ? (
         <>
-          <Text style={styles.text1}>Holiday</Text>
+          <Text style={styles.text1}>
+            {
+              fData && fData.timeoff && fData.timeoff.category ? Capitalize(fData.timeoff.category) : 
+                fData && fData.category ? Capitalize(fData.category) : "" 
+            }
+          </Text>
           <View style={{width: width(30), height: width(30)}}>
             <Circle
               borderWidth={0}
@@ -234,30 +250,37 @@ const RenderItemVertical = ({item}) => {
               size={width(30)}
               key={Math.random()}
               unfilledColor={AppColors.gray1}
-              progress={(status == 'active' || status == 'fewDays') && 0.5}
+              progress={
+                (status == 'active' || status == 'fewDays') && fData && fData.days_taken &&
+                fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : 0
+              }
               direction='counter-clockwise'
             />
             <View style={styles.absolute}>
               {status == 'active' ? (
                 <>
-                  <Text style={styles.count}>3</Text>
+                  <Text style={styles.count}>{fData && fData.days_taken ? fData.days_taken : ""}</Text>
                   <View style={styles.line1} />
-                  <Text style={styles.count1}>5</Text>
+                  <Text style={styles.count1}>{fData && fData.days_requested ? fData.days_requested : ""}</Text>
                   <Text style={styles.count2}>Days</Text>
                 </>
               ) : status == 'balance' ? (
                 <>
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    50
+                    {fData && fData.max_days_allowed ? fData.max_days_allowed : 0}
                   </Text>
                   <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
                   </Text>
-                  <Button
-                    title="Paid"
-                    textStyle={styles.buttonText}
-                    containerStyle={styles.button}
-                  />
+                  {
+                    fData && fData.is_paid ? (
+                      <Button
+                        title="Paid"
+                        textStyle={styles.buttonText}
+                        containerStyle={styles.button}
+                      />
+                    ) : null
+                  }
                 </>
               ) : status == 'fewDays' ? (
                 <>
@@ -293,18 +316,27 @@ const RenderItemVertical = ({item}) => {
               <View style={[styles.row1, {width: '100%'}]}>
                 <View>
                   <Text style={styles.date1}>Start date</Text>
-                  <Text style={styles.date}>02/Jun/21</Text>
+                  <Text style={styles.date}>
+                    {fData && fData.start_date ? moment(fData.start_date).format("DD/MMM/YY") : ""}
+                  </Text>
                 </View>
                 <View style={styles.line2} />
                 <View>
                   <Text style={styles.date1}>End date</Text>
-                  <Text style={styles.date}>13/Jul/21</Text>
+                  <Text style={styles.date}>
+                    {fData && fData.start_date ? moment(fData.end_date).format("DD/MMM/YY") : ""}
+                  </Text>
                 </View>
               </View>
             </>
           )}
           <View style={[styles.line, {marginTop: height(2)}]} />
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8}
+            onPress={()=>{
+              setModal ? setModal(fData.id) : null
+              //console.log("--||--")
+            }}
+          >
             {status == 'active' ? (
               <Text style={styles.endText}>End Leave</Text>
             ) : status == 'balance' ? (
