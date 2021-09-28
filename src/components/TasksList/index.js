@@ -127,7 +127,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
       {selected == 'Birthdays' ? (
         <React.Fragment>
                 {
-                  birthdays && Array.isArray(birthdays) ? birthdays.map((item,index)=>(
+                  birthdays && Array.isArray(birthdays) && birthdays.length > 0 ? birthdays.map((item,index)=>(
                     <View style={styles.birthdayContainer} key={index}>
                       {
                         item && item.photo ? (
@@ -170,7 +170,6 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
           <View style={[styles.line, {marginTop: height(0.5)}]} />
         </React.Fragment>
       ) : null}
-      {console.log("---||---",whos_out)}
       {show ? (
         <>
           <FlatList

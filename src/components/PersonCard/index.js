@@ -13,7 +13,7 @@ const PersonCard = ({item, onPressHandle, containerStyle, titleStyle, subtitleSt
       <TouchableOpacity style={[styles.container, containerStyle]} onPress={onPressHandle}>
         {
           item.photo ? (
-            <Image url={item && item.photo ? item.photo : null} style={styles.avatarStyle}/>
+            <Image source={{uri : item.photo}} style={styles.avatarStyle}/>
           ) : (
             <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle}/>
           )

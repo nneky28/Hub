@@ -300,7 +300,19 @@ export default function People({route,navigation}) {
                     ))}
                 </ScrollView>
                 <View style={styles.line2} />
-                {console.log("loading--celebrations",celebrations)}
+                {selected === "All" ? (
+                    <View style={styles.searchBoxContainer}>
+                        <SearchBox 
+                            title="Search for Name " 
+                            containerStyle={styles.searchBoxStyle}
+                            onSubmitEditing={handleSearch}    
+                        />
+                        <TouchableOpacity style={styles.filterIconContainer} onPress={() => setModal(!modal)}>
+                            <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
+                        </TouchableOpacity>
+                    </View>
+                    ) : null
+                }
                 {
                     loading ? <PageLoader /> : null
                 }
@@ -365,19 +377,7 @@ export default function People({route,navigation}) {
                             />
                     ) : null 
                 }
-                {selected === "All" ? (
-                    <View style={styles.searchBoxContainer}>
-                        <SearchBox 
-                            title="Search for Name " 
-                            containerStyle={styles.searchBoxStyle}
-                            onSubmitEditing={handleSearch}    
-                        />
-                        <TouchableOpacity style={styles.filterIconContainer} onPress={() => setModal(!modal)}>
-                            <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
-                        </TouchableOpacity>
-                    </View>
-                    ) : null
-                }
+                
                 {
                     (selected === "All" || selected === "My Team") && !isListView && personsList && Array.isArray(personsList) 
                     && personsList.length > 0 && !loading

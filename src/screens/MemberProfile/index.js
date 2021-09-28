@@ -47,9 +47,6 @@ export default function MemberProfile({route,navigation}) {
    const getProfile = async () => {
      try{
         const {member} = route.params;
-        //setMember(member);
-        //My team: /employees/{id}/team_members/
-        //Basic detail: /employees/{id}/basic_detail/
         setLoading(true);
         let token = await getData("token");
         let user =  await getData("user");
@@ -116,7 +113,7 @@ export default function MemberProfile({route,navigation}) {
                       </Text>
                       <Text numberOfLines={1} style={[styles.designationText]}>Tech and Design</Text>
                       <Text numberOfLines={1} style={[styles.designationText, {fontFamily: FontFamily.BlackSansBold}]}>
-                        Full Time | {member && member.hire_date ? moment(member.hire_date).fromNow().replace("ago","") : ""}
+                        Full Time | {member && member.hire_date ? Capitalize(moment(member.hire_date).fromNow().replace("ago","")) : ""}
                       </Text>
                   </View>
                   <Button 

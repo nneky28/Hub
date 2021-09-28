@@ -14,7 +14,9 @@ export const APIFunction = {
   next_of_kins : (business_id,id) => `/c/${business_id}/employees/${id}/next-of-kin/`,
   emergency  : (business_id,id) => `/c/${business_id}/employees/${id}/emergency-contact/`,
   update_photo : (business_id,id) => `/c/${business_id}/employees/${id}/update-photo/`,
-  edit : (business_id,id) => `/c/${business_id}/employees/${id}/`
+  edit : (business_id,id) => `/c/${business_id}/employees/${id}/`,
+  trainings : (business_id,id) => `/c/${business_id}/employees/${id}/training/`,
+  training_hist : (business_id,id) => `/c/${business_id}/employees/${id}/training/history/`
 }
 export const getAPIs = (path, token) => {
     return new Promise((resolve, reject) => {

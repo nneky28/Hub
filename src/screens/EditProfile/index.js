@@ -44,21 +44,24 @@ export default function EditProfile({navigation}) {
             <View style={styles.line} />
             <View style={styles.mainViewContainer}>
                 <View style={styles.userInfoContainer}>
-                    <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle} /> 
+                    {
+                        about && about.photo ? (
+                            <Image resizeMode="contain" 
+                                source={{uri:about.photo}}
+                                style={styles.avatarStyle}/>
+                        ) : (
+                            <Image source={require('../../assets/images/dummy/placeholder.png')} 
+                                style={styles.avatarStyle} 
+                            /> 
+                        )
+                    }
+                    
                     <View style={[CommonStyles.marginTop_2, CommonStyles.marginBottom_2]}>
                         <TouchableOpacity
                         onPress={() => navigation.navigate('EditPhoto')}
                         activeOpacity={0.8}
                         style={[styles.buttonStyle]}>
-                            {
-                                about && about.photo ? (
-                                    <Image resizeMode="contain" 
-                                        source={{uri:about.photo}}
-                                        style={styles.cameraIcon}/>
-                                ) : (
-                                    <Image resizeMode="contain" source={cameraIcon} style={styles.cameraIcon}/>
-                                )
-                            }
+                            <Image resizeMode="contain" source={cameraIcon} style={styles.cameraIcon}/>
                             <Text style={[styles.buttonText]}>Edit Photo</Text>
                         </TouchableOpacity>
                         <Text numberOfLines={1} style={styles.subText}>Click a section below to edit</Text>
