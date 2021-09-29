@@ -14,6 +14,10 @@ import CustomButton from '../../component2/button/Button';
 import CustomInput from '../CustomInput';
 import CustomDatePicker from '../CustomDatePicker';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { setLoaderVisible } from '../../Redux/Actions/Config';
+import { APIFunction, postAPIs } from '../../utills/api';
+import { getData, ToastError } from '../../utills/Methods';
 
 const ContactModal = ({isVisible, onHide,data}) => {
 //   email: ""
@@ -102,21 +106,67 @@ const DocumentModal = ({isVisible, onHide}) => {
   );
 };
 
-const TimeoffModal = ({isVisible, onHide,timeoff_id}) => {
+const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
+  const dispatch = useDispatch();
   console.log("TimeoffModal",timeoff_id)
   const defaultColor = "";
   const blackColor = "";
   const [data,setData] = React.useState({
       "timeoff": timeoff_id,
-      "start_date": "2021-09-28",
-      "end_date": "2021-09-28",
-      "reason": "string"
+      "start_date": "",
+      "end_date": "",
+      "reason": ""
     })
   const handleSubmit = async () => {
     try{
-      return console.log("handleSubmit",data,timeoff_id)
+      let failed = false;
+      required = ["start_date","end_date",
+          "reason"]
+      for(let req of required){
+          console.log("data--",data[req])
+          if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
+      }
+      
+      if(failed) {
+        return hideAndOpen("All fields are required")
+      };
+      if(!moment(data.start_date).isBefore(moment(data.end_date))){
+        return hideAndOpen("Start date must be before end date")
+      }
+      if(moment(new Date()).isAfter(moment(data.start_date)) || moment(new Date()).isAfter(moment(data.end_date))){
+        return hideAndOpen("Date must be in the future")
+      }
+      let check = active && Array.isArray(active) && active.some(item=>{
+        return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
+        item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
+      });
+      console.log("---||---hideAndOpen")
+      if(!check){
+        return hideAndOpen("Please select dates that do not fall within active timeoffs")
+      }
+      console.log("---||---hideAndOpen")
+      let token = await getData("token");
+      let user =  await getData("user");
+      let about_me = await getData("about_me")
+      let biz = user.employee_user_memberships &&
+      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
+      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
+      dispatch(setLoaderVisible(true));
+      console.log("---||---hideAndOpen")
+      let timeoff_url = APIFunction.timeoff_reqs(biz.business_id,about_me.id)
+      let fd = {
+        ...data,timeoff : timeoff_id
+      }
+      let res = await postAPIs(timeoff_url,token,fd);
+      console.log("res---",res)
+      //console.log("handleSubmit",data,timeoff_id)
+      dispatch(setLoaderVisible(false));
+      closeAndRefresh()
     }catch(err){
-      console.log("err---",err)
+      let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
+      console.log("err|||",err,msg)
+      dispatch(setLoaderVisible(false));
+      return hideAndOpen(msg)
     }
   }
   return (
@@ -151,7 +201,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id}) => {
                       textSize={20}
                       textWeight={'bold'}
                       textcolor={defaultColor}
-                      displayText={'Payoff Request'}
+                      displayText={'Timeoff Request'}
                       textStyle={{
                         marginTop: -3,
                       }}
@@ -173,6 +223,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id}) => {
                     onChangeData={(value)=>{
                       setData({...data,start_date : value})
                     }}
+                    maximumDate={null}
                 />
                 <Field
                     name="end_date"
@@ -182,6 +233,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id}) => {
                     onChangeData={(value)=>{
                       setData({...data,end_date : value})
                     }}
+                    maximumDate={null}
                 />
                   <Field
                     component={CustomInput}
@@ -190,7 +242,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id}) => {
                     keyboardType="default"
                     value={data.email}
                     onChangeData={(value)=>{
-
+                      setData({...data,reason : value})
                     }}
                     height={100}
                     multiline={true}

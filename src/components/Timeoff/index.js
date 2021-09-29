@@ -251,7 +251,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
               key={Math.random()}
               unfilledColor={AppColors.gray1}
               progress={
-                (status == 'active' || status == 'fewDays') && fData && fData.days_taken &&
+                fData && fData.days_taken &&
                 fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : 0
               }
               direction='counter-clockwise'
@@ -285,14 +285,14 @@ const RenderItemVertical = ({item,fData,setModal}) => {
               ) : status == 'fewDays' ? (
                 <>
                   <Text style={[styles.text, {color: AppColors.green}]}>
-                    36 Days
+                    {fData && fData.timeoff && fData.timeoff.max_days_allowed ? fData.timeoff.max_days_allowed : 0} Days
                   </Text>
                   <Text style={[styles.text2, {color: AppColors.green}]}>
                     Available
                   </Text>
                   <View style={styles.line3} />
                   <Text style={[styles.text, {color: AppColors.black2}]}>
-                    14 Days
+                    {fData && fData.days_taken? fData.days_taken : 0} Days
                   </Text>
                   <Text style={[styles.text2, {color: AppColors.black2}]}>
                     Taken
@@ -301,11 +301,20 @@ const RenderItemVertical = ({item,fData,setModal}) => {
               ) : (
                 <>
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    11
+                    {fData && fData.days_requested ? fData.days_requested : 0}
                   </Text>
                   <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
                   </Text>
+                  {
+                    fData && fData.timeoff && fData.timeoff.is_paid ? (
+                      <Button
+                        title="Paid"
+                        textStyle={styles.buttonText}
+                        containerStyle={styles.button}
+                      />
+                    ) : null
+                  }
                 </>
               )}
             </View>
@@ -333,7 +342,12 @@ const RenderItemVertical = ({item,fData,setModal}) => {
           <View style={[styles.line, {marginTop: height(2)}]} />
           <TouchableOpacity activeOpacity={0.8}
             onPress={()=>{
-              setModal ? setModal(fData.id) : null
+              if(status === "active"){
+                return setModal(fData.id)
+              }
+              if(status === "request"){
+                return 
+              }
               //console.log("--||--")
             }}
           >
@@ -343,9 +357,12 @@ const RenderItemVertical = ({item,fData,setModal}) => {
               <Text style={[styles.endText, {color: AppColors.green}]}>
                 Request
               </Text>
-            ) : (
-              <Text style={styles.endText}>Cancel Request</Text>
-            )}
+            ) : null}
+            {
+              status === "request" ? (
+                <Text style={styles.endText}>Cancel Request</Text>
+              ) : null
+            }
           </TouchableOpacity>
         </>
       ) : null}

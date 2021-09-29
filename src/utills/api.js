@@ -1,4 +1,6 @@
 import axios from "axios";
+import moment from "moment";
+import { getData, storeData } from "./Methods";
 
 export const endPoint = 'https://coolowo.com';
 
@@ -21,7 +23,13 @@ export const APIFunction = {
   timeoff_reqs : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`
 }
-export const getAPIs = (path, token) => {
+export const getAPIs = async (path, token) => {
+    let expiry = await getData("token_expiry");
+    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+       await refreshToken()
+    }
+    let _token = await getData("token");
+    console.log("_token",_token)
     return new Promise((resolve, reject) => {
       let split = path.split("/?");
       let url = split && split.length > 1 ? 
@@ -30,7 +38,7 @@ export const getAPIs = (path, token) => {
       axios
         .get(`${url}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${_token}`,
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
             'Expires': 0
@@ -48,7 +56,12 @@ export const getAPIs = (path, token) => {
     });
   };
   
-export const postAPIs = (path, token, fd) => {
+export const postAPIs = async (path, token, fd) => {
+  let expiry = await getData("token_expiry");
+    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+       await refreshToken()
+    }
+    let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -56,7 +69,7 @@ export const postAPIs = (path, token, fd) => {
         data: fd,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${_token}`,
         },
       })
         .then(result => {
@@ -75,7 +88,12 @@ export const postAPIs = (path, token, fd) => {
     });
   };
   
-export const putAPIs = (path, token, fd) => {
+export const putAPIs = async (path, token, fd) => {
+  let expiry = await getData("token_expiry");
+    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+       await refreshToken()
+    }
+    let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -83,7 +101,7 @@ export const putAPIs = (path, token, fd) => {
         data: fd,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${_token}`,
         },
       })
         .then(result => {
@@ -102,7 +120,12 @@ export const putAPIs = (path, token, fd) => {
     });
   };
   
-export const patchAPIs = (path, token, fd) => {
+export const patchAPIs = async (path, token, fd) => {
+  let expiry = await getData("token_expiry");
+    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+       await refreshToken()
+    }
+    let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -110,7 +133,7 @@ export const patchAPIs = (path, token, fd) => {
         data: fd,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${_token}`,
         },
       })
         .then(result => {
@@ -154,6 +177,11 @@ export const postNoToken = (path, fd) => {
   };
   
 export const storeFile = async (path, token, fd) => {
+  let expiry = await getData("token_expiry");
+    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+       await refreshToken()
+    }
+    let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -162,7 +190,7 @@ export const storeFile = async (path, token, fd) => {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${_token}`,
         },
       })
         .then(res => {
@@ -180,6 +208,11 @@ export const storeFile = async (path, token, fd) => {
   };
   
 export const storeFilePut = async (path, token, fd) => {
+  let expiry = await getData("token_expiry");
+    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+       await refreshToken()
+    }
+    let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -188,7 +221,7 @@ export const storeFilePut = async (path, token, fd) => {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${_token}`,
         },
       })
         .then(res => {
@@ -206,21 +239,19 @@ export const storeFilePut = async (path, token, fd) => {
       //setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
     });
   };
-  
-  const logError = (endPoint,path,error) => {
-    let msg = error.response ? error.response : error;
-    let fd = {
-      endpoint : `${endPoint}${path}`,
-      log : JSON.stringify(msg),
-      device : Platform.OS
+
+  const refreshToken = async () => {
+    try{
+        console.log("refreshToken-ing")
+        let refresh = await getData("refresh")
+        let res = await axios.post(`${endPoint}/accounts/auth/token/refresh/`,
+          {
+            "refresh": refresh
+          }
+        );
+        await storeData('token_expiry',moment(new Date()).add(30,'minutes'))
+        await storeData("token",res.data.access)
+    }catch(err){
+        console.log("refresh-error",err);
     }
-    console.log("logError",fd)
-    axios({
-      url: `${endPoint}/logs/`,
-      method: 'post',
-      data: fd,
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-  }
+}

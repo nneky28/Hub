@@ -16,7 +16,7 @@ import { PageLoader } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
-import { getData, ToastError } from '../../utills/Methods'
+import { getData, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
 
 
@@ -105,7 +105,7 @@ export default function TimeOff({navigation}) {
                 req_res.results.length > 0
             ){
                 tabs.push("Request")
-                setRequests(requests)
+                setRequests(req_res.results)
             }
             console.log("Tabs---",tabs)
             setActive(active);
@@ -186,7 +186,7 @@ export default function TimeOff({navigation}) {
                                     // data={
                                     //     ['balance', 'fewDays', 'balance', 'balance']
                                     // }
-                                    data={'balance'}
+                                    data={'fewDays'}
                                     load={history}
                                     setModal={(id)=>{
                                         console.log("id---",id)
@@ -205,7 +205,6 @@ export default function TimeOff({navigation}) {
                                     data={'balance'}
                                     load={available}
                                     setModal={(id)=>{
-                                        console.log("id---",id)
                                         setCurrent(id)
                                         setModal(true)
                                     }}
@@ -215,7 +214,23 @@ export default function TimeOff({navigation}) {
                     </View>
                 )
             }
-            <TimeoffModal isVisible={modal} onHide={() => setModal(false)} timeoff_id={current}/>
+            <TimeoffModal 
+                isVisible={modal} 
+                onHide={()=>setModal(false)}
+                closeAndRefresh={() => {
+                    setModal(false)
+                    ToastSuccess("Request has been submitted for processing")
+                    getTimeOffs();
+                }} 
+                timeoff_id={current} active={active}
+                hideAndOpen={(msg)=>{
+                    setModal(false);
+                    ToastError(msg)
+                    setTimeout(()=>{
+                        setModal(true);
+                    },1000)
+                }}
+            />
         </ScreenWrapper>
     )
 }

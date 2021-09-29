@@ -18,6 +18,7 @@ import CustomInput from '../../components/CustomInput';
 import { employees_me, getAPIs, postAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
+import moment from 'moment';
 
 
 export default function Dashboard(props) {
@@ -46,6 +47,9 @@ export default function Dashboard(props) {
       dispatch(setLoaderVisible(true));
       let res = await postNoToken('/accounts/auth/employees/login/',fd);
       let token  = res.access_token ? res.access_token : null;
+      await storeData("token",token)
+      console.log("postNoToken-res",res,token)
+      let refresh = res.refresh_token ? res.refresh_token : null;
       let business = res.user.employee_user_memberships && 
       Array.isArray(res.user.employee_user_memberships) && 
       res.user.employee_user_memberships.length > 0 ? 
@@ -53,9 +57,10 @@ export default function Dashboard(props) {
       if(!business) return ToastError("No business connected to this account");
       let employees_me_url = employees_me(business.business_id);
       let about_me = await getAPIs(employees_me_url,token);
+      await storeData("refresh",refresh);
       await storeData("about_me",about_me)
-      await storeData("token",token)
       await storeData("user",res.user);
+      await storeData('token_expiry',moment(new Date()).add(30,'minutes'))
       console.log("Login was successful")
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));

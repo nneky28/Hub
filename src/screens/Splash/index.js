@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text} from 'react-native';
 import styles from './styles';
 import Button from '../../components/Button';
@@ -8,22 +8,26 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import {showMessage} from 'react-native-flash-message';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
+import { getData } from '../../utills/Methods';
 
 const Splash = (props) => {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
-  const loginMethod = () => {
-    dispatch(setLoaderVisible(true));
+  const loginMethod = async () => {
+    //dispatch(setLoaderVisible(true));
+    let user = await getData("user") 
+    console.log("Splash---",user)
     setTimeout(() => {
-      showMessage({
-        message: 'Success',
-        description: 'Succfully logged In',
-        type: 'success',
-      });
-      dispatch(setLoaderVisible(false));
-      dispatch(login({userName: 'John Doe'}));
+      if(user){
+        dispatch(login({userName: user}));
+      }else{
+        props.navigation.navigate("Onboard");
+      }
     }, 1500);
   };
+  useEffect(()=>{
+    loginMethod()
+  },[])
   return (
     <ScreenWrapper statusBarColor={AppColors.white}>
       <View style={styles.mainViewContainer}>

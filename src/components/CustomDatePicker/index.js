@@ -10,7 +10,7 @@ import moment from 'moment';
 const CustomDatePicker = (props) => {
 
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [dateClicked, setDateClicked] = useState(false);
 
   const {
@@ -33,21 +33,23 @@ const CustomDatePicker = (props) => {
       setDateClicked(!dateClicked)
     }}
     >
-    { !dateClicked ? <Text style={styles.text1}>{date.toDateString()}</Text> :
+    { !dateClicked ? <Text style={styles.text1}>
+        {date ? date.toDateString() : props.placeholder ? props.placeholder : new Date().toDateString()}
+      </Text> :
     <Text style={styles.text1}>{props.placeholder ? props.placeholder : "Date of Birth"}</Text>
     }
     <Image resizeMode="contain" source={downIcon} style={[styles.downIcon2]}/>
     </TouchableOpacity>
     {dateClicked &&  <View style={{marginTop: 10}}>
         <DatePicker 
-        date={date} 
+        date={date || new Date()} 
         onDateChange={(newDate) => {
           setDate(newDate);
           props.onChangeData ? props.onChangeData(moment(newDate).format("YYYY-MM-DD")) : null
           //onChange(newDate.toDateString())
         }} 
         mode="date" 
-        maximumDate={new Date()}
+        maximumDate={props.maximumDate === null ? props.maximumDate : new Date()}
         />
     </View>}
     {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}

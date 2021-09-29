@@ -13,7 +13,9 @@
     "assembleDebug": "npm-run-all assembleDebug:*",
     "assembleDebug:unlink": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "assembleDebug:clean": "cd android && ./gradlew clean",
-    "assembleDebug:assemble": "cd android && ./gradlew assembleDebug"
+    "assembleDebug:assemble": "cd android && ./gradlew assembleDebug",
+    "android_staging" : "appcenter codepush release-react -a Torilo/myedge-android -d Staging",
+    "android_prod" : "appcenter codepush release-react -a Torilo/myedge-android -d Production"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
@@ -23,6 +25,9 @@
     "@react-navigation/drawer": "^6.1.4",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/stack": "^6.0.7",
+    "appcenter": "4.3.0",
+    "appcenter-analytics": "4.3.0",
+    "appcenter-crashes": "4.3.0",
     "axios": "^0.21.4",
     "formik": "^2.2.9",
     "lottie-ios": "^3.2.3",
@@ -34,6 +39,7 @@
     "react": "17.0.1",
     "react-content-loader": "^6.0.3",
     "react-native": "0.64.2",
+    "react-native-code-push": "^7.0.3",
     "react-native-date-picker": "^3.4.1",
     "react-native-dimension": "^1.0.6",
     "react-native-flash-message": "^0.1.23",

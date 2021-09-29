@@ -27,28 +27,19 @@ import Training from '../screens/Training';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
 import { getData } from '../utills/Methods';
-
+import codePush from 'react-native-code-push';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
-export default function Routes() {
+const Routes = () => {
   const isLogin = useSelector((state) => state.Auth.isLogin);
-  console.log("isLogin>>>",isLogin)
-  // const [login,setLogin] = React.useState(null);
-  // const getLogin = async () => {
-  //   let user = await getData("user")
-  //   setLogin(user)
-  // }
-  // useEffect(()=>{
-  //   getLogin()
-  // },[])
   return (
     <NavigationContainer>
       <Loader />
       {!isLogin ? (
         <Stack.Navigator
-          initialRouteName="Onboard"
+          initialRouteName="Splash"
           screenOptions={{headerMode: false}}>
             <Stack.Screen name="Splash" component={Splash}/>
             <Stack.Screen name="Onboard" component={Onboard}/>
@@ -119,3 +110,5 @@ export default function Routes() {
     </NavigationContainer>
   );
 }
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
+export default codePush(codePushOptions)(Routes);
