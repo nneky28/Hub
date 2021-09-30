@@ -8,23 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.m */; };
+		139930F7C525459A8F277015 /* black-sans-condensed-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		21D5CB1457BC4758B4111BC2 /* black-sans-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = E38196064A284CA192A98013 /* black-sans-light.otf */; };
+		359D3BF36480464FAAE60CBD /* black-sans-condensed-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */; };
+		4B4ED668EC8642498BD052C7 /* black-sans-ultralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */; };
+		62A8FFB3EAEA4F08A5FDEB72 /* black-sans-thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */; };
+		7397D0F3759648188C8BC3D7 /* black-sans-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */; };
 		80DB09BF3FEF459BB8444460 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA5297D7092F678F89580ED7 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		88EC2652F2E34D25948F3670 /* black-sans-condensed-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */; };
+		8AA80F9C7E7148DF9BC98EFC /* black-sans-condensed-book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */; };
 		971BA02D2CE98B6D75999D83 /* libPods-ReactNativeBoilerPlaceHermes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CDEB6724D1C23C38CA087E /* libPods-ReactNativeBoilerPlaceHermes.a */; };
 		DA8CD1D177EB4F28B2DBFBB9 /* black-sans-black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9BC858F8B1084581871D904D /* black-sans-black.otf */; };
-		7397D0F3759648188C8BC3D7 /* black-sans-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */; };
-		139930F7C525459A8F277015 /* black-sans-condensed-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */; };
-		8AA80F9C7E7148DF9BC98EFC /* black-sans-condensed-book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */; };
-		88EC2652F2E34D25948F3670 /* black-sans-condensed-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */; };
-		359D3BF36480464FAAE60CBD /* black-sans-condensed-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */; };
-		21D5CB1457BC4758B4111BC2 /* black-sans-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = E38196064A284CA192A98013 /* black-sans-light.otf */; };
 		F25AB86299A94AB2A34AFE26 /* black-sans-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6C713A251D6042C78A1E32AD /* black-sans-regular.otf */; };
 		FEDDB2ED9AE540EFBD223DAA /* black-sans-semi-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */; };
-		62A8FFB3EAEA4F08A5FDEB72 /* black-sans-thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */; };
-		4B4ED668EC8642498BD052C7 /* black-sans-ultralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +41,7 @@
 		00E356EE1AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReactNativeBoilerPlaceHermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReactNativeBoilerPlaceHermesTests.m; sourceTree = "<group>"; };
+		1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-book.otf"; path = "../src/assets/fonts/black-sans-condensed-book.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativeBoilerPlaceHermes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeBoilerPlaceHermes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReactNativeBoilerPlaceHermes/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ReactNativeBoilerPlaceHermes/AppDelegate.m; sourceTree = "<group>"; };
@@ -48,24 +49,23 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReactNativeBoilerPlaceHermes/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReactNativeBoilerPlaceHermes/main.m; sourceTree = "<group>"; };
 		18CDEB6724D1C23C38CA087E /* libPods-ReactNativeBoilerPlaceHermes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeBoilerPlaceHermes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-light.otf"; path = "../src/assets/fonts/black-sans-condensed-light.otf"; sourceTree = "<group>"; };
 		29980341861F496938CAFC80 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig"; sourceTree = "<group>"; };
+		329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-semi-bold.otf"; path = "../src/assets/fonts/black-sans-semi-bold.otf"; sourceTree = "<group>"; };
+		3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-bold.otf"; path = "../src/assets/fonts/black-sans-condensed-bold.otf"; sourceTree = "<group>"; };
+		40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-medium.otf"; path = "../src/assets/fonts/black-sans-condensed-medium.otf"; sourceTree = "<group>"; };
 		52C83E91C98475784388DFE0 /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig"; sourceTree = "<group>"; };
+		6C713A251D6042C78A1E32AD /* black-sans-regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-regular.otf"; path = "../src/assets/fonts/black-sans-regular.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativeBoilerPlaceHermes/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-thin.otf"; path = "../src/assets/fonts/black-sans-thin.otf"; sourceTree = "<group>"; };
+		9BC858F8B1084581871D904D /* black-sans-black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-black.otf"; path = "../src/assets/fonts/black-sans-black.otf"; sourceTree = "<group>"; };
 		A471253B87D1D6E52644495F /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-ultralight.otf"; path = "../src/assets/fonts/black-sans-ultralight.otf"; sourceTree = "<group>"; };
 		BA5297D7092F678F89580ED7 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBC943C33D64E2D488051FFB /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes.release.xcconfig"; sourceTree = "<group>"; };
+		CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-bold.otf"; path = "../src/assets/fonts/black-sans-bold.otf"; sourceTree = "<group>"; };
+		E38196064A284CA192A98013 /* black-sans-light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-light.otf"; path = "../src/assets/fonts/black-sans-light.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		9BC858F8B1084581871D904D /* black-sans-black.otf */ = {isa = PBXFileReference; name = "black-sans-black.otf"; path = "../src/assets/fonts/black-sans-black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */ = {isa = PBXFileReference; name = "black-sans-bold.otf"; path = "../src/assets/fonts/black-sans-bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */ = {isa = PBXFileReference; name = "black-sans-condensed-bold.otf"; path = "../src/assets/fonts/black-sans-condensed-bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */ = {isa = PBXFileReference; name = "black-sans-condensed-book.otf"; path = "../src/assets/fonts/black-sans-condensed-book.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */ = {isa = PBXFileReference; name = "black-sans-condensed-light.otf"; path = "../src/assets/fonts/black-sans-condensed-light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */ = {isa = PBXFileReference; name = "black-sans-condensed-medium.otf"; path = "../src/assets/fonts/black-sans-condensed-medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		E38196064A284CA192A98013 /* black-sans-light.otf */ = {isa = PBXFileReference; name = "black-sans-light.otf"; path = "../src/assets/fonts/black-sans-light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		6C713A251D6042C78A1E32AD /* black-sans-regular.otf */ = {isa = PBXFileReference; name = "black-sans-regular.otf"; path = "../src/assets/fonts/black-sans-regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */ = {isa = PBXFileReference; name = "black-sans-semi-bold.otf"; path = "../src/assets/fonts/black-sans-semi-bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */ = {isa = PBXFileReference; name = "black-sans-thin.otf"; path = "../src/assets/fonts/black-sans-thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */ = {isa = PBXFileReference; name = "black-sans-ultralight.otf"; path = "../src/assets/fonts/black-sans-ultralight.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +128,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		6897A7AF3C134653A420D2E7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9BC858F8B1084581871D904D /* black-sans-black.otf */,
+				CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */,
+				3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */,
+				1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */,
+				225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */,
+				40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */,
+				E38196064A284CA192A98013 /* black-sans-light.otf */,
+				6C713A251D6042C78A1E32AD /* black-sans-regular.otf */,
+				329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */,
+				93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */,
+				AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,25 +190,6 @@
 			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		6897A7AF3C134653A420D2E7 /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				9BC858F8B1084581871D904D /* black-sans-black.otf */,
-				CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */,
-				3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */,
-				1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */,
-				225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */,
-				40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */,
-				E38196064A284CA192A98013 /* black-sans-light.otf */,
-				6C713A251D6042C78A1E32AD /* black-sans-regular.otf */,
-				329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */,
-				93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */,
-				AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
