@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView} from 'react-native';
+import React, { useEffect } from 'react';
+import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler} from 'react-native';
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
@@ -22,17 +22,24 @@ import moment from 'moment';
 
 
 export default function Dashboard(props) {
-  const defaultColor = "";
-  const blackColor = "";
+  const defaultColor = "black";
+  const blackColor = "black";
   const [data,setData] = React.useState({
     // email : "jane@email.com",
     // password : "jane12345"
+
+    //real deal
     email : "leo@denzel.com",
-    //email : "temiloluwaodumosu25@gmail.com",
     password : "asd123def"
+    //email : "",
+    //password : ""
   })
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
+    return () => backHandler.remove()
+  }, [])
   const loginMethod = async () => {
     try{
       if(!data.email || data.email.trim() === "" || !data.password
@@ -72,7 +79,7 @@ export default function Dashboard(props) {
       if(err.msg && err.msg.code === "invalid_credentials"){
         msg = "Unable to login with the provided credentials"
       }
-      msg = err.msg && err.msg.code && typeof(err.msg.code) == "string" ? err.msg.code  : "Something went wrong. Please retry"
+      msg = err.msg && err.msg.code && typeof(err.msg.code) == "string" ? "Unable to login with the provided credentials."  : "Something went wrong. Please retry"
       ToastError(msg)
     }
   };
@@ -125,17 +132,19 @@ export default function Dashboard(props) {
           onChangeData={(value)=>{
             setData({...data,email : value})
           }}
+          color={AppColors.black}
         />
           <Field
-          component={CustomInput}
-          name="password"
-          placeholder="Password"
-          value={data.password}
-          secure={true}
-          onChangeData={(value)=>{
-            setData({...data,password : value})
-          }}
-          secureTextEntry={true}
+            component={CustomInput}
+            name="password"
+            placeholder="Password"
+            value={data.password}
+            secure={true}
+            onChangeData={(value)=>{
+              setData({...data,password : value})
+            }}
+            secureTextEntry={true}
+            color={AppColors.black}
           />
         <View style={{width: '100%', marginTop : '5%'}}>
           <CustomButton

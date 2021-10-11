@@ -342,7 +342,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
           <View style={[styles.line, {marginTop: height(2)}]} />
           <TouchableOpacity activeOpacity={0.8}
             onPress={()=>{
-              if(status === "active"){
+              if(status === "balance"){
                 return setModal(fData.id)
               }
               if(status === "request"){

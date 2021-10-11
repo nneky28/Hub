@@ -63,11 +63,11 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setLoading(false);
 
     }catch(err){
+      console.log("Err--",err);
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       console.log("err|||",err,msg)
       ToastError(msg)
     }
-
   }
   useEffect(()=>{
     getInfo()

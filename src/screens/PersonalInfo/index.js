@@ -2,6 +2,8 @@ import { Field, Formik } from 'formik';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import { ActivityIndicator } from 'react-native-paper';
 import { leftIcon } from '../../assets/images';
 import Button from '../../components/Button';
@@ -118,9 +120,9 @@ export default function PersonalInfo({navigation}) {
         getProfile()
     },[])
     return (
-        <ScreenWrapper scrollEnabled={true}>
-
-            <View style={styles.mainViewContainer}>
+    <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView>
+        <View style={styles.mainViewContainer}>
                 <Formik
                     initialValues={{
                         firstName: '',
@@ -168,6 +170,7 @@ export default function PersonalInfo({navigation}) {
                         value={data.firstName}
                         setData={setData}
                         data={data}
+                        color={AppColors.black}
                         onChangeData={(value)=>setData({...data,firstName : value})}
                     />
                     <Field
@@ -176,6 +179,7 @@ export default function PersonalInfo({navigation}) {
                         placeholder="Middle Name"
                         value={data.middleName}
                         onChangeData={(value)=>setData({...data,middleName : value})}
+                        color={AppColors.black}
                     />
                     <Field
                         component={CustomInput}
@@ -183,6 +187,7 @@ export default function PersonalInfo({navigation}) {
                         placeholder="Last Name"
                         value={data.lastName}
                         onChangeData={(value)=>setData({...data,lastName : value})}
+                        color={AppColors.black}
                     />
                     <Field
                         name="gender" 
@@ -190,6 +195,7 @@ export default function PersonalInfo({navigation}) {
                         component={CustomModalDropdown}
                         value={data.gender}
                         onChangeData={(value)=>setData({...data,gender : value})}
+                        color={AppColors.black}
                     />
 
                     <Field
@@ -198,6 +204,7 @@ export default function PersonalInfo({navigation}) {
                         component={CustomModalDropdown}
                         value={data.maritalStatus}
                         onChangeData={(value)=>setData({...data,maritalStatus : value})}
+                        color={AppColors.black}
                     />
                     
 
@@ -208,17 +215,19 @@ export default function PersonalInfo({navigation}) {
                         value={data.dateOfBirth}
                         onChangeData={(value)=>setData({...data,dateOfBirth : value})
                         }
+                        color={AppColors.black}
                     />
             
                     
                     <Field
-                    component={CustomInput}
-                    name="email"
-                    placeholder="Email"
-                    keyboardType="email-address"
-                    editable={false}
+                        component={CustomInput}
+                        name="email"
+                        placeholder="Email"
+                        keyboardType="email-address"
+                        editable={false}
                         value={data.email}
                         onChangeData={(value)=>setData({...data,email : value})}
+                        color={AppColors.black}
                     />
                     <Field
                         component={CustomInput}
@@ -226,6 +235,7 @@ export default function PersonalInfo({navigation}) {
                         placeholder="Address"
                         value={data.address}
                         onChangeData={(value)=>setData({...data,address : value})}
+                        color={AppColors.black}
                     />
                     <Field
                         component={CustomInput}
@@ -233,6 +243,7 @@ export default function PersonalInfo({navigation}) {
                         placeholder="Address 2"
                         value={data.address2}
                         onChangeData={(value)=>setData({...data,address2 : value})}
+                        color={AppColors.black}
                     />
                     <Field
                         component={CustomInput}
@@ -241,23 +252,23 @@ export default function PersonalInfo({navigation}) {
                         keyboardType='phone-pad'
                         value={data.mobileNumber1}
                         onChangeData={(value)=>setData({...data,mobileNumber1 : value})}
+                        color={AppColors.black}
                     />
                     <Field
-                    component={CustomInput}
-                    name="mobileNumber2"
-                    placeholder="Mobile Number 2 (Optional)"
-                    keyboardType='phone-pad'
+                        component={CustomInput}
+                        name="mobileNumber2"
+                        placeholder="Mobile Number 2 (Optional)"
+                        keyboardType='phone-pad'
                         value={data.mobileNumber2}
                         onChangeData={(value)=>setData({...data,mobileNumber2 : value})}
+                        color={AppColors.black}
                     />
 
                 </>
                 )}
             </Formik>
-
-
-                
             </View>
-        </ScreenWrapper>  
+        </ScrollView>
+    </KeyboardAvoidingScrollView>
     );
 }

@@ -13,7 +13,7 @@ import styles from './styles';
 export default function EditProfile({navigation}) {
     const [about,setAbout] = useState(null)
     const [kins,setKins] = useState(null)
-    const [loading,setLoading] = useState(false);
+    const [loading,setLoading] = useState(true);
     const [banking,setBanking] = useState(null);
     const getProfile = async () => {
         try{
@@ -38,7 +38,7 @@ export default function EditProfile({navigation}) {
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
                 </TouchableOpacity>
                 <Text numberOfLines={1} style={styles.screenTitle}>
-                Edit Profile
+                    Edit Profile
                 </Text>
             </View>
             <View style={styles.line} />

@@ -9,6 +9,7 @@ import AppColors from '../../utills/AppColors';
 import {showMessage} from 'react-native-flash-message';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
 import { getData } from '../../utills/Methods';
+import CustomText from '../../component2/customText/CustomText';
 
 const Splash = (props) => {
   const user = useSelector((state) => state.Auth.user);
@@ -21,7 +22,7 @@ const Splash = (props) => {
       if(user){
         dispatch(login({userName: user}));
       }else{
-        props.navigation.navigate("Onboard");
+       props.navigation.navigate("Onboard");
       }
     }, 1500);
   };
@@ -30,7 +31,21 @@ const Splash = (props) => {
   },[])
   return (
     <ScreenWrapper statusBarColor={AppColors.white}>
-      <View style={styles.mainViewContainer}>
+      <View style={{
+        display : 'flex',
+        flex : 1,
+        alignItems : "center",
+        justifyContent : "center"
+      }}>
+        <CustomText
+            textSize={30}
+            textWeight={'bold'}
+            textcolor={'black'}
+            displayText={'MyCoolOwo'}
+            textStyle={{
+              marginTop: -3,
+            }}
+        />
           {/* <Image src={} /> */}
       </View>
     </ScreenWrapper>

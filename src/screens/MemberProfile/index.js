@@ -25,7 +25,7 @@ if (Platform.OS === 'android') {
 
 export default function MemberProfile({route,navigation}) {
     const [modal, setModal] = useState(false);
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(true)
     const [member,setMember] = useState(null)
     const [members,setMembers] = useState([]);
 
@@ -34,8 +34,14 @@ export default function MemberProfile({route,navigation}) {
       <View 
       style={[styles.listItemContainer]}
       >
-          <View style={CommonStyles.rowJustifySpaceBtw}>
-              <Image source={item.avatar} style={styles.avatarSmall} />
+          <View style={CommonStyles.rowJustifySpaceBtw}> 
+              {
+                item.avatar ? (
+                  <Image source={{uri : item.avatar}} style={styles.avatarSmall} />
+                ) : (
+                  <Image source={require("../../assets/images/dummy/placeholder.png")} style={styles.avatarSmall} />
+                )
+              }
               <View style={styles.textContainer}>
                   <Text style={styles.titleText}>{item.title}</Text>
                   <Text style={styles.subText}>{item.designation}</Text>
@@ -131,9 +137,9 @@ export default function MemberProfile({route,navigation}) {
                         <PersonItem item={
                           {
                             key: '1',
-                            title: member && member.line_manager ? member.line_manager : "",
+                            title: `${member && member.line_manager && member.line_manager.first_name ? Capitalize(member.line_manager.first_name) : ""} ${member && member.line_manager && member.line_manager.last_name ? Capitalize(member.line_manager.last_name) : ""}`,
                             designation: 'Junior Developer',
-                            avatar: "../../assets/images",
+                            avatar: member && member.line_manager && member.line_manager.photo ? member.line_manager.photo : null,
                           }
                         }/>
                       </React.Fragment>

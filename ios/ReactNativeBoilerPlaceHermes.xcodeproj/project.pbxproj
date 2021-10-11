@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,16 +12,16 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1DC724CBFE9B4C861448248D /* libPods-ReactNativeBoilerPlaceHermes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1646A38931CDDC3FB83DDAB /* libPods-ReactNativeBoilerPlaceHermes.a */; };
 		21D5CB1457BC4758B4111BC2 /* black-sans-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = E38196064A284CA192A98013 /* black-sans-light.otf */; };
+		358B71555172900ABB67B34C /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03384E24917BC1E1EF29434A /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */; };
 		359D3BF36480464FAAE60CBD /* black-sans-condensed-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */; };
 		4B4ED668EC8642498BD052C7 /* black-sans-ultralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */; };
 		62A8FFB3EAEA4F08A5FDEB72 /* black-sans-thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */; };
 		7397D0F3759648188C8BC3D7 /* black-sans-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */; };
-		80DB09BF3FEF459BB8444460 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA5297D7092F678F89580ED7 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		88EC2652F2E34D25948F3670 /* black-sans-condensed-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */; };
 		8AA80F9C7E7148DF9BC98EFC /* black-sans-condensed-book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */; };
-		971BA02D2CE98B6D75999D83 /* libPods-ReactNativeBoilerPlaceHermes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CDEB6724D1C23C38CA087E /* libPods-ReactNativeBoilerPlaceHermes.a */; };
 		DA8CD1D177EB4F28B2DBFBB9 /* black-sans-black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9BC858F8B1084581871D904D /* black-sans-black.otf */; };
 		F25AB86299A94AB2A34AFE26 /* black-sans-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6C713A251D6042C78A1E32AD /* black-sans-regular.otf */; };
 		FEDDB2ED9AE540EFBD223DAA /* black-sans-semi-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */; };
@@ -41,30 +41,30 @@
 		00E356EE1AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReactNativeBoilerPlaceHermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReactNativeBoilerPlaceHermesTests.m; sourceTree = "<group>"; };
-		1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-book.otf"; path = "../src/assets/fonts/black-sans-condensed-book.otf"; sourceTree = "<group>"; };
+		03384E24917BC1E1EF29434A /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1353C573E9124F0492C64F11 /* black-sans-condensed-book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-book.otf"; path = "../src/assets/fonts/black-sans-condensed-book.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativeBoilerPlaceHermes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeBoilerPlaceHermes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReactNativeBoilerPlaceHermes/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ReactNativeBoilerPlaceHermes/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReactNativeBoilerPlaceHermes/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReactNativeBoilerPlaceHermes/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReactNativeBoilerPlaceHermes/main.m; sourceTree = "<group>"; };
-		18CDEB6724D1C23C38CA087E /* libPods-ReactNativeBoilerPlaceHermes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeBoilerPlaceHermes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-light.otf"; path = "../src/assets/fonts/black-sans-condensed-light.otf"; sourceTree = "<group>"; };
-		29980341861F496938CAFC80 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig"; sourceTree = "<group>"; };
-		329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-semi-bold.otf"; path = "../src/assets/fonts/black-sans-semi-bold.otf"; sourceTree = "<group>"; };
-		3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-bold.otf"; path = "../src/assets/fonts/black-sans-condensed-bold.otf"; sourceTree = "<group>"; };
-		40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-medium.otf"; path = "../src/assets/fonts/black-sans-condensed-medium.otf"; sourceTree = "<group>"; };
-		52C83E91C98475784388DFE0 /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig"; sourceTree = "<group>"; };
-		6C713A251D6042C78A1E32AD /* black-sans-regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-regular.otf"; path = "../src/assets/fonts/black-sans-regular.otf"; sourceTree = "<group>"; };
+		225C4985E1244CF5B9215CA8 /* black-sans-condensed-light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-light.otf"; path = "../src/assets/fonts/black-sans-condensed-light.otf"; sourceTree = "<group>"; };
+		329D3A82883F415DA699EBE2 /* black-sans-semi-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-semi-bold.otf"; path = "../src/assets/fonts/black-sans-semi-bold.otf"; sourceTree = "<group>"; };
+		3B64A94991C44E62AC82E41F /* black-sans-condensed-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-bold.otf"; path = "../src/assets/fonts/black-sans-condensed-bold.otf"; sourceTree = "<group>"; };
+		40E9EB08EB034973810F007F /* black-sans-condensed-medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-condensed-medium.otf"; path = "../src/assets/fonts/black-sans-condensed-medium.otf"; sourceTree = "<group>"; };
+		48A4EC410366770FB1B19987 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6C713A251D6042C78A1E32AD /* black-sans-regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-regular.otf"; path = "../src/assets/fonts/black-sans-regular.otf"; sourceTree = "<group>"; };
+		799DD06E8EC2B9F356D1ECFE /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativeBoilerPlaceHermes/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-thin.otf"; path = "../src/assets/fonts/black-sans-thin.otf"; sourceTree = "<group>"; };
-		9BC858F8B1084581871D904D /* black-sans-black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-black.otf"; path = "../src/assets/fonts/black-sans-black.otf"; sourceTree = "<group>"; };
-		A471253B87D1D6E52644495F /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig"; sourceTree = "<group>"; };
-		AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-ultralight.otf"; path = "../src/assets/fonts/black-sans-ultralight.otf"; sourceTree = "<group>"; };
-		BA5297D7092F678F89580ED7 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBC943C33D64E2D488051FFB /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes.release.xcconfig"; sourceTree = "<group>"; };
-		CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-bold.otf"; path = "../src/assets/fonts/black-sans-bold.otf"; sourceTree = "<group>"; };
-		E38196064A284CA192A98013 /* black-sans-light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-light.otf"; path = "../src/assets/fonts/black-sans-light.otf"; sourceTree = "<group>"; };
+		93256B6D93AA464FBBBCAA68 /* black-sans-thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-thin.otf"; path = "../src/assets/fonts/black-sans-thin.otf"; sourceTree = "<group>"; };
+		9BC858F8B1084581871D904D /* black-sans-black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-black.otf"; path = "../src/assets/fonts/black-sans-black.otf"; sourceTree = "<group>"; };
+		A1646A38931CDDC3FB83DDAB /* libPods-ReactNativeBoilerPlaceHermes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeBoilerPlaceHermes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3362AA2FB8A84CF9D1EAF2A /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes.release.xcconfig"; sourceTree = "<group>"; };
+		AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-ultralight.otf"; path = "../src/assets/fonts/black-sans-ultralight.otf"; sourceTree = "<group>"; };
+		BE5917D2B4F574334B134E10 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig"; sourceTree = "<group>"; };
+		CD283C1BA6C64B7A85C9781C /* black-sans-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-bold.otf"; path = "../src/assets/fonts/black-sans-bold.otf"; sourceTree = "<group>"; };
+		E38196064A284CA192A98013 /* black-sans-light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "black-sans-light.otf"; path = "../src/assets/fonts/black-sans-light.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -73,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80DB09BF3FEF459BB8444460 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a in Frameworks */,
+				358B71555172900ABB67B34C /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				971BA02D2CE98B6D75999D83 /* libPods-ReactNativeBoilerPlaceHermes.a in Frameworks */,
+				1DC724CBFE9B4C861448248D /* libPods-ReactNativeBoilerPlaceHermes.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,8 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				18CDEB6724D1C23C38CA087E /* libPods-ReactNativeBoilerPlaceHermes.a */,
-				BA5297D7092F678F89580ED7 /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */,
+				A1646A38931CDDC3FB83DDAB /* libPods-ReactNativeBoilerPlaceHermes.a */,
+				03384E24917BC1E1EF29434A /* libPods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -144,7 +144,6 @@
 				AD8C477171A9471E9CCB3188 /* black-sans-ultralight.otf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -182,12 +181,11 @@
 		EC3D028D673711EBA043BCB8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				52C83E91C98475784388DFE0 /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */,
-				BBC943C33D64E2D488051FFB /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */,
-				A471253B87D1D6E52644495F /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */,
-				29980341861F496938CAFC80 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */,
+				799DD06E8EC2B9F356D1ECFE /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */,
+				A3362AA2FB8A84CF9D1EAF2A /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */,
+				48A4EC410366770FB1B19987 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */,
+				BE5917D2B4F574334B134E10 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -198,12 +196,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ReactNativeBoilerPlaceHermesTests" */;
 			buildPhases = (
-				F8218771A3E94C3A2EA44049 /* [CP] Check Pods Manifest.lock */,
+				0DC88943670B01482D6A3211 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				4BD8860EAA7CEC151324E99C /* [CP] Embed Pods Frameworks */,
-				1BFFEAB6C9D84EA71C6CD806 /* [CP] Copy Pods Resources */,
+				EB8E03814789716B72F2B80E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -219,14 +216,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ReactNativeBoilerPlaceHermes" */;
 			buildPhases = (
-				E0970B8DFAB33912F5BF699B /* [CP] Check Pods Manifest.lock */,
+				57B9CA4C5081834D1C24509B /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				E5AC0BE5EF620D5A47BFC244 /* [CP] Embed Pods Frameworks */,
-				CB02934A242E172A398FF031 /* [CP] Copy Pods Resources */,
+				CE47290F72910ED9BE48A233 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -255,7 +251,7 @@
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "ReactNativeBoilerPlaceHermes" */;
-			compatibilityVersion = "Xcode 12.0";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -306,7 +302,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -317,59 +313,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			showEnvVarsInLog = 0;
 		};
-		1BFFEAB6C9D84EA71C6CD806 /* [CP] Copy Pods Resources */ = {
+		0DC88943670B01482D6A3211 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4BD8860EAA7CEC151324E99C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CB02934A242E172A398FF031 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E0970B8DFAB33912F5BF699B /* [CP] Check Pods Manifest.lock */ = {
+		57B9CA4C5081834D1C24509B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -391,43 +359,38 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E5AC0BE5EF620D5A47BFC244 /* [CP] Embed Pods Frameworks */ = {
+		CE47290F72910ED9BE48A233 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes/Pods-ReactNativeBoilerPlaceHermes-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F8218771A3E94C3A2EA44049 /* [CP] Check Pods Manifest.lock */ = {
+		EB8E03814789716B72F2B80E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests/Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -482,15 +445,18 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A471253B87D1D6E52644495F /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */;
+			baseConfigurationReference = 48A4EC410366770FB1B19987 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				DEVELOPMENT_TEAM = Z3JFU96DKX;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = " ";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = ReactNativeBoilerPlaceHermesTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -509,12 +475,15 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 29980341861F496938CAFC80 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */;
+			baseConfigurationReference = BE5917D2B4F574334B134E10 /* Pods-ReactNativeBoilerPlaceHermes-ReactNativeBoilerPlaceHermesTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = Z3JFU96DKX;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = " ";
 				INFOPLIST_FILE = ReactNativeBoilerPlaceHermesTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -533,23 +502,26 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52C83E91C98475784388DFE0 /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */;
+			baseConfigurationReference = 799DD06E8EC2B9F356D1ECFE /* Pods-ReactNativeBoilerPlaceHermes.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z3JFU96DKX;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReactNativeBoilerPlaceHermes/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.coolowo.ReactNativeBoilerPlaceHermes;
 				PRODUCT_NAME = ReactNativeBoilerPlaceHermes;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -559,22 +531,25 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BBC943C33D64E2D488051FFB /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */;
+			baseConfigurationReference = A3362AA2FB8A84CF9D1EAF2A /* Pods-ReactNativeBoilerPlaceHermes.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z3JFU96DKX;
 				INFOPLIST_FILE = ReactNativeBoilerPlaceHermes/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.coolowo.ReactNativeBoilerPlaceHermes;
 				PRODUCT_NAME = ReactNativeBoilerPlaceHermes;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -610,11 +585,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -630,7 +605,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -643,6 +618,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Debug;
 		};
@@ -675,11 +651,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -688,7 +664,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -699,8 +675,10 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Release;
 		};
@@ -714,7 +692,7 @@
 				00E356F71AD99517003FC87E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ReactNativeBoilerPlaceHermes" */ = {
 			isa = XCConfigurationList;
@@ -723,7 +701,7 @@
 				13B07F951A680F5B00A75B9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "ReactNativeBoilerPlaceHermes" */ = {
 			isa = XCConfigurationList;
@@ -732,7 +710,7 @@
 				83CBBA211A601CBA00E9B192 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

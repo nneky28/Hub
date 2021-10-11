@@ -29,7 +29,7 @@ import { View } from 'native-base';
 
 export const PageLoader = props => {
     return(
-      [...'1235678979'].map((item,i)=>(
+      [...'123567'].map((item,i)=>(
         <ContentLoader 
           key={i}
           viewBox="0 0 778 116" width={350} height={100} {...props}

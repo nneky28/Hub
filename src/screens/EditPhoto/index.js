@@ -10,7 +10,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { getData, ToastError, ToastSuccess } from '../../utills/Methods';
+import { getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
 import { useDispatch } from 'react-redux';
@@ -76,6 +76,7 @@ export default function EditPhoto({navigation}) {
           cropperCircleOverlay: true
         }).then(async (response) => {
             let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
+            console.log("data---",data)
             setProfilePicture(data);
         }).catch(err=>{
           ImagePicker.clean()
@@ -119,6 +120,7 @@ export default function EditPhoto({navigation}) {
         //return console.log("token--",token);
         let about_me = await getData("about_me")
         let user = await getData("user");
+        let profile = await getData("profile")
         let biz = user.employee_user_memberships &&
         Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
         && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
@@ -128,9 +130,11 @@ export default function EditPhoto({navigation}) {
         let fd = new FormData();
         fd.append("photo",profilePicture)
         let res = await storeFilePut(url,token,fd);
-        console.log("res>>",res);
+        await storeData("about_me",res);
+        await storeData("profile",{...profile,about : res })
         setIsSaved(true);
         setLoading(false);
+        dispatch(setLoaderVisible(false));
         showFlashMessage();
       }catch(err){
         let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
@@ -170,6 +174,7 @@ export default function EditPhoto({navigation}) {
 
             <View style={styles.mainViewContainer}>
                 <View style={styles.imageContainer}>
+                    {console.log("profilePicture",profilePicture)}
                     {
                       about && about.photo && !profilePicture ? (
                         <ImageBackground

@@ -6,7 +6,7 @@ export const endPoint = 'https://coolowo.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
-  my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/assets/`,
+  my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/asset_vehicles/`,
   benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
   whos_out : (business_id,status) => `/c/${business_id}/timeoff_taken/widgets/whos_out/?status=${status}`,
   birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,

@@ -28,7 +28,7 @@ import styles from './styles'
 
 export default function TimeOff({navigation}) {
     
-    var [selected, setSelected] = useState('Active');
+    var [selected, setSelected] = useState('Available');
     const [requests,setRequests] = useState(null);
     const [available,setAvailable] = useState(null);
     const [active,setActive] = useState(null);
@@ -128,7 +128,7 @@ export default function TimeOff({navigation}) {
                 </TouchableOpacity>
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
-                  Time Off
+                    Time Off
                   </Text>
                 </View>
             </View>
