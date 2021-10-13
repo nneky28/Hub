@@ -15,7 +15,9 @@
     "assembleDebug:clean": "cd android && ./gradlew clean",
     "assembleDebug:assemble": "cd android && ./gradlew assembleDebug",
     "android_staging": "appcenter codepush release-react -a Torilo/myedge-android -d Staging",
-    "android_prod": "appcenter codepush release-react -a Torilo/myedge-android -d Production"
+    "android_prod": "appcenter codepush release-react -a Torilo/myedge-android -d Production",
+    "ios_staging": "appcenter codepush release-react -a Torilo/myedge-ios -d Staging",
+    "ios_prod": "appcenter codepush release-react -a Torilo/myedge-ios -d Production"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",

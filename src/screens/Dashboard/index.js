@@ -48,14 +48,15 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
       let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
       let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      let asset_res = await getAPIs(assets_url,token);
+      console.log("--->>>",assets_url)
+      //let asset_res = await getAPIs(assets_url,token);
       let benefits_res = await getAPIs(benefits_url,token)
       let whos_out_res = await getAPIs(whos_out_url,token)
       let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
       let active_res = await getAPIs(active_birthdays_url,token);
       setBusiness(biz);
       setAbout(about_me);
-      setAssets(asset_res.results)
+      //setAssets(asset_res.results)
       setBenefits(benefits_res.results);
       setUpcomingBirthDay(upcoming_res.results);
       setActiveBirthDay(active_res.results);
