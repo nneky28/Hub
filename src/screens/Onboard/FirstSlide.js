@@ -113,6 +113,7 @@ const FirstSlide = (props) => {
               btnText={'Sign In'}
               //handelButtonPress={() => console.log("---|||Testing")}
               //navigation.navigate('Login')
+              handelButtonPress={() => navigation.navigate('Login')}
             />
             {/* <CustomButton
               btnStyle={{

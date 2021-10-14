@@ -13,7 +13,7 @@ export const APIFunction = {
   employees : (business_id) => `/c/${business_id}/employees/`,
   team_members : (business_id,id) => `/c/${business_id}/employees/${id}/team_members/`,
   basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  next_of_kins : (business_id,id) => `/c/${business_id}/employees/${id}/next-of-kin/`,
+  next_of_kins : (business_id,id) => `/c/${business_id}/employees/${id}/next-of-kin`,
   emergency  : (business_id,id) => `/c/${business_id}/employees/${id}/emergency-contact/`,
   update_photo : (business_id,id) => `/c/${business_id}/employees/${id}/update-photo/`,
   edit : (business_id,id) => `/c/${business_id}/employees/${id}/`,
@@ -48,7 +48,7 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("error--",error,error.response)
+          console.log("error--",error,error.response,path)
           //logError(endPoint,path,error)
           reject({status: 500, msg: error.response.data});
         });

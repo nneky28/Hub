@@ -61,13 +61,12 @@ export default function Profile({navigation}) {
          let biz = user.employee_user_memberships &&
         Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
         && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
-        console.log("---")
-        let kin_url = APIFunction.next_of_kins(biz.business_id,about_me.id);
-        let emergency_url = APIFunction.emergency(biz.business_id,about_me.id);
-        let kin_res = await getAPIs(kin_url,token);
-        let ememgency_res = await getAPIs(emergency_url,token);
-        console.log("Kin=--",kin_res,kin_url)
-        console.log("ememgency_res=--",ememgency_res,emergency_url,token)
+        //let kin_url = APIFunction.next_of_kins(biz.business_id,about_me.id);
+        //let emergency_url = APIFunction.emergency(biz.business_id,about_me.id);
+        //let kin_res = await getAPIs(kin_url,token);
+        //let ememgency_res = await getAPIs(emergency_url,token);
+        //console.log("Kin=--",kin_res,kin_url)
+        //console.log("ememgency_res=--",ememgency_res,emergency_url,token)
         // setEmergency()
         // setKin()
         //  let detail_res = await getAPIs(detail_url,token);

@@ -89,12 +89,12 @@ export default function Dashboard(props) {
         <View style={styles.bodyWrap}>
           <Formik>
               <React.Fragment>
-              {/* <Image
+              <Image
           ImageUri={
             'https://res.cloudinary.com/coolowo/image/upload/v1630094478/mobile/modulist/Group_1119_yoan7f.png'
           }
           imageStyle={styles.Image1Sty}
-        /> */}
+        />
         <View
           style={{
             width: '100%',
@@ -139,7 +139,7 @@ export default function Dashboard(props) {
             name="password"
             placeholder="Password"
             value={data.password}
-            secure={true}
+           // secure={true}
             onChangeData={(value)=>{
               setData({...data,password : value})
             }}
@@ -171,13 +171,13 @@ const styles = StyleSheet.create({
   },
   Image1Sty: {
     width: '30%',
-    // height: 102,
+    height: 50,
     // // marginTop: -30,
     // marginBottom: 20,
 
-    flex: 1,
+    //flex: 1,
     // width: null,
-    height: null,
+    //height: null,
     resizeMode: 'contain',
   },
   inner: {
