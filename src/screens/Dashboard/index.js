@@ -5,15 +5,16 @@ import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
+import { TimeoffModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs } from '../../utills/api';
-import { PageLoader } from '../../utills/components';
+import { PageLoader, Reload } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
-import { Capitalize, getData, getGreetingTime, ToastError } from '../../utills/Methods';
+import { Capitalize, getData, getGreetingTime, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [margin, setMargin] = useState(0.1);
@@ -28,6 +29,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [whos_out,setWhosOut] = React.useState(null)
   const [active_birthdays,setActiveBirthDay] = React.useState(null)
   const [upcoming_birthdays,setUpcomingBirthDay] = React.useState(null)
+  const [process,setProcess] = React.useState(true)
+  const [available,setAvailable] = React.useState([]);
+  const [tabs,setTabs] = React.useState([]);
+  const [active,setActive] = React.useState([]);
+  const [requests,setRequests] = React.useState([]);
+  const [modal,setModal] = React.useState(false);
+  const [current,setCurrent] = useState(null);
+
   const setButtons = (i) => {
     setIndex(i);
     var margin = i * 30;
@@ -36,10 +45,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   };
   const getInfo = async () => {
     try{
-      setLoading(true);
+      setProcess(true);
       let token = await getData("token");
       let user =  await getData("user");
-      let about_me = await getData("about_me")
+      let about_me = await getData("about_me");
       let biz = user.employee_user_memberships &&
       Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
       && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
@@ -48,21 +57,33 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
       let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
       let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      console.log("--->>>",assets_url)
-      //let asset_res = await getAPIs(assets_url,token);
+      let asset_res = await getAPIs(assets_url,token);
       let benefits_res = await getAPIs(benefits_url,token)
       let whos_out_res = await getAPIs(whos_out_url,token)
       let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
       let active_res = await getAPIs(active_birthdays_url,token);
+      let res = await getTimeOffsFunction();
+      setAvailable(res.available)
+      setTabs(res.tabs);
+      if(res.active.length === 0){
+        var margin = 30;
+        setMargin(width(margin));
+        setIndex(1)
+      }else{
+        setIndex(0)
+        setMargin(width(0.1))
+      }
+      setActive(res.active);
+      setRequests(res.requests);
       setBusiness(biz);
       setAbout(about_me);
-      //setAssets(asset_res.results)
+      setAssets(asset_res.results)
       setBenefits(benefits_res.results);
       setUpcomingBirthDay(upcoming_res.results);
       setActiveBirthDay(active_res.results);
       setWhosOut(whos_out_res.results)
       setLoading(false);
-
+      setProcess(false);
     }catch(err){
       console.log("Err--",err);
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
@@ -81,17 +102,16 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
           </TouchableOpacity>
           <Text numberOfLines={1} style={styles.text1}>
-            {console.log("business---",business,user)}
             {business && business.business_name ? business.business_name : ""}
           </Text>
         </View>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Image
             resizeMode="contain"
             source={questionMarkIcon}
             style={styles.logo1}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.line} />
       <View style={styles.nameContainer}>
@@ -105,6 +125,11 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               <PageLoader />
             ) : ( 
                   <React.Fragment>
+                   {
+                     process ? (
+                      <Reload />
+                     ) : null
+                   }
                                    <View style={styles.toDoContainer}>
                   <View style={styles.row1}>
                     <Text numberOfLines={1} style={styles.text3}>
@@ -129,53 +154,54 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   Time Off
                 </Text>
                 <View style={styles.threeButtonCont}>
-                  <TouchableOpacity
-                    onPress={() => setButtons(0)}
-                    style={styles.button}
-                    activeOpacity={0.8}>
-                    <Text style={[styles.buttonText, index == 0 && styles.buttonText1]}>
-                      Active
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setButtons(1)}
-                    style={styles.button}
-                    activeOpacity={0.8}>
-                    <Text style={[styles.buttonText, index == 1 && styles.buttonText1]}>
-                      Balance
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setButtons(2)}
-                    style={styles.button}
-                    activeOpacity={0.8}>
-                    <Text style={[styles.buttonText, index == 2 && styles.buttonText1]}>
-                      Request
-                    </Text>
-                  </TouchableOpacity>
+                  {
+                    ['Active', 'Available','Request'].map((item,i)=>(
+                      <TouchableOpacity
+                        onPress={() =>setButtons(i)}
+                        style={styles.button}
+                        activeOpacity={0.8}>
+                        <Text style={[styles.buttonText, index == i && styles.buttonText1]}>
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    ))
+                  }
                   <AnimatedView marginLeft={margin} styles={styles.animatedView} />
                 </View>
                 <View>
-                  <Timeoff
+                <Timeoff
                     data={
                       index == 0
-                        ? ['active', 'active']
+                        ? active && Array.isArray(active) ? active : []
                         : index == 1
-                        ? ['balance', 'balance']
-                        : ['request']
+                        ? available && Array.isArray(available) ? available : []
+                        : requests && Array.isArray(requests) ? requests : []
                     }
+                    tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
+                    showModal={(timeoff_id)=>{
+                      setCurrent(timeoff_id)
+                      return setModal(true)
+                    }}
                   />
                 </View>
                  <View style={[styles.row, styles.center]}>
                   <Text style={styles.text4}>See all time off</Text>
                   <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
                 </View>
-                <Text style={styles.heading}>Asset (
-                  {assets && Array.isArray(assets) ? assets.length : 0 }
-                  )</Text>
-                <View>
-                  <AssetsList data={assets} />
-                </View>
+                {
+                  assets && Array.isArray(assets) && assets.length > 0 ? (
+                      <React.Fragment>
+                        <Text style={styles.heading}>
+                          Asset (
+                            {assets && Array.isArray(assets) ? assets.length : 0 }
+                          )
+                        </Text>
+                        <View>
+                          <AssetsList data={assets} />
+                        </View>
+                      </React.Fragment>
+                  ) : null
+                }
                <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
                 <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
                   benefits={benefits}
@@ -189,7 +215,23 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   </React.Fragment>
             )
           }
-               
+              <TimeoffModal 
+                isVisible={modal} 
+                onHide={()=>setModal(false)}
+                closeAndRefresh={() => {
+                    setModal(false)
+                    ToastSuccess("Request has been submitted for processing")
+                    //getInfo();
+                }} 
+                timeoff_id={current} active={active}
+                hideAndOpen={(msg)=>{
+                    setModal(false);
+                    ToastError(msg)
+                    setTimeout(()=>{
+                        setModal(true);
+                    },1000)
+                }}
+            />  
     </ScreenWrapper>
   );
 }

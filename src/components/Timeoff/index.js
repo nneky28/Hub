@@ -11,10 +11,11 @@ import { Circle } from 'react-native-progress';
 import { rightIcon, upIcon } from '../../assets/images';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
+import { LottieIcon } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
-
+import Emptyjson from '../../assets/lottie/empty.json'
 
 if (
   Platform.OS === 'android' &&
@@ -42,22 +43,36 @@ const TimeoffVertical = ({data,load,setModal}) => {
   );
 };
 
-const Timeoff = ({data}) => {
+const Timeoff = ({data,tab,showModal}) => {
   return (
-    <FlatList
-      data={data}
-      nestedScrollEnabled={true}
-      horizontal={true}
-      ItemSeparatorComponent={() => <View style={styles.margin} />}
-      keyExtractor={(i) => String(Math.random())}
-      contentContainerStyle={styles.flatList}
-      showsHorizontalScrollIndicator={false}
-      renderItem={({item}) => <RenderItem item={item} />}
-    />
+    <React.Fragment>
+        {
+          data && Array.isArray(data) && data.length > 0 ? (
+            <FlatList
+              data={data}
+              nestedScrollEnabled={true}
+              horizontal={true}
+              ItemSeparatorComponent={() => <View style={styles.margin} />}
+              keyExtractor={(i) => String(Math.random())}
+              contentContainerStyle={styles.flatList}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item}) => <RenderItem 
+                item={item} tab={tab} 
+                showModal={showModal}
+              />}
+            />
+          ) : (
+            <View style={{justifyContent : "center", alignItems : "center"}}>
+                <LottieIcon icon={Emptyjson} />
+            </View>
+          )
+        }
+    </React.Fragment>
   );
 };
 
-const RenderItem = ({item}) => {
+const RenderItem = ({item,tab,showModal}) => {
+  console.log("RenderItem",item)
   const spinValue = new Animated.Value(0);
 
   const [show, setShow] = useState(true);
@@ -96,7 +111,7 @@ const RenderItem = ({item}) => {
   return (
     <Animated.View activeOpacity={0.8} style={styles.container}>
       <TouchableOpacity onPress={hide} style={styles.row1}>
-        <Text style={styles.text}>Travel Leave</Text>
+        <Text style={styles.text}>{item && item.title ? Capitalize(item.title) : null}</Text>
         <Animated.Image
           resizeMode="contain"
           source={upIcon}
@@ -105,7 +120,7 @@ const RenderItem = ({item}) => {
       </TouchableOpacity>
       {show ? (
         <>
-          <Text style={styles.text1}>Holiday</Text>
+          <Text style={styles.text1}>{item && item.category ? Capitalize(item.category) : null}</Text>
           <View style={{width: width(30), height: width(30)}}>
             <Circle
               borderWidth={0}
@@ -114,29 +129,33 @@ const RenderItem = ({item}) => {
               size={width(30)}
               key={Math.random()}
               unfilledColor={AppColors.gray1}
-              progress={status == 'active' ? 0.5 : 0}
+              progress={tab == 'active' ? 0.5 : 0}
             />
             <View style={styles.absolute}>
-              {status == 'active' ? (
+              {tab == 'active' ? (
                 <>
                   <Text style={styles.count}>3</Text>
                   <View style={styles.line1} />
                   <Text style={styles.count1}>5</Text>
                   <Text style={styles.count2}>Days</Text>
                 </>
-              ) : status == 'balance' ? (
+              ) : tab == 'available' ? (
                 <>
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    50
+                    {item && item.max_days_allowed ? item.max_days_allowed : 0}
                   </Text>
                   <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
                   </Text>
-                  <Button
-                    title="Paid"
-                    textStyle={styles.buttonText}
-                    containerStyle={styles.button}
-                  />
+                  {
+                    item && item.is_paid ? (
+                      <Button
+                        title="Paid"
+                        textStyle={styles.buttonText}
+                        containerStyle={styles.button}
+                      />
+                    ) : null
+                  }
                 </>
               ) : (
                 <>
@@ -150,7 +169,7 @@ const RenderItem = ({item}) => {
               )}
             </View>
           </View>
-          {status == 'request' && (
+          {tab == 'request' && (
             <>
               <View style={[styles.line, {marginTop: height(2)}]} />
               <View style={[styles.row1, {width: '100%'}]}>
@@ -167,16 +186,25 @@ const RenderItem = ({item}) => {
             </>
           )}
           <View style={[styles.line, {marginTop: height(2)}]} />
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8}
+            onPress={()=>{
+              if(tab === "available"){
+                return showModal(item.id)
+              }
+            }}
+          >
             {status == 'active' ? (
               <Text style={styles.endText}>End Leave</Text>
-            ) : status == 'balance' ? (
+            ) : tab == 'available' ? (
               <Text style={[styles.endText, {color: AppColors.green}]}>
                 Request
               </Text>
-            ) : (
-              <Text style={styles.endText}>Cancel Request</Text>
-            )}
+            ) : null}
+            {
+              tab === "request" ? (
+                <Text style={styles.endText}>Cancel Request</Text>
+              ) : null
+            }
           </TouchableOpacity>
         </>
       ) : null}

@@ -15,13 +15,16 @@ import CustomButton from '../../component2/button/Button';
 import Image from '../../component2/image/Image';
 //import {withNavigation} from 'react-navigation';
 import {withTheme} from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../Redux/Actions/Auth';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 const FourthSlide = (props) => {
   const {colors} = props.theme;
   const {navigation} = props;
-
+  const dispatch = useDispatch()
+  const auth = useSelector((state)=>state.Auth)
   const blackC0lor = colors.fadeDarkColor;
   const primaryColor = colors.primaryButton;
 
@@ -41,8 +44,6 @@ const FourthSlide = (props) => {
             backgroundColor: '#fff',
             width: '100%',
             flex: 1,
-            // height: deviceHeight,
-            // paddingTop: 10,
             paddingBottom: 54,
             paddingRight: 13.7,
             paddingLeft: 13.7,
@@ -51,19 +52,6 @@ const FourthSlide = (props) => {
         <View style={styles.imageWrap}>
           <View style={styles.likeHeaderSTy}>
             <View />
-
-            {/* <TouchableOpacity
-              onPress={() => {
-                // alert('jjjj');
-                navigation.navigate('Login');
-              }}>
-              <CustomText
-                textSize={14}
-                textWeight={'600'}
-                textcolor={blackC0lor}
-                displayText={'Skip'}
-              />
-            </TouchableOpacity> */}
           </View>
           <Image
             ImageUri={
@@ -115,14 +103,10 @@ const FourthSlide = (props) => {
             }}>
             <CustomButton
               btnText={'Sign In'}
-              handelButtonPress={() => navigation.navigate('Login')}
+              handelButtonPress={() => {
+                dispatch(login({...auth,route : 'auth'}))
+              }}
             />
-            {/* <CustomButton
-              btnStyle={styles.GeneralBtnSty2}
-              textStyle={styles.GeneralTextSty2}
-              btnText={'Get Started'}
-              handelButtonPress={() => navigation.navigate('Login')}
-            /> */}
           </View>
         </View>
       </ScrollView>

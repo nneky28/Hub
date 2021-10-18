@@ -33,19 +33,22 @@ const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
-  const isLogin = useSelector((state) => state.Auth.isLogin);
+  const route = useSelector((state) => state.Auth.route);
   return (
     <NavigationContainer>
       <Loader />
-      {!isLogin ? (
-        <Stack.Navigator
-          initialRouteName="Splash"
-          screenOptions={{headerMode: false}}>
-            <Stack.Screen name="Splash" component={Splash}/>
-            <Stack.Screen name="Onboard" component={Onboard}/>
-            <Stack.Screen name="Login" component={Login} />
-        </Stack.Navigator>
-      ) : (
+      {console.log("route---",route)}
+      {
+        route === "splash" ? (
+          <Stack.Navigator
+            initialRouteName="Splash"
+            screenOptions={{headerMode: false}}>
+              <Stack.Screen name="Splash" component={Splash}/>
+              <Stack.Screen name="Onboard" component={Onboard}/>
+          </Stack.Navigator>
+        ) : 
+      route === "main" ? 
+      (
         <DrawerStack.Navigator
           drawerContent={(props) => <Drawer {...props} />}
           // initialRouteName="Dashboard"
@@ -106,6 +109,12 @@ const Routes = () => {
             }}
           </DrawerStack.Screen>
         </DrawerStack.Navigator>
+      ) : (
+        <Stack.Navigator
+          initialRouteName="Splash"
+          screenOptions={{headerMode: false}}>
+            <Stack.Screen name="Login" component={Login} />
+        </Stack.Navigator>
       )}
     </NavigationContainer>
   );

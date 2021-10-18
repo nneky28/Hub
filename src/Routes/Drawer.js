@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,7 @@ import {
 import {Fragment} from 'react';
 import AppColors from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
-import {logout} from '../Redux/Actions/Auth';
+import {login, logout} from '../Redux/Actions/Auth';
 import {
   rightIcon,
   logoIcon,
@@ -24,30 +24,25 @@ import { FontFamily } from '../utills/FontFamily';
 import { getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-community/async-storage';
 const Drawer = ({navigation, ...props}) => {
+
   const dispatch = useDispatch();
+  const auth = useSelector((state)=>state.Auth);
   const [about,setAbout] =  React.useState(null);
   const [user,setUser] = React.useState(null);
   const [bizs,setBiz] = React.useState(null);
   const logoutMethod = async () => {
-
-    // showMessage({
-    //   message: 'Logged Out',
-    //   description: '',
-    //   type: 'danger',
-    // });
     let keys = await AsyncStorage.getAllKeys()
     await AsyncStorage.multiRemove(keys);
+    dispatch(login({...auth,route : "auth",isLogin : false}));
     ToastSuccess("Successfully logged out")
-    dispatch(logout());
   };
   const getUserDetails = async () => {
     let about_me = await getData("about_me");
     let user = await getData("user");
-    console.log("------",user,about_me)
     let biz = user.employee_user_memberships &&
-    Array.isArray(user.employee_user_memberships) ? user.employee_user_memberships : []
+    Array.isArray(user.employee_user_memberships) ? user.employee_user_memberships : [];
     setBiz(biz);
-    setUser(user)
+    setUser(user);
     setAbout(about_me);
   }
   useEffect(()=>{

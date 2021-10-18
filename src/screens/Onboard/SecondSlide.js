@@ -15,12 +15,15 @@ import CustomButton from '../../component2/button/Button';
 import Image from '../../component2/image/Image';
 //import {withNavigation} from 'react-navigation';
 import {withTheme} from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../Redux/Actions/Auth';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 const SecondSlide = (props) => {
   const {colors} = props.theme;
-  const {navigation} = props;
+  const dispatch = useDispatch()
+  const auth = useSelector((state)=>state.Auth)
 
   const blackC0lor = colors.fadeDarkColor;
   const primaryColor = colors.primaryButton;
@@ -103,7 +106,6 @@ const SecondSlide = (props) => {
                 textWeight={'400'}
                 textcolor={blackC0lor}
                 displayText={'  Business Directory & more'}
-                // textStyle={{marginBottom: 10}}
               />
             </View>
           </View>
@@ -116,14 +118,10 @@ const SecondSlide = (props) => {
             }}>
             <CustomButton
               btnText={'Sign In'}
-              handelButtonPress={() => navigation.navigate('Login')}
+              handelButtonPress={() => {
+                dispatch(login({...auth,route : 'auth'}))
+              }}
             />
-            {/* <CustomButton
-              btnStyle={styles.GeneralBtnSty2}
-              textStyle={styles.GeneralTextSty2}
-              btnText={'Get Started'}
-              handelButtonPress={() => navigation.navigate('Login')}
-            /> */}
           </View>
         </View>
       </ScrollView>

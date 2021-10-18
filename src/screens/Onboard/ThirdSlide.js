@@ -15,12 +15,16 @@ import CustomButton from '../../component2/button/Button';
 import Image from '../../component2/image/Image';
 //import {withNavigation} from 'react-navigation';
 import {withTheme} from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../Redux/Actions/Auth';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 const ThirdSlide = (props) => {
   const {colors} = props.theme;
   const {navigation} = props;
+  const dispatch = useDispatch()
+  const auth = useSelector((state)=>state.Auth)
 
   const blackC0lor = colors.fadeDarkColor;
   const primaryColor = colors.primaryButton;
@@ -115,7 +119,9 @@ const ThirdSlide = (props) => {
             }}>
             <CustomButton
               btnText={'Sign In'}
-              handelButtonPress={() => navigation.navigate('Login')}
+              handelButtonPress={() => {
+                dispatch(login({...auth,route : 'auth'}))
+              }}
             />
             {/* <CustomButton
               btnStyle={styles.GeneralBtnSty2}

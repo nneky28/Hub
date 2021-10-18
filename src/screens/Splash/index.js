@@ -12,7 +12,7 @@ import { getData } from '../../utills/Methods';
 import CustomText from '../../component2/customText/CustomText';
 
 const Splash = (props) => {
-  const user = useSelector((state) => state.Auth.user);
+  const auth = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
   const loginMethod = async () => {
     //dispatch(setLoaderVisible(true));
@@ -20,7 +20,7 @@ const Splash = (props) => {
     console.log("Splash---",user)
     setTimeout(() => {
       if(user){
-        dispatch(login({userName: user}));
+        dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
       }else{
        props.navigation.navigate("Onboard");
       }

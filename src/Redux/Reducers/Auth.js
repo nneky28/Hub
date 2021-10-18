@@ -1,15 +1,17 @@
 import {LOGIN, LOGOUT} from '../Types';
 const intialState = {
-  user: {},
+  user: null,
   isLogin: false,
+  route : "splash"
 };
 const reducer = (state = intialState, action) => {
   switch (action.type) {
     case LOGIN: {
       return {
         ...state,
-        user: action.payload,
+        user: {},
         isLogin: true,
+        ...action.payload
       };
     }
     case LOGOUT: {

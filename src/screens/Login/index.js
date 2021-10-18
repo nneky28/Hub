@@ -34,7 +34,7 @@ export default function Dashboard(props) {
     //email : "",
     //password : ""
   })
-  const user = useSelector((state) => state.Auth.user);
+  const auth = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
@@ -68,10 +68,9 @@ export default function Dashboard(props) {
       await storeData("about_me",about_me)
       await storeData("user",res.user);
       await storeData('token_expiry',moment(new Date()).add(30,'minutes'))
-      console.log("Login was successful")
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));
-      dispatch(login({userName: 'John Doe'}));
+      return dispatch(login({...auth,user : {userName: "Joe"}, route : "main",isLogin : true}));
     }catch(err){
       console.log("errr",err);
       dispatch(setLoaderVisible(false));
