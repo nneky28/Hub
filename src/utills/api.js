@@ -21,7 +21,8 @@ export const APIFunction = {
   training_hist : (business_id,id) => `/c/${business_id}/employees/${id}/training/history/`,
   timeoff : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff/`,
   timeoff_reqs : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
-  timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`
+  timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
+  delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`
 }
 export const getAPIs = async (path, token) => {
     let expiry = await getData("token_expiry");
@@ -87,6 +88,40 @@ export const postAPIs = async (path, token, fd) => {
       setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
     });
   };
+
+  export const deleteAPIs = async (path, fd) => {
+    let expiry = await getData("token_expiry");
+      if(expiry && !moment(new Date()).isBefore(expiry)){
+         await refreshToken()
+      }
+      let _token = await getData("token");
+      return new Promise((resolve, reject) => {
+        axios.delete(
+          `${endPoint}${path}`,
+          {
+            headers : {
+              'Content-Type' : 'application/json',
+              Authorization : `Bearer ${_token}`
+            }
+          }
+        )
+          .then(result => {
+            resolve(result.data);
+          })
+          .catch(error => {
+            if (
+              error.response && error.response.data && 
+              error.response.data.detail && typeof(error.response.data.detail) === "string"
+            ) {
+              reject({status: 400, msg:error.response.data.detail});
+            } else {
+              reject({status: 500, msg: 'Connection Error. Please try again later'});
+            }
+          });
+    
+        setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      });
+    };
   
 export const putAPIs = async (path, token, fd) => {
   let expiry = await getData("token_expiry");
@@ -108,9 +143,11 @@ export const putAPIs = async (path, token, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          //logError(endPoint,path,error)
-          if (error.response) {
-            reject({status: 500, msg: error.response.data});
+          if (
+            error.response && error.response.data && error.response.data.msg && 
+            error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"
+          ) {
+            reject({status: 400, msg:error.response.data.msg.detail});
           } else {
             reject({status: 500, msg: 'Connection Error. Please try again later'});
           }

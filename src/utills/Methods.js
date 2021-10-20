@@ -43,6 +43,14 @@ export const ToastSuccess = (msg) =>(
     })
 );
 
+export const getStoredBusiness = async () => {
+  let user = await getData("user");
+  let biz = user.employee_user_memberships &&
+      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
+      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
+  return biz;
+}
+
 export const storeData = async (key, value) => {
     try {
       const jsonValue = JSON.stringify(value);

@@ -5,16 +5,16 @@ import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
-import { TimeoffModal } from '../../components/ContactModal';
+import { TimeoffModal, WarningModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
-import { APIFunction, getAPIs } from '../../utills/api';
+import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
 import { PageLoader, Reload } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
-import { Capitalize, getData, getGreetingTime, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [margin, setMargin] = useState(0.1);
@@ -36,6 +36,28 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [requests,setRequests] = React.useState([]);
   const [modal,setModal] = React.useState(false);
   const [current,setCurrent] = useState(null);
+  const [show,setShow] = useState(false);
+  const [del,setDelete] = useState(null);
+  const [cancel,setCancel] =  useState(false);
+
+  const cancelRequest = async () => {
+    try{
+      setCancel(true)
+      let about = await getData("about_me")
+      let biz = await getStoredBusiness();
+      let cancel_url = APIFunction.delete_timeoff(biz.business_id,about.id,del.id);
+      let res = await deleteAPIs(cancel_url);
+      let filtered = requests.filter(item=>item.id !== del.id);
+      setRequests(filtered);
+      setShow(false);
+      setCancel(false);
+      return ToastSuccess("Request has been canceled");
+    }catch(err){
+      setCancel(false);
+      setShow(false);
+      ToastError(err.msg)
+    }
+  }
 
   const setButtons = (i) => {
     setIndex(i);
@@ -46,12 +68,11 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const getInfo = async () => {
     try{
       setProcess(true);
+      console.log("setProcess---")
       let token = await getData("token");
       let user =  await getData("user");
       let about_me = await getData("about_me");
-      let biz = user.employee_user_memberships &&
-      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
+      let biz = await getStoredBusiness();
       let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
       let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
@@ -65,14 +86,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let res = await getTimeOffsFunction();
       setAvailable(res.available)
       setTabs(res.tabs);
-      if(res.active.length === 0){
-        var margin = 30;
-        setMargin(width(margin));
-        setIndex(1)
-      }else{
-        setIndex(0)
-        setMargin(width(0.1))
-      }
       setActive(res.active);
       setRequests(res.requests);
       setBusiness(biz);
@@ -82,6 +95,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setUpcomingBirthDay(upcoming_res.results);
       setActiveBirthDay(active_res.results);
       setWhosOut(whos_out_res.results)
+      if(res.active.length === 0){
+        var margin = 30;
+        setMargin(width(margin));
+        setIndex(1)
+      }else{
+        setIndex(0)
+        setMargin(width(0.1))
+      }
       setLoading(false);
       setProcess(false);
     }catch(err){
@@ -178,16 +199,29 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                         : requests && Array.isArray(requests) ? requests : []
                     }
                     tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
-                    showModal={(timeoff_id)=>{
-                      setCurrent(timeoff_id)
-                      return setModal(true)
+                    showModal={(timeoff_id,item,tab_name)=>{
+                      if(tab_name === "request"){
+                        setDelete(item);
+                        return setShow(true);
+                      }
+                      if(item && item.max_days_allowed && 
+                        item.total_days_taken && 
+                        item.total_days_taken < 
+                        item.max_days_allowed){
+                        setCurrent(timeoff_id)
+                        return setModal(true)
+                      }
                     }}
                   />
                 </View>
-                 <View style={[styles.row, styles.center]}>
-                  <Text style={styles.text4}>See all time off</Text>
-                  <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
-                </View>
+                <TouchableOpacity
+                  onPress={()=>props.navigation.navigate("Time off")}
+                >
+                  <View style={[styles.row, styles.center]}>
+                    <Text style={styles.text4}>See all time off</Text>
+                    <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
+                  </View>
+                </TouchableOpacity>
                 {
                   assets && Array.isArray(assets) && assets.length > 0 ? (
                       <React.Fragment>
@@ -219,9 +253,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                 isVisible={modal} 
                 onHide={()=>setModal(false)}
                 closeAndRefresh={() => {
+                    console.log("closeAndRefresh function---------------------------------------")
                     setModal(false)
                     ToastSuccess("Request has been submitted for processing")
-                    //getInfo();
+                   getInfo();
                 }} 
                 timeoff_id={current} active={active}
                 hideAndOpen={(msg)=>{
@@ -232,6 +267,16 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     },1000)
                 }}
             />  
+            <WarningModal 
+              isVisible={show}
+              onHide={()=>{
+                console.log("hiding")
+                setShow(false)
+              }}
+              question={'Are you sure you want to cancel this request?'}
+              performAction={cancelRequest}
+              loading={cancel}
+            />
     </ScreenWrapper>
   );
 }

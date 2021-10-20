@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text, View,ScrollView
 } from 'react-native';
@@ -17,7 +17,12 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
-import { getData, ToastError } from '../../utills/Methods';
+import { getData, ToastError,storeData } from '../../utills/Methods';
+import { Container, H1, LottieIcon, P, SizedBox } from '../../utills/components';
+import Warningjson from '../../assets/lottie/warning.json'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator } from 'react-native-paper';
+import AppColors from '../../utills/AppColors';
 
 const ContactModal = ({isVisible, onHide,data}) => {
 //   email: ""
@@ -112,36 +117,34 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
   const defaultColor = "";
   const blackColor = "";
   const [data,setData] = React.useState({
-      "timeoff": timeoff_id,
-      "start_date": "",
-      "end_date": "",
-      "reason": ""
-    })
+    "timeoff": timeoff_id,
+    "start_date": "",
+    "end_date": "",
+    "reason": ""
+  })
   const handleSubmit = async () => {
     try{
       let failed = false;
       required = ["start_date","end_date",
           "reason"]
       for(let req of required){
-          console.log("data--",data[req])
+          console.log("data--",data[req],active)
           if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
       }
-      
       if(failed) {
         return hideAndOpen("All fields are required")
       };
       if(!moment(data.start_date).isBefore(moment(data.end_date))){
         return hideAndOpen("Start date must be before end date")
       }
-      if(moment(new Date()).isAfter(moment(data.start_date)) || moment(new Date()).isAfter(moment(data.end_date))){
+      if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
         return hideAndOpen("Date must be in the future")
       }
-      let check = active && Array.isArray(active) && active.some(item=>{
+      let check = active && Array.isArray(active) && active.length > 0 ?  active.some(item=>{
         return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
         item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
-      });
-      console.log("---||---hideAndOpen")
-      if(!check){
+      }) : false;
+      if(check){
         return hideAndOpen("Please select dates that do not fall within active timeoffs")
       }
       console.log("---||---hideAndOpen")
@@ -157,8 +160,10 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       let fd = {
         ...data,timeoff : timeoff_id
       }
+      console.log("fd--",fd)
       let res = await postAPIs(timeoff_url,token,fd);
       console.log("res---",res)
+      storeData("curr_timeoff",null)
       //console.log("handleSubmit",data,timeoff_id)
       dispatch(setLoaderVisible(false));
       closeAndRefresh()
@@ -264,6 +269,63 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
     </Modal>
   );
 };
+
+
+
+export const WarningModal = ({isVisible, onHide, onPressHandle,question,performAction,loading}) => {
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{justifyContent: 'flex-end', margin: 0}}
+      isVisible={isVisible}>
+      <View style={styles.container}>
+          <View style={{
+            alignItems : "center",
+            padding : 5
+          }}>
+            <LottieIcon 
+              icon={Warningjson}
+              size={100}
+            />
+              <H1 textAlign="center" fontSize={3}>{question}</H1>
+              <SizedBox />
+              {
+                loading ? (
+                  <ActivityIndicator 
+                    color={AppColors.pink}
+                  />
+                ) : (
+                  <CustomButton 
+                    btnText={"Cancel Request"}
+                    btnStyle={{
+                      backgroundColor : "#FF7372",
+                      width : "100%",
+                      textAlign : "center"
+                    }}
+                    handelButtonPress={()=>{
+                      performAction();
+                    }}
+                />
+                )
+              }
+            <SizedBox />
+          </View>
+      </View>
+    </Modal>
+  );
+};
+
+
 
 const FilterModal = ({isVisible, onHide, onPressHandle}) => {
 

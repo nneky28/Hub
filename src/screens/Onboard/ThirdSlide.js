@@ -122,6 +122,7 @@ const ThirdSlide = (props) => {
               handelButtonPress={() => {
                 dispatch(login({...auth,route : 'auth'}))
               }}
+              btnStyle={{}}
             />
             {/* <CustomButton
               btnStyle={styles.GeneralBtnSty2}

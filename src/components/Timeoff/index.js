@@ -72,7 +72,6 @@ const Timeoff = ({data,tab,showModal}) => {
 };
 
 const RenderItem = ({item,tab,showModal}) => {
-  console.log("RenderItem",item)
   const spinValue = new Animated.Value(0);
 
   const [show, setShow] = useState(true);
@@ -121,12 +120,12 @@ const RenderItem = ({item,tab,showModal}) => {
       {show ? (
         <>
           <Text style={styles.text1}>{item && item.category ? Capitalize(item.category) : null}</Text>
-          <View style={{width: width(30), height: width(30)}}>
+          <View style={{width: width(35), height: width(35)}}>
             <Circle
               borderWidth={0}
               thickness={width(3)}
               color={AppColors.green}
-              size={width(30)}
+              size={width(35)}
               key={Math.random()}
               unfilledColor={AppColors.gray1}
               progress={tab == 'active' ? 0.5 : 0}
@@ -141,12 +140,28 @@ const RenderItem = ({item,tab,showModal}) => {
                 </>
               ) : tab == 'available' ? (
                 <>
-                  <Text style={[styles.count, {color: AppColors.black1}]}>
-                    {item && item.max_days_allowed ? item.max_days_allowed : 0}
-                  </Text>
-                  <Text style={[styles.count2, {color: AppColors.black1}]}>
-                    Days
-                  </Text>
+                {
+                  item && item.total_days_taken > 0 ? (
+                    <>
+                      <Text style={styles.count}>{item.total_days_taken}</Text>
+                      <View style={styles.line1} />
+                      <Text style={styles.count1}>{item && item.max_days_allowed ?  item.max_days_allowed : 0}</Text>
+                      <Text style={styles.count2}>Days</Text>
+                    </>
+                  ) : null
+                }
+                {
+                  item && item.total_days_taken === 0 ? (
+                    <>
+                      <Text style={[styles.count, {color: AppColors.black1}]}>
+                        {item && item.max_days_allowed ? item.max_days_allowed : 0}
+                      </Text>
+                      <Text style={[styles.count2, {color: AppColors.black1}]}>
+                        Days
+                      </Text>
+                    </>
+                  ) : null
+                }
                   {
                     item && item.is_paid ? (
                       <Button
@@ -159,8 +174,9 @@ const RenderItem = ({item,tab,showModal}) => {
                 </>
               ) : (
                 <>
+                  {console.log("item--",item)}
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    11
+                    {item && item.days_requested ? item.days_requested : 0}
                   </Text>
                   <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
@@ -175,12 +191,16 @@ const RenderItem = ({item,tab,showModal}) => {
               <View style={[styles.row1, {width: '100%'}]}>
                 <View>
                   <Text style={styles.date1}>Start date</Text>
-                  <Text style={styles.date}>02/Jun/21</Text>
+                  <Text style={styles.date}>
+                    {item && item.start_date ? moment(item.start_date).format("DD/MMM/YY")  : null}
+                  </Text>
                 </View>
                 <View style={styles.line2} />
                 <View>
                   <Text style={styles.date1}>End date</Text>
-                  <Text style={styles.date}>13/Jul/21</Text>
+                  <Text style={styles.date}>
+                    {item && item.end_date ? moment(item.end_date).format("DD/MMM/YY")  : null}
+                  </Text>
                 </View>
               </View>
             </>
@@ -189,7 +209,7 @@ const RenderItem = ({item,tab,showModal}) => {
           <TouchableOpacity activeOpacity={0.8}
             onPress={()=>{
               if(tab === "available"){
-                return showModal(item.id)
+                return showModal(item.id,item)
               }
             }}
           >
@@ -202,7 +222,11 @@ const RenderItem = ({item,tab,showModal}) => {
             ) : null}
             {
               tab === "request" ? (
-                <Text style={styles.endText}>Cancel Request</Text>
+                <TouchableOpacity onPress={()=>{
+                  return showModal(item.id,item,"request")
+                }}>
+                  <Text style={styles.endText}>Cancel Request</Text>
+                </TouchableOpacity>
               ) : null
             }
           </TouchableOpacity>

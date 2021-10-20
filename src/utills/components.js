@@ -1,11 +1,11 @@
 import React from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
+import {Text} from  'react-native';
 import Svg, {
     Circle,
     Ellipse,
     G,
-    Text,
     TSpan,
     TextPath,
     Path,
@@ -25,7 +25,9 @@ import Svg, {
     SvgUri,
   } from 'react-native-svg';
 import AppColors from './AppColors';
-import { View } from 'native-base';
+import { View } from 'react-native';
+import { FontFamily } from './FontFamily';
+import { height, width } from 'react-native-dimension';
 
 export const PageLoader = props => {
   return(
@@ -92,4 +94,49 @@ export const Reload = props => {
       <Rect x="150" y="103" rx="3" ry="3" width="118" height="6" />
       <Circle cx="210" cy="40" r="22" />
     </ContentLoader>
+  )
+
+  export const P = (props) => (
+    <Text
+      style={{
+        fontSize : props.fontSize || width(3.5),
+        fontFamily : FontFamily.BlackSansRegular,
+        textAlign : props.textAlign,
+        ...props.style
+      }}
+    >
+     {props.children}
+    </Text>
+  )
+
+  export const H1 = (props) => (
+    <Text
+      style={{
+        fontSize : width(props.fontSize) || width(4),
+        fontFamily : FontFamily.BlackSansBold,
+        color : props.color || 'black',
+        textAlign: props.textAlign,
+        ...props.style
+      }}
+    >
+      {props.children}
+    </Text>
+  )
+  
+export const SizedBox = (props) => (
+  <View 
+    style={{
+      height : height(props.size || 1)
+    }}
+  />
+)
+
+  export const Container = (props) => (
+    <View flex={props.flex || 1}
+      style={{
+        padding : props.padding || 2
+      }}
+    >
+      {props.children}
+    </View>
   )

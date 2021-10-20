@@ -72,6 +72,7 @@ const Routes = () => {
                         <Stack.Screen name="Todos" component={Todos} />
                         <Stack.Screen name="People" component={People} />
                         <Stack.Screen name="MemberProfile" component={MemberProfile} />
+                        <Stack.Screen name="Time off" component={TimeOff} />
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>
@@ -80,7 +81,7 @@ const Routes = () => {
                       <Stack.Navigator
                         screenOptions={{headerMode: false}}>
                           <Stack.Screen name="People" component={People} />
-                        <Stack.Screen name="Time off" component={TimeOff} />
+                          <Stack.Screen name="Time off" component={TimeOff} />
                         <Stack.Screen name="Payslip" component={Payslips} />
                         <Stack.Screen name="Benefits" component={Benefits} />
                         <Stack.Screen name="Documents" component={Documents} />

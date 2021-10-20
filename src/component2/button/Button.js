@@ -26,7 +26,7 @@ const GenButton = (props) => {
         mode="contained"
         style={{
           ...{backgroundColor: AppColors.green},
-          //...(props.btnStyle || styles.GeneralBtnSty),
+          ...(props.btnStyle ? props.btnStyle : {} || styles.GeneralBtnSty),
         }}
         onPress={props.handelButtonPress}
         loading={props.isloading || false}
