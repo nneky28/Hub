@@ -19,8 +19,9 @@ import {height} from 'react-native-dimension';
 import { Capitalize, getData } from '../../utills/Methods';
 import { getAPIs } from '../../utills/api';
 import moment from 'moment';
-import { LottieIcon } from '../../utills/components';
+import { Container, LottieIcon } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
+import Emptyjson from '../../assets/lottie/empty.json'
 import { useNavigation } from '@react-navigation/core';
 
 if (
@@ -29,7 +30,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays}) => {
+const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary}) => {
   return (
     <FlatList
       data={data}
@@ -42,11 +43,12 @@ const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays}) => {
         whos_out={whos_out}
         upcoming_birthdays={upcoming_birthdays}
         navigate={navigate}
+        anniversary={anniversary}
       />}
     />
   );
 };
-const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
+const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary}) => {
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
   var [selected, setSelected] = useState(headings[0]);
@@ -124,8 +126,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
       </ScrollView>
 
       <View style={styles.line} />
-      {selected == 'Birthdays' ? (
-        <React.Fragment>
+        {selected == 'Birthdays' ? (
+              <React.Fragment>
                 {
                   birthdays && Array.isArray(birthdays) && birthdays.length > 0 ? birthdays.map((item,index)=>(
                     <View style={styles.birthdayContainer} key={index}>
@@ -140,9 +142,13 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
                         <Text numberOfLines={1} style={styles.text3}>
                           {item.first_name ? `${Capitalize(item.first_name)}'s` : ""} birthday is today
                         </Text>
-                        <Text numberOfLines={1} style={styles.text1}>
-                          Lead Designer
-                        </Text>
+                        {
+                          item && item.job && item.job.title ? (
+                            <Text numberOfLines={1} style={styles.text1}>
+                              {Capitalize(item.job.title)}
+                            </Text>
+                          ) : null
+                        }
                       </View>
                       <View style={{alignItems: 'center'}}>
                         <Image
@@ -156,7 +162,13 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
                       </View>
                     </View>
                   )) : (
-                    <LottieIcon icon={Birthdayjson} />
+                    <Container
+                      style={{
+                        alignItems : "center"
+                      }}
+                    >
+                      <LottieIcon icon={Emptyjson} />
+                    </Container>
                   )
                 }
           <TouchableOpacity onPress={hide} style={styles.row}>
@@ -172,10 +184,11 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
       ) : null}
       {show ? (
         <>
+        {console.log("anniversary---",anniversary)}
           <FlatList
-            data={item && item.title !== "Celebrations" && whos_out && Array.isArray(whos_out) ?
+            data={selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) ? anniversary : selected !==  "Job Anniversary" && item && item.title !== "Celebrations" && whos_out && Array.isArray(whos_out) ?
             whos_out : 
-              upcoming_birthdays && Array.isArray(upcoming_birthdays) ? upcoming_birthdays : []
+            selected !==  "Job Anniversary" && item && item.title !== "Who’s Out" && upcoming_birthdays && Array. isArray(upcoming_birthdays) ? upcoming_birthdays : []
             }
             numColumns={2}
             style={styles.margin1}
@@ -185,24 +198,54 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays}) => {
             renderItem={({item}) => {
               return (
                 <View style={styles.userContainer}>
-                  <Image source={placeholderIcon} style={styles.image} />
+                  <Image source={
+                  item && item.employee && item.employee.photo ? 
+                  item.employee.photo : 
+                  placeholderIcon  
+                } style={styles.image} />
                   <View style={styles.details}>
-                    <Text numberOfLines={1} style={styles.text3}>
-                      {item && item.first_name ? Capitalize(item.first_name) : ""}
-                    </Text>
-                    <Text numberOfLines={1} style={styles.text1}>
-                      Lead Designer
-                    </Text>
+                    {
+                      selected !== "Birthdays" && selected !== "Job Anniversary" ? (
+                        <React.Fragment>
+                          <Text numberOfLines={1} style={styles.text3}>
+                              {item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""}
+                              {" "}
+                              {item && item.employee && item.employee.last_name ? Capitalize(item.employee.last_name) : ""}
+                            </Text>
+                            <Text numberOfLines={1} style={styles.text1}>
+                            {
+                              item && item.employee && item.employee.job && item.employee.job.title ? 
+                              Capitalize(item.employee.job.title) : null  
+                            }
+                          </Text>
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          <Text numberOfLines={1} style={styles.text3}>
+                              {item && item.first_name ? Capitalize(item.first_name) : ""}
+                            </Text>
+                            <Text numberOfLines={1} style={styles.text1}>
+                            {item && item.job && item.job.title ? Capitalize(item.job.title) : "Lead Designer"}
+                          </Text>
+                        </React.Fragment>
+                      )
+                    }
                     {selected == 'Birthdays' || selected === "Job Anniversary" ? (
                       <Text numberOfLines={1} style={styles.text1}>
-                        {item && item.birth_date ? moment(item.birth_date).format("MMM DD") : ""}
+                        { selected == 'Birthdays' && item && item.birth_date ? moment(item.birth_date).format("MMM DD") : selected != 'Birthdays' && item && item.hire_date ? moment(item.hire_date).format("MMM DD") :  ""}
                       </Text>
                     ) : (
-                      <Button
-                        title="Sick Leave"
-                        textStyle={styles.buttonText}
-                        containerStyle={styles.button}
-                      />
+                      <React.Fragment>
+                        {
+                          item && item.title ? (
+                            <Button
+                              title={item.title}
+                              textStyle={styles.buttonText}
+                              containerStyle={styles.button}
+                            />
+                          ) : null
+                        }
+                      </React.Fragment>
                     )}
                   </View>
                 </View>

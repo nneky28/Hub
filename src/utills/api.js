@@ -22,11 +22,13 @@ export const APIFunction = {
   timeoff : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff/`,
   timeoff_reqs : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
-  delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`
+  delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  job_anniversary : (status,business_id,page=1) =>`/c/${business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`,
+  notifications : (business_id,page=1) => `/c/${business_id}/employees/notifications/?page=${page}`
 }
 export const getAPIs = async (path, token) => {
     let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+    if(expiry && !moment(new Date()).isBefore(expiry)){
        await refreshToken()
     }
     let _token = await getData("token");
@@ -49,9 +51,14 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("error--",error,error.response,path)
-          //logError(endPoint,path,error)
-          reject({status: 500, msg: error.response.data});
+          if (
+            error.response && error.response.data && 
+            error.response.data.detail && typeof(error.response.data.detail) === "string"
+          ) {
+            reject({status: 400, msg:error.response.data.detail});
+          } else {
+            reject({status: 500, msg: 'Connection Error. Please try again later'});
+          }
         });
       //setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
     });
@@ -77,7 +84,7 @@ export const postAPIs = async (path, token, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          //logError(endPoint,path,error)
+          console.log("postAPIs-err",error.response)
           if (error.response) {
             reject({status: 500, msg: error.response.data});
           } else {

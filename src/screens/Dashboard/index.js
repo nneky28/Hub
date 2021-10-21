@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { width } from 'react-native-dimension';
@@ -39,7 +40,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [show,setShow] = useState(false);
   const [del,setDelete] = useState(null);
   const [cancel,setCancel] =  useState(false);
-
+  const [text,setText] = useState("");
+  const [anniversary,setAnniversary] = React.useState(null);
   const cancelRequest = async () => {
     try{
       setCancel(true)
@@ -78,11 +80,13 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
       let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
       let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
+      let ann_url = APIFunction.job_anniversary("active",biz.business_id);
       let asset_res = await getAPIs(assets_url,token);
       let benefits_res = await getAPIs(benefits_url,token)
       let whos_out_res = await getAPIs(whos_out_url,token)
       let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
       let active_res = await getAPIs(active_birthdays_url,token);
+      let active_ann = await getAPIs(ann_url,token);
       let res = await getTimeOffsFunction();
       setAvailable(res.available)
       setTabs(res.tabs);
@@ -95,6 +99,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setUpcomingBirthDay(upcoming_res.results);
       setActiveBirthDay(active_res.results);
       setWhosOut(whos_out_res.results)
+      setAnniversary(active_ann.results);
       if(res.active.length === 0){
         var margin = 30;
         setMargin(width(margin));
@@ -112,9 +117,11 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       ToastError(msg)
     }
   }
-  useEffect(()=>{
-    getInfo()
-  },[])
+  useFocusEffect(
+    React.useCallback(()=>{
+      getInfo()
+    },[])
+  )
   return (
     <ScreenWrapper scrollEnabled={true}>
       <View style={styles.header}>
@@ -200,8 +207,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     }
                     tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
                     showModal={(timeoff_id,item,tab_name)=>{
+                      if(tab_name == "active"){
+                        setText("Are you sure you want to end this leave?")
+                        setDelete(item);
+                        return setShow(true);
+                      }
                       if(tab_name === "request"){
                         setDelete(item);
+                        setText("Are you sure you want to cancel this request?")
                         return setShow(true);
                       }
                       if(item && item.max_days_allowed && 
@@ -215,7 +228,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   />
                 </View>
                 <TouchableOpacity
-                  onPress={()=>props.navigation.navigate("Time off")}
+                  onPress={()=>navigate("Time off")}
                 >
                   <View style={[styles.row, styles.center]}>
                     <Text style={styles.text4}>See all time off</Text>
@@ -236,24 +249,30 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                       </React.Fragment>
                   ) : null
                 }
-               <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
-                <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
-                  benefits={benefits}
-                />
-                <TasksList data={tasksData} 
-                  whos_out={whos_out}
-                  birthdays={active_birthdays}
-                  upcoming_birthdays={upcoming_birthdays}
-                  navigate={navigate}
-                />
-                  </React.Fragment>
+                  {
+                    benefits && Array.isArray(benefits) && benefits.length > 0 ? (
+                      <React.Fragment>
+                        <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
+                        <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
+                          benefits={benefits}
+                        />
+                      </React.Fragment>
+                    ) : null
+                  }
+                  <TasksList data={tasksData} 
+                      whos_out={whos_out}
+                      birthdays={active_birthdays}
+                      upcoming_birthdays={upcoming_birthdays}
+                      anniversary={anniversary}
+                      navigate={navigate}
+                    />
+              </React.Fragment>
             )
           }
               <TimeoffModal 
                 isVisible={modal} 
                 onHide={()=>setModal(false)}
                 closeAndRefresh={() => {
-                    console.log("closeAndRefresh function---------------------------------------")
                     setModal(false)
                     ToastSuccess("Request has been submitted for processing")
                    getInfo();
@@ -270,10 +289,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             <WarningModal 
               isVisible={show}
               onHide={()=>{
-                console.log("hiding")
                 setShow(false)
               }}
-              question={'Are you sure you want to cancel this request?'}
+              question={text}
               performAction={cancelRequest}
               loading={cancel}
             />

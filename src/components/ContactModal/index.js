@@ -143,8 +143,8 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       let check = active && Array.isArray(active) && active.length > 0 ?  active.some(item=>{
         return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
         item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
-      }) : false;
-      if(check){
+      }) : true;
+      if(!check){
         return hideAndOpen("Please select dates that do not fall within active timeoffs")
       }
       console.log("---||---hideAndOpen")
@@ -290,13 +290,17 @@ export const WarningModal = ({isVisible, onHide, onPressHandle,question,performA
       isVisible={isVisible}>
       <View style={styles.container}>
           <View style={{
-            alignItems : "center",
-            padding : 5
+            padding : 20,
+            width : "100%"
           }}>
-            <LottieIcon 
-              icon={Warningjson}
-              size={100}
-            />
+            <View style={{
+              alignItems : "center"
+            }}>
+              <LottieIcon 
+                icon={Warningjson}
+                size={100}
+              />
+            </View>
               <H1 textAlign="center" fontSize={3}>{question}</H1>
               <SizedBox />
               {
@@ -318,7 +322,7 @@ export const WarningModal = ({isVisible, onHide, onPressHandle,question,performA
                 />
                 )
               }
-            <SizedBox />
+            {/* <SizedBox /> */}
           </View>
       </View>
     </Modal>

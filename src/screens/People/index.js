@@ -36,21 +36,24 @@ export default function People({route,navigation}) {
     const [personsList, setPersonsList] = useState(null);
     const [celebrations,setCelebrations] = useState(null);
     const [whosOut,setWhosOut] = useState(null)
-    const isBottomTabBarVisible = useSelector((state) => state.Config.isBottomTabBarVisible);
+    const [persons,setPersons] = useState([]);
     const dispatch = useDispatch();
     const [loading,setLoading] = React.useState(null);
-
+    const [tags,setTags] = React.useState([]);
     const handleSearch = (text) => {
         if (text.length > 0) {
-            let tmp = personsList.filter(item => item.title.includes(text));
-            setPersonsList(tmp);
+            let filtered = persons.filter(item => (
+                item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text)
+            ) ||
+            item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text)
+        );
+            // if(tags && Array.isArray(tags) && tags.length > 0){
+                
+            // }
+            setPersonsList(filtered);
         }
         else
             setPersonsList(persons);
-    }
-
-    const handleFilter = (selectedFilter) => {
-        
     }
     const fetchData = async () => {
         try{
@@ -64,18 +67,22 @@ export default function People({route,navigation}) {
             let selected = await getData("tab");
             if(selected === "All" || selected === "My Team"){
                 let url = selected === "All" ? APIFunction.employees(biz.business_id) : APIFunction.team_members(biz.business_id,about_me.id);
-                console.log("url<<<",url)
                 let res = await getAPIs(url,token);
-                console.log("url-----",url,token,res)
-                let persons = res && res.results && Array.isArray(res.results) ? 
+                let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
-                setPersonsList(persons);
+                setPersonsList(persons_arr);
+                setPersons(persons_arr)
             }
             if(selected === "Celebrations"){
                 let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
                 let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
+                let active_ann_url = APIFunction.job_anniversary("active",biz.business_id);
+                let up_ann_url = APIFunction.job_anniversary("upcoming",biz.business_id);
                 let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
                 let active_res = await getAPIs(active_birthdays_url,token);
+                let active_ann_res = await getAPIs(active_ann_url,token);
+                let up_ann_res = await getAPIs(up_ann_url,token);
+                console.log("Celebrations",up_ann_res,active_ann_res)
                 let active_birthdays = active_res && active_res.results && Array.isArray(active_res.results) ? 
                 active_res.results.map((item)=>(
                     {
@@ -92,10 +99,26 @@ export default function People({route,navigation}) {
                     {
                         title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
                         avatar: item.photo,
-                        subtitle: 'Tech Support',
+                        subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : "Lead Designer",
                         icon: require('../../assets/images/icons/cake.png')
                     }
                 )) : []
+
+                let upcoming_ann = up_ann_res && up_ann_res.results && Array.isArray(up_ann_res.results) ? 
+                up_ann_res.results.map((item)=>({
+                    title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
+                    avatar: item && item.photo ? item.photo : require('../../assets/images/dummy/placeholder.png'),
+                    subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
+                    icon: require('../../assets/images/icons/document2.png'),
+                })) : [];
+
+                let active_ann = active_ann_res && active_ann_res.results && Array.isArray(active_ann_res.results) ? 
+                up_ann_res.results.map((item)=>({
+                    title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
+                    avatar: item && item.photo ? item.photo : require('../../assets/images/dummy/placeholder.png'),
+                    subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
+                    icon: require('../../assets/images/icons/document2.png'),
+                })) : [];
 
                 let celeb = [
                     {
@@ -108,7 +131,7 @@ export default function People({route,navigation}) {
                         key: '2',
                         date: moment(new Date()).format("MMM DD"),
                         heading: 'Job Anniversary',
-                        data: []
+                        data: active_ann
                         
                     },
                     {
@@ -119,16 +142,9 @@ export default function People({route,navigation}) {
                     },
                     {
                         key: '2',
-                        date: 'Aug 28',
+                        date: moment(new Date()).format("MMM DD"),
                         heading: 'Upcoming Anniversary',
-                        data: [
-                            {
-                            title: 'Naomi Ashley’s 1 year anniversary',
-                            avatar: require('../../assets/images/dummy/placeholder.png'),
-                            subtitle: 'Tech Support',
-                            icon: require('../../assets/images/icons/document2.png'),
-                            },
-                        ]
+                        data: upcoming_ann
                         
                     },
                 ];
@@ -136,16 +152,15 @@ export default function People({route,navigation}) {
             }
 
             if(selected === "Who's out"){
-                console.log("selected--",token)
                 let whos_out_url = APIFunction.whos_out(biz.business_id,"active");
                 let whos_out_res = await getAPIs(whos_out_url,token);
-                console.log("whos---out",whos_out_url,whos_out_res)
                 let data = whos_out_res && whos_out_res.results && Array.isArray(whos_out_res.results) ?
                  whos_out_res.results.map((item,index)=>(
                     {
-                        title: `${item && item.first_name ? Capitalize(item.first_name) : ""} ${item && item.first_name ? Capitalize(item.first_name) : ""}`,
+                        title: `${item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""} ${item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""}`,
                         avatar: require('../../assets/images/dummy/placeholder.png'),
-                        subtitle: 'Tech Support',
+                        subtitle: item && item.employee && item.employee.job && item.employee.job.title ? 
+                        Capitalize(item.employee.job.title) : "",
                         status: item.title,
                         background: 'pink',
                     }
@@ -328,7 +343,6 @@ export default function People({route,navigation}) {
                         renderSectionHeader={({ section }) => {
                             return (
                             <View style={[styles.headingContainer]}>
-                                {console.log("section---",section)}
                                 <Text numberOfLines={1} style={styles.heading2}>{section.heading}</Text> 
                                 <Image resizeMode="contain" source={downIcon} style={styles.downIcon} />
                             </View>
@@ -336,7 +350,6 @@ export default function People({route,navigation}) {
                         />
                      ) : null
                 }
-                {console.log("---|||selected",celebrations)}
                 {
                     !loading && selected === "Celebrations" && celebrations && celebrations.active_bithdays && celebrations.upcoming_birthdays
                     &&
@@ -357,7 +370,6 @@ export default function People({route,navigation}) {
                         </View>
                     ) : null
                 }
-                {console.log("---||---whos_outs",whosOut)}
                 {
                     selected === "Who's out" && Array.isArray(whosOut) && whosOut.length > 0 && !loading ? (
                         <SectionList
@@ -405,7 +417,7 @@ export default function People({route,navigation}) {
                         <FlatList
                     data={personsList}
                     keyExtractor={(item) => item.key}
-                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={() =>async () => {
+                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={async () => {
                         await storeData("tmember",item)
                         navigation.navigate('MemberProfile')
                     }}/>}
@@ -417,7 +429,7 @@ export default function People({route,navigation}) {
                     ) : null
                 }
             
-                <FilterModal onPressHandle={handleFilter} isVisible={modal} onHide={() => setModal(false)}/>
+                <FilterModal onPressHandle={handleSearch} isVisible={modal} onHide={() => setModal(false)}/>
             </View>
         </ScreenWrapper>
     )

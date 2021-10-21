@@ -131,7 +131,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.reactnativeboilerplacehermes"
+       applicationId "com.reactnativeboilerplacehermes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

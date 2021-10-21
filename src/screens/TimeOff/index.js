@@ -3,22 +3,23 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import { height, totalSize, width } from 'react-native-dimension'
 import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
-import { TimeoffModal } from '../../components/ContactModal'
+import { TimeoffModal, WarningModal } from '../../components/ContactModal'
 import PersonCard from '../../components/PersonCard'
 import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import SearchBox from '../../components/SearchBox'
 import { TimeoffVertical } from '../../components/Timeoff'
 import TrainingList from '../../components/TrainingList'
-import { APIFunction, getAPIs } from '../../utills/api'
+import { APIFunction, deleteAPIs, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { PageLoader, Reload } from '../../utills/components'
+import { Container, LottieIcon, PageLoader, Reload } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
-import { getData, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods'
+import { getData, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
+import Emptyjson from '../../assets/lottie/empty.json'
 
 
 
@@ -39,6 +40,31 @@ export default function TimeOff({navigation}) {
     const [modal,setModal] = useState(false);
     const [current,setCurrent] = useState(null);
     const [process,setProcess] = useState(true)
+    const [show,setShow] = useState(false);
+    const [del,setDelete] = useState(null);
+    const [cancel,setCancel] =  useState(false);
+    const [text,setText] = useState("");
+
+
+    const cancelRequest = async () => {
+        try{
+          setCancel(true)
+          let about = await getData("about_me")
+          let biz = await getStoredBusiness();
+          let cancel_url = APIFunction.delete_timeoff(biz.business_id,about.id,del.id);
+          let res = await deleteAPIs(cancel_url);
+          let filtered = requests.filter(item=>item.id !== del.id);
+          setRequests(filtered);
+          setShow(false);
+          setCancel(false);
+          return ToastSuccess("Request has been canceled");
+        }catch(err){
+          setCancel(false);
+          setShow(false);
+          ToastError(err.msg)
+        }
+      }
+
     const getTimeOffs = async () => {
         try{
             setLoading(true);
@@ -52,7 +78,6 @@ export default function TimeOff({navigation}) {
             setLoading(false);
             setProcess(false)
         }catch(err){
-            console.log("Err---",err)
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             ToastError(msg)
         }
@@ -102,6 +127,17 @@ export default function TimeOff({navigation}) {
                                 <Reload />
                             ) : null
                         }
+                        {
+                            tabs && Array.isArray(tabs) && tabs.length === 0 ? (
+                                <Container style={{
+                                    alignItems : "center"
+                                }}>
+                                    <LottieIcon 
+                                        icon={Emptyjson}
+                                    />
+                                </Container>
+                            ) : null
+                        }
                         {selected === 'Active' &&
                             <>
                                 <View style={styles.headingContainer}>
@@ -110,6 +146,11 @@ export default function TimeOff({navigation}) {
                                 <TimeoffVertical
                                     data={'active'}
                                     load={active}
+                                    setModal={(item)=>{
+                                        setText("Are you sure you want to end this leave?")
+                                        setDelete(item);
+                                        return setShow(true);
+                                    }}
                                 />
                             </>
                         }
@@ -121,6 +162,11 @@ export default function TimeOff({navigation}) {
                                 <TimeoffVertical
                                     data={'request'}
                                     load={requests}
+                                    setModal={(item)=>{
+                                        setDelete(item);
+                                        setText("Are you sure you want to cancel this request?")
+                                        return setShow(true);
+                                    }}
                                 />
                             </React.Fragment>
                         }
@@ -130,15 +176,11 @@ export default function TimeOff({navigation}) {
                                     <Text style={styles.heading}></Text>
                                 </View>
                                 <TimeoffVertical
-                                    // data={
-                                    //     ['balance', 'fewDays', 'balance', 'balance']
-                                    // }
                                     data={'fewDays'}
                                     load={history}
                                     setModal={(id)=>{
-                                        console.log("id---",id)
-                                        setCurrent(id)
-                                        setModal(true)
+                                        // setCurrent(id)
+                                        // setModal(true)
                                     }}
                                 />
                             </React.Fragment>
@@ -177,6 +219,15 @@ export default function TimeOff({navigation}) {
                         setModal(true);
                     },1000)
                 }}
+            />
+            <WarningModal 
+              isVisible={show}
+              onHide={()=>{
+                setShow(false)
+              }}
+              question={text}
+              performAction={cancelRequest}
+              loading={cancel}
             />
         </ScreenWrapper>
     )

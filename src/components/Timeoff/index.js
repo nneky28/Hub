@@ -24,22 +24,31 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 const TimeoffVertical = ({data,load,setModal}) => {
-  console.log("TimeoffVertical",load)
   return (
-    <FlatList
-      columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
-      data={load}
-      nestedScrollEnabled={true}
-      numColumns={2}
-      ItemSeparatorComponent={() => <View style={CommonStyles.marginTop_3} />}
-      keyExtractor={(i) => String(Math.random())}
-      contentContainerStyle={styles.flatListVertical}
-      showsHorizontalScrollIndicator={false}
-      renderItem={({item}) => <RenderItemVertical 
-        fData={item} item={data} 
-        setModal={setModal}
-      />}
-    />
+    <React.Fragment>
+      {
+        load && Array.isArray(load) && load.length > 0 ? (
+          <FlatList
+            columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
+            data={load}
+            nestedScrollEnabled={true}
+            numColumns={2}
+            ItemSeparatorComponent={() => <View style={CommonStyles.marginTop_3} />}
+            keyExtractor={(i) => String(Math.random())}
+            contentContainerStyle={styles.flatListVertical}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item}) => <RenderItemVertical 
+              fData={item} item={data} 
+              setModal={setModal}
+            />}
+          />
+        ) : (
+          <View style={{justifyContent : "center", alignItems : "center",flex : 1}}>
+                  <LottieIcon icon={Emptyjson} />
+              </View>
+        )
+      }
+    </React.Fragment>
   );
 };
 
@@ -128,14 +137,18 @@ const RenderItem = ({item,tab,showModal}) => {
               size={width(35)}
               key={Math.random()}
               unfilledColor={AppColors.gray1}
-              progress={tab == 'active' ? 0.5 : 0}
+              progress={
+                tab == 'active' && item && item.days_taken && item.days_requested ? 
+                numeral(item.days_taken/item.days_requested).format("0") : 0
+              }
             />
             <View style={styles.absolute}>
+              {console.log("item--||",item)}
               {tab == 'active' ? (
                 <>
-                  <Text style={styles.count}>3</Text>
+                  <Text style={styles.count}>{item && item.days_taken ? item.days_taken : 0}</Text>
                   <View style={styles.line1} />
-                  <Text style={styles.count1}>5</Text>
+                  <Text style={styles.count1}>{item && item.days_requested ? item.days_requested : 0}</Text>
                   <Text style={styles.count2}>Days</Text>
                 </>
               ) : tab == 'available' ? (
@@ -185,7 +198,7 @@ const RenderItem = ({item,tab,showModal}) => {
               )}
             </View>
           </View>
-          {tab == 'request' && (
+          {tab == 'request' || tab== "active" ? (
             <>
               <View style={[styles.line, {marginTop: height(2)}]} />
               <View style={[styles.row1, {width: '100%'}]}>
@@ -204,7 +217,7 @@ const RenderItem = ({item,tab,showModal}) => {
                 </View>
               </View>
             </>
-          )}
+          ) : null}
           <View style={[styles.line, {marginTop: height(2)}]} />
           <TouchableOpacity activeOpacity={0.8}
             onPress={()=>{
@@ -213,8 +226,14 @@ const RenderItem = ({item,tab,showModal}) => {
               }
             }}
           >
-            {status == 'active' ? (
-              <Text style={styles.endText}>End Leave</Text>
+            {tab == 'active' ? (
+              <TouchableOpacity
+                onPress={()=>{
+                  //return showModal(item.id,item,"active")
+                }}
+              >
+                <Text style={styles.endText}>End Leave</Text>
+              </TouchableOpacity>
             ) : tab == 'available' ? (
               <Text style={[styles.endText, {color: AppColors.green}]}>
                 Request
@@ -398,9 +417,9 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 return setModal(fData.id)
               }
               if(status === "request"){
+                setModal(fData)
                 return 
               }
-              //console.log("--||--")
             }}
           >
             {status == 'active' ? (

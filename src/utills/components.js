@@ -134,7 +134,10 @@ export const SizedBox = (props) => (
   export const Container = (props) => (
     <View flex={props.flex || 1}
       style={{
-        padding : props.padding || 2
+        flex : props.flex || 1,
+        width : props.widthPercent || '100%',
+        padding : props.padding || 2,
+        ...props.style
       }}
     >
       {props.children}
