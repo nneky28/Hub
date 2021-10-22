@@ -11,7 +11,7 @@ import SearchBox from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { LottieIcon, PageLoader } from '../../utills/components'
+import { Container, LottieIcon, PageLoader } from '../../utills/components'
 //import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import styles from './styles'
@@ -40,16 +40,12 @@ export default function People({route,navigation}) {
     const dispatch = useDispatch();
     const [loading,setLoading] = React.useState(null);
     const [tags,setTags] = React.useState([]);
+
     const handleSearch = (text) => {
-        if (text.length > 0) {
-            let filtered = persons.filter(item => (
-                item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text)
-            ) ||
-            item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text)
-        );
-            // if(tags && Array.isArray(tags) && tags.length > 0){
-                
-            // }
+        if (text.length > 0){
+            let filtered = persons.filter(item => {
+                return (item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text)) || (item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text))
+            });
             setPersonsList(filtered);
         }
         else
@@ -157,7 +153,7 @@ export default function People({route,navigation}) {
                 let data = whos_out_res && whos_out_res.results && Array.isArray(whos_out_res.results) ?
                  whos_out_res.results.map((item,index)=>(
                     {
-                        title: `${item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""} ${item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""}`,
+                        title: `${item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""} ${item && item.employee && item.employee.last_name ? Capitalize(item.employee.last_name) : ""}`,
                         avatar: require('../../assets/images/dummy/placeholder.png'),
                         subtitle: item && item.employee && item.employee.job && item.employee.job.title ? 
                         Capitalize(item.employee.job.title) : "",
@@ -359,15 +355,19 @@ export default function People({route,navigation}) {
                 }
                 {
                     (
-                        (selected === "All" || selected === "My Team") && Array.isArray(personsList) &&
+                        (selected === "All" || selected === "My Team") && personsList && Array.isArray(personsList) &&
                         personsList.length === 0 && !loading
                     ) || (
                         selected === "Who's out" && Array.isArray(whosOut) &&
                         whosOut.length === 0 && !loading
                     ) ? (
-                        <View>
+                        <Container
+                            style={{
+                                alignItems : "center"
+                            }}
+                        >
                             <LottieIcon icon={Empty} />
-                        </View>
+                        </Container>
                     ) : null
                 }
                 {

@@ -28,6 +28,7 @@ import AppColors from './AppColors';
 import { View } from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
+import { TouchableRipple } from 'react-native-paper';
 
 export const PageLoader = props => {
   return(
@@ -136,10 +137,32 @@ export const SizedBox = (props) => (
       style={{
         flex : props.flex || 1,
         width : props.widthPercent || '100%',
-        padding : props.padding || 2,
+        padding : props.padding || height(2),
+        paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
+        paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
+        marginLeft : props.marginLeft,
         ...props.style
       }}
     >
       {props.children}
     </View>
   )
+
+  export const TouchWrap = (props) => (
+    <TouchableRipple
+      onPress={props.onPress}
+      rippleColor="transparent"
+    >
+      {props.children}
+    </TouchableRipple>
+  )
+  // width: width(90),
+  //   borderColor: AppColors.gray1,
+  //   backgroundColor: AppColors.white,
+  //   borderWidth: 1,
+  //   borderRadius: 6,
+  //   paddingVertical: height(3),
+  //   paddingHorizontal: width(3),
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'space-between'

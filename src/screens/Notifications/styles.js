@@ -2,6 +2,7 @@ import {StyleSheet} from 'react-native';
 import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
+import { alignItems } from 'styled-system';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -76,15 +77,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
+  listItemContainer2: {
+    width: width(90),
+    borderColor: AppColors.gray1,
+    backgroundColor: AppColors.white,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: height(3),
+    paddingHorizontal: width(3),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   avatarStyle: {
     height: height(5),
     width: height(5),
     borderRadius: height(4.75),
   },
   textContainer: {
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     height: height(5),
-    marginLeft: width(2)
+    marginLeft: width(2),
+    width : width(60),
+    //alignItems : "center"
   },
 
   flatListIcon: {

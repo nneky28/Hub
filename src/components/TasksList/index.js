@@ -182,9 +182,19 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
           <View style={[styles.line, {marginTop: height(0.5)}]} />
         </React.Fragment>
       ) : null}
+      {
+        selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) && anniversary.length === 0 ? (
+          <Container
+            style={{
+              alignItems : "center"
+            }}
+          >
+            <LottieIcon icon={Emptyjson} />
+          </Container>
+        ) : null
+      }
       {show ? (
         <>
-        {console.log("anniversary---",anniversary)}
           <FlatList
             data={selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) ? anniversary : selected !==  "Job Anniversary" && item && item.title !== "Celebrations" && whos_out && Array.isArray(whos_out) ?
             whos_out : 

@@ -23,6 +23,8 @@ import {showMessage} from 'react-native-flash-message';
 import { FontFamily } from '../utills/FontFamily';
 import { getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useFocusEffect } from '@react-navigation/core';
+import moment from 'moment';
 const Drawer = ({navigation, ...props}) => {
 
   const dispatch = useDispatch();
@@ -45,6 +47,26 @@ const Drawer = ({navigation, ...props}) => {
     setUser(user);
     setAbout(about_me);
   }
+  const timeUserOut = async () => {
+    try{
+      let expiry = await getData("token_expiry");
+      console.log("expiry",expiry)
+      let diff = moment(expiry).diff(moment(new Date()),'hours');
+      console.log("diff",diff,expiry)
+      if(!expiry || diff > 3){
+        return logoutMethod()
+      }
+      
+    }catch(err){
+      console.log("err",err)
+      return logoutMethod()
+    }
+  }
+  useFocusEffect(
+    React.useCallback(()=>{
+      timeUserOut()
+    },[])
+  )
   useEffect(()=>{
     getUserDetails();
   },[])

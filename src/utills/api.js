@@ -208,7 +208,7 @@ export const postNoToken = (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          //logError(endPoint,path,error)
+          console.log("error",error.response)
           if (error.response) {
             reject({status: 400, msg: error.response.data});
           } else {
