@@ -28,13 +28,13 @@ const AssetsList = ({data}) => {
             }
             
             <View style={styles.details}>
-              <Text style={styles.text}>{item && item.name ? item.name: ""}</Text>
+              <Text style={styles.text}>{item && item.name ? item.name: "No name"}</Text>
               <Text style={styles.text1}>{item && item.brand ? item.brand : ""}</Text>
-              <Button
+              {/* <Button
                 title="Report"
                 textStyle={styles.buttonText}
                 containerStyle={styles.button}
-              />
+              /> */}
             </View>
           </View>
         );

@@ -137,9 +137,26 @@ const styles = StyleSheet.create({
     marginTop: height(1.5),
     marginLeft: width(2)
   },
+
+  filterIconContainerIOS: {
+    backgroundColor: AppColors.lightGreen,
+    paddingVertical: height(1),
+    paddingHorizontal: width(2),
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 6,
+    marginTop: height(1.5),
+    marginLeft: width(2)
+  },
+
   filterIcon: {
     width: width(5),
     height: height(2.5),
+  },
+  filterIconIOS: {
+    width: width(5),
+    height: height(2),
   },
   subText: {
     fontSize: width(2.5),

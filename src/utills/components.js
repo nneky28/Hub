@@ -25,10 +25,14 @@ import Svg, {
     SvgUri,
   } from 'react-native-svg';
 import AppColors from './AppColors';
-import { View } from 'react-native';
+import { View ,Dimensions} from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
 import { TouchableRipple } from 'react-native-paper';
+
+const winDimensions = Dimensions.get("window")
+const winWidth = winDimensions.width;
+const winHeight = winDimensions.height
 
 export const PageLoader = props => {
   return(
@@ -135,11 +139,12 @@ export const SizedBox = (props) => (
   export const Container = (props) => (
     <View flex={props.flex || 1}
       style={{
-        flex : props.flex || 1,
+        flex : props.flex || 0,
         width : props.widthPercent || '100%',
         padding : props.padding || height(2),
         paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
+        marginTop : props.marginTop ? height(props.marginTop) : 0,
         marginLeft : props.marginLeft,
         ...props.style
       }}
@@ -156,13 +161,22 @@ export const SizedBox = (props) => (
       {props.children}
     </TouchableRipple>
   )
-  // width: width(90),
-  //   borderColor: AppColors.gray1,
-  //   backgroundColor: AppColors.white,
-  //   borderWidth: 1,
-  //   borderRadius: 6,
-  //   paddingVertical: height(3),
-  //   paddingHorizontal: width(3),
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'space-between'
+  export const Width = (val) => {
+    let res;
+    val === undefined || null ? (res = null) : (res = (val / 100) * winWidth);
+    return res;
+  };
+  export const Rounded = (props) =>(
+    <Container
+      style={{
+        width : Width(props.size || 15),
+        height: Width(props.size || 15),
+        borderRadius : 50,
+        backgroundColor : props.backgroundColor || AppColors.green,
+        justifyContent : "center",
+        alignItems : "center"
+      }}
+    >
+      {props.children}
+  </Container>
+  )

@@ -38,4 +38,11 @@ const AppColors = {
     elevation: 0,
   },
 };
+
+export const ColorList = [
+  "#FFE7E7",
+  "#C2D4FF",
+  "#FCE2AF",
+  "#99E6FF"
+]
 export default AppColors;

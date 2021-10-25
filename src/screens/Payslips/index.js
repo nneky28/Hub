@@ -6,8 +6,10 @@ import { downIcon, fileIcon, HorDotIcon, leftIcon } from '../../assets/images';
 import { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import CommonStyles from '../../utills/CommonStyles';
+import { Container, LottieIcon } from '../../utills/components';
 import { payslips } from '../../utills/data/payslips';
 import styles from './styles';
+import Emptyjson from '../../assets/lottie/empty.json'
 
 
 export default function Payslips({navigation}) {
@@ -65,7 +67,7 @@ export default function Payslips({navigation}) {
                         defaultValue="Month"
                         textStyle={[styles.text1, {marginLeft: width(3.5)}]}
                         dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
-                        onSelect={(index,text) => setFieldValue(name, text)}
+                        //onSelect={(index,text) => setFieldValue(name, text)}
                         renderRightComponent={() => <Image 
                                     resizeMode="contain" 
                                     source={downIcon} 
@@ -88,7 +90,7 @@ export default function Payslips({navigation}) {
                         defaultValue="Year"
                         textStyle={[styles.text1, {marginLeft: width(3.5)}]}
                         dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
-                        onSelect={(index,text) => setFieldValue(name, text)}
+                        //onSelect={(index,text) => setFieldValue(name, text)}
                         renderRightComponent={() => <Image 
                                     resizeMode="contain" 
                                     source={downIcon} 
@@ -98,7 +100,7 @@ export default function Payslips({navigation}) {
                         />      
                     </TouchableOpacity>
                 </View>                   
-            <FlatList
+            {/* <FlatList
                 data={payslips}
                 keyExtractor={(item) => item.key}
                 renderItem={ListComponent}
@@ -106,7 +108,18 @@ export default function Payslips({navigation}) {
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled={true}
                 contentContainerStyle={CommonStyles.marginTop_2}
-                />
+                /> */}
+                <Container
+                    marginTop={10}
+                    style={{
+                        justifyContent : "center",
+                        alignItems : "center"
+                    }}
+                >
+                    <LottieIcon 
+                        icon={Emptyjson}
+                    />
+                </Container>
             </View>
             <DocumentModal isVisible={modal} onHide={() => setModal(false)}/> 
         </ScreenWrapper>  

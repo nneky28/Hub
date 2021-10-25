@@ -229,6 +229,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
                       setData({...data,start_date : value})
                     }}
                     maximumDate={null}
+                    color={AppColors.black}
                 />
                 <Field
                     name="end_date"
@@ -239,6 +240,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
                       setData({...data,end_date : value})
                     }}
                     maximumDate={null}
+                    color={AppColors.black}
                 />
                   <Field
                     component={CustomInput}
@@ -251,6 +253,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
                     }}
                     height={100}
                     multiline={true}
+                    color={AppColors.black}
                   />
                   <View style={{width: '100%', padding : '5%'}}>
                     <CustomButton

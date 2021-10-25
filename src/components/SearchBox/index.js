@@ -28,6 +28,33 @@ export default function SearchBox({title, containerStyle, onSubmitEditing}) {
             keyboardType='default'
             onChangeText={onSubmitEditing}
             onSubmitEditing={onSubmitEditing}
+            color={AppColors.black}
+            />
+            
+        </View>
+    );
+}
+
+export const SearchBoxIOS = ({title, containerStyle, onSubmitEditing}) => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
+        Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
+
+    }, []);
+    return (
+        <View style={[styles.container, containerStyle]}>
+            <Image source={searchIcon} style={styles.searchIcon}/>
+            <TextInput 
+            style={styles.inputStyleIOS}
+            placeholder={title}
+            fontFamily={FontFamily.BlackSansRegular}
+            placeholderTextColor={AppColors.black3}
+            keyboardType='default'
+            onChangeText={onSubmitEditing}
+            onSubmitEditing={onSubmitEditing}
+            color={AppColors.black}
             />
             
         </View>

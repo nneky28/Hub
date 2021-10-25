@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Platform, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import { totalSize, width } from 'react-native-dimension'
 import { useDispatch, useSelector } from 'react-redux'
 import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
@@ -7,11 +7,11 @@ import { FilterModal } from '../../components/ContactModal'
 import PersonCard from '../../components/PersonCard'
 import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import SearchBox from '../../components/SearchBox'
+import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
-import AppColors from '../../utills/AppColors'
+import AppColors, { ColorList } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, LottieIcon, PageLoader } from '../../utills/components'
+import { Container, H1, LottieIcon, PageLoader, Rounded } from '../../utills/components'
 //import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import styles from './styles'
@@ -150,11 +150,13 @@ export default function People({route,navigation}) {
             if(selected === "Who's out"){
                 let whos_out_url = APIFunction.whos_out(biz.business_id,"active");
                 let whos_out_res = await getAPIs(whos_out_url,token);
+                console.log("whos_out_res====",whos_out_res)
+
                 let data = whos_out_res && whos_out_res.results && Array.isArray(whos_out_res.results) ?
                  whos_out_res.results.map((item,index)=>(
                     {
                         title: `${item && item.employee && item.employee.first_name ? Capitalize(item.employee.first_name) : ""} ${item && item.employee && item.employee.last_name ? Capitalize(item.employee.last_name) : ""}`,
-                        avatar: require('../../assets/images/dummy/placeholder.png'),
+                        avatar: item.photo ? item.photo : null,
                         subtitle: item && item.employee && item.employee.job && item.employee.job.title ? 
                         Capitalize(item.employee.job.title) : "",
                         status: item.title,
@@ -256,7 +258,18 @@ export default function People({route,navigation}) {
         style={[styles.listItemContainer, {backgroundColor: bgColor, borderColor: borderColor}]}
         >
             <View style={CommonStyles.rowJustifySpaceBtw}>
-                <Image source={item.avatar} style={styles.avatarStyle} />
+                {
+                    item && item.avatar ? (
+                        <Image source={item.avatar} style={styles.avatarStyle} />
+                    ) : (
+                        <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                          <H1>
+                            {item && item.title && item.title.length > 0 ? Capitalize([...item.title][0]) : ""}
+                            {item && item.title && item.title.length > 1 ? `${Capitalize([...item.title][1])}` : ""}
+                          </H1>
+                        </Rounded>
+                    )
+                }
                 <View style={styles.textContainer}>
                     <Text style={styles.titleText}>{item.title}</Text>
                     <Text style={styles.subText}>{item.subtitle}</Text>
@@ -311,7 +324,7 @@ export default function People({route,navigation}) {
                     ))}
                 </ScrollView>
                 <View style={styles.line2} />
-                {selected === "All" ? (
+                {selected === "All" && Platform.OS === "android" ? (
                     <View style={styles.searchBoxContainer}>
                         <SearchBox 
                             title="Search for Name " 
@@ -322,8 +335,21 @@ export default function People({route,navigation}) {
                             <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
                         </TouchableOpacity>
                     </View>
+                    ) : selected === "All" ? (
+                        <View style={styles.searchBoxContainer}>
+                            <SearchBoxIOS 
+                                title="Search for Name " 
+                                containerStyle={styles.searchBoxStyle}
+                                onSubmitEditing={handleSearch}    
+                            />
+                            <TouchableOpacity style={styles.filterIconContainerIOS} onPress={() => setModal(!modal)}>
+                                <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
+                            </TouchableOpacity>
+                        </View>
                     ) : null
+                    
                 }
+
                 {
                     loading ? <PageLoader /> : null
                 }

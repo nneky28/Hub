@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { leftIcon, HorDotIcon, fileIcon } from '../../assets/images';
 import ContactModal, { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import SearchBox from '../../components/SearchBox';
+import SearchBox, { SearchBoxIOS } from '../../components/SearchBox';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
+import { Container, LottieIcon } from '../../utills/components';
 import { documents } from '../../utills/data/documents';
 import styles from './styles';
+import Emptyjson from '../../assets/lottie/empty.json'
 
 
 
@@ -37,7 +39,9 @@ export default function Documents({navigation}) {
     }
         
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper 
+            scrollEnabled={true}
+        >
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -49,8 +53,14 @@ export default function Documents({navigation}) {
             <View style={styles.line} />
 
             <View style={styles.mainViewContainer}>
-            <SearchBox title="Search for document"/>
-            <FlatList
+                {
+                    Platform.OS === "android" ? (
+                        <SearchBox title="Search for document"/>
+                    ) : (
+                        <SearchBoxIOS title="Search for document"/>
+                    )
+                }
+            {/* <FlatList
                 data={documents}
                 keyExtractor={(item) => item.key}
                 renderItem={ListComponent}
@@ -58,7 +68,18 @@ export default function Documents({navigation}) {
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled={true}
                 contentContainerStyle={CommonStyles.marginTop_2}
-                />
+                /> */}
+                <Container
+                    marginTop={10}
+                    style={{
+                        justifyContent : "center",
+                        alignItems : "center"
+                    }}
+                >
+                    <LottieIcon 
+                        icon={Emptyjson}
+                    />
+                </Container>
             </View>
             <DocumentModal isVisible={modal} onHide={() => setModal(false)}/>
         </ScreenWrapper>  

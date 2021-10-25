@@ -139,11 +139,11 @@ const RenderItem = ({item,tab,showModal}) => {
               unfilledColor={AppColors.gray1}
               progress={
                 tab == 'active' && item && item.days_taken && item.days_requested ? 
-                numeral(item.days_taken/item.days_requested).format("0") : 0
+                numeral(item.days_taken/item.days_requested).format("0.00") : tab === "available" && item.total_days_taken ?  
+                numeral(item.total_days_taken/item.max_days_allowed).format("0.00") : 0
               }
             />
             <View style={styles.absolute}>
-              {console.log("item--||",item)}
               {tab == 'active' ? (
                 <>
                   <Text style={styles.count}>{item && item.days_taken ? item.days_taken : 0}</Text>
@@ -232,13 +232,21 @@ const RenderItem = ({item,tab,showModal}) => {
                   //return showModal(item.id,item,"active")
                 }}
               >
-                <Text style={styles.endText}>End Leave</Text>
+                <Text style={styles.endText}>
+                  {/* End Leave */}
+                  </Text>
               </TouchableOpacity>
-            ) : tab == 'available' ? (
+            ) : tab == 'available' && item && item.max_days_allowed && 
+            item.total_days_taken !== undefined && item.max_days_allowed > item.total_days_taken ? (
               <Text style={[styles.endText, {color: AppColors.green}]}>
                 Request
               </Text>
-            ) : null}
+            ) : tab == 'available' ? <React.Fragment>
+                <Text style={{
+                  color : AppColors.gray1
+                }}>Request</Text>
+              </React.Fragment> : null
+            }
             {
               tab === "request" ? (
                 <TouchableOpacity onPress={()=>{
@@ -313,17 +321,18 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 fData && fData.category ? Capitalize(fData.category) : "" 
             }
           </Text>
-          <View style={{width: width(30), height: width(30)}}>
+          <View style={{width: width(35), height: width(35)}}>
             <Circle
               borderWidth={0}
               thickness={width(3)}
               color={AppColors.green}
-              size={width(30)}
+              size={width(35)}
               key={Math.random()}
               unfilledColor={AppColors.gray1}
               progress={
                 fData && fData.days_taken &&
-                fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : 0
+                fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : fData.total_days_taken > 0 ?
+                numeral(fData.total_days_taken/fData.max_days_allowed).format("0.00") : 0
               }
               direction='counter-clockwise'
             />
@@ -337,12 +346,29 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 </>
               ) : status == 'balance' ? (
                 <>
-                  <Text style={[styles.count, {color: AppColors.black1}]}>
-                    {fData && fData.max_days_allowed ? fData.max_days_allowed : 0}
-                  </Text>
-                  <Text style={[styles.count2, {color: AppColors.black1}]}>
-                    Days
-                  </Text>
+                  {console.log("Balance",fData)}
+                  {
+                  fData && fData.total_days_taken > 0 ? (
+                    <>
+                      <Text style={styles.count}>{fData.total_days_taken}</Text>
+                      <View style={styles.line1} />
+                      <Text style={styles.count1}>{fData && fData.max_days_allowed ?  fData.max_days_allowed : 0}</Text>
+                      <Text style={styles.count2}>Days</Text>
+                    </>
+                  ) : null
+                }
+                  {
+                    fData && fData.total_days_taken === 0 ? (
+                      <React.Fragment>
+                        <Text style={[styles.count, {color: AppColors.black1}]}>
+                          {fData && fData.max_days_allowed ? fData.max_days_allowed : 0}
+                        </Text>
+                        <Text style={[styles.count2, {color: AppColors.black1}]}>
+                          Days
+                        </Text>
+                      </React.Fragment>
+                    ) : null
+                  }
                   {
                     fData && fData.is_paid ? (
                       <Button
@@ -423,12 +449,17 @@ const RenderItemVertical = ({item,fData,setModal}) => {
             }}
           >
             {status == 'active' ? (
-              <Text style={styles.endText}>End Leave</Text>
-            ) : status == 'balance' ? (
+              <Text style={styles.endText}>
+                {/* End Leave */}
+              </Text>
+            ) : status == 'balance' && fData && fData.max_days_allowed && fData.total_days_taken !== undefined && fData.max_days_allowed > fData.total_days_taken  ? (
               <Text style={[styles.endText, {color: AppColors.green}]}>
                 Request
               </Text>
-            ) : null}
+            ) : status == 'balance' ? <React.Fragment>
+                <Text style={[styles.endText, {color: AppColors.gray1}]}>Request</Text>
+              </React.Fragment> : null
+            }
             {
               status === "request" ? (
                 <Text style={styles.endText}>Cancel Request</Text>

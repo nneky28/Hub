@@ -33,6 +33,7 @@ const CustomInput = (props) => {
         ]}
         fontFamily={FontFamily.BlackSansRegular}
         placeholderTextColor={AppColors.black3}
+        color={AppColors.black}
         value={value}
         onChangeText={(text) => {
           console.log("Text---",text)

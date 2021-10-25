@@ -11,8 +11,9 @@ import ContactModal from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { scrollToPosition } from '../../Redux/Actions/Config';
 import { APIFunction, getAPIs } from '../../utills/api';
+import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { ProfileLoader } from '../../utills/components';
+import { H1, ProfileLoader, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
@@ -244,7 +245,16 @@ export default function Profile({navigation}) {
                           about && about.photo ? (
                             <Image source={{uri : about.photo}} style={styles.avatarStyle} />   
                           ) : (
-                            <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle} />   
+                            <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
+                            size={20}
+                          >
+                            <H1>
+                              {about && about.first_name && about.first_name.length > 0 ? 
+                                Capitalize([...about.first_name][0]) : ""}
+                              {about && about.last_name && about.last_name.length > 1 ? 
+                              `${Capitalize([...about.last_name][0])}` : ""}
+                            </H1>
+                          </Rounded>
                           )
                         }
                           

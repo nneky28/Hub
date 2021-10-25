@@ -158,8 +158,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                       <Reload />
                      ) : null
                    }
-                                   <View style={styles.toDoContainer}>
-                  <View style={styles.row1}>
+                            {/*       <View style={styles.toDoContainer}>
+                   <View style={styles.row1}>
                     <Text numberOfLines={1} style={styles.text3}>
                       To do
                     </Text>
@@ -174,10 +174,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                         style={styles.icon}
                       />
                     </TouchableOpacity>
-                  </View>
+                  </View> 
                   <View style={styles.line} />
                   <Todo data={smallListUnCompleteTodo} />
-                </View>
+                </View>*/}
                 <Text numberOfLines={1} style={styles.timeOffText}>
                   Time Off
                 </Text>
@@ -249,23 +249,23 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                       </React.Fragment>
                   ) : null
                 }
-                  {
-                    benefits && Array.isArray(benefits) && benefits.length > 0 ? (
-                      <React.Fragment>
-                        <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
-                        <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
-                          benefits={benefits}
-                        />
-                      </React.Fragment>
-                    ) : null
-                  }
-                  <TasksList data={tasksData} 
-                      whos_out={whos_out}
-                      birthdays={active_birthdays}
-                      upcoming_birthdays={upcoming_birthdays}
-                      anniversary={anniversary}
-                      navigate={navigate}
-                    />
+                {
+                  benefits && Array.isArray(benefits) && benefits.length > 0 ? (
+                    <React.Fragment>
+                      <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
+                      <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
+                        benefits={benefits}
+                      />
+                    </React.Fragment>
+                  ) : null
+                }
+                <TasksList data={tasksData} 
+                  whos_out={whos_out}
+                  birthdays={active_birthdays}
+                  upcoming_birthdays={upcoming_birthdays}
+                  anniversary={anniversary}
+                  navigate={navigate}
+                />
               </React.Fragment>
             )
           }

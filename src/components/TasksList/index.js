@@ -19,10 +19,11 @@ import {height} from 'react-native-dimension';
 import { Capitalize, getData } from '../../utills/Methods';
 import { getAPIs } from '../../utills/api';
 import moment from 'moment';
-import { Container, LottieIcon } from '../../utills/components';
+import { Container, H1, LottieIcon, Rounded } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
 import Emptyjson from '../../assets/lottie/empty.json'
 import { useNavigation } from '@react-navigation/core';
+import { ColorList } from '../../utills/AppColors';
 
 if (
   Platform.OS === 'android' &&
@@ -135,7 +136,12 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                         item && item.photo ? (
                           <Image source={{uri : item.photo}} style={styles.image} />
                         ) : (
-                          <Image source={placeholderIcon} style={styles.image} />
+                          <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                            <H1>
+                              {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
+                              {item && item.last_name && item.last_name.length > 1 ? `${Capitalize([...item.last_name][0])}` : ""}
+                            </H1>
+                          </Rounded>
                         )
                       }
                       <View style={{width: '68%'}}>
@@ -208,11 +214,22 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
             renderItem={({item}) => {
               return (
                 <View style={styles.userContainer}>
-                  <Image source={
-                  item && item.employee && item.employee.photo ? 
-                  item.employee.photo : 
-                  placeholderIcon  
-                } style={styles.image} />
+                  {
+                    item && item.employee && item.employee.photo ? (
+                      <Image source={item.employee.photo} style={styles.image} />
+                    ) : (
+                      <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
+                        size={10}
+                      >
+                        <H1>
+                          {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
+                            Capitalize([...item.employee.first_name][0]) : ""}
+                          {item && item.employee.last_name && item.employee.last_name.length > 1 ? 
+                          `${Capitalize([...item.employee.last_name][0])}` : ""}
+                        </H1>
+                      </Rounded>
+                    )
+                  }
                   <View style={styles.details}>
                     {
                       selected !== "Birthdays" && selected !== "Job Anniversary" ? (

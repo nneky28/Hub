@@ -19,6 +19,12 @@ const styles = StyleSheet.create({
     inputStyle: {
         width: width(90),
     },
+    inputStyleIOS: {
+        width: width(90),
+        height : height(4),
+        textAlignVertical : "center",
+        marginLeft : 5
+    },
     text1: {
         fontSize: width(2.75), 
         color: AppColors.black3,

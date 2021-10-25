@@ -1,13 +1,13 @@
 import { useFocusEffect } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Platform, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import { height, totalSize, width } from 'react-native-dimension'
 import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
 import { FilterModal } from '../../components/ContactModal'
 import PersonCard from '../../components/PersonCard'
 import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import SearchBox from '../../components/SearchBox'
+import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import TrainingList from '../../components/TrainingList'
 import { APIFunction, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
@@ -101,7 +101,13 @@ export default function Training({navigation}) {
                     {
                         selected === 'Overview' &&
                         <>
-                        <SearchBox title="Search for Training"/>
+                        {
+                            Platform.OS === "android" ? (
+                                <SearchBox title="Search for Training"/>
+                            ) : (
+                                <SearchBoxIOS title="Search for Training"/>
+                            )
+                        }
                         <View style={styles.headingContainer}>
                             <Text style={styles.heading}>Upcoming</Text>
                         </View>

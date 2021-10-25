@@ -8,12 +8,13 @@ import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { LottieIcon, PageLoader, ProfileLoader } from '../../utills/components';
+import { H1, LottieIcon, PageLoader, ProfileLoader, Rounded } from '../../utills/components';
 import { persons } from '../../utills/data/persons';
 import { FontFamily } from '../../utills/FontFamily';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 import Empty from '../../assets/lottie/empty.json'
+import { ColorList } from '../../utills/AppColors';
 
 
 
@@ -111,7 +112,12 @@ export default function MemberProfile({route,navigation}) {
                             style={styles.avatarStyle} 
                           />   
                       ) : (
-                        <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle} />   
+                        <Rounded  size={20} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                          <H1>
+                            {member && member.first_name && member.first_name.length > 0 ? Capitalize([...member.first_name][0]) : ""}
+                            {member && member.last_name && member.first_name.length > 0 ? `${Capitalize([...member.last_name][0])}` : ""}
+                          </H1>
+                        </Rounded>
                       )
                     }
                       <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
@@ -156,7 +162,6 @@ export default function MemberProfile({route,navigation}) {
                       />
                     ) : null
                   }
-                  {console.log("member--",member)}
                   <FlatList
                   data={members}
                   horizontal
