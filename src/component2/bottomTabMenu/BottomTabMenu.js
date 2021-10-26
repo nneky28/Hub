@@ -95,7 +95,7 @@ const CustomBottomTab = () => {
               textcolor={
                 currentHome === 'ModuleList' ? colorActive : coloDeActive
               }
-              displayText={'Modules'}
+              displayText={'Menu'}
             />
           </TouchableOpacity>
           <TouchableOpacity

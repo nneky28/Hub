@@ -12,7 +12,8 @@ import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
-import { PageLoader, Reload } from '../../utills/components';
+import { ColorList } from '../../utills/AppColors';
+import { H1, PageLoader, Reload, Rounded } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
@@ -127,7 +128,18 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       <View style={styles.header}>
         <View style={styles.row}>
           <TouchableOpacity onPress={() => toggleDrawer()}>
-            <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
+            {
+              business && business.logo ? (
+                <Image resizeMode="contain" source={{uri : business.logo}} style={styles.logo} />
+              ) : (
+                <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                  <H1>
+                      {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
+                      {business && business.business_name && business.business_name.length > 1 ? Capitalize([...business.business_name][1]) : ""}
+                  </H1>
+              </Rounded>
+              )
+            }
           </TouchableOpacity>
           <Text numberOfLines={1} style={styles.text1}>
             {business && business.business_name ? business.business_name : ""}

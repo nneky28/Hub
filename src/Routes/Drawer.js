@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Fragment} from 'react';
-import AppColors from '../utills/AppColors';
+import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import {login, logout} from '../Redux/Actions/Auth';
 import {
@@ -21,10 +21,11 @@ import {
 } from '../assets/images';
 import {showMessage} from 'react-native-flash-message';
 import { FontFamily } from '../utills/FontFamily';
-import { getData, ToastSuccess } from '../utills/Methods';
+import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useFocusEffect } from '@react-navigation/core';
 import moment from 'moment';
+import { H1, Rounded, TouchWrap } from '../utills/components';
 const Drawer = ({navigation, ...props}) => {
 
   const dispatch = useDispatch();
@@ -52,11 +53,9 @@ const Drawer = ({navigation, ...props}) => {
       let expiry = await getData("token_expiry");
       console.log("expiry",expiry)
       let diff = moment(expiry).diff(moment(new Date()),'hours');
-      console.log("diff",diff,expiry)
       if(!expiry || diff > 3){
         return logoutMethod()
       }
-      
     }catch(err){
       console.log("err",err)
       return logoutMethod()
@@ -74,10 +73,21 @@ const Drawer = ({navigation, ...props}) => {
     return (
       <TouchableOpacity style={styles.itemContainer} activeOpacity={0.8}>
         <View style={styles.row}>
-          <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
+          {
+            item && item.logo ? (
+              <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
+            ) : (
+              <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                  <H1>
+                      {item && item.business_name && item.business_name.length > 0 ? Capitalize([...item.business_name][0]) : ""}
+                      {item && item.business_name && item.business_name.length > 1 ? Capitalize([...item.business_name][1]) : ""}
+                  </H1>
+              </Rounded>
+            )
+          }
           <View style={styles.margin}>
             <Text numberOfLines={1} style={styles.text1}>
-              {item && item.business_name ? item.business_name : "" }
+              {item && item.business_name ? Capitalize(item.business_name) : "" }
             </Text>
             <Text numberOfLines={2} style={styles.text2}>
               {user && user.email ? user.email : ""}
@@ -104,7 +114,6 @@ const Drawer = ({navigation, ...props}) => {
       <Text style={styles.text}>Businesses</Text>
       <View style={styles.line} />
       <View style={{height: height(63)}}>
-        {console.log("biz>>>",bizs)}
         <FlatList
           data={bizs ? bizs : []}
           extraData={bizs ? bizs : []}
@@ -116,8 +125,10 @@ const Drawer = ({navigation, ...props}) => {
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />
-      <ItemWithText icon={plusIcon} text="Add Another Buisness " />
-      <ItemWithText icon={settingIcon} text="Settings" />
+      {/* <ItemWithText icon={plusIcon} text="Add Another Buisness " /> */}
+      <ItemWithText icon={settingIcon} text="Settings" onPress={()=>{
+        navigation.navigate("Settings")
+      }}/>
       <ItemWithText onPress={logoutMethod} icon={logoutIcon} text="Sign Out" />
     </Fragment>
   );

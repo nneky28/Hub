@@ -4,9 +4,11 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { cameraIcon, leftIcon } from '../../assets/images';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TextWithIcon from '../../components/TextWithIcon';
+import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
+import { H1, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
-import { getData } from '../../utills/Methods';
+import { Capitalize, getData } from '../../utills/Methods';
 import styles from './styles';
 
 
@@ -20,7 +22,6 @@ export default function EditProfile({navigation}) {
             const profile = await getData("profile");
             setAbout(profile.about);
         }catch(err){
-            console.log("member---",err)
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             ToastError(msg)
         }
@@ -50,9 +51,12 @@ export default function EditProfile({navigation}) {
                                 source={{uri:about.photo}}
                                 style={styles.avatarStyle}/>
                         ) : (
-                            <Image source={require('../../assets/images/dummy/placeholder.png')} 
-                                style={styles.avatarStyle} 
-                            /> 
+                            <Rounded  size={25} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                                <H1>
+                                    {about && about.first_name && about.first_name.length > 0 ? Capitalize([...about.first_name][0]) : ""}
+                                    {about && about.last_name && about.first_name.length > 0 ? `${Capitalize([...about.last_name][0])}` : ""}
+                                </H1>
+                            </Rounded>
                         )
                     }
                     

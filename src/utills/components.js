@@ -28,7 +28,8 @@ import AppColors from './AppColors';
 import { View ,Dimensions} from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
-import { TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -137,7 +138,7 @@ export const SizedBox = (props) => (
 )
 
   export const Container = (props) => (
-    <View flex={props.flex || 1}
+    <View 
       style={{
         flex : props.flex || 0,
         width : props.widthPercent || '100%',
@@ -146,11 +147,32 @@ export const SizedBox = (props) => (
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop : props.marginTop ? height(props.marginTop) : 0,
         marginLeft : props.marginLeft,
+        backgroundColor : props.backgroundColor || AppColors.white,
         ...props.style
       }}
     >
       {props.children}
     </View>
+  )
+  
+  export const AppButton = (props) => (
+    <TouchableOpacity
+      onPress={props.onPress}
+    >
+      <Container
+        backgroundColor={props.backgroundColor || AppColors.green}
+        style={{
+          justifyContent : "center",
+          alignItems : "center",
+          padding : height(5),
+          paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(2)
+        }}
+      >
+        {props.loading ? <ActivityIndicator size={height(3)}
+          color={AppColors.white}
+        /> : <H1 color={props.color}>{props.text}</H1>}
+      </Container>
+    </TouchableOpacity>
   )
 
   export const TouchWrap = (props) => (

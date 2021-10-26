@@ -37,7 +37,7 @@ function TabBar({state, descriptors, navigation}) {
         const isFocused = state.index === index;
 
         const onPress = () => {
-          if (route.name === 'Modules')
+          if (route.name === 'Menu')
             setModal(true);
           else {
             const event = navigation.emit({

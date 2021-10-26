@@ -225,7 +225,11 @@ export default function Profile({navigation}) {
                 <Text numberOfLines={1} style={styles.screenTitle}>
                 Profile
                 </Text>
-                <Image resizeMode="contain" source={settingIcon} style={styles.leftIcon} />
+                <TouchableOpacity
+                  onPress={()=>navigation.navigate("Settings")}
+                >
+                  <Image resizeMode="contain" source={settingIcon} style={styles.leftIcon} />
+                </TouchableOpacity>
             </View>
 
             {

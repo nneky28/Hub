@@ -24,6 +24,7 @@ import Todos from '../screens/Todos';
 import Splash from '../screens/Splash';
 import Onboard from '../screens/Onboard/onboard';
 import Training from '../screens/Training';
+import Settings from '../screens/Settings';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
 import { getData } from '../utills/Methods';
@@ -76,7 +77,7 @@ const Routes = () => {
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>
-                  <Tab.Screen name="Modules">
+                  <Tab.Screen name="Menu">
                   {() => (
                       <Stack.Navigator
                         screenOptions={{headerMode: false}}>
@@ -102,6 +103,7 @@ const Routes = () => {
                         <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
                         <Stack.Screen name="EditPhoto" component={EditPhoto} />
                         <Stack.Screen name="Compensation" component={Compensation} />
+                        <Stack.Screen name="Settings" component={Settings}/>
                       </Stack.Navigator>
                     )}
                     </Tab.Screen>
@@ -109,6 +111,7 @@ const Routes = () => {
               );
             }}
           </DrawerStack.Screen>
+          <DrawerStack.Screen name="Settings" component={Settings} />
         </DrawerStack.Navigator>
       ) : (
         <Stack.Navigator

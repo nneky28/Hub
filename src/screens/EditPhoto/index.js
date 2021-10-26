@@ -79,6 +79,7 @@ export default function EditPhoto({navigation}) {
             console.log("data---",data)
             setProfilePicture(data);
         }).catch(err=>{
+          console.log("imageFromGallery-error",err)
           ImagePicker.clean()
         });
     };

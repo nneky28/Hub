@@ -25,7 +25,7 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
       <TouchableOpacity
         onPress={() => {
           setSelected(text)
-          navigation.navigate('Modules', { screen: text })
+          navigation.navigate('Menu', { screen: text })
           // navigation.navigate(text)
           onHide();
         }}

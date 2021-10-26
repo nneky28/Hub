@@ -79,7 +79,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
   };
   const onSelection = (item) => {
     // if (selected == 'Birthdays' || item == 'Birthdays') {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    //LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     // }
     setShow(true);
     setSelected(item);
@@ -199,6 +199,19 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
           </Container>
         ) : null
       }
+
+      {
+        item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 0 ? (
+          <Container
+            style={{
+              alignItems : "center"
+            }}
+          >
+            <LottieIcon icon={Emptyjson} />
+          </Container>
+        ) : null
+      }
+
       {show ? (
         <>
           <FlatList

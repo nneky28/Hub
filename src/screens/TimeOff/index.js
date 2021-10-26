@@ -127,7 +127,7 @@ export default function TimeOff({navigation}) {
                                 <Reload />
                             ) : null
                         }
-                        {
+                        {/* {
                             tabs && Array.isArray(tabs) && tabs.length === 0 ? (
                                 <Container style={{
                                     alignItems : "center"
@@ -137,7 +137,7 @@ export default function TimeOff({navigation}) {
                                     />
                                 </Container>
                             ) : null
-                        }
+                        } */}
                         {selected === 'Active' &&
                             <>
                                 <View style={styles.headingContainer}>

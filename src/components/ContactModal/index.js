@@ -17,7 +17,7 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
-import { getData, ToastError,storeData } from '../../utills/Methods';
+import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
 import { Container, H1, LottieIcon, P, SizedBox } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -147,24 +147,17 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       if(!check){
         return hideAndOpen("Please select dates that do not fall within active timeoffs")
       }
-      console.log("---||---hideAndOpen")
       let token = await getData("token");
       let user =  await getData("user");
       let about_me = await getData("about_me")
-      let biz = user.employee_user_memberships &&
-      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
+      let biz = getStoredBusiness();
       dispatch(setLoaderVisible(true));
-      console.log("---||---hideAndOpen")
       let timeoff_url = APIFunction.timeoff_reqs(biz.business_id,about_me.id)
       let fd = {
         ...data,timeoff : timeoff_id
       }
-      console.log("fd--",fd)
       let res = await postAPIs(timeoff_url,token,fd);
-      console.log("res---",res)
       storeData("curr_timeoff",null)
-      //console.log("handleSubmit",data,timeoff_id)
       dispatch(setLoaderVisible(false));
       closeAndRefresh()
     }catch(err){

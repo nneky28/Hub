@@ -24,7 +24,8 @@ export const APIFunction = {
   timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
   job_anniversary : (status,business_id,page=1) =>`/c/${business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`,
-  notifications : (business_id,page=1) => `/c/${business_id}/employees/notifications/?page=${page}`
+  notifications : (business_id,page=1) => `/c/${business_id}/employees/notifications/?page=${page}`,
+  change_password : async (fd) => postAPIs(`/accounts/auth/password/change/`,fd,fd)
 }
 export const getAPIs = async (path, token) => {
     let expiry = await getData("token_expiry");
@@ -65,6 +66,7 @@ export const getAPIs = async (path, token) => {
   };
   
 export const postAPIs = async (path, token, fd) => {
+  console.log("postAPIs----",path,token,fd)
   let expiry = await getData("token_expiry");
     if(token && expiry && !moment(new Date()).isBefore(expiry)){
        await refreshToken()
@@ -84,7 +86,7 @@ export const postAPIs = async (path, token, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("postAPIs-err",error.response)
+          console.log("postAPIs-err",error)
           if (error.response) {
             reject({status: 500, msg: error.response.data});
           } else {
