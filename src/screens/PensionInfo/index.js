@@ -12,7 +12,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction, getAPIs, postAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { AppButton, Container, LottieIcon, PageLoader } from '../../utills/components'
+import { AppButton, Container, H1, LottieIcon, PageLoader } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -24,22 +24,32 @@ import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../component2/button/Button';
 import { setLoaderVisible } from '../../Redux/Actions/Config'
 import { useDispatch } from 'react-redux'
+import CustomModalDropdown from '../../components/CustomModalDropdown'
 
 
-
-
-
-
-
-export default function Setting({navigation}) {
+export default function PensionInfo({navigation}) {
     const dispatch = useDispatch()
     const [data,setData] = useState({
-        old_password : "",
-        new_password : "",
-        confirm_password :""
+        account_number : "",
+        pension_number : "",
+        bank :"",
+        provider : ""
     });
-   const changePassword = async () => {
+    const [providers,setProviders] = useState([]);
+    const [banks,setBanks] = useState([])
+   const handleSubmit = async () => {
         try{
+
+            // {
+            //     "bank_account": {
+            //       "bank": 0,
+            //       "account_number": "string"
+            //     },
+            //     "pension": {
+            //       "provider": 0,
+            //       "pension_number": "string"
+            //     }
+            //   }
             if(data.confirm_password === "" || data.new_password === "" || data.old_password === "" 
             || data.new_password.trim() === "" || data.confirm_password.trim() === "" || data.old_password.trim() === ""){
                 return ToastError("All fields are required")
@@ -63,7 +73,24 @@ export default function Setting({navigation}) {
             ToastError(msg)
         }
     }
+
+    const fetchRecord = async () => {
+        try{
+            let bank_res = await APIFunction.banks();
+            let prov_res = await APIFunction.pension_providers();
+            console.log("bank_res",bank_res)
+            console.log("prov_res",prov_res)
+            setProviders(prov_res);
+            setBanks(bank_res);
+        }catch(err){
+            ToastError(err.msg)
+        }
+    }
     
+    useEffect(()=>{
+        fetchRecord()
+    },[])
+
     return (
         <ScreenWrapper scrollEnabled={false}>
             <View style={styles.header}>
@@ -72,9 +99,12 @@ export default function Setting({navigation}) {
                 </TouchableOpacity>
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
-                    Change Password
+                    Update Pension Info
                   </Text>
                 </View>
+                <TouchableOpacity>
+                    <H1 color={AppColors.green}>Save</H1>
+                </TouchableOpacity>
             </View>
             <View style={styles.line} />
             <Container 
@@ -84,55 +114,53 @@ export default function Setting({navigation}) {
                     <Container>
                         <Field
                             component={CustomInput}
-                            name="password"
-                            placeholder="Old Password"
+                            name="account_number"
+                            placeholder="Account Number"
                             value={data.old_password}
                             onChangeData={(value)=>{
-                                setData({...data,old_password : value})
+                                setData({...data,account_number : value})
                             }}
                             color={AppColors.black}
-                            secureTextEntry={true}
+                            keyboardType={'numeric'}
                         />
                         <Field
                             component={CustomInput}
-                            name="new_password"
-                            placeholder="New Password"
-                            value={data.new_password}
+                            name="pension_number"
+                            placeholder="Pension Number"
+                            value={data.pension_number}
                             onChangeData={(value)=>{
-                                setData({...data,new_password : value})
+                                setData({...data,pension_number : value})
                             }}
                             color={AppColors.black}
-                            secureTextEntry={true}
+                            keyboardType={'numeric'}
                         />
+
                         <Field
-                            component={CustomInput}
-                            name="confirm_password"
-                            placeholder="Confirm Password"
-                            value={data.confirm_password}
+                            component={CustomModalDropdown}
+                            name="pension_number"
+                            placeholder="Bank"
+                            value={data.bank}
                             onChangeData={(value)=>{
-                                setData({...data,confirm_password : value})
+                                setData({...data,pension_number : value})
                             }}
                             color={AppColors.black}
-                            secureTextEntry={true}
+                            options={banks && Array.isArray(banks) ? banks : []}
+                        />
+
+                        <Field
+                            component={CustomModalDropdown}
+                            name="pension_number"
+                            placeholder="Pension Provider"
+                            value={data.provider}
+                            onChangeData={(value)=>{
+                                setData({...data,pension_number : value})
+                            }}
+                            color={AppColors.black}
+                            options={providers && Array.isArray(providers) ? providers : []}
                         />
 
                     </Container>
                 </Formik>
-                <Container
-                    style={{
-                        justifyContent : "flex-end"
-                    }}
-                    flex={1}
-                >
-                    <AppButton 
-                        text={"SUBMIT"}
-                        color={AppColors.white}
-                        onPress={()=>{
-                            changePassword()
-                        }}
-                        //loading={loading}
-                    />
-                </Container>
             </Container>
         </ScreenWrapper>
     )

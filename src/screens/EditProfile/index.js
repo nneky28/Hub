@@ -17,10 +17,13 @@ export default function EditProfile({navigation}) {
     const [kins,setKins] = useState(null)
     const [loading,setLoading] = useState(true);
     const [banking,setBanking] = useState(null);
+    const [emergency,setEmergency] = useState(null);
     const getProfile = async () => {
         try{
             const profile = await getData("profile");
             setAbout(profile.about);
+            setKins(profile.kin)
+            setEmergency(profile.emergency)
         }catch(err){
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             ToastError(msg)
@@ -77,10 +80,25 @@ export default function EditProfile({navigation}) {
                         navigation.navigate('PersonalInfo',{about})
                     }}
                 />
-                <TextWithIcon item={profileData[1]} iconStyle={styles.rightIcon}/>
-                <TextWithIcon item={profileData[2]} iconStyle={styles.rightIcon}/>
-                <TextWithIcon item={profileData[3]} iconStyle={styles.rightIcon}/>
-                <TextWithIcon item={profileData[4]} iconStyle={styles.rightIcon}/>
+                <TextWithIcon item={profileData[1]} iconStyle={styles.rightIcon} />
+                <TextWithIcon item={profileData[2]} iconStyle={styles.rightIcon}
+                     onPressHandle={() => {
+                        //if(!kins) return
+                        navigation.navigate('NextKin',{kins})
+                    }}
+                />
+                <TextWithIcon item={profileData[3]} iconStyle={styles.rightIcon}
+                    onPressHandle={() => {
+                        //if(!emergency) return
+                        navigation.navigate('Emergency',{emergency})
+                    }}
+                />
+                <TextWithIcon item={profileData[4]} iconStyle={styles.rightIcon}
+                    onPressHandle={() => {
+                        //if(!banking) return
+                        navigation.navigate('PensionInfo',{banking})
+                    }}
+                />
             </View>
         </ScreenWrapper>  
     );

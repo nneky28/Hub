@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Benefits from '../screens/Benefits';
 import Compensation from '../screens/Compensation';
@@ -27,14 +27,34 @@ import Training from '../screens/Training';
 import Settings from '../screens/Settings';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
-import { getData } from '../utills/Methods';
+import { getData, ToastSuccess } from '../utills/Methods';
 import codePush from 'react-native-code-push';
+import moment from 'moment';
+import AsyncStorage from '@react-native-community/async-storage';
+import { login } from '../Redux/Actions/Auth';
+import NextKin from '../screens/NextKin';
+import Emergency from '../screens/Emergency';
+import PensionInfo from '../screens/PensionInfo';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   const route = useSelector((state) => state.Auth.route);
+  const auth = useSelector((state)=>state.Auth)
+  const dispatch = useDispatch();
+
+  const logoutMethod = async () => {
+    try{
+      let keys = await AsyncStorage.getAllKeys()
+      await AsyncStorage.multiRemove(keys);
+      dispatch(login({...auth,route : "auth",isLogin : false}));
+      ToastSuccess("Successfully logged out")
+    }catch(err){
+      console.log("logout-err",err)
+    }
+  };
+
   return (
     <NavigationContainer>
       <Loader />
@@ -51,6 +71,15 @@ const Routes = () => {
       route === "main" ? 
       (
         <DrawerStack.Navigator
+          screenListeners={{
+            state: async (e) => {
+              let timeout = await getData("logout_time")
+              let check = timeout ? moment(new Date()).isAfter(timeout) : true;
+              if(check){
+                return logoutMethod()
+              }
+            },
+          }}
           drawerContent={(props) => <Drawer {...props} />}
           // initialRouteName="Dashboard"
           screenOptions={{headerShown: false}}>
@@ -104,6 +133,9 @@ const Routes = () => {
                         <Stack.Screen name="EditPhoto" component={EditPhoto} />
                         <Stack.Screen name="Compensation" component={Compensation} />
                         <Stack.Screen name="Settings" component={Settings}/>
+                        <Stack.Screen name="NextKin" component={NextKin}/>
+                        <Stack.Screen name="Emergency" component={Emergency}/>
+                        <Stack.Screen name="PensionInfo" component={PensionInfo}/>
                       </Stack.Navigator>
                     )}
                     </Tab.Screen>

@@ -14,7 +14,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { getData, storeData, ToastError } from '../../utills/Methods';
+import { getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
 
@@ -25,9 +25,8 @@ export default function PersonalInfo({navigation}) {
     const updateProfile = async () => {
         try{
             let failed = false;
-            console.log("PersonalInfo",data)
             required = ["firstName","middleName",
-                "lastName","gender","dateOfBirth","maritalStatus","email","address","mobileNumber1"]
+                "lastName","gender","dateOfBirth","maritalStatus","email","addr","mobileNumber1"]
             for(let req of required){
                 console.log("data--",data[req])
                if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
@@ -37,23 +36,19 @@ export default function PersonalInfo({navigation}) {
             setLoading(true);
             let token = await getData("token");
             let user =  await getData("user");
-            let about_me = await getData("about_me")
-            let biz = user.employee_user_memberships &&
-            Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-            && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
-            let edit_url = APIFunction.edit(biz.business_id,about_me.id);
+            let about = await getData("about_me");
             let fd = {
                 "title": "",
                 "first_name": data.firstName,
                 "middle_name": data.middleName,
                 "last_name": data.lastName,
                 "birth_date": moment(new Date()).format("YYYY-MM-DD"),
-                "marital_status": data.maritalStatus,
+                "marital_status": data.maritalStatus && data.maritalStatus.toLowerCase()  ,
                 "gender": data.gender === "Male" ? "M" : "F",
                 "phone_number1": data.mobileNumber1,
                 "phone_number2": data.mobileNumber2,
                 "address": {
-                  "address1": data.address,
+                  "address1": data.addr,
                   "address2": data.address2,
                   "country": "NG",
                   "state": "Lagos",
@@ -61,8 +56,7 @@ export default function PersonalInfo({navigation}) {
                   "postal_code": ""
                 }
             }
-            console.log("FD--",fd)
-            let res = await putAPIs(edit_url,token,fd);
+            let res = await APIFunction.edit(fd,about.id);
             await storeData("about_me",res);
             let profile = await getData("profile");
             await storeData("profile",{
@@ -72,6 +66,7 @@ export default function PersonalInfo({navigation}) {
             navigation.goBack();
             setLoading(false)
         }catch(err){
+            
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             console.log("err|||",err,msg)
             ToastError(msg)
@@ -79,22 +74,21 @@ export default function PersonalInfo({navigation}) {
         }
     }
     const [data,setData] = React.useState({
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        gender: '',
-        dateOfBirth: '',
-        maritalStatus:'',
-        email: '',
-        address: '',
-        address2: '',
-        mobileNumber1: '',
-        mobileNumber2: '',
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        gender: "",
+        dateOfBirth: "",
+        maritalStatus:"",
+        email: "",
+        addr: "",
+        address2: "",
+        mobileNumber1: "",
+        mobileNumber2: "",
     })
     const getProfile = async () => {
         try{
             let profile = await getData("profile");
-            console.log("profile---",profile.about)
             if(profile && profile.about){
                 setData(
                     {
@@ -105,7 +99,8 @@ export default function PersonalInfo({navigation}) {
                         dateOfBirth: profile.about.birth_date,
                         maritalStatus : profile.about.marital_status,
                         email: profile.about.email,
-                        address: profile.about.address,
+                        addr: profile.about.address && profile.about.address.address1 ? 
+                        profile.about.address.address1 : "",
                         address2: '',
                         mobileNumber1: profile.about.phone_number1,
                         mobileNumber2: profile.about.phone_number2,
@@ -196,6 +191,7 @@ export default function PersonalInfo({navigation}) {
                         value={data.gender}
                         onChangeData={(value)=>setData({...data,gender : value})}
                         color={AppColors.black}
+                        options={["Male","Female","Others"]}
                     />
 
                     <Field
@@ -205,6 +201,7 @@ export default function PersonalInfo({navigation}) {
                         value={data.maritalStatus}
                         onChangeData={(value)=>setData({...data,maritalStatus : value})}
                         color={AppColors.black}
+                        options={["Single","Married","Divorced"]}
                     />
                     
 
@@ -234,7 +231,7 @@ export default function PersonalInfo({navigation}) {
                         name="address"
                         placeholder="Address"
                         value={data.address}
-                        onChangeData={(value)=>setData({...data,address : value})}
+                        onChangeData={(value)=>setData({...data,addr : value})}
                         color={AppColors.black}
                     />
                     <Field

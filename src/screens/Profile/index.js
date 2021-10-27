@@ -30,9 +30,10 @@ export default function Profile({navigation}) {
     const [modal, setModal] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [about,setAbout] = useState(null)
-    const [kins,setKins] = useState(null)
+    const [kin,setKin] = useState(null)
     const [loading,setLoading] = useState(false);
     const [banking,setBanking] = useState(null);
+    const [pension,setPension] = useState(null);
     const [emergency,setEmergency] = useState(null);
     const getUser = async () => {
       let about = await getData("about_me");
@@ -56,28 +57,17 @@ export default function Profile({navigation}) {
       try{
          
          setLoading(true);
-         let token = await getData("token");
-         let user =  await getData("user");
-         let about_me = await getData("about_me")
-         let biz = user.employee_user_memberships &&
-        Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-        && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
-        //let kin_url = APIFunction.next_of_kins(biz.business_id,about_me.id);
-        //let emergency_url = APIFunction.emergency(biz.business_id,about_me.id);
-        //let kin_res = await getAPIs(kin_url,token);
-        //let ememgency_res = await getAPIs(emergency_url,token);
-        //console.log("Kin=--",kin_res,kin_url)
-        //console.log("ememgency_res=--",ememgency_res,emergency_url,token)
-        // setEmergency()
-        // setKin()
-        //  let detail_res = await getAPIs(detail_url,token);
-        //  let members = res && res.results && Array.isArray(res.results) ? res.results : [];
-        //  setMembers(members)
-        //  console.log("members---",detail_res,members)
-        //  setMember({...member,...detail_res});
+         let about = await getData("about_me")
+        let res = await APIFunction.next_of_kins(about.id);
+        setKin(res);
+        let emg_res = await APIFunction.emergency(about.id);
+        let bank_res = await APIFunction.banks(about.id);
+        let pen_res = await APIFunction.pension_providers(about.id);
+        setEmergency(emg_res);
+        setPension(pen_res);
+        setBanking(bank_res);
          setLoading(false);
       }catch(err){
-        console.log("member---",err)
        let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
        ToastError(msg)
       }
@@ -89,8 +79,6 @@ export default function Profile({navigation}) {
        },[])
      )
     const RenderList = ({item, index,about}) => {
-      console.log("RenderList--",about)
-        
         const handleClick = (index) => {
           if (selectedIndex == index) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
@@ -108,7 +96,6 @@ export default function Profile({navigation}) {
 
         
         const {data} = item;
-
         return (
           <View style={styles.profileListContainer}>
             <TouchableOpacity onPress={() => handleClick(index)} 
@@ -140,7 +127,6 @@ export default function Profile({navigation}) {
                     </View>
                   </View> 
                 }
-
                 {item.title.includes('Job') &&
                   <View style={CommonStyles.marginBottom_3}>
                   <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
@@ -160,36 +146,69 @@ export default function Profile({navigation}) {
                 </View> 
                 }
 
-
-                {data.length === 12 &&
+                { item.title.includes('Kin') ? 
                   <View style={CommonStyles.marginBottom_3}>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
-                      <TopBottomText topText={data[0]} bottomText={data[1]} containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[2]} bottomText={data[3]} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[0]} 
+                      bottomText={kin && kin.first_name ? Capitalize(kin.first_name) : null} 
+                      containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[2]} bottomText={kin && kin.last_name ? Capitalize(kin.last_name) : null} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[4]} bottomText={data[5]} containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[6]} bottomText={data[7]} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[4]} bottomText={kin && kin.relationship ? Capitalize(kin.relationship) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[6]} bottomText={kin && kin.phone_number ? kin.phone_number : null} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[8]} bottomText={data[9]}/>
+                      <TopBottomText topText={data[8]} bottomText={kin && kin.address1 ? kin.address1 : null}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[10]} bottomText={data[11]}/>
+                      <TopBottomText topText={data[10]} bottomText={kin && kin.email ? kin.email : null}/>
                     </View>
                   
-                  </View> 
+                  </View> : null
+                }
+
+                { item.title.includes('Emergency') ? 
+                  <View style={CommonStyles.marginBottom_3}>
+                    <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
+                      <TopBottomText topText={data[0]} 
+                      bottomText={emergency && emergency.first_name ? Capitalize(emergency.first_name) : null} 
+                      containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[2]} bottomText={emergency && emergency.last_name ? Capitalize(emergency.last_name) : null} containerStyle={styles.halfWidthContainer}/>
+                    </View>
+                    <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
+                      <TopBottomText topText={data[4]} bottomText={emergency && emergency.relationship ? Capitalize(emergency.relationship) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[6]} bottomText={emergency && emergency.phone_number ? emergency.phone_number : null} containerStyle={styles.halfWidthContainer}/>
+                    </View>
+                    <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
+                      <TopBottomText topText={data[8]} bottomText={emergency && emergency.address1 ? emergency.address1 : null}/>
+                    </View>
+                    <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
+                      <TopBottomText topText={data[10]} bottomText={emergency && emergency.email ? kin.email : null}/>
+                    </View>
+                  
+                  </View> : null
                 }
 
                 {item.title.includes('Bank') &&
-              
+
                   <View style={[CommonStyles.marginTop_2, CommonStyles.marginBottom_3]}>
-                    <TopBottomText topText={data[0]} bottomText={data[1]}/>
-                    <TopBottomText topText={data[2]} bottomText={data[3]} containerStyle={{marginTop: height(2)}}/>
+                    <TopBottomText topText={data[0]} bottomText={
+                      about && about.bank_account && about.bank_account.bank && about.bank_account.bank.name ? Capitalize(about.bank_account.bank.name) : null
+                    }/>
+                    <TopBottomText topText={data[2]} bottomText={
+                      about && about.bank_account && about.bank_account.account_number ? about.bank_account.account_number : null
+                    } containerStyle={{marginTop: height(2)}}/>
                     <View style={styles.line}/>
                     <Text style={styles.subHeading}>Pension</Text>
-                    <TopBottomText topText={data[4]} bottomText={data[5]} containerStyle={{marginTop: height(2)}}/>
-                    <TopBottomText topText={data[6]} bottomText={data[7]} containerStyle={{marginTop: height(2)}}/>
+                    <TopBottomText topText={data[4]} bottomText={
+                      about && about.pension && about.pension.provider && about.pension.provider.name ? 
+                      Capitalize(about.pension.provider.name) : null
+                    } containerStyle={{marginTop: height(2)}}/>
+                    <TopBottomText topText={data[6]} bottomText={
+                      about && about.pension && about.pension.pension_number ? 
+                      Capitalize(about.pension.pension_number) : null
+                    } containerStyle={{marginTop: height(2)}}/>
                   </View>
                 }
                 </>
@@ -285,7 +304,7 @@ export default function Profile({navigation}) {
                             await storeData("profile",{
                               banking,
                               about,
-                              kins,
+                              kin,
                               emergency,
                             });
                             navigation.navigate('EditProfile')

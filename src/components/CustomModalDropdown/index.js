@@ -25,18 +25,18 @@ const CustomModalDropdown = (props) => {
       <ModalDropdown
       ref={dropdown}
       isFullWidth
-      options={name==='gender'?['Male', 'Female', 'Other']: ['Single', 'Married', 'Divorced']} 
+      options={props.options} 
       style={[
             styles.listContainer,
             hasError && styles.errorInput
           ]}
       dropdownStyle={styles.dropDownContainer}
       defaultIndex={-1}
-      defaultValue={name==='gender'? "Gender" : "Marital Status"}
+      defaultValue={props.placeholder}
       textStyle={styles.text1}
       dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
       onSelect={(index,text) => {
-        setFieldValue(name, text)
+        //setFieldValue(name, text)
         props.onChangeData ? props.onChangeData(text) : null
       }}
       renderRightComponent={() => <Image 

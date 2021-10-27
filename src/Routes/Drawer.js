@@ -48,24 +48,6 @@ const Drawer = ({navigation, ...props}) => {
     setUser(user);
     setAbout(about_me);
   }
-  const timeUserOut = async () => {
-    try{
-      let expiry = await getData("token_expiry");
-      console.log("expiry",expiry)
-      let diff = moment(expiry).diff(moment(new Date()),'hours');
-      if(!expiry || diff > 3){
-        return logoutMethod()
-      }
-    }catch(err){
-      console.log("err",err)
-      return logoutMethod()
-    }
-  }
-  useFocusEffect(
-    React.useCallback(()=>{
-      timeUserOut()
-    },[])
-  )
   useEffect(()=>{
     getUserDetails();
   },[])
@@ -77,10 +59,9 @@ const Drawer = ({navigation, ...props}) => {
             item && item.logo ? (
               <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
             ) : (
-              <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+              <Rounded  size={10} backgroundColor={AppColors.white}>
                   <H1>
                       {item && item.business_name && item.business_name.length > 0 ? Capitalize([...item.business_name][0]) : ""}
-                      {item && item.business_name && item.business_name.length > 1 ? Capitalize([...item.business_name][1]) : ""}
                   </H1>
               </Rounded>
             )

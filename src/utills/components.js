@@ -141,8 +141,8 @@ export const SizedBox = (props) => (
     <View 
       style={{
         flex : props.flex || 0,
-        width : props.widthPercent || '100%',
-        padding : props.padding || height(2),
+        width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
+        padding : props.padding ? width(props.padding) : height(2),
         paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop : props.marginTop ? height(props.marginTop) : 0,
@@ -165,7 +165,8 @@ export const SizedBox = (props) => (
           justifyContent : "center",
           alignItems : "center",
           padding : height(5),
-          paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(2)
+          width  : props.width ? width(props.width) : 0,
+          paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(2),
         }}
       >
         {props.loading ? <ActivityIndicator size={height(3)}

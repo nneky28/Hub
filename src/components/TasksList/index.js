@@ -226,7 +226,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
             ItemSeparatorComponent={() => <View style={styles.margin} />}
             renderItem={({item}) => {
               return (
-                <View style={styles.userContainer}>
+                <View style={whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
                   {
                     item && item.employee && item.employee.photo ? (
                       <Image source={item.employee.photo} style={styles.image} />

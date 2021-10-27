@@ -85,7 +85,8 @@ function TabBar({state, descriptors, navigation}) {
             onPress={onPress}
             activeOpacity={1}
             onLongPress={onLongPress}
-            style={styles.container}>
+            style={styles.container}
+          >
             <Image
               resizeMode="contain"
               source={isFocused ? image1 : image}

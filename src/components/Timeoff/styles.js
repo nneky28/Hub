@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     paddingBottom: height(1.5),
     paddingHorizontal: width(3),
     borderWidth: 0.5,
-    borderColor: AppColors.grayBorder,
+    borderColor: AppColors.grayBorder
   },
   absolute: {
     position: 'absolute',

@@ -1,6 +1,6 @@
 import axios from "axios";
 import moment from "moment";
-import { getData, storeData } from "./Methods";
+import { getData, getStoredBusiness, storeData } from "./Methods";
 
 export const endPoint = 'https://coolowo.com';
 
@@ -13,10 +13,23 @@ export const APIFunction = {
   employees : (business_id) => `/c/${business_id}/employees/`,
   team_members : (business_id,id) => `/c/${business_id}/employees/${id}/team_members/`,
   basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  next_of_kins : (business_id,id) => `/c/${business_id}/employees/${id}/next-of-kin`,
-  emergency  : (business_id,id) => `/c/${business_id}/employees/${id}/emergency-contact/`,
+  next_of_kins : async (id) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/employees/${id}/next-of-kin/`)
+  },
+  emergency  : async (id) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/employees/${id}/emergency-contact/`)
+  },
+  update_emergency : async (fd,id) => {  
+    let biz = await getStoredBusiness();
+    return putAPIs(`/c/${biz.business_id}/employees/${id}/update-emergency-contact/`,fd)
+  },
   update_photo : (business_id,id) => `/c/${business_id}/employees/${id}/update-photo/`,
-  edit : (business_id,id) => `/c/${business_id}/employees/${id}/`,
+  edit : async (fd,id) => {
+    let biz = await getStoredBusiness();
+    return putAPIs(`/c/${biz.business_id}/employees/${id}/`,fd);
+  },
   trainings : (business_id,id) => `/c/${business_id}/employees/${id}/training/`,
   training_hist : (business_id,id) => `/c/${business_id}/employees/${id}/training/history/`,
   timeoff : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff/`,
@@ -25,7 +38,19 @@ export const APIFunction = {
   delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
   job_anniversary : (status,business_id,page=1) =>`/c/${business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`,
   notifications : (business_id,page=1) => `/c/${business_id}/employees/notifications/?page=${page}`,
-  change_password : async (fd) => postAPIs(`/accounts/auth/password/change/`,fd,fd)
+  change_password : async (fd) => postAPIs(`/accounts/auth/password/change/`,fd,fd),
+  pension_providers : async () => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/pension_providers/`)
+  },
+  banks : async () => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/banks/`)
+  },
+  update_next_of_kin : async (fd,id) => {
+    let biz = await getStoredBusiness();
+    return putAPIs(`/c/${biz.business_id}/employees/${id}/update-next-of-kin/`,fd)
+  }
 }
 export const getAPIs = async (path, token) => {
     let expiry = await getData("token_expiry");
@@ -33,7 +58,6 @@ export const getAPIs = async (path, token) => {
        await refreshToken()
     }
     let _token = await getData("token");
-    console.log("_token",_token)
     return new Promise((resolve, reject) => {
       let split = path.split("/?");
       let url = split && split.length > 1 ? 
@@ -52,6 +76,7 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("err",error.response)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -132,9 +157,9 @@ export const postAPIs = async (path, token, fd) => {
       });
     };
   
-export const putAPIs = async (path, token, fd) => {
+export const putAPIs = async (path,fd) => {
   let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+    if(expiry && !moment(new Date()).isBefore(expiry)){
        await refreshToken()
     }
     let _token = await getData("token");
@@ -152,6 +177,7 @@ export const putAPIs = async (path, token, fd) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("Err--",error.response)
           if (
             error.response && error.response.data && error.response.data.msg && 
             error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"

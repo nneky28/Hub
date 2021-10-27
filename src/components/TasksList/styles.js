@@ -106,6 +106,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  userContainer2: {
+    width: '90%',
+    backgroundColor: AppColors.gray,
+    borderRadius: 5,
+    paddingHorizontal: '3%',
+    paddingVertical: height(1.5),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   column: {width: '100%', justifyContent: 'space-between'},
   line: {
     width: '100%',

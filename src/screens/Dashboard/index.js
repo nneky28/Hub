@@ -12,7 +12,7 @@ import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
-import { ColorList } from '../../utills/AppColors';
+import AppColors, { ColorList } from '../../utills/AppColors';
 import { H1, PageLoader, Reload, Rounded } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
@@ -132,10 +132,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               business && business.logo ? (
                 <Image resizeMode="contain" source={{uri : business.logo}} style={styles.logo} />
               ) : (
-                <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                <Rounded  size={10} backgroundColor={AppColors.gray}>
                   <H1>
                       {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
-                      {business && business.business_name && business.business_name.length > 1 ? Capitalize([...business.business_name][1]) : ""}
                   </H1>
               </Rounded>
               )
