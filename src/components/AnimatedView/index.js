@@ -8,7 +8,6 @@ function AnimatedView({styles, marginLeft}) {
   const offset = useSharedValue(0);
 
   const animatedStyles = useAnimatedStyle(() => {
-    console.log("animatedStyles",marginLeft)
     return {
       // scaleX: withSpring(offset.value),
       transform : [{
@@ -17,7 +16,6 @@ function AnimatedView({styles, marginLeft}) {
     };
   });
   useEffect(() => {
-    console.log("marginLeft changed")
     if (marginLeft) {
       // offset.value = withSpring(marginLeft, {damping: 20}, (finished) => {
       //   if (finished) {
@@ -30,7 +28,6 @@ function AnimatedView({styles, marginLeft}) {
   }, [marginLeft]);
   return (
     <>
-      {console.log("animatedStyles-render",animatedStyles)}
       <Animated.View style={[styles, animatedStyles]} />
     </>
   );

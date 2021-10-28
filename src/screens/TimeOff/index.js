@@ -193,9 +193,16 @@ export default function TimeOff({navigation}) {
                                 <TimeoffVertical
                                     data={'balance'}
                                     load={available}
-                                    setModal={(id)=>{
-                                        setCurrent(id)
-                                        setModal(true)
+                                    setModal={(id,item)=>{
+                                        if(
+                                            item && item.max_days_allowed && 
+                                            item.total_days_taken >= 0 && 
+                                            item.total_days_taken < 
+                                            item.max_days_allowed
+                                        ){
+                                            setCurrent(id)
+                                            setModal(true)
+                                        }
                                     }}
                                 />
                             </React.Fragment>

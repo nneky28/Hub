@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, Text} from 'react-native';
+import {View, Text,Image,StyleSheet} from 'react-native';
 import styles from './styles';
 import Button from '../../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
@@ -10,6 +10,8 @@ import {showMessage} from 'react-native-flash-message';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
 import { getData } from '../../utills/Methods';
 import CustomText from '../../component2/customText/CustomText';
+import { Container } from '../../utills/components';
+import { height, width } from 'react-native-dimension';
 
 const Splash = (props) => {
   const auth = useSelector((state) => state.Auth);
@@ -17,14 +19,13 @@ const Splash = (props) => {
   const loginMethod = async () => {
     //dispatch(setLoaderVisible(true));
     let user = await getData("user") 
-    console.log("Splash---",user)
     setTimeout(() => {
       if(user){
         dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
       }else{
        props.navigation.navigate("Onboard");
       }
-    }, 1500);
+    }, 3000);
   };
   useEffect(()=>{
     loginMethod()
@@ -37,7 +38,7 @@ const Splash = (props) => {
         alignItems : "center",
         justifyContent : "center"
       }}>
-        <CustomText
+        {/* <CustomText
             textSize={30}
             textWeight={'bold'}
             textcolor={'black'}
@@ -45,11 +46,20 @@ const Splash = (props) => {
             textStyle={{
               marginTop: -3,
             }}
-        />
-          {/* <Image src={} /> */}
+        /> */}
+          <Image source={require('../../assets/images/icons/loader.gif')} 
+            style={style.resize}
+          />
       </View>
     </ScreenWrapper>
   );
 }
+
+const style = StyleSheet.create({
+  resize : {
+    width: 300,
+    height: 300,
+  }
+})
 
 export default Splash;

@@ -1,27 +1,15 @@
-import { useFocusEffect } from '@react-navigation/core'
+
 import React, { useEffect, useState } from 'react'
 import { FlatList, Image, Platform, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
-import { height, totalSize, width } from 'react-native-dimension'
 import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
-import { FilterModal } from '../../components/ContactModal'
-import PersonCard from '../../components/PersonCard'
-import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
-import TrainingList from '../../components/TrainingList'
-import { APIFunction, getAPIs, postAPIs } from '../../utills/api'
+import { APIFunction, } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import CommonStyles from '../../utills/CommonStyles'
-import { AppButton, Container, H1, LottieIcon, PageLoader } from '../../utills/components'
-import { celebrations, whosOut } from '../../utills/data/celebrations'
-import { persons } from '../../utills/data/persons'
-import tasksData from '../../utills/data/tasksData'
-import { getData, ToastError, ToastSuccess } from '../../utills/Methods'
+import {Container, H1 } from '../../utills/components'
+import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
-import Empty from '../../assets/lottie/empty.json'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
-import CustomButton from '../../component2/button/Button';
 import { setLoaderVisible } from '../../Redux/Actions/Config'
 import { useDispatch } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
@@ -37,51 +25,65 @@ export default function PensionInfo({navigation}) {
     });
     const [providers,setProviders] = useState([]);
     const [banks,setBanks] = useState([])
+    const [bankHolder,setBankHolder] = useState([]);
+    const [provHolder,setProvHolder] = useState([]);
    const handleSubmit = async () => {
         try{
-
-            // {
-            //     "bank_account": {
-            //       "bank": 0,
-            //       "account_number": "string"
-            //     },
-            //     "pension": {
-            //       "provider": 0,
-            //       "pension_number": "string"
-            //     }
-            //   }
-            if(data.confirm_password === "" || data.new_password === "" || data.old_password === "" 
-            || data.new_password.trim() === "" || data.confirm_password.trim() === "" || data.old_password.trim() === ""){
-                return ToastError("All fields are required")
+            let required = ["account_number","account_number","bank","provider"];
+            let failed = false;
+            for(let req of required){
+                if(data[req] === "" || data[req].trim() === ""){
+                    failed = true
+                    msg = `${Capitalize(req.replace("_"," "))} is required`
+                }
             }
-            if(data.confirm_password !== data.new_password){
-                return ToastError("Passwords do not match");
+            if(failed){
+                return ToastError(msg);
             }
+            let pension = provHolder[providers.indexOf(data.provider)]
+            let bank = bankHolder[banks.indexOf(data.bank)]
+            let fd  = {
+                "bank_account": {
+                  "bank": bank.id,
+                  "account_number": data.account_number
+                },
+                "pension": {
+                  "provider": pension.id,
+                  "pension_number": data.pension_number
+                }
+              }
             dispatch(setLoaderVisible(true));
-            let res = await APIFunction.change_password(data)
+            let about = await getData("about_me");
+            let res = await APIFunction.update_pension(fd,about.id)
+            await storeData("about_me",res)
             dispatch(setLoaderVisible(false));
-            ToastSuccess("Password has been changed");
-            setData({
-                new_password : "",
-                old_password : "",
-                confirm_password : ""
-            })
+            ToastSuccess("Record has been saved");
         }catch(err){
             dispatch(setLoaderVisible(false));
-            let msg = err.msg && Object.values(err.msg) && Object.values(err.msg).length > 0 ? Object.values(err.msg)[0][0] : 
-            "Something went wrong.Please retry";
-            ToastError(msg)
+            ToastError(err.msg)
         }
     }
 
     const fetchRecord = async () => {
         try{
+            let about = await getData("about_me");
             let bank_res = await APIFunction.banks();
             let prov_res = await APIFunction.pension_providers();
-            console.log("bank_res",bank_res)
-            console.log("prov_res",prov_res)
-            setProviders(prov_res);
-            setBanks(bank_res);
+            console.log("about_me==",about.bank_account,about.pension)
+            setData({
+                account_number : about && about.bank_account && about.bank_account.account_number ? 
+                about.bank_account.account_number : "",
+                pension_number : about && about.pension && about.pension.pension_number ?
+                about.pension.pension_number : "",
+                bank : about && about.bank_account && about.bank_account.bank && about.bank_account.bank.name ? 
+                about.bank_account.bank.name : "",
+                provider : about && about.pension && about.pension.provider && about.pension.provider.name ?
+                about.pension.provider.name : ""
+            })
+            setBankHolder(bank_res)
+            setProvHolder(prov_res)
+            setProviders(prov_res.map((item)=>item.name));
+            setBanks(bank_res.map((item)=>item.name));
         }catch(err){
             ToastError(err.msg)
         }
@@ -102,7 +104,9 @@ export default function PensionInfo({navigation}) {
                     Update Pension Info
                   </Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                >
                     <H1 color={AppColors.green}>Save</H1>
                 </TouchableOpacity>
             </View>
@@ -116,12 +120,13 @@ export default function PensionInfo({navigation}) {
                             component={CustomInput}
                             name="account_number"
                             placeholder="Account Number"
-                            value={data.old_password}
+                            value={data.account_number}
                             onChangeData={(value)=>{
                                 setData({...data,account_number : value})
                             }}
                             color={AppColors.black}
                             keyboardType={'numeric'}
+                            maxLength={10}
                         />
                         <Field
                             component={CustomInput}
@@ -141,7 +146,7 @@ export default function PensionInfo({navigation}) {
                             placeholder="Bank"
                             value={data.bank}
                             onChangeData={(value)=>{
-                                setData({...data,pension_number : value})
+                                setData({...data,bank : value})
                             }}
                             color={AppColors.black}
                             options={banks && Array.isArray(banks) ? banks : []}
@@ -153,7 +158,7 @@ export default function PensionInfo({navigation}) {
                             placeholder="Pension Provider"
                             value={data.provider}
                             onChangeData={(value)=>{
-                                setData({...data,pension_number : value})
+                                setData({...data,provider : value})
                             }}
                             color={AppColors.black}
                             options={providers && Array.isArray(providers) ? providers : []}

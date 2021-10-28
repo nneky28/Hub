@@ -21,7 +21,7 @@ import { getAPIs } from '../../utills/api';
 import moment from 'moment';
 import { Container, H1, LottieIcon, Rounded } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
-import Emptyjson from '../../assets/lottie/empty.json'
+import Emptyjson from '../../assets/lottie/birthday-icon.json'
 import { useNavigation } from '@react-navigation/core';
 import { ColorList } from '../../utills/AppColors';
 
@@ -146,7 +146,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       }
                       <View style={{width: '68%'}}>
                         <Text numberOfLines={1} style={styles.text3}>
-                          {item.first_name ? `${Capitalize(item.first_name)}'s` : ""} birthday is today
+                          {item && item.first_name ? `${Capitalize(item.first_name)}'s` : ""} birthday is today
                         </Text>
                         {
                           item && item.job && item.job.title ? (
@@ -234,10 +234,11 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
                         size={10}
                       >
-                        <H1>
+                          {console.log("---}}}}",item)}
+                           <H1>
                           {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
                             Capitalize([...item.employee.first_name][0]) : ""}
-                          {item && item.employee.last_name && item.employee.last_name.length > 1 ? 
+                          {item && item.employee && item.employee.last_name && item.employee.last_name.length > 1 ? 
                           `${Capitalize([...item.employee.last_name][0])}` : ""}
                         </H1>
                       </Rounded>

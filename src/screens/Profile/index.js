@@ -35,13 +35,7 @@ export default function Profile({navigation}) {
     const [banking,setBanking] = useState(null);
     const [pension,setPension] = useState(null);
     const [emergency,setEmergency] = useState(null);
-    const getUser = async () => {
-      let about = await getData("about_me");
-      //console.log("about---",about)
-      setAbout(about)
-    }
     useEffect(() => {
-      getUser()
       return dispatch(scrollToPosition({x: 0, y: 0}))
     }, []);
     const TopBottomText = ({topText, bottomText, containerStyle}) => {
@@ -64,9 +58,10 @@ export default function Profile({navigation}) {
         let bank_res = await APIFunction.banks(about.id);
         let pen_res = await APIFunction.pension_providers(about.id);
         setEmergency(emg_res);
+        setAbout(about);
         setPension(pen_res);
         setBanking(bank_res);
-         setLoading(false);
+        setLoading(false);
       }catch(err){
        let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
        ToastError(msg)
@@ -74,7 +69,6 @@ export default function Profile({navigation}) {
     }
      useFocusEffect(
        React.useCallback(()=>{
-         getUser()
         getProfile();
        },[])
      )

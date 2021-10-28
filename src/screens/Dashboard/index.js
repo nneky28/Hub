@@ -228,8 +228,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                         setText("Are you sure you want to cancel this request?")
                         return setShow(true);
                       }
+                      
                       if(item && item.max_days_allowed && 
-                        item.total_days_taken && 
+                        item.total_days_taken >= 0 && 
                         item.total_days_taken < 
                         item.max_days_allowed){
                         setCurrent(timeoff_id)

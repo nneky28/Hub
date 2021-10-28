@@ -29,7 +29,7 @@ const TimeoffVertical = ({data,load,setModal}) => {
       {
         load && Array.isArray(load) && load.length > 0 ? (
           <FlatList
-            columnWrapperStyle={{justifyContent: load && load.length === 1 ? "center" : 'space-between', width: width(90)}}
+            columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
             data={load}
             nestedScrollEnabled={true}
             numColumns={2}
@@ -440,7 +440,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
           <TouchableOpacity activeOpacity={0.8}
             onPress={()=>{
               if(status === "balance"){
-                return setModal(fData.id)
+                return setModal(fData.id,fData)
               }
               if(status === "request"){
                 setModal(fData)

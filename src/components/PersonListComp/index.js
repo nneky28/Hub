@@ -3,7 +3,9 @@ import {
   Image,
   Text, TouchableOpacity, View
 } from 'react-native';
+import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
+import { H1, Rounded } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import styles from './styles';
 
@@ -14,13 +16,17 @@ const PersonListComp = ({item, onPressHandle}) => {
     style={[styles.listItemContainer]}
     onPress={onPressHandle}
     >
-        {console.log("PersonListComp",item)}
         <View style={CommonStyles.rowJustifySpaceBtw}>
         {
           item.photo ? (
-            <Image url={item && item.photo ? item.photo : null} style={styles.avatarStyle}/>
+            <Image source={{uri : item.photo}} style={styles.avatarStyle}/>
           ) : (
-            <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle}/>
+            <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={12}>
+              <H1>
+                {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
+                {item && item.last_name && item.first_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ""}
+              </H1>
+            </Rounded>
           )
         }
             <View style={styles.textContainer}>

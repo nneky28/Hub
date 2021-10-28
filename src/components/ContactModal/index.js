@@ -156,7 +156,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       let fd = {
         ...data,timeoff : timeoff_id
       }
-      let res = await postAPIs(timeoff_url,token,fd);
+      let res = await postAPIs(timeoff_url,fd);
       storeData("curr_timeoff",null)
       dispatch(setLoaderVisible(false));
       closeAndRefresh()

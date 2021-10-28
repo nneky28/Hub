@@ -35,6 +35,7 @@ import { login } from '../Redux/Actions/Auth';
 import NextKin from '../screens/NextKin';
 import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
+import { APIFunction } from '../utills/api';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
@@ -46,8 +47,6 @@ const Routes = () => {
 
   const logoutMethod = async () => {
     try{
-      let keys = await AsyncStorage.getAllKeys()
-      await AsyncStorage.multiRemove(keys);
       dispatch(login({...auth,route : "auth",isLogin : false}));
       ToastSuccess("Successfully logged out")
     }catch(err){
@@ -58,7 +57,6 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Loader />
-      {console.log("route---",route)}
       {
         route === "splash" ? (
           <Stack.Navigator
@@ -78,6 +76,8 @@ const Routes = () => {
               if(check){
                 return logoutMethod()
               }
+              let res = await APIFunction.notifications()
+              dispatch(login({...auth,notifications : res.count}));
             },
           }}
           drawerContent={(props) => <Drawer {...props} />}

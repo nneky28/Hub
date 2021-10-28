@@ -15,7 +15,7 @@ let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 import { Field, Formik } from 'formik';
 import CustomInput from '../../components/CustomInput';
-import { employees_me, getAPIs, postAPIs, postNoToken } from '../../utills/api';
+import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
@@ -68,7 +68,7 @@ export default function Dashboard(props) {
       await storeData("about_me",about_me)
       await storeData("user",res.user);
       await storeData("logout_time",moment(new Date()).add(2,'hours'));
-      await storeData('token_expiry',moment(new Date()).add(30,'minutes'))
+      await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));
       return dispatch(login({...auth,user : {userName: "Joe"}, route : "main",isLogin : true}));

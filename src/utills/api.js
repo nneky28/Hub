@@ -37,8 +37,11 @@ export const APIFunction = {
   timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
   job_anniversary : (status,business_id,page=1) =>`/c/${business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`,
-  notifications : (business_id,page=1) => `/c/${business_id}/employees/notifications/?page=${page}`,
-  change_password : async (fd) => postAPIs(`/accounts/auth/password/change/`,fd,fd),
+  notifications : async (page=1) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/employees/notifications/?page=${page}`)
+  },
+  change_password : async (fd) => postAPIs(`/accounts/auth/password/change/`,fd),
   pension_providers : async () => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz.business_id}/pension_providers/`)
@@ -50,6 +53,18 @@ export const APIFunction = {
   update_next_of_kin : async (fd,id) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz.business_id}/employees/${id}/update-next-of-kin/`,fd)
+  },
+  update_pension : async (fd,id) => {
+    let biz = await getStoredBusiness();
+    return postAPIs(`/c/${biz.business_id}/employees/${id}/update_pension_bank_account/`,fd)
+  },
+  about_me : async () => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/employees/me/`);
+  },
+  read_notification : async (id) => {
+    let biz = await getStoredBusiness();
+    return postAPIs(`/c/${biz.business_id}/employees/notifications/${id}/read/`)
   }
 }
 export const getAPIs = async (path, token) => {
@@ -90,10 +105,9 @@ export const getAPIs = async (path, token) => {
     });
   };
   
-export const postAPIs = async (path, token, fd) => {
-  console.log("postAPIs----",path,token,fd)
+export const postAPIs = async (path, fd) => {
   let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
+    if(expiry && !moment(new Date()).isBefore(expiry)){
        await refreshToken()
     }
     let _token = await getData("token");
@@ -112,8 +126,11 @@ export const postAPIs = async (path, token, fd) => {
         })
         .catch(error => {
           console.log("postAPIs-err",error)
-          if (error.response) {
-            reject({status: 500, msg: error.response.data});
+          if (
+            error.response && error.response.data && 
+            error.response.data.detail && typeof(error.response.data.detail) === "string"
+          ) {
+            reject({status: 400, msg:error.response.data.detail});
           } else {
             reject({status: 500, msg: 'Connection Error. Please try again later'});
           }
@@ -321,7 +338,7 @@ export const storeFilePut = async (path, token, fd) => {
             "refresh": refresh
           }
         );
-        await storeData('token_expiry',moment(new Date()).add(30,'minutes'))
+        await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
         await storeData("token",res.data.access)
     }catch(err){
         console.log("refresh-error",err);

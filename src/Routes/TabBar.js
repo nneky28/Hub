@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
@@ -12,11 +13,13 @@ import {
 } from '../assets/images';
 import SelectionModal from '../components/SelectionModal';
 import AppColors from '../utills/AppColors';
+import { Container, H1, Rounded } from '../utills/components';
 import { FontFamily } from '../utills/FontFamily';
 
 
 function TabBar({state, descriptors, navigation}) {
   const isBottomTabBarVisible = useSelector(state => state.Config.isBottomTabBarVisible);
+  const auth = useSelector(state=>state.Auth);
   const [modal, setModal] = useState(false);
 
   if (!isBottomTabBarVisible)
@@ -87,6 +90,22 @@ function TabBar({state, descriptors, navigation}) {
             onLongPress={onLongPress}
             style={styles.container}
           >
+            {
+              index === 2  && auth && auth.notifications > 0 && (moment().isAfter(auth.last_checked) || !auth.last_checked) ? (
+                <Container
+                  style={{
+                    position:"absolute",
+                    top : -10,
+                    left : 30
+                  }}
+                  backgroundColor={'transparent'}
+                >
+                  <Rounded size={7}>
+                    <H1 color={AppColors.white} fontSize={3.5}>{auth.notifications}</H1>
+                  </Rounded>
+                </Container>
+              ) : null
+            }
             <Image
               resizeMode="contain"
               source={isFocused ? image1 : image}

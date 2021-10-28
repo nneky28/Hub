@@ -44,7 +44,7 @@ export default function People({route,navigation}) {
     const handleSearch = (text) => {
         if (text.length > 0){
             let filtered = persons.filter(item => {
-                return (item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text)) || (item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text))
+                return (item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text.toLowerCase())) || (item && item.last_name && item.last_name.toLowerCase() && item.last_name.toLowerCase().includes(text.toLowerCase()))
             });
             setPersonsList(filtered);
         }
@@ -84,7 +84,7 @@ export default function People({route,navigation}) {
                     {
                         title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
                         avatar: item.photo,
-                        subtitle: 'Tech Support',
+                        subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : '',
                         icon: require('../../assets/images/icons/cake.png'),
                         background: 'pink',
                     }
@@ -95,7 +95,7 @@ export default function People({route,navigation}) {
                     {
                         title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
                         avatar: item.photo,
-                        subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : "Lead Designer",
+                        subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : "",
                         icon: require('../../assets/images/icons/cake.png')
                     }
                 )) : []
@@ -103,7 +103,7 @@ export default function People({route,navigation}) {
                 let upcoming_ann = up_ann_res && up_ann_res.results && Array.isArray(up_ann_res.results) ? 
                 up_ann_res.results.map((item)=>({
                     title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
-                    avatar: item && item.photo ? item.photo : require('../../assets/images/dummy/placeholder.png'),
+                    avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
                     icon: require('../../assets/images/icons/document2.png'),
                 })) : [];
@@ -111,47 +111,45 @@ export default function People({route,navigation}) {
                 let active_ann = active_ann_res && active_ann_res.results && Array.isArray(active_ann_res.results) ? 
                 up_ann_res.results.map((item)=>({
                     title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
-                    avatar: item && item.photo ? item.photo : require('../../assets/images/dummy/placeholder.png'),
+                    avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
                     icon: require('../../assets/images/icons/document2.png'),
                 })) : [];
 
                 let celeb = [
-                    {
+                    active_birthdays && Array.isArray(active_birthdays) && active_birthdays.length > 0 ? {
                         key: '1',
                         date: moment(new Date()).format("MMM DD"),
                         heading: 'Birthdays',
                         data: active_birthdays
-                    },
-                    {
+                    } : null,
+                    active_ann && Array.isArray(active_ann) && active_ann.length > 0 ? {
                         key: '2',
                         date: moment(new Date()).format("MMM DD"),
                         heading: 'Job Anniversary',
                         data: active_ann
                         
-                    },
-                    {
+                    } : null,
+                    upcoming_birthdays && Array.isArray(upcoming_birthdays) && upcoming_birthdays.length > 0 ? {
                         key: '1',
                         date: moment(new Date()).format("MMM DD"),
                         heading: 'Upcoming Birthdays',
                         data: upcoming_birthdays
-                    },
-                    {
+                    } : null,
+                    upcoming_ann && Array.isArray(upcoming_ann) && upcoming_ann.length > 0 ? {
                         key: '2',
                         date: moment(new Date()).format("MMM DD"),
                         heading: 'Upcoming Anniversary',
                         data: upcoming_ann
                         
-                    },
-                ];
+                    } : null,
+                ].filter(item=>item !== null);
                 setCelebrations(celeb);
             }
 
             if(selected === "Who's out"){
                 let whos_out_url = APIFunction.whos_out(biz.business_id,"active");
                 let whos_out_res = await getAPIs(whos_out_url,token);
-                console.log("whos_out_res====",whos_out_res)
-
                 let data = whos_out_res && whos_out_res.results && Array.isArray(whos_out_res.results) ?
                  whos_out_res.results.map((item,index)=>(
                     {
@@ -215,7 +213,12 @@ export default function People({route,navigation}) {
                     item.photo ? (
                         <Image url={item.avatar} style={styles.avatarStyle} />
                     ) : (
-                        <Image source={require('../../assets/images/dummy/placeholder.png')} style={styles.avatarStyle} />
+                        <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={11}>
+                          <H1>
+                            {item && item.title && item.title.length > 0 ? Capitalize([...item.title][0]) : ""}
+                            {item && item.title && item.title.length > 1 ? `${Capitalize([...item.title][1])}` : ""}
+                          </H1>
+                        </Rounded>
                     )
                 }
                 <View style={styles.textContainer}>
@@ -262,7 +265,7 @@ export default function People({route,navigation}) {
                     item && item.avatar ? (
                         <Image source={item.avatar} style={styles.avatarStyle} />
                     ) : (
-                        <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                        <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={11}>
                           <H1>
                             {item && item.title && item.title.length > 0 ? Capitalize([...item.title][0]) : ""}
                             {item && item.title && item.title.length > 1 ? `${Capitalize([...item.title][1])}` : ""}
@@ -373,12 +376,15 @@ export default function People({route,navigation}) {
                      ) : null
                 }
                 {
-                    !loading && selected === "Celebrations" && celebrations && celebrations.active_bithdays && celebrations.upcoming_birthdays
-                    &&
-                    (celebrations.upcoming_birthdays.length === 0 || celebrations.active_bithdays.length === 0) ? (
-                        <LottieIcon icon={Birthdayjson} />
+                    !loading && celebrations && selected === "Celebrations" && Array.isArray(celebrations) && celebrations.length === 0 ? (
+                        <Container style={{
+                            alignItems : "center"
+                        }}>
+                            <LottieIcon icon={Empty} />
+                        </Container>
                     ) : null
                 }
+                
                 {
                     (
                         (selected === "All" || selected === "My Team") && personsList && Array.isArray(personsList) &&
