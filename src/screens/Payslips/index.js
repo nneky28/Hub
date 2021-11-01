@@ -6,10 +6,11 @@ import { downIcon, fileIcon, HorDotIcon, leftIcon } from '../../assets/images';
 import { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, LottieIcon } from '../../utills/components';
+import { Container, H1, LottieIcon } from '../../utills/components';
 import { payslips } from '../../utills/data/payslips';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
+import AppColors from '../../utills/AppColors';
 
 
 export default function Payslips({navigation}) {
@@ -40,7 +41,7 @@ export default function Payslips({navigation}) {
     }
         
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper scrollEnabled={false}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -109,18 +110,18 @@ export default function Payslips({navigation}) {
                 nestedScrollEnabled={true}
                 contentContainerStyle={CommonStyles.marginTop_2}
                 /> */}
+            </View>
                 <Container
-                    marginTop={10}
+                    flex={1}
                     style={{
                         justifyContent : "center",
                         alignItems : "center"
                     }}
                 >
-                    <LottieIcon 
-                        icon={Emptyjson}
-                    />
-                </Container>
-            </View>
+                    <H1
+                        color={AppColors.black3}
+                    >Looks like you have not received a payslip yet.</H1>
+                    </Container>
             <DocumentModal isVisible={modal} onHide={() => setModal(false)}/> 
         </ScreenWrapper>  
     );

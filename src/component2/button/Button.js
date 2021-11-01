@@ -8,7 +8,6 @@ import AppColors from '../../utills/AppColors';
 
 const GenButton = (props) => {
   const {colors} = props.theme;
-  console.log("color||||---",colors)
   return (
     // <Button
     //   //

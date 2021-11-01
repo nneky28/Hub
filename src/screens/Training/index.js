@@ -37,23 +37,18 @@ export default function Training({navigation}) {
             let token = await getData("token");
             let user =  await getData("user");
             let about_me = await getData("about_me")
-            console.log("getTraining")
             let biz = user.employee_user_memberships &&
             Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             let train_url = APIFunction.trainings(biz.business_id,about_me.id)
             let hist_url = APIFunction.training_hist(biz.business_id,about_me.id)
-            console.log("url---",train_url,hist_url,token)
             let hist_res = await getAPIs(hist_url,token)
             let train_res = await getAPIs(train_url,token)
-            console.log("Training--",hist_res,train_res)
             setHistories(hist_res.results);
             setTrainings(train_res.results)
             setLoading(false);
         }catch(err){
-            console.log("err--",err)
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-            console.log("err|||",err,msg)
             //ToastError(msg)
         }
     }
@@ -92,7 +87,6 @@ export default function Training({navigation}) {
                     ))}
                 </ScrollView>
                 <View style={styles.line2} />
-                {console.log("re-render")}
                 {
                     loading ? (
                         <PageLoader />

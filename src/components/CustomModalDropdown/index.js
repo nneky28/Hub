@@ -16,7 +16,7 @@ const CustomModalDropdown = (props) => {
 
   const hasError = errors[name] && touched[name]
   const dropdown = useRef(null);
-
+  const [selected,setSelected] = React.useState(false);
   return (
     <TouchableOpacity
     onPress={() => dropdown.current.show()}
@@ -27,16 +27,17 @@ const CustomModalDropdown = (props) => {
       isFullWidth
       options={props.options} 
       style={[
-            styles.listContainer,
-            hasError && styles.errorInput
-          ]}
+        styles.listContainer,
+        hasError && styles.errorInput
+      ]}
       dropdownStyle={styles.dropDownContainer}
       defaultIndex={-1}
       defaultValue={props.placeholder}
-      textStyle={styles.text1}
+      textStyle={selected ? styles.text2 : styles.text1}
       dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
       onSelect={(index,text) => {
         //setFieldValue(name, text)
+        props.placeholder === text ?  setSelected(false) : setSelected(true)
         props.onChangeData ? props.onChangeData(text) : null
       }}
       renderRightComponent={() => <Image 

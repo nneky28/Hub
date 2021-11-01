@@ -22,6 +22,7 @@ import moment from 'moment';
 import { Container, H1, LottieIcon, Rounded } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
 import Emptyjson from '../../assets/lottie/birthday-icon.json'
+import Outjson from '../../assets/lottie/out.json'
 import { useNavigation } from '@react-navigation/core';
 import { ColorList } from '../../utills/AppColors';
 
@@ -207,7 +208,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
               alignItems : "center"
             }}
           >
-            <LottieIcon icon={Emptyjson} />
+            <LottieIcon icon={Outjson} />
           </Container>
         ) : null
       }

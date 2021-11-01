@@ -59,9 +59,12 @@ const upIcon = require('./icons/up.png');
 const leftIcon = require('./icons/left.png');
 const cameraIcon = require('./icons/camera.png');
 const tickIcon = require('./icons/tick.png');
-
+const benefitIcon = require('./icons/benefit.png')
 const placeholder5 = require('./dummy/placeholder5.png');
+const payslipIcon = require('./icons/payslip.png');
 export {
+  payslipIcon,
+  benefitIcon,
   fileIcon,
   categoryFillIcon,
   categoryIcon,

@@ -7,11 +7,13 @@ import {
   View,
 } from 'react-native';
 import {
+  payslipIcon,
   timeOffIcon,
   lighteningIcon,
   truckIcon,
   threeMenIcon,
   documentIcon,
+  benefitIcon
 } from '../../assets/images';
 import styles from './styles';
 import Modal from 'react-native-modal';
@@ -68,9 +70,9 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
         </View>
         <View style={styles.line} />
         <View style={styles.row}>
-          <TextWithIcon text="Payslip" icon={truckIcon} />
+          <TextWithIcon text="Payslip" icon={payslipIcon} />
           <TextWithIcon text="Trainings" icon={lighteningIcon} />
-          <TextWithIcon text="Benefits" icon={lighteningIcon} />
+          <TextWithIcon text="Benefits" icon={benefitIcon} />
         </View>
       </View>
     </Modal>

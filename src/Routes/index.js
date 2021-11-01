@@ -147,7 +147,7 @@ const Routes = () => {
         </DrawerStack.Navigator>
       ) : (
         <Stack.Navigator
-          initialRouteName="Splash"
+          initialRouteName="Login"
           screenOptions={{headerMode: false}}>
             <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>

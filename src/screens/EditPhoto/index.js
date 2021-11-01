@@ -8,14 +8,15 @@ import { leftIcon, placeholder5 } from '../../assets/images';
 import Button from '../../components/Button';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
-import AppColors from '../../utills/AppColors';
+import AppColors, { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
 import { useDispatch } from 'react-redux';
 import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
 import { ActivityIndicator } from 'react-native-paper';
+import { H1, Rounded } from '../../utills/components';
 
 
 
@@ -75,9 +76,9 @@ export default function EditPhoto({navigation}) {
           cropping: true,
           cropperCircleOverlay: true
         }).then(async (response) => {
-            let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
-            console.log("data---",data)
-            setProfilePicture(data);
+            // let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
+            console.log("data---",response)
+            //setProfilePicture(data);
         }).catch(err=>{
           console.log("imageFromGallery-error",err)
           ImagePicker.clean()
@@ -95,13 +96,14 @@ export default function EditPhoto({navigation}) {
       }
     }
     
-    useFocusEffect(
-      React.useCallback(()=>{
-        getProfile();
-      },[])
-    )
-
+    // useFocusEffect(
+    //   React.useCallback(()=>{
+        
+    //   },[])
+    // )
+    
     useEffect(() => {
+        getProfile();
         //cleanup code
         return ImagePicker.clean().then(() => {
             console.log('removed all tmp images from tmp directory');
@@ -175,7 +177,6 @@ export default function EditPhoto({navigation}) {
 
             <View style={styles.mainViewContainer}>
                 <View style={styles.imageContainer}>
-                    {console.log("profilePicture",profilePicture)}
                     {
                       about && about.photo && !profilePicture ? (
                         <ImageBackground
@@ -187,13 +188,27 @@ export default function EditPhoto({navigation}) {
                           </ImageBackground>
                       ) : (
                           <ImageBackground 
-                            source={profilePicture || require('../../assets/images/dummy/placeholder.png')} 
+                            source={profilePicture} 
                             resizeMode='contain' 
                             style={styles.imageStyle}
                           >
                               <SvgCircle />
                           </ImageBackground>
                       )
+                    }
+                    {
+                      about && !about.photo && !profilePicture ? (
+                        <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
+                          size={25}
+                        >
+                          <H1>
+                            {about && about.first_name && about.first_name.length > 0 ? 
+                              Capitalize([...about.first_name][0]) : ""}
+                            {about && about.last_name && about.last_name.length > 1 ? 
+                            `${Capitalize([...about.last_name][0])}` : ""}
+                          </H1>
+                        </Rounded>
+                      ) : null
                     }
                 </View>
                 

@@ -23,7 +23,7 @@ const Splash = (props) => {
       if(user){
         dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
       }else{
-       props.navigation.navigate("Onboard");
+        dispatch(login({...auth,user : user,isLogin : true,route : "auth"}));
       }
     }, 3000);
   };

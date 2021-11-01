@@ -6,7 +6,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, LottieIcon } from '../../utills/components';
+import { Container, H1, LottieIcon } from '../../utills/components';
 import { documents } from '../../utills/data/documents';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
@@ -40,7 +40,7 @@ export default function Documents({navigation}) {
         
     return (
         <ScreenWrapper 
-            scrollEnabled={true}
+            scrollEnabled={false}
         >
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -69,18 +69,18 @@ export default function Documents({navigation}) {
                 nestedScrollEnabled={true}
                 contentContainerStyle={CommonStyles.marginTop_2}
                 /> */}
-                <Container
-                    marginTop={10}
+            </View>
+            <Container
+                    flex={1}
                     style={{
                         justifyContent : "center",
                         alignItems : "center"
                     }}
                 >
-                    <LottieIcon 
-                        icon={Emptyjson}
-                    />
-                </Container>
-            </View>
+                    <H1
+                        color={AppColors.black3}
+                    >You have no document yet.</H1>
+                    </Container>
             <DocumentModal isVisible={modal} onHide={() => setModal(false)}/>
         </ScreenWrapper>  
     );

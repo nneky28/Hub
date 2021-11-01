@@ -12,16 +12,11 @@ import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors, { ColorList } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
 import { Container, H1, LottieIcon, PageLoader, Rounded } from '../../utills/components'
-//import { celebrations, whosOut } from '../../utills/data/celebrations'
-import { persons } from '../../utills/data/persons'
 import styles from './styles'
-import Birthdayjson from '../../assets/lottie/birthday.json'
 import Empty from '../../assets/lottie/empty.json'
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api'
-import Loader from '../../components/Loader'
 import moment from 'moment'
-
 
 
 

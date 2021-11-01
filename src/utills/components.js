@@ -72,7 +72,6 @@ export const Reload = props => {
 }
 
   export const LottieIcon = ({icon,size}) => {
-    console.log("size,",size,icon)
     return(
         <LottieView 
           source={icon}

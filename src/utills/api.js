@@ -2,7 +2,8 @@ import axios from "axios";
 import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 
-export const endPoint = 'https://coolowo.com';
+//export const endPoint = 'https://coolowo.com';
+export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -91,7 +92,6 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("err",error.response)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -125,7 +125,6 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("postAPIs-err",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -194,7 +193,6 @@ export const putAPIs = async (path,fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("Err--",error.response)
           if (
             error.response && error.response.data && error.response.data.msg && 
             error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"
@@ -253,7 +251,6 @@ export const postNoToken = (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("error",error.response)
           if (error.response) {
             reject({status: 400, msg: error.response.data});
           } else {
@@ -314,7 +311,6 @@ export const storeFilePut = async (path, token, fd) => {
         },
       })
         .then(res => {
-          console.log("res---",res)
           resolve(res.data);
         })
         .catch(error => {
@@ -331,7 +327,6 @@ export const storeFilePut = async (path, token, fd) => {
 
   const refreshToken = async () => {
     try{
-        console.log("refreshToken-ing")
         let refresh = await getData("refresh")
         let res = await axios.post(`${endPoint}/accounts/auth/token/refresh/`,
           {

@@ -14,7 +14,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods';
+import { Capitalize, getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
 
@@ -25,13 +25,16 @@ export default function PersonalInfo({navigation}) {
     const updateProfile = async () => {
         try{
             let failed = false;
-            required = ["firstName","middleName",
-                "lastName","gender","dateOfBirth","maritalStatus","email","addr","mobileNumber1"]
+            let required = ["first_name","last_name",
+                "middle_name","gender","birth_date","marital_status","email","address","phone_number","state","city"]
+            let msg = "";
             for(let req of required){
-                console.log("data--",data[req])
-               if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
+               if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")){
+                    msg = `"${Capitalize(req.replace("_"," "))}" is required`
+                    failed = true
+               };
             }
-            if(failed) return ToastError("All fields are required")
+            if(failed) return ToastError(msg)
             setLoading(true)
             setLoading(true);
             let token = await getData("token");
@@ -39,21 +42,21 @@ export default function PersonalInfo({navigation}) {
             let about = await getData("about_me");
             let fd = {
                 "title": "",
-                "first_name": data.firstName,
-                "middle_name": data.middleName,
-                "last_name": data.lastName,
-                "birth_date": moment(new Date()).format("YYYY-MM-DD"),
-                "marital_status": data.maritalStatus && data.maritalStatus.toLowerCase()  ,
+                "first_name": data.first_name,
+                "middle_name": data.middle_name,
+                "last_name": data.last_name,
+                "birth_date": moment(data.birth_date).format("YYYY-MM-DD"),
+                "marital_status": data.marital_status && data.marital_status.toLowerCase()  ,
                 "gender": data.gender === "Male" ? "M" : "F",
-                "phone_number1": data.mobileNumber1,
+                "phone_number1": data.phone_number,
                 "phone_number2": data.mobileNumber2,
                 "address": {
-                  "address1": data.addr,
+                  "address1": data.address,
                   "address2": data.address2,
                   "country": "NG",
-                  "state": "Lagos",
-                  "city": "Lagos",
-                  "postal_code": ""
+                  "state": data.state,
+                  "city": data.city,
+                  "postal_code": data.postal_code
                 }
             }
             let res = await APIFunction.edit(fd,about.id);
@@ -74,36 +77,44 @@ export default function PersonalInfo({navigation}) {
         }
     }
     const [data,setData] = React.useState({
-        firstName: "",
-        middleName: "",
-        lastName: "",
+        first_name: "",
+        middle_name: "",
+        last_name: "",
         gender: "",
-        dateOfBirth: "",
-        maritalStatus:"",
+        birth_date: "",
+        marital_status:"",
         email: "",
-        addr: "",
+        address: "",
         address2: "",
-        mobileNumber1: "",
+        phone_number: "",
         mobileNumber2: "",
+        state : "",
+        city : "",
+        postal_code : ''
     })
     const getProfile = async () => {
         try{
             let profile = await getData("profile");
+            console.log("profile.about",profile.about)
             if(profile && profile.about){
                 setData(
                     {
-                        firstName: profile.about.first_name,
-                        middleName: profile.about.middle_name,
-                        lastName: profile.about.last_name,
+                        first_name: profile.about.first_name,
+                        middle_name: profile.about.middle_name,
+                        last_name: profile.about.last_name,
                         gender: profile.about.gender,
-                        dateOfBirth: profile.about.birth_date,
-                        maritalStatus : profile.about.marital_status,
+                        birth_date: profile.about.birth_date,
+                        marital_status : profile.about.marital_status,
                         email: profile.about.email,
-                        addr: profile.about.address && profile.about.address.address1 ? 
+                        address: profile.about.address && profile.about.address.address1 ? 
                         profile.about.address.address1 : "",
-                        address2: '',
-                        mobileNumber1: profile.about.phone_number1,
+                        address2: profile.about.address && profile.about.address.address2 ? 
+                        profile.about.address.address2 : "",
+                        phone_number: profile.about.phone_number,
                         mobileNumber2: profile.about.phone_number2,
+                        city : profile.about && profile.about.city ? profile.about.city : "",
+                        state : profile.about && profile.about.state ? profile.about.state : "",
+                        postal_code : profile.about && profile.about.postal_code ? profile.about.postal_code : ""
                     }
                 )
             }
@@ -120,17 +131,20 @@ export default function PersonalInfo({navigation}) {
         <View style={styles.mainViewContainer}>
                 <Formik
                     initialValues={{
-                        firstName: '',
-                        middleName: '',
-                        lastName: '',
+                        first_name: '',
+                        last_name: '',
+                        middle_name: '',
                         gender: '',
-                        dateOfBirth: '',
-                        maritalStatus:'',
+                        birth_date: '',
+                        marital_status:'',
                         email: '',
                         address: '',
                         address2: '',
-                        mobileNumber1: '',
+                        phone_number: '',
                         mobileNumber2: '',
+                        city : "",
+                        state : "",
+                        postal_code : ""
                     }}
                     //validationSchema={validationSchema}
                     onSubmit={showFlashMessage}
@@ -162,26 +176,26 @@ export default function PersonalInfo({navigation}) {
                         component={CustomInput}
                         name="firstName"
                         placeholder="First Name"
-                        value={data.firstName}
+                        value={data.first_name}
                         setData={setData}
                         data={data}
                         color={AppColors.black}
-                        onChangeData={(value)=>setData({...data,firstName : value})}
+                        onChangeData={(value)=>setData({...data,first_name : value})}
                     />
                     <Field
                         component={CustomInput}
                         name="middleName"
                         placeholder="Middle Name"
-                        value={data.middleName}
-                        onChangeData={(value)=>setData({...data,middleName : value})}
+                        value={data.middle_name}
+                        onChangeData={(value)=>setData({...data,middle_name : value})}
                         color={AppColors.black}
                     />
                     <Field
                         component={CustomInput}
                         name="lastName"
                         placeholder="Last Name"
-                        value={data.lastName}
-                        onChangeData={(value)=>setData({...data,lastName : value})}
+                        value={data.last_name}
+                        onChangeData={(value)=>setData({...data,last_name : value})}
                         color={AppColors.black}
                     />
                     <Field
@@ -198,8 +212,8 @@ export default function PersonalInfo({navigation}) {
                         name="maritalStatus" 
                         placeholder="Marital Status"
                         component={CustomModalDropdown}
-                        value={data.maritalStatus}
-                        onChangeData={(value)=>setData({...data,maritalStatus : value})}
+                        value={data.marital_status}
+                        onChangeData={(value)=>setData({...data,marital_status : value})}
                         color={AppColors.black}
                         options={["Single","Married","Divorced"]}
                     />
@@ -209,8 +223,8 @@ export default function PersonalInfo({navigation}) {
                         name="dateOfBirth"
                         placeholder="Date of Birth"
                         component={CustomDatePicker}
-                        value={data.dateOfBirth}
-                        onChangeData={(value)=>setData({...data,dateOfBirth : value})
+                        value={data.birth_date}
+                        onChangeData={(value)=>setData({...data,birth_date : value})
                         }
                         color={AppColors.black}
                     />
@@ -231,7 +245,7 @@ export default function PersonalInfo({navigation}) {
                         name="address"
                         placeholder="Address"
                         value={data.address}
-                        onChangeData={(value)=>setData({...data,addr : value})}
+                        onChangeData={(value)=>setData({...data,address : value})}
                         color={AppColors.black}
                     />
                     <Field
@@ -247,8 +261,8 @@ export default function PersonalInfo({navigation}) {
                         name="mobileNumber1"
                         placeholder="Mobile Number 1"
                         keyboardType='phone-pad'
-                        value={data.mobileNumber1}
-                        onChangeData={(value)=>setData({...data,mobileNumber1 : value})}
+                        value={data.phone_number}
+                        onChangeData={(value)=>setData({...data,phone_number : value})}
                         color={AppColors.black}
                     />
                     <Field
@@ -258,6 +272,46 @@ export default function PersonalInfo({navigation}) {
                         keyboardType='phone-pad'
                         value={data.mobileNumber2}
                         onChangeData={(value)=>setData({...data,mobileNumber2 : value})}
+                        color={AppColors.black}
+                    />
+
+                    <Field
+                        name="country" 
+                        placeholder="Country"
+                        component={CustomModalDropdown}
+                        value={data.country}
+                        onChangeData={(value)=>setData({...data,country : value})}
+                        color={AppColors.black}
+                        options={["Nigeria"]}
+                    />
+
+                    <Field
+                        component={CustomInput}
+                        name="city"
+                        placeholder="City"
+                        keyboardType='default'
+                        value={data.city}
+                        onChangeData={(value)=>setData({...data,city : value})}
+                        color={AppColors.black}
+                    />
+
+                    <Field
+                        component={CustomInput}
+                        name="state"
+                        placeholder="State"
+                        keyboardType='default'
+                        value={data.state}
+                        onChangeData={(value)=>setData({...data,state : value})}
+                        color={AppColors.black}
+                    />
+
+                    <Field
+                        component={CustomInput}
+                        name="state"
+                        placeholder="Postal Code"
+                        keyboardType='number-pad'
+                        value={data.postal_code}
+                        onChangeData={(value)=>setData({...data,postal_code : value})}
                         color={AppColors.black}
                     />
 

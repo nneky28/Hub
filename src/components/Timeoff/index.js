@@ -15,7 +15,7 @@ import { LottieIcon } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
-import Emptyjson from '../../assets/lottie/empty.json'
+import Timeoffjson from '../../assets/lottie/timeoff.json'
 
 if (
   Platform.OS === 'android' &&
@@ -72,7 +72,8 @@ const Timeoff = ({data,tab,showModal}) => {
             />
           ) : (
             <View style={{justifyContent : "center", alignItems : "center"}}>
-                <LottieIcon icon={Emptyjson} />
+                <LottieIcon icon={Timeoffjson} />
+                
             </View>
           )
         }

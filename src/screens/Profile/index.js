@@ -218,12 +218,12 @@ export default function Profile({navigation}) {
             <Text style={styles.insideText4}>{topText}</Text>
             <Text style={styles.insideText3}>{bottomText}</Text>
           </View>
-          <TouchableOpacity 
+          {/* <TouchableOpacity 
           style={styles.saveBtnStyle} 
           onPress={onPressHandle}
           >
             <Text style={styles.saveBtnText}>View History</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       );
     }

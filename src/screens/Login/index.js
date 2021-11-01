@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler} from 'react-native';
+import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image} from 'react-native';
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
@@ -10,7 +10,7 @@ import {setLoaderVisible} from '../../Redux/Actions/Config';
 import CustomText from '../../component2/customText/CustomText';
 import CusInput from '../../component2/input/inputElement';
 import CustomButton from '../../component2/button/Button';
-import Image from '../../component2/image/Image';
+//import Image from '../../component2/image/Image';
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 import { Field, Formik } from 'formik';
@@ -19,6 +19,7 @@ import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
+import { Container, SizedBox } from '../../utills/components';
 
 
 export default function Dashboard(props) {
@@ -86,76 +87,84 @@ export default function Dashboard(props) {
   return (
     <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
       <ScrollView contentContainerStyle={styles.inner}>
-        <View style={styles.bodyWrap}>
-          <Formik>
-              <React.Fragment>
-              <Image
-          ImageUri={
-            'https://res.cloudinary.com/coolowo/image/upload/v1630094478/mobile/modulist/Group_1119_yoan7f.png'
-          }
-          imageStyle={styles.Image1Sty}
-        />
         <View
           style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            marginTop: 25,
-          }}>
-            <CustomText
+            flex : 1,
+            alignItems : 'center',
+            marginTop : "50%",
+            backgroundColor : AppColors.white
+          }}
+        >
+          <Container
+            height={30}
+            width={30}
+            style={{
+              justifyContent : "center",
+              alignItems : "center"
+            }}
+          >
+            <Image
+              source={require('../../assets/images_2/logo/myedge.png')}
+              style={styles.Image1Sty}
+            />
+          </Container>
+          <CustomText
               textSize={20}
               textWeight={'bold'}
               textcolor={defaultColor}
               // displayText={'Welcome to Bizedge! '}
               displayText={'Welcome'}
               textStyle={{
-                marginTop: -3,
+                marginTop: 3,
               }}
             />
+            <CustomText
+              textSize={12}
+              textWeight={'normal'}
+              textcolor={blackColor}
+              displayText={
+                'Login to your myEdge account.'
+              }
+              textStyle={{
+                marginTop: 5,
+              }}
+            />
+
+              <Formik>
+                    <React.Fragment>
+                      <Field
+                        component={CustomInput}
+                        name="email"
+                        placeholder="Email"
+                        value={data.email}
+                        onChangeData={(value)=>{
+                          setData({...data,email : value})
+                        }}
+                        color={AppColors.black}
+                      />
+                    <Field
+                      component={CustomInput}
+                      name="password"
+                      placeholder="Password"
+                      value={data.password}
+                    // secure={true}
+                      onChangeData={(value)=>{
+                        setData({...data,password : value})
+                      }}
+                      secureTextEntry={true}
+                      color={AppColors.black}
+                    />
+                    </React.Fragment>
+              </Formik>
+
+            <Container marginTop={3} width={90}>
+              <CustomButton
+                btnText={'Sign In'}
+                handelButtonPress={loginMethod}
+                //isloading={isprocessing}
+              />
+            </Container> 
         </View>
-        <CustomText
-          textSize={12}
-          textWeight={'normal'}
-          textcolor={blackColor}
-          displayText={
-            'Login to your account to see how your business is doing today.'
-          }
-          textStyle={{
-            marginTop: 5,
-          }}
-        />
-        <Field
-          component={CustomInput}
-          name="email"
-          placeholder="Email"
-          value={data.email}
-          onChangeData={(value)=>{
-            setData({...data,email : value})
-          }}
-          color={AppColors.black}
-        />
-          <Field
-            component={CustomInput}
-            name="password"
-            placeholder="Password"
-            value={data.password}
-           // secure={true}
-            onChangeData={(value)=>{
-              setData({...data,password : value})
-            }}
-            secureTextEntry={true}
-            color={AppColors.black}
-          />
-        <View style={{width: '100%', marginTop : '5%'}}>
-          <CustomButton
-            btnText={'Sign In'}
-            handelButtonPress={loginMethod}
-            //isloading={isprocessing}
-          />
-        </View> 
-              </React.Fragment>
-          </Formik>
-      </View>
     </ScrollView>
     </KeyboardAvoidingScrollView>
   );
@@ -170,19 +179,12 @@ const styles = StyleSheet.create({
     // marginTop: 40,
   },
   Image1Sty: {
-    width: '30%',
-    height: 50,
-    // // marginTop: -30,
-    // marginBottom: 20,
-
-    //flex: 1,
-    // width: null,
-    //height: null,
+    width : "100%",
     resizeMode: 'contain',
   },
   inner: {
     minHeight: deviceHeight,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: AppColors.white
     // paddingTop: 40,
   },
   bodyWrap: {

@@ -27,8 +27,14 @@ const styles = StyleSheet.create({
     // borderLeftWidth: 1
    },
    text1: {
-    fontSize: width(2.75), 
+    fontSize: width(3.1), 
     color: AppColors.black3,
+    marginLeft: width(5),
+    fontFamily: FontFamily.BlackSansRegular
+  },
+  text2: {
+    fontSize: width(3.1), 
+    color: AppColors.black,
     marginLeft: width(5),
     fontFamily: FontFamily.BlackSansRegular
   },

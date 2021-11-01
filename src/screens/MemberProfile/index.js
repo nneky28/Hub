@@ -15,6 +15,7 @@ import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods
 import styles from './styles';
 import Empty from '../../assets/lottie/empty.json'
 import { ColorList } from '../../utills/AppColors';
+import Teamjson from '../../assets/lottie/teams.json'
 
 
 
@@ -30,7 +31,7 @@ export default function MemberProfile({route,navigation}) {
     const [member,setMember] = useState(null)
     const [members,setMembers] = useState([]);
 
-    const PersonItem = ({item}) => {
+    const PersonItem = ({item,manager}) => {
       return(
       <View 
       style={[styles.listItemContainer]}
@@ -40,12 +41,17 @@ export default function MemberProfile({route,navigation}) {
                 item.avatar ? (
                   <Image source={{uri : item.avatar}} style={styles.avatarSmall} />
                 ) : (
-                  <Image source={require("../../assets/images/dummy/placeholder.png")} style={styles.avatarSmall} />
-                )
+                <Rounded  size={8} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                  <H1 fontSize={3}>
+                    {manager && manager.first_name && manager.first_name.length > 0 ? Capitalize([...manager.first_name][0]) : ""}
+                    {manager && manager.last_name && manager.first_name.length > 0 ? `${Capitalize([...manager.last_name][0])}` : ""}
+                  </H1>
+                </Rounded>
+              )
               }
               <View style={styles.textContainer}>
                   <Text style={styles.titleText}>{item.title}</Text>
-                  <Text style={styles.subText}>{item.designation}</Text>
+                  {/* <Text style={styles.subText}>{item.designation}</Text> */}
               </View>
           </View>
       </View>
@@ -123,7 +129,7 @@ export default function MemberProfile({route,navigation}) {
                       <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
                         {`${member && member.job && member.job.title ? Capitalize(member.job.title) : ""}`}
                       </Text>
-                      <Text numberOfLines={1} style={[styles.designationText]}>Tech and Design</Text>
+                      {/* <Text numberOfLines={1} style={[styles.designationText]}>Tech and Design</Text> */}
                       <Text numberOfLines={1} style={[styles.designationText, {fontFamily: FontFamily.BlackSansBold}]}>
                         {member && member.type ? Capitalize(member.type.replace("_"," ")) : ""} | {member && member.hire_date ? Capitalize(moment(member.hire_date).fromNow().replace("ago","")) : ""}
                       </Text>
@@ -134,13 +140,14 @@ export default function MemberProfile({route,navigation}) {
                   textStyle={styles.buttonText} 
                   onPress={() => setModal(true)}
                   />
+                  {console.log("member.line_manager",member.line_manager)}
                   {
                     member && member.line_manager ? (
                       <React.Fragment>
                         <View style={styles.headingContainer}>
                           <Text style={styles.headingText}>Report to</Text>
                         </View>
-                        <PersonItem item={
+                        <PersonItem manager={member && member.line_manager ? member.line_manager : null} item={
                           {
                             key: '1',
                             title: `${member && member.line_manager && member.line_manager.first_name ? Capitalize(member.line_manager.first_name) : ""} ${member && member.line_manager && member.line_manager.last_name ? Capitalize(member.line_manager.last_name) : ""}`,
@@ -158,7 +165,7 @@ export default function MemberProfile({route,navigation}) {
                   {
                     member && Array.isArray(members) && members.length === 0 ? (
                       <LottieIcon 
-                        icon={Empty}
+                        icon={Teamjson}
                       />
                     ) : null
                   }
