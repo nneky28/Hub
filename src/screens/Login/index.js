@@ -30,8 +30,10 @@ export default function Dashboard(props) {
     // password : "jane12345"
 
     //real deal
-    email : "leo@denzel.com",
-    password : "asd123def"
+    email  : "",
+    password  : ""
+   // email : "leo@denzel.com",
+    //password : "asd123def"
     //email : "",
     //password : ""
   })

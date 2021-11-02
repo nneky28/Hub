@@ -19,7 +19,7 @@ import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
 import { getData, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
-import Emptyjson from '../../assets/lottie/empty.json'
+//import Emptyjson from '../../assets/lottie/empty.json'
 
 
 

@@ -44,7 +44,7 @@ const TimeoffVertical = ({data,load,setModal}) => {
           />
         ) : (
           <View style={{justifyContent : "center", alignItems : "center",flex : 1}}>
-                  <LottieIcon icon={Emptyjson} />
+                  <LottieIcon icon={Timeoffjson} />
               </View>
         )
       }
