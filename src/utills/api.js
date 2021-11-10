@@ -207,38 +207,6 @@ export const putAPIs = async (path,fd) => {
     });
   };
   
-export const patchAPIs = async (path, token, fd) => {
-  let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
-    let _token = await getData("token");
-    return new Promise((resolve, reject) => {
-      axios({
-        url: `${endPoint}${path}`,
-        method: 'patch',
-        data: fd,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${_token}`,
-        },
-      })
-        .then(result => {
-          resolve(result.data);
-        })
-        .catch(error => {
-          //logError(endPoint,path,error)
-          if (error.response) {
-            reject({status: 500, msg: error.response.data});
-          } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
-          }
-        });
-  
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
-    });
-  };
-  
 export const postNoToken = (path, fd) => {
     return new Promise((resolve, reject) => {
       axios

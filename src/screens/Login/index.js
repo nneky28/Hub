@@ -26,16 +26,8 @@ export default function Dashboard(props) {
   const defaultColor = "black";
   const blackColor = "black";
   const [data,setData] = React.useState({
-    // email : "jane@email.com",
-    // password : "jane12345"
-
-    //real deal
     email  : "",
     password  : ""
-   // email : "leo@denzel.com",
-    //password : "asd123def"
-    //email : "",
-    //password : ""
   })
   const auth = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
