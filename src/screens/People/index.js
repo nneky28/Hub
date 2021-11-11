@@ -14,6 +14,9 @@ import CommonStyles from '../../utills/CommonStyles'
 import { Container, H1, LottieIcon, PageLoader, Rounded } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
+import Outjson from '../../assets/lottie/out.json'
+import Celebrationjson from '../../assets/lottie/birthday-icon.json'
+import Teamjson from '../../assets/lottie/teams.json'
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
@@ -156,14 +159,14 @@ export default function People({route,navigation}) {
                         background: 'pink',
                     }
                  )) : [];
-                 let whos_out_data = [
+                 let whos_out_data = data && Array.isArray(data) && data.length > 0 ? [
                     {
                         key: '1',
                         date: 'Jan 12 - Jul 23',
                         heading: 'On leave',
                         data: data
                     }
-                 ]
+                 ] : []
                 setWhosOut(whos_out_data)
             }
             setLoading(false);
@@ -284,7 +287,7 @@ export default function People({route,navigation}) {
     }
 
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper scrollEnabled={false}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -375,7 +378,7 @@ export default function People({route,navigation}) {
                         <Container style={{
                             alignItems : "center"
                         }}>
-                            <LottieIcon icon={Empty} />
+                            <LottieIcon icon={Celebrationjson} />
                         </Container>
                     ) : null
                 }
@@ -384,16 +387,27 @@ export default function People({route,navigation}) {
                     (
                         (selected === "All" || selected === "My Team") && personsList && Array.isArray(personsList) &&
                         personsList.length === 0 && !loading
-                    ) || (
-                        selected === "Who's out" && Array.isArray(whosOut) &&
-                        whosOut.length === 0 && !loading
                     ) ? (
+                        <Container
+                            style={{
+                                alignItems : "center",
+                                justifyContent : "center"
+                            }}
+                        >
+                            <LottieIcon icon={Teamjson} />
+                        </Container>
+                    ) : null
+                }
+                {
+                    selected === "Who's out" && Array.isArray(whosOut) &&
+                        whosOut.length === 0 && !loading
+                    ? (
                         <Container
                             style={{
                                 alignItems : "center"
                             }}
                         >
-                            <LottieIcon icon={Empty} />
+                            <LottieIcon icon={Outjson} />
                         </Container>
                     ) : null
                 }

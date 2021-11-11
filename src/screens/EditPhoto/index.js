@@ -76,9 +76,9 @@ export default function EditPhoto({navigation}) {
           cropping: true,
           cropperCircleOverlay: true
         }).then(async (response) => {
-            // let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
+             let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
             console.log("data---",response)
-            //setProfilePicture(data);
+            setProfilePicture(data);
         }).catch(err=>{
           console.log("imageFromGallery-error",err)
           ImagePicker.clean()
@@ -186,7 +186,7 @@ export default function EditPhoto({navigation}) {
                           >
                               <SvgCircle />
                           </ImageBackground>
-                      ) : (
+                      ) : profilePicture ? (
                           <ImageBackground 
                             source={profilePicture} 
                             resizeMode='contain' 
@@ -194,8 +194,9 @@ export default function EditPhoto({navigation}) {
                           >
                               <SvgCircle />
                           </ImageBackground>
-                      )
+                      ) : null
                     }
+                    {console.log("---profilePicture---",profilePicture)}
                     {
                       about && !about.photo && !profilePicture ? (
                         <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}

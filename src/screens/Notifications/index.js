@@ -231,9 +231,15 @@ export default function Notifications({navigation}) {
         );
     }
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper 
+            scrollEnabled={!process && notifications && Array.isArray(notifications) && notifications.length === 0 ? false : true}
+        >
             <View style={styles.header}>
-                <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon} />
+                <TouchableOpacity
+                    onPress={()=>navigation.goBack()}
+                >
+                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon} />
+                </TouchableOpacity>
                 <Text numberOfLines={1} style={styles.text1}>
                 Notifications
                 </Text>
@@ -271,6 +277,22 @@ export default function Notifications({navigation}) {
                                 )}}
                             />
                         </View>
+                        {
+                            !process && notifications && Array.isArray(notifications) && notifications.length === 0 ?
+                            (
+                                <Container
+                                    flex={1}
+                                    style={{
+                                        justifyContent : "center",
+                                        alignItems : "center"
+                                    }}
+                                >
+                                    <H1
+                                        color={AppColors.black3}
+                                    >You have no notifications yet.</H1>
+                                </Container>
+                            ) : null
+                        }
                     </React.Fragment>
                 )
             }
