@@ -6,7 +6,7 @@ import BenifitList from '../../components/BenifitList';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { PageLoader } from '../../utills/components';
+import { Container, H1, PageLoader } from '../../utills/components';
 import { getData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 
@@ -40,7 +40,7 @@ export default function Benefits({navigation}) {
         },[])
     )
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper scrollEnabled={!loading && benefits && Array.isArray(benefits) && benefits.length === 0 ? false : true}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -51,10 +51,29 @@ export default function Benefits({navigation}) {
             </View>
             <View style={styles.line} />
 
-            <View style={styles.mainViewContainer}>
+            <View 
+                style={!loading && benefits && Array.isArray(benefits) && benefits.length === 0 ? 
+                    styles.mainViewContainer2 : styles.mainViewContainer}
+            >
                 {
                     loading ? (
                         <PageLoader />
+                    ) : null
+                }
+                {
+                    !loading && benefits && Array.isArray(benefits) && benefits.length === 0 ? (
+                        <Container
+                            flex={1}
+                            style={{
+                                justifyContent : "center",
+                                alignItems : "center"
+                            }}
+                            paddingHorizontal={5}
+                        >
+                            <H1
+                                color={AppColors.black3}
+                            >Looks like you have no active benefits yet.</H1>
+                        </Container>
                     ) : (
                         <BenifitList data={['#C2D4FF', '#99E6FF']} 
                             horizontal={false}

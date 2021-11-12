@@ -43,6 +43,7 @@ export default function NextKin({navigation,route}) {
             let failed = false;
             let msg = ""
             for(let req of required){
+                console.log("CHECK--",data[req] === "",data[req],data,req)
                 if(data[req] && data[req] === "" || data[req].trim() === ""){
                     failed = true;
                     msg = `"${Capitalize(req.replace("_"," "))}" is required`;
@@ -68,6 +69,7 @@ export default function NextKin({navigation,route}) {
         const {kins} = route.params;
         console.log("getRecord",kins)
         setData({
+            ...data,
            ...kins
         })
     }
@@ -99,10 +101,15 @@ export default function NextKin({navigation,route}) {
                }
             </View>
             <View style={styles.line} />
+            <Container
+                paddingHorizontal={5}
+                marginTop={1}
+            >
+                <H1 color={AppColors.green}>All fields are required *</H1>
+            </Container>
             <Container 
                 flex={1}
             >
-                {console.log("SATA---",data)}
                 <Formik>
                     <Container>
                         <Field

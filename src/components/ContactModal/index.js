@@ -53,12 +53,12 @@ const ContactModal = ({isVisible, onHide,data}) => {
           iconLeft: require('../../assets/images/icons/phone.png'),
           iconRight: require('../../assets/images/icons/copy.png'),
       },
-      {
-          key: '4',
-          title: 'linkedin',
-          iconLeft: require('../../assets/images/icons/linked-in.png'),
-          iconRight: null,
-      },
+      // {
+      //     key: '4',
+      //     title: 'linkedin',
+      //     iconLeft: require('../../assets/images/icons/linked-in.png'),
+      //     iconRight: null,
+      // },
   ]
   return (
     <Modal
@@ -79,7 +79,7 @@ const ContactModal = ({isVisible, onHide,data}) => {
         <TextWithIconCopy item={contactData[0]} onHide={onHide}/>
         <TextWithIconCopy item={contactData[1]} onHide={onHide}/>
         <TextWithIconCopy item={contactData[2]} onHide={onHide}/>
-        <TextWithIcon item={contactData[3]} textStyle={styles.text2}/>
+        {/* <TextWithIcon item={contactData[3]} textStyle={styles.text2}/> */}
       </View>
     </Modal>
   );

@@ -15,12 +15,14 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   header: {
-    width: width(100),
+    width: width(80),
     paddingHorizontal: width(5),
     marginTop: height(2),
     marginBottom: height(1.5),
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    //backgroundColor : "red"
   },
   leftIcon: {
     width: width(5),

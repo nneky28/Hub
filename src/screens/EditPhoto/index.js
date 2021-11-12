@@ -76,6 +76,9 @@ export default function EditPhoto({navigation}) {
           cropping: true,
           cropperCircleOverlay: true
         }).then(async (response) => {
+            if(!response.path || !response.filename || !response.mime){
+              return ToastError("Something went wrong. Please retry.")
+            }
              let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
             console.log("data---",response)
             setProfilePicture(data);
@@ -117,10 +120,9 @@ export default function EditPhoto({navigation}) {
         if(!profilePicture){
           return ToastError("Please select an image to upload");
         }
-        // setLoading(true)
-        // setIsSaved(false);
+        setLoading(true)
+        setIsSaved(false);
         let token = await getData("token");
-        //return console.log("token--",token);
         let about_me = await getData("about_me")
         let user = await getData("user");
         let profile = await getData("profile")
@@ -128,8 +130,7 @@ export default function EditPhoto({navigation}) {
         Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
         && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
         dispatch(setLoaderVisible(true));
-        let url = await APIFunction.update_photo(biz.business_id,about_me.id)
-        console.log("url---",url,token);
+        let url = APIFunction.update_photo(biz.business_id,about_me.id)
         let fd = new FormData();
         fd.append("photo",profilePicture)
         let res = await storeFilePut(url,token,fd);

@@ -146,6 +146,9 @@ export const SizedBox = (props) => (
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop : props.marginTop ? height(props.marginTop) : 0,
         marginLeft : props.marginLeft,
+        paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
+        paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
+        marginRight : props.marginRight ? width(props.marginRight) : 0,
         backgroundColor : props.backgroundColor || AppColors.white,
         ...props.style
       }}

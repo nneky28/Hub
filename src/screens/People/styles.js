@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     alignItems: 'center',
   },
+  mainViewContainer2: {
+    backgroundColor: AppColors.white,
+    alignItems: 'center',
+    flex : 1,
+  },
   header: {
     width: width(100),
     paddingHorizontal: width(5),

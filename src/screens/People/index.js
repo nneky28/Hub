@@ -38,6 +38,7 @@ export default function People({route,navigation}) {
     const dispatch = useDispatch();
     const [loading,setLoading] = React.useState(null);
     const [tags,setTags] = React.useState([]);
+    const [data,setData] = React.useState([])
 
     const handleSearch = (text) => {
         if (text.length > 0){
@@ -66,6 +67,7 @@ export default function People({route,navigation}) {
                 res.results : [];
                 setPersonsList(persons_arr);
                 setPersons(persons_arr)
+                setData(persons_arr)
             }
             if(selected === "Celebrations"){
                 let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
@@ -142,7 +144,8 @@ export default function People({route,navigation}) {
                         
                     } : null,
                 ].filter(item=>item !== null);
-                setCelebrations(celeb);
+                setCelebrations([]);
+                setData([])
             }
 
             if(selected === "Who's out"){
@@ -168,6 +171,7 @@ export default function People({route,navigation}) {
                     }
                  ] : []
                 setWhosOut(whos_out_data)
+                setData(whos_out_data)
             }
             setLoading(false);
         }catch(err){
@@ -287,7 +291,9 @@ export default function People({route,navigation}) {
     }
 
     return (
-        <ScreenWrapper scrollEnabled={false}>
+        <ScreenWrapper scrollEnabled={
+            !loading && data && Array.isArray(data) && data.length === 0 ? false : true
+        }>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -305,7 +311,10 @@ export default function People({route,navigation}) {
                 </TouchableOpacity>
             </View>
             <View style={styles.line} />
-            <View style={styles.mainViewContainer}>
+            <View style={
+                !loading && data && Array.isArray(data) && data.length === 0 ? styles.mainViewContainer2 : 
+                styles.mainViewContainer
+            }>
 
                 <ScrollView
                     nestedScrollEnabled={true}
@@ -324,7 +333,7 @@ export default function People({route,navigation}) {
                     </TouchableOpacity>
                     ))}
                 </ScrollView>
-                <View style={styles.line2} />
+                {/* <View style={styles.line2} /> */}
                 {selected === "All" && Platform.OS === "android" ? (
                     <View style={styles.searchBoxContainer}>
                         <SearchBox 
@@ -376,9 +385,11 @@ export default function People({route,navigation}) {
                 {
                     !loading && celebrations && selected === "Celebrations" && Array.isArray(celebrations) && celebrations.length === 0 ? (
                         <Container style={{
-                            alignItems : "center"
+                            alignItems : "center",
+                            flex : 3
                         }}>
                             <LottieIcon icon={Celebrationjson} />
+                            <H1 color={AppColors.darkGray}>No active celebration</H1>
                         </Container>
                     ) : null
                 }
@@ -391,10 +402,11 @@ export default function People({route,navigation}) {
                         <Container
                             style={{
                                 alignItems : "center",
-                                justifyContent : "center"
+                                flex : 2
                             }}
                         >
                             <LottieIcon icon={Teamjson} />
+                            <H1 color={AppColors.darkGray}>You have no team member</H1>
                         </Container>
                     ) : null
                 }
@@ -404,10 +416,12 @@ export default function People({route,navigation}) {
                     ? (
                         <Container
                             style={{
-                                alignItems : "center"
+                                alignItems : "center",
+                                flex : 2
                             }}
                         >
                             <LottieIcon icon={Outjson} />
+                            <H1 color={AppColors.darkGray}>No one is out of office today</H1>
                         </Container>
                     ) : null
                 }
