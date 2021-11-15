@@ -38,9 +38,16 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) requires access to location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the phone microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+    <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like to use your camera</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+
+
 	<key>UIAppFonts</key>
 	<array>
 		<string>black-sans-black.otf</string>

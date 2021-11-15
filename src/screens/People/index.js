@@ -39,6 +39,8 @@ export default function People({route,navigation}) {
     const [loading,setLoading] = React.useState(null);
     const [tags,setTags] = React.useState([]);
     const [data,setData] = React.useState([])
+    const [fetch,setFetch] = React.useState(false)
+    const [page,setPage]  = React.useState(0)
 
     const handleSearch = (text) => {
         if (text.length > 0){
@@ -50,9 +52,14 @@ export default function People({route,navigation}) {
         else
             setPersonsList(persons);
     }
-    const fetchData = async () => {
+    const fetchData = async (page = null) => {
         try{
-            setLoading(true);
+            if(page){
+                setFetch(true)
+            }
+            if(!page){
+                setLoading(true)
+            }
             let token = await getData("token");
             let user =  await getData("user");
             let about_me = await getData("about_me")
@@ -61,7 +68,7 @@ export default function People({route,navigation}) {
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             let selected = await getData("tab");
             if(selected === "All" || selected === "My Team"){
-                let url = selected === "All" ? APIFunction.employees(biz.business_id) : APIFunction.team_members(biz.business_id,about_me.id);
+                let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
                 let res = await getAPIs(url,token);
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
@@ -174,6 +181,7 @@ export default function People({route,navigation}) {
                 setData(whos_out_data)
             }
             setLoading(false);
+            setFetch(false)
         }catch(err){
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             console.log("err|||",err,msg)
@@ -189,6 +197,7 @@ export default function People({route,navigation}) {
         location()
     },[])
     useEffect(()=>{
+        setPage(0)
         fetchData()
     },[selected])
     const CelebrationItem = ({item, section}) => {
@@ -292,7 +301,8 @@ export default function People({route,navigation}) {
 
     return (
         <ScreenWrapper scrollEnabled={
-            !loading && data && Array.isArray(data) && data.length === 0 ? false : true
+            //!loading && data && Array.isArray(data) && data.length === 0 ? false : true
+            false
         }>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -453,7 +463,7 @@ export default function People({route,navigation}) {
                             columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
                             numColumns={2}
                             data={personsList}
-                            keyExtractor={(item) => item.key}
+                            keyExtractor={(item) => `${Math.random()}`}
                             renderItem={({item}) => <PersonCard item={item} onPressHandle={async () => {
                                 await storeData("tmember",item)
                                 navigation.navigate('MemberProfile')
@@ -462,6 +472,16 @@ export default function People({route,navigation}) {
                             showsVerticalScrollIndicator={false}
                             nestedScrollEnabled={true}
                             contentContainerStyle={CommonStyles.marginTop_1}
+                            onEndReachedThreshold={0.5}
+                            loading={fetch}
+                            onEndReached={async ()=>{
+                                setFetch(true)
+                                // setPersonsList([...personsList,...personsList])
+                                let next = page + 1;
+                                await fetchData(next)
+                                setPage(next)
+                                console.log("THE END---")
+                            }}
                         /> 
                     ) : null
                 }
@@ -480,6 +500,9 @@ export default function People({route,navigation}) {
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}
                     contentContainerStyle={CommonStyles.marginTop_1}
+                    onEndReached={()=>{
+                        console.log("THE END--")
+                    }}
                     /> 
                     ) : null
                 }

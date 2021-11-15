@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
-import ImagePicker from 'react-native-image-crop-picker';
+//import ImagePicker from 'react-native-image-crop-picker';
 import { Circle, Defs, Mask, Rect, Svg } from 'react-native-svg';
 import { leftIcon, placeholder5 } from '../../assets/images';
 import Button from '../../components/Button';
@@ -16,7 +16,9 @@ import {setLoaderVisible} from '../../Redux/Actions/Config';
 import { useDispatch } from 'react-redux';
 import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
 import { ActivityIndicator } from 'react-native-paper';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { H1, Rounded } from '../../utills/components';
+import { PermissionsAndroid } from 'react-native';
 
 
 
@@ -26,11 +28,11 @@ export default function EditPhoto({navigation}) {
   const [isSaved, setIsSaved] = useState(true);
   const [about,setAbout] = useState(null);
   const [loading,setLoading] = useState(null);
+  const [file,setFile] = useState(null)
+  const [fileMeta,setFileMeta] = useState(null)
   const dispatch = useDispatch();
-
     var cropValues;
     const SvgCircle = (props) => {
-        
         return (
           <Svg width={width(100)} height={height(40)}>
             <Defs>
@@ -53,40 +55,74 @@ export default function EditPhoto({navigation}) {
         );
       }
 
-    const imageFromCamera = () => {
-        ImagePicker.openCamera({
-          width: 300,
-          height: 400,
-          compressImageQuality: 0.7,
-          cropping: true,
-          cropperCircleOverlay: true
-        }).then((response) => {
-            setProfilePicture({ uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime });
-            setIsSaved(false);
-        });
-        
+    const imageFromGallery = () => {
+      const options = {
+        title: 'Select Profile PIcture',
+      };
+      launchImageLibrary(options, response => {
+        try {
+          if(response.fileSize > 2000000){
+            return ToastError("Image must not be more than 2mb");
+          }
+          if(response.didCancel) {
+            return false;
+          }
+          if(response.error) {
+            return ToastError(response.error);
+          }
+          setProfilePicture(response);
+        } catch (error) {
+          console.log("ERR---",error)
+        }
+      });
+    };
+  
+    const __imageFromCamera = () => {
+      const options = {
+        title: 'Select Profile PIcture',
+      };
+      launchCamera(options, response => {
+        try {
+          console.log("response--",response)
+          if(response.fileSize > 2000000){
+            return ToastError("Image must not be more than 2mb");
+          }
+          if(response.didCancel) {
+            return false;
+          }
+          if(response.error) {
+            return ToastError(response.error);
+          }
+          setProfilePicture(response);
+        } catch (error) {
+          console.log("ERR--",error)
+        }
+      });
+    };
+
+
+    const imageFromCamera = async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: "App Camera Permission",
+            message:"App needs access to your camera",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK"
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          __imageFromCamera()
+        } else {
+          console.log("Camera permission denied");
+        }
+      } catch (err) {
+        console.warn(err);
+      }
     };
     
-    const imageFromGallery = () => {
-        ImagePicker.openPicker({
-          width: 300,
-          height: 400,
-          mediaType: 'photo',
-          compressImageQuality: 0.7,
-          cropping: true,
-          cropperCircleOverlay: true
-        }).then(async (response) => {
-            if(!response.path || !response.filename || !response.mime){
-              return ToastError("Something went wrong. Please retry.")
-            }
-             let data = {uri: response.path, name: response.filename ?? "profile" + Math.random(1000)+'.'+response.mime.split('/')[1], type: response.mime}
-            console.log("data---",response)
-            setProfilePicture(data);
-        }).catch(err=>{
-          console.log("imageFromGallery-error",err)
-          ImagePicker.clean()
-        });
-    };
 
     const getProfile = async () => {
       try{
@@ -99,20 +135,8 @@ export default function EditPhoto({navigation}) {
       }
     }
     
-    // useFocusEffect(
-    //   React.useCallback(()=>{
-        
-    //   },[])
-    // )
-    
     useEffect(() => {
         getProfile();
-        //cleanup code
-        return ImagePicker.clean().then(() => {
-            console.log('removed all tmp images from tmp directory');
-          }).catch(e => {
-            alert(e);
-          });
     }, []);
 
     const updateImage = async () => {
@@ -132,7 +156,12 @@ export default function EditPhoto({navigation}) {
         dispatch(setLoaderVisible(true));
         let url = APIFunction.update_photo(biz.business_id,about_me.id)
         let fd = new FormData();
-        fd.append("photo",profilePicture)
+        let file = {
+          uri: profilePicture.assets[0].uri,
+          type: profilePicture.assets[0].type,
+          name: profilePicture.assets[0].fileName,
+        }
+        fd.append("photo",file)
         let res = await storeFilePut(url,token,fd);
         await storeData("about_me",res);
         await storeData("profile",{...profile,about : res })
@@ -158,7 +187,6 @@ export default function EditPhoto({navigation}) {
                 <Text numberOfLines={1} style={styles.screenTitle}>
                   Edit Photo
                 </Text>
-                {console.log("loading--",loading)}
                 {
                   loading ? (
                     <ActivityIndicator size={15} color={AppColors.green} />
@@ -187,9 +215,9 @@ export default function EditPhoto({navigation}) {
                           >
                               <SvgCircle />
                           </ImageBackground>
-                      ) : profilePicture ? (
+                      ) : profilePicture && profilePicture.assets && profilePicture.assets[0] ? (
                           <ImageBackground 
-                            source={profilePicture} 
+                            source={{uri : profilePicture.assets[0].uri}} 
                             resizeMode='contain' 
                             style={styles.imageStyle}
                           >
@@ -197,7 +225,6 @@ export default function EditPhoto({navigation}) {
                           </ImageBackground>
                       ) : null
                     }
-                    {console.log("---profilePicture---",profilePicture)}
                     {
                       about && !about.photo && !profilePicture ? (
                         <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
@@ -218,14 +245,12 @@ export default function EditPhoto({navigation}) {
                     <Button 
                     title="Take Photo"
                     onPress={imageFromCamera}
-                    // onPress={() => setProfilePicture(placeholder5)}
                     containerStyle={styles.takePhotoBtn}
                     textStyle={styles.btnText}
                     />
                     <Button 
                     title="Choose Photo"
                     onPress={imageFromGallery}
-                    // onPress={() => cropImage(profilePicture)}
                     containerStyle={styles.choosePhotoBtn}
                     textStyle={[styles.btnText, {color: AppColors.black3}]}
                     />
@@ -236,7 +261,6 @@ export default function EditPhoto({navigation}) {
                   setIsSaved(false)
                   setProfilePicture(null)
                 }}
-                // onPress={() => setProfilePicture(placeholder5)}
                 containerStyle={styles.removeBtn}
                 textStyle={[styles.btnText, {color: AppColors.red}]}
                 />
