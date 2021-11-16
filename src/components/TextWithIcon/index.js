@@ -30,12 +30,12 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
       <>
       <View style={[styles.contactComponentContainer]}>
         <TouchableOpacity 
-        onLongPress={() => handleLongPress(item.title)}
+        onLongPress={() => handleLongPress(item && item.title ? item.title : "")}
         style={[styles.row]}
         >
           <View style={CommonStyles.rowAlignItemCenter}>
             <Image resizeMode="contain" source={item.iconLeft} style={styles.iconStyle} />
-            <Text style={[styles.listCompTitle, CommonStyles.marginLeft_4]}>{item.title}</Text>
+            <Text style={[styles.listCompTitle, CommonStyles.marginLeft_4]}>{item && item.title ? item.title : ""}</Text>
           </View>
           <Image
           resizeMode={'contain'}
@@ -54,7 +54,7 @@ const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle
 
     let lock = false;
 
-    if (item.title === 'Job Detail')
+    if (item && item.title === 'Job Detail')
       lock = true;
     
 
@@ -66,7 +66,7 @@ const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle
         onPress={onPressHandle}
         >
           <View style={CommonStyles.rowAlignItemCenter}>
-            {item.iconLeft !== undefined && <Image resizeMode="contain" source={item.iconLeft} style={styles.iconStyle} />} 
+            {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={item.iconLeft} style={styles.iconStyle} />} 
             <Text style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>{item.title}</Text>
           </View>
           {lock? <Image
@@ -77,7 +77,7 @@ const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle
                   :
                   <Image
                   resizeMode={'contain'}
-                  source={item.iconRight}
+                  source={item && item.iconRight}
                   style={[styles.iconStyle, iconStyle]}
                   />
             }

@@ -153,12 +153,12 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
         </TouchableOpacity> */}
       </View>
       <View style={styles.line} />
-      <View style={styles.nameContainer}>
-        <Text style={styles.text2}>{getGreetingTime()}</Text>
+      {/*<View style={styles.nameContainer}>
+         <Text style={styles.text2}>{getGreetingTime()}</Text> 
         <Text numberOfLines={1} style={styles.text3}>
         {about && about.first_name ? Capitalize(about.first_name) : ""}
         </Text>
-      </View>
+      </View>*/}
           {
             loading ? (
               <PageLoader />

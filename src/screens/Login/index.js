@@ -26,14 +26,8 @@ export default function Dashboard(props) {
   const defaultColor = "black";
   const blackColor = "black";
   const [data,setData] = React.useState({
-    // email : "jane@email.com",
-    // password : "jane12345"
-
-    //real deal
-    email : "leo@denzel.com",
-    password : "asd123def"
-    //email : "",
-    //password : ""
+    email  : "",
+    password  : ""
   })
   const auth = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
@@ -46,7 +40,7 @@ export default function Dashboard(props) {
       if(!data.email || data.email.trim() === "" || !data.password
         || data.password.trim() === ""
       ){
-        return ToastError("All fields are requird")
+        return ToastError("All fields are required")
       }
       let fd = {
         email : data.email,

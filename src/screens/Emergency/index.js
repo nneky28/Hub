@@ -68,6 +68,7 @@ export default function NextKin({navigation,route}) {
         const {emergency} = route.params;
         console.log("getRecord",emergency)
         setData({
+            ...data,
            ...emergency
         })
     }
@@ -99,6 +100,12 @@ export default function NextKin({navigation,route}) {
                }
             </View>
             <View style={styles.line} />
+            <Container
+                paddingHorizontal={5}
+                marginTop={1}
+            >
+                <H1 color={AppColors.green}>All fields are required *</H1>
+            </Container>
             <Container 
                 flex={1}
             >

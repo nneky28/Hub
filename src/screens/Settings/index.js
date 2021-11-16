@@ -12,7 +12,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction} from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { AppButton, Container, LottieIcon, PageLoader } from '../../utills/components'
+import { AppButton, Container, H1, LottieIcon, PageLoader } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -24,6 +24,7 @@ import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../component2/button/Button';
 import { setLoaderVisible } from '../../Redux/Actions/Config'
 import { useDispatch } from 'react-redux'
+import { ActivityIndicator } from 'react-native-paper'
 
 
 
@@ -65,8 +66,12 @@ export default function Setting({navigation}) {
     }
     
     return (
-        <ScreenWrapper scrollEnabled={false}>
-            <View style={styles.header}>
+        <ScreenWrapper scrollEnabled={true}>
+            <Container 
+                paddingHorizontal={3}
+            style={{
+                flexDirection : "row"
+            }}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
                 </TouchableOpacity>
@@ -75,7 +80,15 @@ export default function Setting({navigation}) {
                     Change Password
                   </Text>
                 </View>
-            </View>
+                <TouchableOpacity
+                    onPress={changePassword}
+                >
+                    <H1 color={AppColors.green}>Save</H1>
+                </TouchableOpacity>
+            </Container>
+            {/* <View style={styles.header}>
+                
+            </View> */}
             <View style={styles.line} />
             <Container 
                 flex={1}
@@ -115,24 +128,18 @@ export default function Setting({navigation}) {
                             color={AppColors.black}
                             secureTextEntry={true}
                         />
-
-                    </Container>
-                </Formik>
-                <Container
-                    style={{
-                        justifyContent : "flex-end"
-                    }}
-                    flex={1}
-                >
-                    <AppButton 
+                        <Container>
+                    {/* <AppButton 
                         text={"SUBMIT"}
                         color={AppColors.white}
                         onPress={()=>{
                             changePassword()
                         }}
                         //loading={loading}
-                    />
+                    /> */}
                 </Container>
+                    </Container>
+                </Formik>
             </Container>
         </ScreenWrapper>
     )

@@ -8,13 +8,13 @@ import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { H1, LottieIcon, PageLoader, ProfileLoader, Rounded } from '../../utills/components';
+import { Container, H1, LottieIcon, PageLoader, ProfileLoader, Rounded } from '../../utills/components';
 import { persons } from '../../utills/data/persons';
 import { FontFamily } from '../../utills/FontFamily';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 import Empty from '../../assets/lottie/empty.json'
-import { ColorList } from '../../utills/AppColors';
+import AppColors, { ColorList } from '../../utills/AppColors';
 import Teamjson from '../../assets/lottie/teams.json'
 
 
@@ -140,7 +140,6 @@ export default function MemberProfile({route,navigation}) {
                   textStyle={styles.buttonText} 
                   onPress={() => setModal(true)}
                   />
-                  {console.log("member.line_manager",member.line_manager)}
                   {
                     member && member.line_manager ? (
                       <React.Fragment>
@@ -163,10 +162,20 @@ export default function MemberProfile({route,navigation}) {
                     <Text style={styles.headingText}>Team</Text>
                   </View>
                   {
-                    member && Array.isArray(members) && members.length === 0 ? (
-                      <LottieIcon 
-                        icon={Teamjson}
-                      />
+                    members && Array.isArray(members) && members.length === 0 ? (
+                      <Container
+                        style={{
+                          alignItems : "center",
+                          justifyContent : "center"
+                        }}
+                      >
+                          <LottieIcon 
+                            icon={Teamjson}
+                          />
+                          <H1
+                            color={AppColors.black3}
+                          >{member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}</H1>
+                      </Container>
                     ) : null
                   }
                   <FlatList

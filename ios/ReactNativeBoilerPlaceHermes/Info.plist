@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
-	<string>vXuI6Z_cLmuW0uGSNQhbWwOlPTOagPGntaNtK</string>
+	<string>KDXit0QgI06B3JrMkrnDOAWhbqqy4qCAklcxr</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -38,9 +38,15 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>$(PRODUCT_NAME) requires access to location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the phone microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+    <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like to use your camera</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+	<string />
 	<key>UIAppFonts</key>
 	<array>
 		<string>black-sans-black.otf</string>

@@ -11,8 +11,8 @@ export const APIFunction = {
   benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
   whos_out : (business_id,status) => `/c/${business_id}/timeoff_taken/widgets/whos_out/?status=${status}`,
   birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,
-  employees : (business_id) => `/c/${business_id}/employees/`,
-  team_members : (business_id,id) => `/c/${business_id}/employees/${id}/team_members/`,
+  employees : (business_id,page=1) => `/c/${business_id}/employees/?page=${page}`,
+  team_members : (business_id,id,page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
   basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
   next_of_kins : async (id) => {
     let biz = await getStoredBusiness();
@@ -66,6 +66,10 @@ export const APIFunction = {
   read_notification : async (id) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/employees/notifications/${id}/read/`)
+  },
+  bank_verification : async (fd) => {
+    let biz = await getStoredBusiness();
+    return postAPIs(`/banks/account_number_validation/`,fd)
   }
 }
 export const getAPIs = async (path, token) => {
@@ -98,10 +102,10 @@ export const getAPIs = async (path, token) => {
           ) {
             reject({status: 400, msg:error.response.data.detail});
           } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
+            reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
-      //setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      //setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
   
@@ -131,11 +135,11 @@ export const postAPIs = async (path, fd) => {
           ) {
             reject({status: 400, msg:error.response.data.detail});
           } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
+            reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
   
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
 
@@ -165,11 +169,11 @@ export const postAPIs = async (path, fd) => {
             ) {
               reject({status: 400, msg:error.response.data.detail});
             } else {
-              reject({status: 500, msg: 'Connection Error. Please try again later'});
+              reject({status: 500, msg: 'Something went wrong. Please retry.'});
             }
           });
     
-        setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+        setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
       });
     };
   
@@ -193,49 +197,18 @@ export const putAPIs = async (path,fd) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("---ERROR--",error.response)
           if (
             error.response && error.response.data && error.response.data.msg && 
             error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"
           ) {
             reject({status: 400, msg:error.response.data.msg.detail});
           } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
+            reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
   
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
-    });
-  };
-  
-export const patchAPIs = async (path, token, fd) => {
-  let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
-    let _token = await getData("token");
-    return new Promise((resolve, reject) => {
-      axios({
-        url: `${endPoint}${path}`,
-        method: 'patch',
-        data: fd,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${_token}`,
-        },
-      })
-        .then(result => {
-          resolve(result.data);
-        })
-        .catch(error => {
-          //logError(endPoint,path,error)
-          if (error.response) {
-            reject({status: 500, msg: error.response.data});
-          } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
-          }
-        });
-  
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
   
@@ -254,11 +227,11 @@ export const postNoToken = (path, fd) => {
           if (error.response) {
             reject({status: 400, msg: error.response.data});
           } else {
-            reject({status: 400, msg: 'Connection Error. Please try again later'});
+            reject({status: 400, msg: 'Something went wrong. Please retry.'});
           }
         });
   
-      setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
   
@@ -287,7 +260,7 @@ export const storeFile = async (path, token, fd) => {
           if (error.response) {
             reject({status: 500, msg: error.response.data});
           } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
+            reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
     });
@@ -317,11 +290,11 @@ export const storeFilePut = async (path, token, fd) => {
           if (error.response) {
             reject({status: 500, msg: error.response.data});
           } else {
-            reject({status: 500, msg: 'Connection Error. Please try again later'});
+            reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
   
-      //setTimeout(() => reject({status: 500, msg: 'Connection Error. Please try again later'}), 50000);
+      //setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
 

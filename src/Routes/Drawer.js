@@ -19,11 +19,9 @@ import {
   settingIcon,
   logoutIcon,
 } from '../assets/images';
-import {showMessage} from 'react-native-flash-message';
 import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-community/async-storage';
-import { useFocusEffect } from '@react-navigation/core';
 import moment from 'moment';
 import { H1, Rounded, TouchWrap } from '../utills/components';
 const Drawer = ({navigation, ...props}) => {
@@ -106,7 +104,6 @@ const Drawer = ({navigation, ...props}) => {
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />
-      {/* <ItemWithText icon={plusIcon} text="Add Another Buisness " /> */}
       <ItemWithText icon={settingIcon} text="Settings" onPress={()=>{
         navigation.navigate("Settings")
       }}/>

@@ -18,6 +18,7 @@ import CustomModalDropdown from '../../components/CustomModalDropdown'
 export default function PensionInfo({navigation}) {
     const dispatch = useDispatch()
     const [data,setData] = useState({
+        account_name : null,
         account_number : "",
         pension_number : "",
         bank :"",
@@ -27,9 +28,11 @@ export default function PensionInfo({navigation}) {
     const [banks,setBanks] = useState([])
     const [bankHolder,setBankHolder] = useState([]);
     const [provHolder,setProvHolder] = useState([]);
-   const handleSubmit = async () => {
+    const [disabled,setDisabled] = useState(false)
+    const handleSubmit = async () => {
         try{
-            let required = ["account_number","account_number","bank","provider"];
+            //let required = disabled ? ["account_number","account_number"] : ["bank","provider"];
+            required = ["account_number","account_number","bank","provider"]
             let failed = false;
             for(let req of required){
                 if(data[req] === "" || data[req].trim() === ""){
@@ -40,6 +43,10 @@ export default function PensionInfo({navigation}) {
             if(failed){
                 return ToastError(msg);
             }
+            // if(disabled){
+            //     res = await APIFunction.bank_verification(data)
+            //     return console.log("Account Name---",res)
+            // }
             let pension = provHolder[providers.indexOf(data.provider)]
             let bank = bankHolder[banks.indexOf(data.bank)]
             let fd  = {
@@ -59,6 +66,7 @@ export default function PensionInfo({navigation}) {
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been saved");
         }catch(err){
+            console.log("err---",err)
             dispatch(setLoaderVisible(false));
             ToastError(err.msg)
         }
@@ -69,7 +77,6 @@ export default function PensionInfo({navigation}) {
             let about = await getData("about_me");
             let bank_res = await APIFunction.banks();
             let prov_res = await APIFunction.pension_providers();
-            console.log("about_me==",about.bank_account,about.pension)
             setData({
                 account_number : about && about.bank_account && about.bank_account.account_number ? 
                 about.bank_account.account_number : "",
@@ -94,20 +101,20 @@ export default function PensionInfo({navigation}) {
     },[])
 
     return (
-        <ScreenWrapper scrollEnabled={false}>
+        <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
                 </TouchableOpacity>
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
-                    Update Pension Info
+                    Update Information
                   </Text>
                 </View>
                 <TouchableOpacity
                     onPress={handleSubmit}
                 >
-                    <H1 color={AppColors.green}>Save</H1>
+                    <H1 color={AppColors.green}>{disabled ? "Verify" : "Save"}</H1>
                 </TouchableOpacity>
             </View>
             <View style={styles.line} />
@@ -116,6 +123,41 @@ export default function PensionInfo({navigation}) {
             >
                 <Formik>
                     <Container>
+                        <Container
+                            paddingHorizontal={5}
+                            marginTop={2}
+                        >
+                            <Text numberOfLines={1} style={styles.screenTitle}>
+                                Bank Information
+                            </Text>
+                            <View style={styles.line} />
+                        </Container>
+                        {
+                            data.account_name ? (
+                                <Field
+                                    component={CustomInput}
+                                    name="account_number"
+                                    placeholder="Account Name"
+                                    value={data.account_name}
+                                    color={AppColors.black}
+                                    keyboardType={'numeric'}
+                                    maxLength={10}
+                                    editable={false}
+                                />
+                            ) : null
+                        }
+                        <Field
+                            component={CustomModalDropdown}
+                            name="bank"
+                            placeholder="Bank"
+                            value={data.bank}
+                            onChangeData={(value)=>{
+                                setData({...data,bank : value})
+                                setDisabled(true)
+                            }}
+                            color={AppColors.black}
+                            options={banks && Array.isArray(banks) ? banks : []}
+                        />
                         <Field
                             component={CustomInput}
                             name="account_number"
@@ -123,10 +165,31 @@ export default function PensionInfo({navigation}) {
                             value={data.account_number}
                             onChangeData={(value)=>{
                                 setData({...data,account_number : value})
+                                setDisabled(true)
                             }}
                             color={AppColors.black}
                             keyboardType={'numeric'}
                             maxLength={10}
+                        />
+                        <Container
+                            paddingHorizontal={5}
+                            marginTop={2}
+                        >
+                            <Text numberOfLines={1} style={styles.screenTitle}>
+                                Pension Information
+                            </Text>
+                            <View style={styles.line} />
+                        </Container>
+                        <Field
+                            component={CustomModalDropdown}
+                            name="pension_number"
+                            placeholder="Pension Provider"
+                            value={data.provider}
+                            onChangeData={(value)=>{
+                                setData({...data,provider : value})
+                            }}
+                            color={AppColors.black}
+                            options={providers && Array.isArray(providers) ? providers : []}
                         />
                         <Field
                             component={CustomInput}
@@ -138,30 +201,6 @@ export default function PensionInfo({navigation}) {
                             }}
                             color={AppColors.black}
                             keyboardType={'numeric'}
-                        />
-
-                        <Field
-                            component={CustomModalDropdown}
-                            name="pension_number"
-                            placeholder="Bank"
-                            value={data.bank}
-                            onChangeData={(value)=>{
-                                setData({...data,bank : value})
-                            }}
-                            color={AppColors.black}
-                            options={banks && Array.isArray(banks) ? banks : []}
-                        />
-
-                        <Field
-                            component={CustomModalDropdown}
-                            name="pension_number"
-                            placeholder="Pension Provider"
-                            value={data.provider}
-                            onChangeData={(value)=>{
-                                setData({...data,provider : value})
-                            }}
-                            color={AppColors.black}
-                            options={providers && Array.isArray(providers) ? providers : []}
                         />
 
                     </Container>

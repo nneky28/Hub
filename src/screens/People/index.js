@@ -14,6 +14,9 @@ import CommonStyles from '../../utills/CommonStyles'
 import { Container, H1, LottieIcon, PageLoader, Rounded } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
+import Outjson from '../../assets/lottie/out.json'
+import Celebrationjson from '../../assets/lottie/birthday-icon.json'
+import Teamjson from '../../assets/lottie/teams.json'
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
@@ -35,6 +38,9 @@ export default function People({route,navigation}) {
     const dispatch = useDispatch();
     const [loading,setLoading] = React.useState(null);
     const [tags,setTags] = React.useState([]);
+    const [data,setData] = React.useState([])
+    const [fetch,setFetch] = React.useState(false)
+    const [page,setPage]  = React.useState(0)
 
     const handleSearch = (text) => {
         if (text.length > 0){
@@ -46,9 +52,14 @@ export default function People({route,navigation}) {
         else
             setPersonsList(persons);
     }
-    const fetchData = async () => {
+    const fetchData = async (page = null) => {
         try{
-            setLoading(true);
+            if(page){
+                setFetch(true)
+            }
+            if(!page){
+                setLoading(true)
+            }
             let token = await getData("token");
             let user =  await getData("user");
             let about_me = await getData("about_me")
@@ -57,12 +68,13 @@ export default function People({route,navigation}) {
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             let selected = await getData("tab");
             if(selected === "All" || selected === "My Team"){
-                let url = selected === "All" ? APIFunction.employees(biz.business_id) : APIFunction.team_members(biz.business_id,about_me.id);
+                let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
                 let res = await getAPIs(url,token);
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
                 setPersonsList(persons_arr);
                 setPersons(persons_arr)
+                setData(persons_arr)
             }
             if(selected === "Celebrations"){
                 let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
@@ -139,7 +151,8 @@ export default function People({route,navigation}) {
                         
                     } : null,
                 ].filter(item=>item !== null);
-                setCelebrations(celeb);
+                setCelebrations([]);
+                setData([])
             }
 
             if(selected === "Who's out"){
@@ -156,17 +169,19 @@ export default function People({route,navigation}) {
                         background: 'pink',
                     }
                  )) : [];
-                 let whos_out_data = [
+                 let whos_out_data = data && Array.isArray(data) && data.length > 0 ? [
                     {
                         key: '1',
                         date: 'Jan 12 - Jul 23',
                         heading: 'On leave',
                         data: data
                     }
-                 ]
+                 ] : []
                 setWhosOut(whos_out_data)
+                setData(whos_out_data)
             }
             setLoading(false);
+            setFetch(false)
         }catch(err){
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             console.log("err|||",err,msg)
@@ -182,6 +197,7 @@ export default function People({route,navigation}) {
         location()
     },[])
     useEffect(()=>{
+        setPage(0)
         fetchData()
     },[selected])
     const CelebrationItem = ({item, section}) => {
@@ -284,7 +300,10 @@ export default function People({route,navigation}) {
     }
 
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper scrollEnabled={
+            //!loading && data && Array.isArray(data) && data.length === 0 ? false : true
+            false
+        }>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -302,7 +321,10 @@ export default function People({route,navigation}) {
                 </TouchableOpacity>
             </View>
             <View style={styles.line} />
-            <View style={styles.mainViewContainer}>
+            <View style={
+                !loading && data && Array.isArray(data) && data.length === 0 ? styles.mainViewContainer2 : 
+                styles.mainViewContainer
+            }>
 
                 <ScrollView
                     nestedScrollEnabled={true}
@@ -321,7 +343,7 @@ export default function People({route,navigation}) {
                     </TouchableOpacity>
                     ))}
                 </ScrollView>
-                <View style={styles.line2} />
+                {/* <View style={styles.line2} /> */}
                 {selected === "All" && Platform.OS === "android" ? (
                     <View style={styles.searchBoxContainer}>
                         <SearchBox 
@@ -373,9 +395,11 @@ export default function People({route,navigation}) {
                 {
                     !loading && celebrations && selected === "Celebrations" && Array.isArray(celebrations) && celebrations.length === 0 ? (
                         <Container style={{
-                            alignItems : "center"
+                            alignItems : "center",
+                            flex : 3
                         }}>
-                            <LottieIcon icon={Empty} />
+                            <LottieIcon icon={Celebrationjson} />
+                            <H1 color={AppColors.darkGray}>No active celebration</H1>
                         </Container>
                     ) : null
                 }
@@ -384,16 +408,30 @@ export default function People({route,navigation}) {
                     (
                         (selected === "All" || selected === "My Team") && personsList && Array.isArray(personsList) &&
                         personsList.length === 0 && !loading
-                    ) || (
-                        selected === "Who's out" && Array.isArray(whosOut) &&
-                        whosOut.length === 0 && !loading
                     ) ? (
                         <Container
                             style={{
-                                alignItems : "center"
+                                alignItems : "center",
+                                flex : 2
                             }}
                         >
-                            <LottieIcon icon={Empty} />
+                            <LottieIcon icon={Teamjson} />
+                            <H1 color={AppColors.darkGray}>You have no team member</H1>
+                        </Container>
+                    ) : null
+                }
+                {
+                    selected === "Who's out" && Array.isArray(whosOut) &&
+                        whosOut.length === 0 && !loading
+                    ? (
+                        <Container
+                            style={{
+                                alignItems : "center",
+                                flex : 2
+                            }}
+                        >
+                            <LottieIcon icon={Outjson} />
+                            <H1 color={AppColors.darkGray}>No one is out of office today</H1>
                         </Container>
                     ) : null
                 }
@@ -425,7 +463,7 @@ export default function People({route,navigation}) {
                             columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
                             numColumns={2}
                             data={personsList}
-                            keyExtractor={(item) => item.key}
+                            keyExtractor={(item) => `${Math.random()}`}
                             renderItem={({item}) => <PersonCard item={item} onPressHandle={async () => {
                                 await storeData("tmember",item)
                                 navigation.navigate('MemberProfile')
@@ -434,6 +472,16 @@ export default function People({route,navigation}) {
                             showsVerticalScrollIndicator={false}
                             nestedScrollEnabled={true}
                             contentContainerStyle={CommonStyles.marginTop_1}
+                            onEndReachedThreshold={0.5}
+                            loading={fetch}
+                            onEndReached={async ()=>{
+                                setFetch(true)
+                                // setPersonsList([...personsList,...personsList])
+                                let next = page + 1;
+                                await fetchData(next)
+                                setPage(next)
+                                console.log("THE END---")
+                            }}
                         /> 
                     ) : null
                 }
@@ -452,6 +500,9 @@ export default function People({route,navigation}) {
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}
                     contentContainerStyle={CommonStyles.marginTop_1}
+                    onEndReached={()=>{
+                        console.log("THE END--")
+                    }}
                     /> 
                     ) : null
                 }

@@ -12,7 +12,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { LottieIcon, PageLoader } from '../../utills/components'
+import { Container, H1, LottieIcon, PageLoader } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -59,7 +59,8 @@ export default function Training({navigation}) {
     )
     
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper scrollEnabled={selected === "Available" && trainings && 
+        Array.isArray(trainings) && trainings.length === 0 ? false : true}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
@@ -72,21 +73,40 @@ export default function Training({navigation}) {
             </View>
             <View style={styles.line} />
             <View style={styles.mainViewContainer}>
-                <ScrollView
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={styles.scrollViewContainer}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}>
+                <Container 
+                    style={{
+                        flexDirection : "row"
+                    }}
+                    paddingTop={2}
+                    paddingHorizontal={5}
+                >
                     {['Overview', 'Available'].map((item) => (
-                    <TouchableOpacity 
-                    onPress={() => setSelected(item)}
-                    >
-                        <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
-                        {selected == item && <View style={styles.animated} />}
-                    </TouchableOpacity>
-                    ))}
-                </ScrollView>
+                        <TouchableOpacity 
+                        onPress={() => setSelected(item)}
+                        >
+                            <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
+                            {selected == item && <View style={styles.animated} />}
+                        </TouchableOpacity>
+                        ))}
+                </Container>
                 <View style={styles.line2} />
+                {/* <React.Fragment>
+                    <ScrollView
+                        nestedScrollEnabled={true}
+                        contentContainerStyle={styles.scrollViewContainer}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}>
+                        {['Overview', 'Available'].map((item) => (
+                        <TouchableOpacity 
+                        onPress={() => setSelected(item)}
+                        >
+                            <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
+                            {selected == item && <View style={styles.animated} />}
+                        </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                    <View style={styles.line2} />
+                </React.Fragment> */}
                 {
                     loading ? (
                         <PageLoader />
@@ -109,19 +129,38 @@ export default function Training({navigation}) {
                             trainings && Array.isArray(trainings) && trainings.length > 0 ? (
                                 <TrainingList data={trainings}/>
                             ) : (
-                                <LottieIcon icon={Empty}/>
+                                <Container
+                                    style={{
+                                        justifyContent : "center",
+                                        alignItems : "center"
+                                    }}
+                                >
+                                    <LottieIcon icon={Empty}/>
+                                    <H1
+                                        color={AppColors.black3}
+                                    >You have no Upcoming Training</H1>
+                                </Container>
                             )
                         }
-                        <View style={styles.headingContainer}>
-                            <Text style={styles.heading}>History</Text>
-                        </View>
-                        {
-                            histories && Array.isArray(histories) && histories.length > 0 ? (
-                                <TrainingList data={histories}/>
-                            ) : (
-                                <LottieIcon icon={Empty}/>
-                            )
-                        }
+                        <React.Fragment>
+                            {
+                                trainings && Array.isArray(trainings) && trainings.length > 0 &&  histories && Array.isArray(histories) && histories.length >= 0 ? (
+                                    <View style={styles.headingContainer}>
+                                        <Text style={styles.heading}>History</Text>
+                                    </View>
+                                ) : null
+                            }
+                            {
+                                histories && Array.isArray(histories) && histories.length > 0 ? (
+                                    <TrainingList data={histories}/>
+                                ) : null
+                            }
+                            {
+                                trainings && Array.isArray(trainings) && trainings.length > 0 &&  histories && Array.isArray(histories) && histories.length === 0 ? (
+                                    <LottieIcon icon={Empty}/>
+                                ) : null
+                            }
+                        </React.Fragment>
                         </>
                     }
                     {
@@ -132,7 +171,19 @@ export default function Training({navigation}) {
                                         && trainings.length > 0 ? (
                                             <TrainingList data={trainings}/>
                                         ) : (
-                                            <LottieIcon icon={Empty}/>
+                                            <Container
+                                                style={{
+                                                    justifyContent : "center",
+                                                    alignItems : "center",
+                                                    flex:1
+                                                }}
+                                            >
+                                                <LottieIcon icon={Empty}/>
+                                                <H1
+                                                    color={AppColors.black3}
+                                                >You have no available training yet</H1>
+                                                
+                                            </Container>
                                         )
                                 }
                             </React.Fragment> 
