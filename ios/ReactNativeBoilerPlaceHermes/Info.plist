@@ -46,8 +46,7 @@
     <key>NSCameraUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to use your camera</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
-
-
+	<string />
 	<key>UIAppFonts</key>
 	<array>
 		<string>black-sans-black.otf</string>
