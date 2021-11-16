@@ -40,7 +40,7 @@ export default function Dashboard(props) {
       if(!data.email || data.email.trim() === "" || !data.password
         || data.password.trim() === ""
       ){
-        return ToastError("All fields are requird")
+        return ToastError("All fields are required")
       }
       let fd = {
         email : data.email,
