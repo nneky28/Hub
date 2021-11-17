@@ -32,7 +32,7 @@ const CustomModalDropdown = (props) => {
       ]}
       dropdownStyle={styles.dropDownContainer}
       defaultIndex={-1}
-      defaultValue={props.placeholder}
+      defaultValue={props.value || props.placeholder}
       textStyle={selected ? styles.text2 : styles.text1}
       dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
       onSelect={(index,text) => {

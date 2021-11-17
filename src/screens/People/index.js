@@ -11,7 +11,7 @@ import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors, { ColorList } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, H1, LottieIcon, PageLoader, Rounded } from '../../utills/components'
+import { Container, H1, LottieIcon, PageLoader, Reload, Rounded } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import Outjson from '../../assets/lottie/out.json'
@@ -31,16 +31,14 @@ export default function People({route,navigation}) {
     var [selected, setSelected] = useState('All');
     const [isListView, setIsListView] = useState(false);
     const [modal, setModal] = useState(false);
-    const [personsList, setPersonsList] = useState(null);
+    const [personsList, setPersonsList] = useState([]);
     const [celebrations,setCelebrations] = useState(null);
     const [whosOut,setWhosOut] = useState(null)
     const [persons,setPersons] = useState([]);
     const dispatch = useDispatch();
     const [loading,setLoading] = React.useState(null);
-    const [tags,setTags] = React.useState([]);
     const [data,setData] = React.useState([])
     const [fetch,setFetch] = React.useState(false)
-    const [page,setPage]  = React.useState(0)
 
     const handleSearch = (text) => {
         if (text.length > 0){
@@ -52,14 +50,15 @@ export default function People({route,navigation}) {
         else
             setPersonsList(persons);
     }
-    const fetchData = async (page = null) => {
+    const fetchData = async () => {
         try{
-            if(page){
+            let page = await getData("page")
+            if(page > 1){
                 setFetch(true)
-            }
-            if(!page){
+            }else{
                 setLoading(true)
             }
+            console.log("FETCHDATA___PAGE",page)
             let token = await getData("token");
             let user =  await getData("user");
             let about_me = await getData("about_me")
@@ -68,13 +67,14 @@ export default function People({route,navigation}) {
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             let selected = await getData("tab");
             if(selected === "All" || selected === "My Team"){
+                console.log("IF STATEMENT",selected)
                 let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
                 let res = await getAPIs(url,token);
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
-                setPersonsList(persons_arr);
-                setPersons(persons_arr)
-                setData(persons_arr)
+                setPersonsList([...personsList,...persons_arr]);
+                setPersons([...personsList,...persons_arr])
+                setData([...personsList,...persons_arr])
             }
             if(selected === "Celebrations"){
                 let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
@@ -85,7 +85,6 @@ export default function People({route,navigation}) {
                 let active_res = await getAPIs(active_birthdays_url,token);
                 let active_ann_res = await getAPIs(active_ann_url,token);
                 let up_ann_res = await getAPIs(up_ann_url,token);
-                console.log("Celebrations",up_ann_res,active_ann_res)
                 let active_birthdays = active_res && active_res.results && Array.isArray(active_res.results) ? 
                 active_res.results.map((item)=>(
                     {
@@ -151,8 +150,8 @@ export default function People({route,navigation}) {
                         
                     } : null,
                 ].filter(item=>item !== null);
-                setCelebrations([]);
-                setData([])
+                setCelebrations(celeb);
+                setData(celeb)
             }
 
             if(selected === "Who's out"){
@@ -182,9 +181,16 @@ export default function People({route,navigation}) {
             }
             setLoading(false);
             setFetch(false)
+            await storeData("page",page + 1)
         }catch(err){
-            let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
+            console.log("ERRR",err)
+            setLoading(false);
+            setFetch(false)
+            let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg  ? err.msg : "Something went wrong. Please retry"
             console.log("err|||",err,msg)
+            if(msg === "Invalid page."){
+                return;
+            }
             ToastError(msg)
         }
     }
@@ -197,7 +203,6 @@ export default function People({route,navigation}) {
         location()
     },[])
     useEffect(()=>{
-        setPage(0)
         fetchData()
     },[selected])
     const CelebrationItem = ({item, section}) => {
@@ -304,23 +309,24 @@ export default function People({route,navigation}) {
             //!loading && data && Array.isArray(data) && data.length === 0 ? false : true
             false
         }>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
-                <Text numberOfLines={1} style={styles.screenTitle}>
-                People
-                </Text>
-                <TouchableOpacity 
-                onPress={() => setIsListView(!isListView)}
-                >
-                {isListView ? <Image resizeMode="contain" source={categoryIcon1} style={styles.rightIcon} /> :
-                              <Image resizeMode="contain" source={listingIcon} style={styles.rightIcon} />
-                }
-                    
-                </TouchableOpacity>
-            </View>
-            <View style={styles.line} />
+            <Container flex={1}>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
+                    </TouchableOpacity>
+                    <Text numberOfLines={1} style={styles.screenTitle}>
+                        People
+                    </Text>
+                    <TouchableOpacity 
+                    onPress={() => setIsListView(!isListView)}
+                    >
+                    {isListView ? <Image resizeMode="contain" source={categoryIcon1} style={styles.rightIcon} /> :
+                                <Image resizeMode="contain" source={listingIcon} style={styles.rightIcon} />
+                    }
+                        
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.line} />
             <View style={
                 !loading && data && Array.isArray(data) && data.length === 0 ? styles.mainViewContainer2 : 
                 styles.mainViewContainer
@@ -335,6 +341,8 @@ export default function People({route,navigation}) {
                     <TouchableOpacity 
                     onPress={async () => {
                         await storeData("tab",item)
+                        await storeData("page",1)
+                        setPersonsList([])
                         setSelected(item)
                     }}
                     >
@@ -456,59 +464,69 @@ export default function People({route,navigation}) {
                 }
                 
                 {
-                    (selected === "All" || selected === "My Team") && !isListView && personsList && Array.isArray(personsList) 
-                    && personsList.length > 0 && !loading
-                    ? (
-                        <FlatList
-                            columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
-                            numColumns={2}
-                            data={personsList}
-                            keyExtractor={(item) => `${Math.random()}`}
-                            renderItem={({item}) => <PersonCard item={item} onPressHandle={async () => {
-                                await storeData("tmember",item)
-                                navigation.navigate('MemberProfile')
-                            }}/>}
-                            ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
-                            showsVerticalScrollIndicator={false}
-                            nestedScrollEnabled={true}
-                            contentContainerStyle={CommonStyles.marginTop_1}
-                            onEndReachedThreshold={0.5}
-                            loading={fetch}
-                            onEndReached={async ()=>{
-                                setFetch(true)
-                                // setPersonsList([...personsList,...personsList])
-                                let next = page + 1;
-                                await fetchData(next)
-                                setPage(next)
-                                console.log("THE END---")
-                            }}
-                        /> 
-                    ) : null
-                }
+                        (selected === "All" || selected === "My Team") && !isListView && personsList && Array.isArray(personsList) 
+                        && personsList.length > 0 && !loading
+                        ? (
+                            <React.Fragment>
+                                <FlatList
+                                    columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
+                                    numColumns={2}
+                                    data={personsList}
+                                    keyExtractor={(item) => `${Math.random()}`}
+                                    renderItem={({item}) => <PersonCard item={item} onPressHandle={async () => {
+                                        await storeData("tmember",item)
+                                        navigation.navigate('MemberProfile')
+                                    }} />}
+                                    ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
+                                    showsVerticalScrollIndicator={false}
+                                    nestedScrollEnabled={true}
+                                    contentContainerStyle={CommonStyles.marginTop_1}
+                                    onEndReachedThreshold={0.3}
+                                    onEndReached={({ distanceFromEnd }) => {
+                                        fetchData();
+                                    }}
+                                    refreshing={fetch}
+                                    onRefresh={async ()=> {
+                                        await storePage("page",1)
+                                        fetchData();
+                                    }}
+                                /> 
+                            </React.Fragment>
+                        ) : null
+                    }
                 {
                     (selected === "All" || selected === "My Team") && isListView && personsList && Array.isArray(personsList) 
                     && personsList.length > 0 && !loading
                     ? (  
-                        <FlatList
-                    data={personsList}
-                    keyExtractor={(item) => item.key}
-                    renderItem={({item}) => <PersonListComp item={item} onPressHandle={async () => {
-                        await storeData("tmember",item)
-                        navigation.navigate('MemberProfile')
-                    }}/>}
-                    ItemSeparatorComponent={() => <View style={styles.line}/>}
-                    showsVerticalScrollIndicator={false}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={CommonStyles.marginTop_1}
-                    onEndReached={()=>{
-                        console.log("THE END--")
-                    }}
-                    /> 
+                            <React.Fragment>
+                                <FlatList
+                                    data={personsList}
+                                    keyExtractor={(item) => item.key}
+                                    renderItem={({item}) => <PersonListComp item={item} fetch={fetch} onPressHandle={async () => {
+                                        await storeData("tmember",item)
+                                        navigation.navigate('MemberProfile')
+                                    }}/>}
+                                    ItemSeparatorComponent={() => <View style={styles.line}/>}
+                                    showsVerticalScrollIndicator={false}
+                                    nestedScrollEnabled={true}
+                                    contentContainerStyle={CommonStyles.marginTop_1}
+                                    onEndReachedThreshold={0.3}
+                                    onEndReached={({ distanceFromEnd }) => {
+                                        fetchData();
+                                    }}
+                                    refreshing={fetch}
+                                    onRefresh={async ()=> {
+                                        await storePage("page",1)
+                                        fetchData();
+                                    }}
+                                /> 
+                            </React.Fragment>
                     ) : null
                 }
             
                 <FilterModal onPressHandle={handleSearch} isVisible={modal} onHide={() => setModal(false)}/>
             </View>
+            </Container>
         </ScreenWrapper>
     )
 }

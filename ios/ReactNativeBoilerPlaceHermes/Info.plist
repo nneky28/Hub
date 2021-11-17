@@ -42,9 +42,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to the phone microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+    <string>This lets you upload a profile image to your account.</string>
     <key>NSCameraUsageDescription</key>
-    <string>$(PRODUCT_NAME) would like to use your camera</string>
+    <string>This lets you capture a profile image for your account.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
 	<string />
 	<key>UIAppFonts</key>

@@ -29,39 +29,50 @@ export default function Notifications({navigation}) {
     let background  = "pink";
     const load = (item) => {
         background = background === "pink" ? "green" : "pink"
-        if(item && item.type === "timeoff_request_approval"){
+        
+        if(item && ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type)){
+            let title = ""
+            if(item.type === "timeoff-request"){
+                title = `${item.data && item.data.employee_first_name ? Capitalize(item.data.employee_first_name) : ""} is requesting for a ${item.data && item.data.days ? item.data.days : ""} day(s) ${item.data && item.data.timeoff_policy_title ? Capitalize(item.data.timeoff_policy_title) : ""}`
+            }
+            if(item.type === "timeoff-request-approval"){
+                title = `Your time off request for ${item.data && item.data.timeoff_policy_title ? Capitalize(item.data.timeoff_policy_title) : ""} has been approved.`
+            }
+            if(item.type === "timeoff-request-dismissal"){
+                title = `Your time off request for ${item.data && item.data.timeoff_policy_title ? Capitalize(item.data.timeoff_policy_title) : ""} has been declined.`
+            }
             return {
                 id : item.id,
-                avatar : item && item.actor && item.actor.avatar ? item.actor.avatar : null,
-                subtitle : "Tech Support",
-                title : `Your request for ${item.action_object && item.action_object.timeoff_policy ? Capitalize(item.action_object.timeoff_policy) : null} for ${item.action_object && item.action_object.days_requested ? item.action_object.days_requested : null} day(s) has been accepted`,
+                avatar : item &&item.image ? item.image : null,
+                subtitle : "",
+                title : title,
                 icon : require('../../assets/images/icons/list.png'),
-                type : "timeoff_request_approval",
+                type : item.type,
                 date :  item.created_at,
                 placeholder : "Success"
             }
         }
-        if(item && item.type === "employee_birthday"){
+        if(item && item.type === "birthday"){
             return {
                 id : item.id,
-                avatar : item && item.actor && item.actor.photo ? item.actor.photo : null,
-                subtitle : "Tech Support",
-                title : `${item && item.actor && item.actor.first_name ? Capitalize(item.actor.first_name) : null}'s birthday is today`,
+                avatar : item && item.image ? item.image : null,
+                subtitle : "",
+                title : `Wish ${item && item.data && item.data.employee_first_name ? Capitalize(item.data.employee_first_name) : ""} a happy birthday (${item && item.data.date ? moment(item.data.date).format("MMM DD") : ""})`,
                 icon : require('../../assets/images/icons/cake.png'),
-                type : "employee_birthday",
+                type : "birthday",
                 date :  item.created_at,
                 background : background,
                 placeholder : "Birthday"
             }
         }
-        if(item && item.type === "job_anniversary"){
+        if(item && item.type === "work-anniversary"){
             return {
                 id : item.id,
-                avatar : item && item.actor && item.actor && item.actor.photo ? item.actor.photo : null,
-                subtitle : "Tech Support",
-                title : `${item && item.actor && item.actor.first_name ? Capitalize(item.actor.first_name) : ""}'s ${item.data && item.data.num_years_spent ? item.data.num_years_spent : ""} year(s) anniversary`,
+                avatar : item && item.image ? item.image : null,
+                subtitle : "",
+                title : `Congratulate ${item && item.data && item.data.employee_first_name ? Capitalize(item.data.employee_first_name) : ""} for ${item.data && item.data.years ? item.data.years : 0} year work anniversary`,
                 icon : require('../../assets/images/icons/document2.png'),
-                type : "job_anniversary",
+                type : "work-anniversary",
                 date :  item.created_at,
                 background : background,
                 placeholder : "Job"
@@ -73,18 +84,7 @@ export default function Notifications({navigation}) {
         try{
             setProcess(true)
             dispatch(login({...auth,last_checked : moment(new Date())}))
-            let about = await getData("about_me");
-            let biz = await getStoredBusiness();
-            let token = await getData("token");
             let res = await APIFunction.notifications(1);
-            // const icons = [{
-            //     cake : require('../../assets/images/icons/cake.png'),
-            //     bag : require('../../assets/images/icons/bag.png'),
-            //     document : require('../../assets/images/icons/document2.png'),
-            //     list : require('../../assets/images/icons/list.png'),
-            //     up_cake : require('../../assets/images/icons/cake1.png')
-            // }]
-            console.log("---RES----",res)
             let other_data = res && res.results && Array.isArray(res.results) && res.results.length > 0 ? 
             res.results.map((item)=>(
                 load(item)
@@ -112,51 +112,6 @@ export default function Notifications({navigation}) {
                     data: grp.notifications
                }
             })
-
-            // [
-            //     {
-            //     title: 'Naomi Ashley’s birthday is today',
-            //     avatar: require('../../assets/images/dummy/placeholder.png'),
-            //     subtitle: 'Tech Support',
-            //     icon: require('../../assets/images/icons/cake1.png'),
-            //     background: 'pink',
-            //     },
-            //     {
-            //     title: 'Naomi Ashley’s birthday is today',
-            //     avatar: require('../../assets/images/dummy/placeholder.png'),
-            //     subtitle: 'Tech Support',
-            //     icon: require('../../assets/images/icons/cake.png'),
-            //     background: 'green',
-            //     }
-                
-            // ]
-            // [
-            //     {
-            //         title: 'July Payslip is avaliable',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['document']
-            //     },
-            //     {
-            //         title: 'ABC12KJA is due for service ',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['cake']
-            //     },
-            //     {
-            //         title: 'Onboarding task due in a day ',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['list']
-            //     },
-            //     {
-            //         title: 'Dr Drey birthday in 3 days ',
-            //         date: 'Aug 28',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['up_cake']
-            //     }
-            // ]
             setNotification(data)
             setLoading(false)
             setProcess(false)
@@ -190,14 +145,14 @@ export default function Notifications({navigation}) {
         return(
             <TouchWrap
                 onPress={()=>{
-                    APIFunction.read_notification(item.id);
-                    if(item && item.type === "employee_birthday"){
+                    //APIFunction.read_notification(item.id);
+                    if(item && item.type === "birthday"){
                         return navigation.navigate("People",{tab : "Celebrations"})
                     }
-                    if(item && item.type === "timeoff_request_approval"){
+                    if(item && item.type && ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type)){
                         return navigation.navigate("People",{tab : "Who's out"})
                     }
-                    if(item && item.type === "job_anniversary"){
+                    if(item && item.type === "work-anniversary"){
                         return navigation.navigate("People",{tab : "Celebrations"})
                     }
                 }}

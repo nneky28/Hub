@@ -110,11 +110,14 @@ export default function PersonalInfo({navigation}) {
                         profile.about.address.address1 : "",
                         address2: profile.about.address && profile.about.address.address2 ? 
                         profile.about.address.address2 : "",
-                        phone_number: profile.about.phone_number,
+                        phone_number: profile.about.phone_number1,
                         mobileNumber2: profile.about.phone_number2,
-                        city : profile.about && profile.about.city ? profile.about.city : "",
-                        state : profile.about && profile.about.state ? profile.about.state : "",
-                        postal_code : profile.about && profile.about.postal_code ? profile.about.postal_code : ""
+                        city : profile.about.address && profile.about.address.address1 ? 
+                        profile.about.address.city : "",
+                        state : profile.about.address && profile.about.address.address1 ? 
+                        profile.about.address.state : "",
+                        postal_code : profile.about.address && profile.about.address.address1 ? 
+                        profile.about.address.postal_code : ""
                     }
                 )
             }
@@ -314,7 +317,6 @@ export default function PersonalInfo({navigation}) {
                         onChangeData={(value)=>setData({...data,postal_code : value})}
                         color={AppColors.black}
                     />
-
                 </>
                 )}
             </Formik>
