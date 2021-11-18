@@ -36,13 +36,7 @@ export default function PensionInfo({navigation}) {
             let required = disabled ? ["account_number","account_number"] : ["pension_number","provider"];
             let failed = false;
             let fData = await getData("load")
-            let data = fData || {
-                account_name : null,
-                account_number : "",
-                pension_number : "",
-                bank :"",
-                provider : ""
-            }
+            let data = fData
             for(let req of required){
                 if(data[req] === "" || data[req].trim() === ""){
                     failed = true
@@ -93,7 +87,7 @@ export default function PensionInfo({navigation}) {
             let about = await getData("about_me");
             let bank_res = await APIFunction.banks();
             let prov_res = await APIFunction.pension_providers();
-            setData({
+            let load = {
                 account_number : about && about.bank_account && about.bank_account.account_number ? 
                 about.bank_account.account_number : "",
                 pension_number : about && about.pension && about.pension.pension_number ?
@@ -102,7 +96,9 @@ export default function PensionInfo({navigation}) {
                 about.bank_account.bank.name : "",
                 provider : about && about.pension && about.pension.provider && about.pension.provider.name ?
                 about.pension.provider.name : ""
-            })
+            }
+            setData(load)
+            await storeData("load",load)
             setBankHolder(bank_res)
             setProvHolder(prov_res)
             setProviders(prov_res.map((item)=>item.name));

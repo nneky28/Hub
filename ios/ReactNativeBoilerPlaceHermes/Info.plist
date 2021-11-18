@@ -37,16 +37,16 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>This lets you capture a profile image for your account.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires access to location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to the phone microphone.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>This lets you upload a profile image to your account.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This lets you capture a profile image for your account.</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-	<string />
+	<string>This lets you upload a profile image to your account.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>black-sans-black.otf</string>

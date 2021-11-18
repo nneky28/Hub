@@ -295,7 +295,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     ToastError(msg)
                     setTimeout(()=>{
                         setModal(true);
-                    },1000)
+                    },2500)
                 }}
             />  
             <WarningModal 

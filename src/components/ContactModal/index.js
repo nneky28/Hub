@@ -113,7 +113,6 @@ const DocumentModal = ({isVisible, onHide}) => {
 
 const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
   const dispatch = useDispatch();
-  console.log("TimeoffModal",timeoff_id)
   const defaultColor = "";
   const blackColor = "";
   const [data,setData] = React.useState({
@@ -128,7 +127,6 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       required = ["start_date","end_date",
           "reason"]
       for(let req of required){
-          console.log("data--",data[req],active)
           if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
       }
       if(failed) {
@@ -147,22 +145,20 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       if(!check){
         return hideAndOpen("Please select dates that do not fall within active timeoffs")
       }
-      let token = await getData("token");
-      let user =  await getData("user");
       let about_me = await getData("about_me")
-      let biz = getStoredBusiness();
+      let biz = await getStoredBusiness();
       dispatch(setLoaderVisible(true));
       let timeoff_url = APIFunction.timeoff_reqs(biz.business_id,about_me.id)
       let fd = {
         ...data,timeoff : timeoff_id
       }
-      let res = await postAPIs(timeoff_url,fd);
+       await postAPIs(timeoff_url,fd);
       storeData("curr_timeoff",null)
       dispatch(setLoaderVisible(false));
       closeAndRefresh()
     }catch(err){
-      let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-      console.log("err|||",err,msg)
+      console.log("ERR---",err)
+      let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg
       dispatch(setLoaderVisible(false));
       return hideAndOpen(msg)
     }

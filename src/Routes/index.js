@@ -76,7 +76,7 @@ const Routes = () => {
               if(check){
                 return logoutMethod()
               }
-              let res = await APIFunction.notifications()
+              let res = await APIFunction.unseen_count()
               dispatch(login({...auth,notifications : res.count}));
             },
           }}

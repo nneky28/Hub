@@ -84,6 +84,7 @@ export default function Notifications({navigation}) {
         try{
             setProcess(true)
             dispatch(login({...auth,last_checked : moment(new Date())}))
+            APIFunction.seen_all()
             let res = await APIFunction.notifications(1);
             let other_data = res && res.results && Array.isArray(res.results) && res.results.length > 0 ? 
             res.results.map((item)=>(

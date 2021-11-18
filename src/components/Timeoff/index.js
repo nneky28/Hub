@@ -11,7 +11,7 @@ import { Circle } from 'react-native-progress';
 import { rightIcon, upIcon } from '../../assets/images';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { LottieIcon } from '../../utills/components';
+import { Container, H1, LottieIcon } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
@@ -45,6 +45,17 @@ const TimeoffVertical = ({data,load,setModal}) => {
         ) : (
           <View style={{justifyContent : "center", alignItems : "center",flex : 1}}>
             <LottieIcon icon={Timeoffjson} />
+              <Container
+                flex={1}
+                style={{
+                    justifyContent : "center",
+                    alignItems : "center"
+                }}
+              >
+                  <H1
+                      color={AppColors.black3}
+                  >You have no timeoff yet.</H1>
+              </Container>
           </View>
         )
       }

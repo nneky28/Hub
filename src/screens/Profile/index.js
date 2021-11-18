@@ -129,7 +129,7 @@ export default function Profile({navigation}) {
                   </View>
                   <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4 ]}>
                     <TopBottomText topText={data[4]} bottomText={about && about.job && about.job.title ? Capitalize(about.job.title) : ""} containerStyle={styles.halfWidthContainer}/>
-                    <TopBottomText topText={data[6]} bottomText={data[7]} containerStyle={styles.halfWidthContainer}/>
+                    {/* <TopBottomText topText={data[6]} bottomText={data[7]} containerStyle={styles.halfWidthContainer}/> */}
                   </View>
                   <View style={styles.line}/>
                   <Text style={styles.subHeading}>Compensation</Text>
@@ -312,14 +312,13 @@ export default function Profile({navigation}) {
                           />
                       </View>
                       <FlatList
-                      data={profileData}
-                      renderItem={({item,index})=><RenderList about={about} item={item} index={index}/>}
-                      ItemSeparatorComponent={() => <View />}
-                      showsVerticalScrollIndicator={false}
-                      nestedScrollEnabled={true}
-                      contentContainerStyle={CommonStyles.marginTop_2}
-                      keyExtractor={(item) => item.key}
-
+                        data={profileData}
+                        renderItem={({item,index})=><RenderList about={about} item={item} index={index}/>}
+                        ItemSeparatorComponent={() => <View />}
+                        showsVerticalScrollIndicator={false}
+                        nestedScrollEnabled={true}
+                        contentContainerStyle={CommonStyles.marginTop_2}
+                        keyExtractor={(item) => item.key}
                       />
                         {/* {profileData.map((item, index) => <RenderList title="Personal Information" item={item} index={index}/>) } */}
                       

@@ -224,7 +224,7 @@ export default function TimeOff({navigation}) {
                     ToastError(msg)
                     setTimeout(()=>{
                         setModal(true);
-                    },1000)
+                    },2500)
                 }}
             />
             <WarningModal 

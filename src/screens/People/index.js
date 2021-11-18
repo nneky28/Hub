@@ -36,7 +36,7 @@ export default function People({route,navigation}) {
     const [whosOut,setWhosOut] = useState(null)
     const [persons,setPersons] = useState([]);
     const dispatch = useDispatch();
-    const [loading,setLoading] = React.useState(null);
+    const [loading,setLoading] = React.useState(true);
     const [data,setData] = React.useState([])
     const [fetch,setFetch] = React.useState(false)
 
@@ -67,14 +67,14 @@ export default function People({route,navigation}) {
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             let selected = await getData("tab");
             if(selected === "All" || selected === "My Team"){
-                console.log("IF STATEMENT",selected)
                 let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
                 let res = await getAPIs(url,token);
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
-                setPersonsList([...personsList,...persons_arr]);
-                setPersons([...personsList,...persons_arr])
-                setData([...personsList,...persons_arr])
+                let arr = [...personsList,...persons_arr].splice((page & 10)+1)
+                setPersonsList([...arr]);
+                setPersons([...arr])
+                setData([...arr])
             }
             if(selected === "Celebrations"){
                 let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");

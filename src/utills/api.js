@@ -2,8 +2,8 @@ import axios from "axios";
 import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 
-//export const endPoint = 'https://coolowo.com';
-export const endPoint = 'https://api.bizedgeapp.com';
+export const endPoint = 'https://coolowo.com';
+//export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -40,8 +40,11 @@ export const APIFunction = {
   job_anniversary : (status,business_id,page=1) =>`/c/${business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`,
   notifications : async (page=1) => {
     let biz = await getStoredBusiness();
-    console.log("biz--",biz)
     return getAPIs(`/c/${biz.business_id}/employees/notifications/?page=${page}`)
+  },
+  unseen_count : async (page=1) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz.business_id}/employees/notifications/unseen_count/`)
   },
   change_password : async (fd) => postAPIs(`/accounts/auth/password/change/`,fd),
   pension_providers : async () => {
@@ -71,6 +74,10 @@ export const APIFunction = {
   bank_verification : async (fd) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/banks/account_number_validation/`,fd)
+  },
+  seen_all : async () => {
+    let biz = await getStoredBusiness();
+    return postAPIs(`/c/${biz.business_id}/employees/notifications/seen_all/`)
   }
 }
 export const getAPIs = async (path, token) => {
