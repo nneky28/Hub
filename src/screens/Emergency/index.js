@@ -15,6 +15,8 @@ import { useDispatch } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
 import Button from '../../components/Button';
 import { ActivityIndicator } from 'react-native-paper'
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view'
+import { ScrollView } from 'react-native-gesture-handler'
 
 
 export default function NextKin({navigation,route}) {
@@ -77,8 +79,10 @@ export default function NextKin({navigation,route}) {
     },[])
     
     return (
-        <ScreenWrapper scrollEnabled={true}>
-            <View style={styles.header}>
+        <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView>
+                <View style={styles.mainViewContainer}>
+                <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
                 </TouchableOpacity>
@@ -109,7 +113,6 @@ export default function NextKin({navigation,route}) {
             <Container 
                 flex={1}
             >
-                {console.log("SATA---",data)}
                 <Formik>
                     <Container>
                         <Field
@@ -255,7 +258,9 @@ export default function NextKin({navigation,route}) {
                     </Container>
                 </Formik>
             </Container>
-        </ScreenWrapper>
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingScrollView>
     )
 }
 

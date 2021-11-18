@@ -2,8 +2,8 @@ import axios from "axios";
 import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 
-//export const endPoint = 'https://coolowo.com';
-export const endPoint = 'https://api.bizedgeapp.com';
+export const endPoint = 'https://coolowo.com';
+//export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -70,7 +70,7 @@ export const APIFunction = {
   },
   bank_verification : async (fd) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/banks/account_number_validation/`,fd)
+    return postAPIs(`/c/${biz.business_id}/banks/account_number_validation/`,fd)
   }
 }
 export const getAPIs = async (path, token) => {
@@ -111,6 +111,7 @@ export const getAPIs = async (path, token) => {
   };
   
 export const postAPIs = async (path, fd) => {
+  console.log("postAPIs",path,fd)
   let expiry = await getData("token_expiry");
     if(expiry && !moment(new Date()).isBefore(expiry)){
        await refreshToken()
@@ -130,6 +131,7 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("ERR--",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -139,8 +141,6 @@ export const postAPIs = async (path, fd) => {
             reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
-  
-      setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
 

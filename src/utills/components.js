@@ -107,6 +107,7 @@ export const Reload = props => {
         fontSize : props.fontSize || width(3.5),
         fontFamily : FontFamily.BlackSansRegular,
         textAlign : props.textAlign,
+        color : props.color || AppColors.black,
         ...props.style
       }}
     >
@@ -145,7 +146,7 @@ export const SizedBox = (props) => (
         paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop : props.marginTop ? height(props.marginTop) : 0,
-        marginLeft : props.marginLeft,
+        marginLeft : props.marginLeft ? width(props.marginLeft) : 0,
         paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
         paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
         marginRight : props.marginRight ? width(props.marginRight) : 0,
