@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageBackground, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 //import ImagePicker from 'react-native-image-crop-picker';
 import { Circle, Defs, Mask, Rect, Svg } from 'react-native-svg';
@@ -55,26 +55,23 @@ export default function EditPhoto({navigation}) {
         );
       }
 
-    const imageFromGallery = () => {
-      const options = {
-        title: 'Select Profile PIcture',
-      };
-      launchImageLibrary(options, response => {
-        try {
-          if(response.fileSize > 2000000){
-            return ToastError("Image must not be more than 2mb");
+    const imageFromGallery = async () => {
+      try{
+        const options = {
+          title: 'Select Profile PIcture',
+        };
+        launchImageLibrary(options,response=>{
+          if(response.didCancel){
+            return false
           }
-          if(response.didCancel) {
-            return false;
-          }
-          if(response.error) {
-            return ToastError(response.error);
+          if(response.error){
+            ToastError("Something went wrong.Please retry")
           }
           setProfilePicture(response);
-        } catch (error) {
-          console.log("ERR---",error)
-        }
-      });
+        })
+      }catch(err){
+        ToastError("Something went wrong.Please retry")
+      }
     };
   
     const __imageFromCamera = () => {
@@ -83,10 +80,6 @@ export default function EditPhoto({navigation}) {
       };
       launchCamera(options, response => {
         try {
-          console.log("response--",response)
-          if(response.fileSize > 2000000){
-            return ToastError("Image must not be more than 2mb");
-          }
           if(response.didCancel) {
             return false;
           }
@@ -103,6 +96,9 @@ export default function EditPhoto({navigation}) {
 
     const imageFromCamera = async () => {
       try {
+        if(Platform.OS === "ios"){
+          return __imageFromCamera()
+        }
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.CAMERA,
           {
@@ -116,10 +112,10 @@ export default function EditPhoto({navigation}) {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           __imageFromCamera()
         } else {
-          console.log("Camera permission denied");
+          ToastError("Something went wrong.Please retry")
         }
       } catch (err) {
-        console.warn(err);
+        ToastError("Something went wrong.Please retry")
       }
     };
     
