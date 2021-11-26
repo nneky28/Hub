@@ -1,7 +1,7 @@
 import React from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import {Text} from  'react-native';
+import {ImageBackground, Text} from  'react-native';
 import Svg, {
     Circle,
     Ellipse,
@@ -141,6 +141,7 @@ export const SizedBox = (props) => (
     <View 
       style={{
         flex : props.flex || 0,
+        flexDirection : props.direction,
         width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
         padding : props.padding ? width(props.padding) : height(2),
         paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
@@ -151,11 +152,41 @@ export const SizedBox = (props) => (
         paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
         marginRight : props.marginRight ? width(props.marginRight) : 0,
         backgroundColor : props.backgroundColor || AppColors.white,
+        borderWidth : props.borderWidth,
+        borderBottomWidth : props.borderBottomWidth,
         ...props.style
       }}
     >
       {props.children}
     </View>
+  )
+
+  export const ImageWrap = (props) => (
+    <ImageBackground
+      source={props.source || { uri: props.url }}
+      resizeMode={props.fit}
+      style={{
+        overflow: "hidden",
+        //...Elevation(props.elevation),
+        position: props.position,
+        width: width(props.width) || props.widthPercent || "100%",
+        height: height(props.height) || "100%",
+        backgroundColor: props.backgroundColor,
+        borderRadius: props.borderRadius,
+        borderTopLeftRadius: props.borderTopLeftRadius,
+        borderBottomLeftRadius: props.borderBottomLeftRadius,
+        margin: width(props.margin) || 0,
+        marginVertical: height(props.marginVertical) || 0,
+        marginHorizontal: width(props.marginHorizontal) || 0,
+        marginRight: width(props.marginRight) || 0,
+        marginLeft: width(props.marginLeft) || 0,
+        marginTop: height(props.marginTop) || 0,
+        marginBottom: height(props.marginBottom) || 0,
+        padding: props.padding,
+      }}
+    >
+      {props.children}
+    </ImageBackground>
   )
   
   export const AppButton = (props) => (

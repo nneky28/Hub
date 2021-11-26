@@ -69,9 +69,11 @@ export default function People({route,navigation}) {
             if(selected === "All" || selected === "My Team"){
                 let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
                 let res = await getAPIs(url,token);
+                console.log("ALL---",res)
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
-                let arr = [...personsList,...persons_arr].splice((page & 10)+1)
+                let arr = [...personsList,...persons_arr]
+                arr.splice((page * 10)+1)
                 setPersonsList([...arr]);
                 setPersons([...arr])
                 setData([...arr])
@@ -487,7 +489,7 @@ export default function People({route,navigation}) {
                                     }}
                                     refreshing={fetch}
                                     onRefresh={async ()=> {
-                                        await storePage("page",1)
+                                        await storeData("page",1)
                                         fetchData();
                                     }}
                                 /> 
@@ -511,9 +513,7 @@ export default function People({route,navigation}) {
                                     nestedScrollEnabled={true}
                                     contentContainerStyle={CommonStyles.marginTop_1}
                                     onEndReachedThreshold={0.3}
-                                    onEndReached={({ distanceFromEnd }) => {
-                                        fetchData();
-                                    }}
+                                    onEndReached={fetchData}
                                     refreshing={fetch}
                                     onRefresh={async ()=> {
                                         await storePage("page",1)

@@ -8,12 +8,10 @@ import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, LottieIcon, PageLoader, ProfileLoader, Rounded } from '../../utills/components';
-import { persons } from '../../utills/data/persons';
+import { Container, H1, ImageWrap, LottieIcon, PageLoader, ProfileLoader, Rounded,P } from '../../utills/components';
 import { FontFamily } from '../../utills/FontFamily';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
-import Empty from '../../assets/lottie/empty.json'
 import AppColors, { ColorList } from '../../utills/AppColors';
 import Teamjson from '../../assets/lottie/teams.json'
 
@@ -101,7 +99,7 @@ export default function MemberProfile({route,navigation}) {
             </View>
             <View style={styles.line} />
             {
-              loading ? (
+              false ? (
                 <View style={{alignItems : "center", 
                     justifyContent : "center",flex : 1,
                     marginTop : "20%"  
@@ -135,11 +133,62 @@ export default function MemberProfile({route,navigation}) {
                       </Text>
                   </View>
                   <Button 
-                  title="Contact" 
-                  containerStyle={styles.buttonStyle} 
-                  textStyle={styles.buttonText} 
-                  onPress={() => setModal(true)}
+                    title="Contact" 
+                    containerStyle={styles.buttonStyle} 
+                    textStyle={styles.buttonText} 
+                    onPress={() => setModal(true)}
                   />
+                  {/* <Container marginTop={5}
+                    paddingHorizontal={5}
+                  >
+                    {
+                      [
+                          {
+                              key: '1',
+                              title: member && member.email ? member.email : "",
+                              iconLeft: require('../../assets/images/icons/message.png'),
+                              iconRight: require('../../assets/images/icons/copy.png'),
+                          },
+                          {
+                              key: '2',
+                              title: member && member.address && member.address.address1 ? member.address.address1 : 
+                              member && member.address ? member.address : "",
+                              iconLeft: require('../../assets/images/icons/location.png'),
+                              iconRight: require('../../assets/images/icons/copy.png'),
+                          },
+                          {
+                              key: '3',
+                              title: member && member.phone_number1 ? member.phone_number1 : "",
+                              iconLeft: require('../../assets/images/icons/phone.png'),
+                              iconRight: require('../../assets/images/icons/copy.png'),
+                          }
+                      ].map((item,key)=>(
+                        <Container
+                          direction="row" 
+                          key={key}
+                          paddingVertical={2}
+                          borderBottomWidth={0.5}
+                          borderColor={AppColors.gray1}
+                          style={{
+                            alignItems : 'center'
+
+                          }}
+                        >
+                          <ImageWrap 
+                            fit="contain"
+                            source={item.iconLeft}
+                            height={2}
+                          />
+                          <P>{item.title}</P>
+                          <ImageWrap 
+                            fit="contain"
+                            source={item.iconRight}
+                            height={2}
+                          />
+                        </Container>
+                      ))
+                    }
+                  </Container> */}
                   {
                     member && member.line_manager ? (
                       <React.Fragment>
@@ -203,7 +252,6 @@ export default function MemberProfile({route,navigation}) {
               </View>
               )
             }
-
             <ContactModal isVisible={modal} onHide={() => setModal(false)} data={member} />
         </ScreenWrapper>  
     );
