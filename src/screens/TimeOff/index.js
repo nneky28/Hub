@@ -104,8 +104,9 @@ export default function TimeOff({navigation}) {
                 loading && tabs && Array.isArray(tabs) && tabs.length === 0 ? (
                     <PageLoader />
                 ) : (
-                    <View style={styles.mainViewContainer}>
-                        <ScrollView
+                    <View style={{...styles.mainViewContainer,height : tabs && Array.isArray(tabs) && tabs.length > 0 ? null : height(60)}}>
+                        {
+                            tabs.length > 0 && <ScrollView
                             nestedScrollEnabled={true}
                             contentContainerStyle={styles.scrollViewContainer}
                             showsHorizontalScrollIndicator={false}
@@ -120,8 +121,11 @@ export default function TimeOff({navigation}) {
                                 {selected == item && <View style={styles.animated} />}
                             </TouchableOpacity>
                             ))}
-                        </ScrollView>
-                        <View style={styles.line2} />
+                    </ScrollView>
+                        }
+                        {
+                            tabs && Array.isArray(tabs) && tabs.length > 0 && <View style={styles.line2} />
+                        }
                         {
                             process ? (
                                 <Reload />
@@ -144,6 +148,7 @@ export default function TimeOff({navigation}) {
                                     <Text style={styles.heading}>Active and upcoming</Text>
                                 </View>
                                 <TimeoffVertical
+                                    tab={"active"}
                                     data={'active'}
                                     load={active}
                                     setModal={(item)=>{
@@ -160,6 +165,7 @@ export default function TimeOff({navigation}) {
                                     <Text style={styles.heading}></Text>
                                 </View>
                                 <TimeoffVertical
+                                    tab={"request"}
                                     data={'request'}
                                     load={requests}
                                     setModal={(item)=>{
@@ -176,6 +182,7 @@ export default function TimeOff({navigation}) {
                                     <Text style={styles.heading}></Text>
                                 </View>
                                 <TimeoffVertical
+                                    tab={"history"}
                                     data={'fewDays'}
                                     load={history}
                                     setModal={(id)=>{
@@ -193,6 +200,7 @@ export default function TimeOff({navigation}) {
                                 <TimeoffVertical
                                     data={'balance'}
                                     load={available}
+                                    tab={"active"}
                                     setModal={(id,item)=>{
                                         if(
                                             item && item.max_days_allowed && 

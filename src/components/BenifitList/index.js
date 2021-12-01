@@ -9,7 +9,6 @@ import Button from '../Button';
 import styles from './styles';
 
 const BenifitList = ({data, horizontal,benefits}) => {
-  console.log("benefits--",benefits)
   let color = "";
   return (
     <FlatList

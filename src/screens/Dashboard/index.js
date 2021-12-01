@@ -2,6 +2,7 @@ import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { width } from 'react-native-dimension';
+import { ScrollView } from 'react-native-gesture-handler';
 import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
@@ -13,7 +14,7 @@ import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { H1, PageLoader, Reload, Rounded } from '../../utills/components';
+import { Container, H1, P, PageLoader, Reload, Rounded } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
@@ -112,9 +113,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setLoading(false);
       setProcess(false);
     }catch(err){
-      console.log("Err--",err);
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-      console.log("err|||",err,msg)
       ToastError(msg)
     }
   }
@@ -124,7 +123,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     },[])
   )
   return (
-    <ScreenWrapper scrollEnabled={true}>
+    <ScreenWrapper scrollEnabled={false}>
       <View style={styles.header}>
         <View style={styles.row}>
           <TouchableOpacity onPress={() => toggleDrawer()}>
@@ -163,16 +162,24 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             loading ? (
               <PageLoader />
             ) : ( 
-                  <React.Fragment>
+                 <ScrollView>
+                             <React.Fragment>
                    {
                      process ? (
                       <Reload />
                      ) : null
                    }
-                            {/*       <View style={styles.toDoContainer}>
+                <Container
+                  marginTop={3}
+                  marginBottom={3}
+                >
+                   <P textAlign="center">Hello.</P>
+                   <H1 textAlign="center">Welcome back</H1>
+                </Container>
+                <View style={styles.toDoContainer}>
                    <View style={styles.row1}>
                     <Text numberOfLines={1} style={styles.text3}>
-                      To do
+                      Tasks
                     </Text>
                     <TouchableOpacity
                       activeOpacity={0.8}
@@ -188,7 +195,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   </View> 
                   <View style={styles.line} />
                   <Todo data={smallListUnCompleteTodo} />
-                </View>*/}
+                </View>
                 <Text numberOfLines={1} style={styles.timeOffText}>
                   Time Off
                 </Text>
@@ -239,14 +246,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     }}
                   />
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={()=>navigate("Time off")}
                 >
                   <View style={[styles.row, styles.center]}>
                     <Text style={styles.text4}>See all time off</Text>
                     <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {
                   assets && Array.isArray(assets) && assets.length > 0 ? (
                       <React.Fragment>
@@ -265,12 +272,15 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   benefits && Array.isArray(benefits) && benefits.length > 0 ? (
                     <React.Fragment>
                       <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
-                      <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
+                      <BenifitList 
+                        data={['#C2D4FF', '#99E6FF']} 
+                        horizontal={benefits.length === 1 ? false : true}
                         benefits={benefits}
                       />
                     </React.Fragment>
                   ) : null
                 }
+                <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text>
                 <TasksList data={tasksData} 
                   whos_out={whos_out}
                   birthdays={active_birthdays}
@@ -279,6 +289,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   navigate={navigate}
                 />
               </React.Fragment>
+                 </ScrollView>
             )
           }
               <TimeoffModal 

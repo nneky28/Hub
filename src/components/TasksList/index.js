@@ -19,7 +19,7 @@ import {height} from 'react-native-dimension';
 import { Capitalize, getData } from '../../utills/Methods';
 import { getAPIs } from '../../utills/api';
 import moment from 'moment';
-import { Container, H1, LottieIcon, Rounded } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, P, Rounded, SizedBox } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
 import Emptyjson from '../../assets/lottie/birthday-icon.json'
 import Outjson from '../../assets/lottie/out.json'
@@ -113,7 +113,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{title}</Text>
+      {/* <Text style={styles.text}>{title}</Text> */}
       <ScrollView
         nestedScrollEnabled={true}
         contentContainerStyle={{paddingTop: height(2)}}
@@ -169,46 +169,74 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       </View>
                     </View>
                   )) : (
-                    <Container
-                      style={{
-                        alignItems : "center"
-                      }}
+                    <Container 
+                      style={{justifyContent : "center", alignItems : "center"}}
+                      marginTop={3}
                     >
-                      <LottieIcon icon={Emptyjson} />
+                        <Container width={50}>
+                          <ImageWrap 
+                            url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638365299/myedge%20mobile/Vector_3_bt64pb.png'}
+                            height={3}
+                            fit={"contain"}
+                          />
+                          <SizedBox height={1}/>
+                          <P textAlign="center">{`No upcoming birthdays`}</P>
+                        </Container>
                     </Container>
                   )
                 }
-          <TouchableOpacity onPress={hide} style={styles.row}>
-            <Text style={styles.upcomming}>Upcoming Birthdays</Text>
-            <Animated.Image
-              resizeMode="contain"
-              source={upIcon}
-              style={[styles.icon1, {transform: [{rotate: spin}]}]}
-            />
-          </TouchableOpacity>
-          <View style={[styles.line, {marginTop: height(0.5)}]} />
+            {
+               false ? (
+                <React.Fragment>
+                  <TouchableOpacity onPress={hide} style={styles.row}>
+                    <Text style={styles.upcomming}>Upcoming Birthdays</Text>
+                    <Animated.Image
+                      resizeMode="contain"
+                      source={upIcon}
+                      style={[styles.icon1, {transform: [{rotate: spin}]}]}
+                    />
+                  </TouchableOpacity>
+                  <View style={[styles.line, {marginTop: height(0.5)}]} />
+                </React.Fragment>
+               ) : null
+            }
         </React.Fragment>
       ) : null}
       {
-        selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) && anniversary.length === 0 ? (
-          <Container
-            style={{
-              alignItems : "center"
-            }}
+        selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) 
+        && anniversary.length === 0 ? (
+          <Container 
+            style={{justifyContent : "center", alignItems : "center"}}
+            marginTop={3}
           >
-            <LottieIcon icon={Emptyjson} />
+            <Container width={50}>
+              <ImageWrap 
+                url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638365299/myedge%20mobile/Vector_3_bt64pb.png'}
+                height={3}
+                fit={"contain"}
+              />
+              <SizedBox height={1}/>
+              <P textAlign="center">{`No upcoming anniversaries`}</P>
+            </Container>
           </Container>
         ) : null
       }
 
       {
         item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 0 ? (
-          <Container
-            style={{
-              alignItems : "center"
-            }}
+          <Container 
+            style={{justifyContent : "center", alignItems : "center"}}
+            marginTop={3}
           >
-            <LottieIcon icon={Outjson} />
+              <Container width={50}>
+                <ImageWrap 
+                  url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638362875/myedge%20mobile/Vector_iz1psh.png'}
+                  height={3}
+                  fit={"contain"}
+                />
+                <SizedBox height={1}/>
+                <P textAlign="center">{`No one is currently on leave`}</P>
+              </Container>
           </Container>
         ) : null
       }
@@ -235,7 +263,6 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
                         size={10}
                       >
-                          {console.log("---}}}}",item)}
                            <H1>
                           {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
                             Capitalize([...item.employee.first_name][0]) : ""}
@@ -267,7 +294,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                               {item && item.first_name ? Capitalize(item.first_name) : ""}
                             </Text>
                             <Text numberOfLines={1} style={styles.text1}>
-                            {item && item.job && item.job.title ? Capitalize(item.job.title) : "Lead Designer"}
+                            {item && item.job && item.job.title ? Capitalize(item.job.title) : ""}
                           </Text>
                         </React.Fragment>
                       )
@@ -294,17 +321,25 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
               );
             }}
           />
-          {hasMore? (
+          {
+            (item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length > 0) 
+          || (selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) 
+          && anniversary.length > 0) || 
+          (
+            selected == 'Birthdays' && birthdays && Array.isArray(birthdays) && birthdays.length > 0
+          )
+          ? (
             <TouchableOpacity activeOpacity={0.8} onPress={()=>showMore(item.title,selected)}>
               <Text style={styles.viewAll}>View all </Text>
             </TouchableOpacity>
           ) : 
-          (
+            null
+          }
+          {/* (
             <TouchableOpacity activeOpacity={0.8} onPress={showLess}>
               <Text style={styles.viewAll}>View less </Text>
             </TouchableOpacity>
-          )
-          }
+          ) */}
         </>
       ) : null}
     </View>

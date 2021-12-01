@@ -11,11 +11,12 @@ import { Circle } from 'react-native-progress';
 import { rightIcon, upIcon } from '../../assets/images';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, LottieIcon } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, P } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
 import Timeoffjson from '../../assets/lottie/timeoff.json'
+import { Images } from '../../component2/image/Image';
 
 if (
   Platform.OS === 'android' &&
@@ -23,7 +24,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TimeoffVertical = ({data,load,setModal}) => {
+const TimeoffVertical = ({data,load,setModal,tab}) => {
   return (
     <React.Fragment>
       {
@@ -43,20 +44,20 @@ const TimeoffVertical = ({data,load,setModal}) => {
             />}
           />
         ) : (
-          <View style={{justifyContent : "center", alignItems : "center",flex : 1}}>
-            <LottieIcon icon={Timeoffjson} />
-              <Container
-                flex={1}
-                style={{
-                    justifyContent : "center",
-                    alignItems : "center"
-                }}
-              >
-                  <H1
-                      color={AppColors.black3}
-                  >You have no timeoff yet.</H1>
-              </Container>
-          </View>
+          <Container 
+            style={{justifyContent : "center", alignItems : "center"}}
+            flex={1}
+          >
+                <ImageWrap 
+                  url={Images.TimeoffIcon}
+                  height={20}
+                  fit={"contain"}
+                />
+                <Container width={50}>
+                  <H1 textAlign="center">Oops!</H1>
+                  <P textAlign="center">{`You do not have any ${tab === "request" ? "request" : tab+" timeoff"}`}</P>
+                </Container>
+            </Container>
         )
       }
     </React.Fragment>
@@ -82,10 +83,17 @@ const Timeoff = ({data,tab,showModal}) => {
               />}
             />
           ) : (
-            <View style={{justifyContent : "center", alignItems : "center"}}>
-                <LottieIcon icon={Timeoffjson} />
-                
-            </View>
+            <Container style={{justifyContent : "center", alignItems : "center"}}>
+                <ImageWrap 
+                  url={Images.TimeoffIcon}
+                  height={20}
+                  fit={"contain"}
+                />
+                <Container width={50}>
+                  <H1 textAlign="center">Oops!</H1>
+                  <P textAlign="center">{`You do not have any ${tab === "request" ? "request" : tab+" timeoff"}`}</P>
+                </Container>
+            </Container>
           )
         }
     </React.Fragment>

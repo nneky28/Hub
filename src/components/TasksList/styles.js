@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   animated: {
     width: '80%',
     backgroundColor: AppColors.green,
-    height: height(0.8),
+    height: height(0.2),
     marginTop: height(1),
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,

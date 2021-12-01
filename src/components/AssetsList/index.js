@@ -6,6 +6,7 @@ import {checkIcon, unCheckIcon, placeholderIcon4} from '../../assets/images';
 import styles from './styles';
 import { H1, Rounded } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
+import { width } from 'react-native-dimension';
 
 const AssetsList = ({data}) => {
   return (
@@ -19,7 +20,7 @@ const AssetsList = ({data}) => {
       horizontal={true}
       renderItem={({item}) => {
         return (
-          <View style={styles.container}>
+          <View style={{...styles.container,width : data.length === 1 ? width(90) : width(80)}}>
             {
               item && item.image ? (
                 <Image source={{uri : item.image}} style={styles.image} />

@@ -23,6 +23,7 @@ import Warningjson from '../../assets/lottie/warning.json'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
+import { showFlashMessage } from '../SuccessFlash';
 
 const ContactModal = ({isVisible, onHide,data}) => {
 //   email: ""
@@ -111,7 +112,7 @@ const DocumentModal = ({isVisible, onHide}) => {
   );
 };
 
-const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
+const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
   const dispatch = useDispatch();
   const defaultColor = "";
   const blackColor = "";
@@ -130,21 +131,22 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
           if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
       }
       if(failed) {
-        return hideAndOpen("All fields are required")
+        return showFlashMessage({type : "error",title : "All fields are required"})
       };
       if(!moment(data.start_date).isBefore(moment(data.end_date))){
-        return hideAndOpen("Start date must be before end date")
+        return showFlashMessage({type : "error",title : "Start date must be before end date"})
       }
       if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
-        return hideAndOpen("Date must be in the future")
+        return showFlashMessage({type : "error",title : "Date must be in the future"})
       }
-      let check = active && Array.isArray(active) && active.length > 0 ?  active.some(item=>{
-        return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
-        item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
-      }) : true;
-      if(!check){
-        return hideAndOpen("Please select dates that do not fall within active timeoffs")
-      }
+      // console.log("err--",active,data)
+      // let check = active && Array.isArray(active) && active.length > 0 ?  active.some(item=>{
+      //   return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
+      //   item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
+      // }) : true;
+      // if(!check){
+      //   return showFlashMessage({type : "error",title : "Please select dates that do not fall within active timeoffs"})
+      // }
       let about_me = await getData("about_me")
       let biz = await getStoredBusiness();
       dispatch(setLoaderVisible(true));
@@ -157,10 +159,10 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       dispatch(setLoaderVisible(false));
       closeAndRefresh()
     }catch(err){
-      console.log("ERR---",err)
+      console.log("err00",err)
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg
       dispatch(setLoaderVisible(false));
-      return hideAndOpen(msg)
+      return showFlashMessage({type : "error",title : msg})
     }
   }
   return (
@@ -179,7 +181,6 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       style={{justifyContent: 'flex-end', margin: 0}}
       isVisible={isVisible}>
       <View style={styles.container}>
-                    
         <ScrollView contentContainerStyle={styles.inner}>
           <View style={styles.bodyWrap}>
             <Formik>
@@ -264,7 +265,7 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
 
 
 
-export const WarningModal = ({isVisible, onHide, onPressHandle,question,performAction,loading}) => {
+const __WarningModal = ({isVisible, onHide, onPressHandle,question,performAction,loading}) => {
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -352,6 +353,10 @@ const FilterModal = ({isVisible, onHide, onPressHandle}) => {
     </Modal>
   );
 };
-
-export { DocumentModal, FilterModal,TimeoffModal };
+const areEqual = (prevProps,nextProps)=>{
+  return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
+}
+export const WarningModal = React.memo(__WarningModal,areEqual)
+export const TimeoffModal = React.memo(__TimeoffModal,areEqual)
+export { DocumentModal, FilterModal};
 export default ContactModal;
