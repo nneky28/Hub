@@ -258,9 +258,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   assets && Array.isArray(assets) && assets.length > 0 ? (
                       <React.Fragment>
                         <Text style={styles.heading}>
-                          Asset (
-                            {assets && Array.isArray(assets) ? assets.length : 0 }
-                          )
+                          Asset
+                            {assets && Array.isArray(assets) && assets.length > 1 ? `(${assets.length})` : "" }
                         </Text>
                         <View>
                           <AssetsList data={assets} />
@@ -280,7 +279,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     </React.Fragment>
                   ) : null
                 }
-                <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text>
+                {/* <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text> */}
                 <TasksList data={tasksData} 
                   whos_out={whos_out}
                   birthdays={active_birthdays}

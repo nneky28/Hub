@@ -112,8 +112,10 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
   };
 
   return (
+    <React.Fragment>
+                  <Text style={styles.custom_heading}>{title}</Text>
+                  <SizedBox height={2}/>
     <View style={styles.container}>
-      {/* <Text style={styles.text}>{title}</Text> */}
       <ScrollView
         nestedScrollEnabled={true}
         contentContainerStyle={{paddingTop: height(2)}}
@@ -265,9 +267,11 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       >
                            <H1>
                           {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
-                            Capitalize([...item.employee.first_name][0]) : ""}
+                            Capitalize([...item.employee.first_name][0]) : 
+                            item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""
+                            }
                           {item && item.employee && item.employee.last_name && item.employee.last_name.length > 1 ? 
-                          `${Capitalize([...item.employee.last_name][0])}` : ""}
+                          `${Capitalize([...item.employee.last_name][0])}` : item && item.last_name && item.last_name.length > 0 ? Capitalize([...item.last_name][0]) : ""}
                         </H1>
                       </Rounded>
                     )
@@ -321,13 +325,14 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
               );
             }}
           />
+
+{/* || (selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) 
+          && anniversary.length > 0) ||  */}
+          {/* (
+            selected == 'Birthdays' && birthdays && Array.isArray(birthdays) && birthdays.length > 4
+          ) */}
           {
-            (item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length > 0) 
-          || (selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) 
-          && anniversary.length > 0) || 
-          (
-            selected == 'Birthdays' && birthdays && Array.isArray(birthdays) && birthdays.length > 0
-          )
+            (item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length > 4) 
           ? (
             <TouchableOpacity activeOpacity={0.8} onPress={()=>showMore(item.title,selected)}>
               <Text style={styles.viewAll}>View all </Text>
@@ -343,6 +348,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
         </>
       ) : null}
     </View>
+    </React.Fragment>
   );
 };
 export default TasksList;

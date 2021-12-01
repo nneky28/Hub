@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     borderWidth: 0.5,
     borderColor: AppColors.grayBorder,
-    ...AppColors.shadowStyles,
+    ...AppColors.smallShadow,
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderRadius: 20,

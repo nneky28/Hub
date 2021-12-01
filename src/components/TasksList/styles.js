@@ -3,13 +3,29 @@ import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
 
-
+// BlackSansBold: 'black-sans-bold',
+//   BlackSansCondensedBold: 'black-sans-condensed-bold',
+//   BlackSansCondensedBook: 'black-sans-condensed-book',
+//   BlackSansCondensedLight: 'black-sans-condensed-light',
+//   BlackSansCondensedMedium: 'black-sans-condensed-medium',
+//   BlackSansLight: 'black-sans-light',
+//   BlackSansRegular: 'black-sans-regular',
+//   BlackSansSemiBold: 'black-sans-semi-bold',
+//   BlackSansThin: 'black-sans-thin',
+//   BlackSansUltraLight: 'black-sans-ultralight',
 const styles = StyleSheet.create({
   text: {
     fontSize: width(3.5),
     color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold
+    fontFamily: FontFamily.BlackSansSemiBold
   },
+  custom_heading: {
+    fontSize: width(4),
+    color: AppColors.black1,
+    fontFamily: FontFamily.BlackSansBold,
+    marginTop: height(2)
+  },
+
   heading: {
     fontSize: width(3.4),
     color: AppColors.black1,
@@ -50,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     borderWidth: 0.5,
     borderColor: AppColors.grayBorder,
-    ...AppColors.shadowStyles,
+    ...AppColors.smallShadow,
 
     borderRadius: 20,
     paddingVertical: height(2),

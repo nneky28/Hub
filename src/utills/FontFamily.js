@@ -2,7 +2,8 @@ import { Platform } from "react-native";
 
 const FontFamily = Platform.OS === "ios" ? {
   BlackSansBlack: 'BlackSans-Black',
-  BlackSansBold: 'BlackSans-Bold',
+  BlackSansBold: 'BlackSans-SemiBold',//Note: The value is actually not BlackSansBold, we had to improvise
+  //'BlackSans-Bold',
   BlackSansCondensedBold: 'BlackSans-CondensedBold',
   BlackSansCondensedBook: 'BlackSans-CondensedBook',
   BlackSansCondensedLight: 'BlackSans-CondensedLight',
@@ -14,7 +15,9 @@ const FontFamily = Platform.OS === "ios" ? {
   BlackSansUltraLight: 'BlackSans-UltraLight',
 } : {
   BlackSansBlack: 'black-sans-black',
-  BlackSansBold: 'black-sans-bold',
+  BlackSansBold: 'black-sans-semi-bold', //Note: The value is actually not BlackSansBold, we had to improvise
+  
+  //'black-sans-bold',
   BlackSansCondensedBold: 'black-sans-condensed-bold',
   BlackSansCondensedBook: 'black-sans-condensed-book',
   BlackSansCondensedLight: 'black-sans-condensed-light',

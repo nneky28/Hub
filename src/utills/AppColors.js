@@ -19,10 +19,10 @@ const AppColors = {
   lightOrange: '#FCE2AF',
   smallShadow: {
     shadowColor: this.gray,
-    shadowOffset: {width: 2, height: 2},
+    shadowOffset: {width: 1, height: 2},
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 1.1,
   },
   shadowStyles: {
     shadowColor: '#F2F2F2',
