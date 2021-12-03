@@ -9,7 +9,7 @@ export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
   my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/asset_vehicles/`,
   benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
-  whos_out : (business_id,status) => `/c/${business_id}/timeoff_taken/widgets/whos_out/?status=${status}`,
+  whos_out : (business_id,category="timeoff") => `/c/${business_id}/timeoff_taken/widgets/whos_out/?category=${category}`,
   birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,
   employees : (business_id,page=1) => `/c/${business_id}/employees/?page=${page}`,
   team_members : (business_id,id,page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
@@ -104,6 +104,7 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("Err-",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"

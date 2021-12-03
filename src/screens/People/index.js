@@ -157,7 +157,7 @@ export default function People({route,navigation}) {
             }
 
             if(selected === "Who's out"){
-                let whos_out_url = APIFunction.whos_out(biz.business_id,"active");
+                let whos_out_url = APIFunction.whos_out(biz.business_id);
                 let whos_out_res = await getAPIs(whos_out_url,token);
                 let data = whos_out_res && whos_out_res.results && Array.isArray(whos_out_res.results) ?
                  whos_out_res.results.map((item,index)=>(

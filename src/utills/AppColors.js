@@ -17,6 +17,7 @@ const AppColors = {
   blue1: '#C2D4FF',
   blue2: '#99E6FF',
   lightOrange: '#FCE2AF',
+  lightMediumGreen : "#55C0CC",
   smallShadow: {
     shadowColor: this.gray,
     shadowOffset: {width: 1, height: 2},

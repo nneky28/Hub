@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansBold
   },
   text1: {
-    fontSize: width(2.8),
+    fontSize: width(3.1),
     color: AppColors.black1,
     marginVertical: height(0.5),
     fontFamily: FontFamily.BlackSansRegular
   },
   ttext: {
-    fontSize: width(3.7),
+    fontSize: width(3.1),
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold
   },

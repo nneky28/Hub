@@ -44,6 +44,33 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [cancel,setCancel] =  useState(false);
   const [text,setText] = useState("");
   const [anniversary,setAnniversary] = React.useState(null);
+  const [remote,setRemote] = React.useState(null)
+  const [training,setTraining] = React.useState(null)
+  const [tab,setTab] = React.useState("Leave")
+  const [fetching,setFetching] = React.useState(false)
+
+  const getWhosOut = async (category) => {
+    try{
+      let about = await getStoredBusiness();
+      setTab(category)
+      console.log("CATEGORY",category,about)
+      let whos_url = APIFunction.whos_out(about.business_id,category)
+      let res = getAPIs(whos_url)
+      if(category === "Remote Work"){
+        res && res.results && Array.isArray(res.results) ? setRemote(res.results) : setRemote([])
+      }
+      if(category === "Leave"){
+        res && res.results && Array.isArray(res.results) ? setWhosOut(res.results) : setWhosOut([])
+      }
+      if(category === "Training"){
+        res && res.results && Array.isArray(res.results) ? setTraining(res.results) : setTraining([])
+      }
+      
+    }catch(err){
+      ToastError(err.msg)
+    }
+  }
+
   const cancelRequest = async () => {
     try{
       setCancel(true)
@@ -72,14 +99,13 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const getInfo = async () => {
     try{
       setProcess(true);
-      console.log("setProcess---")
       let token = await getData("token");
       let user =  await getData("user");
       let about_me = await getData("about_me");
       let biz = await getStoredBusiness();
       let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
       let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
-      let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
+      let whos_out_url = APIFunction.whos_out(biz.business_id)
       let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
       let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
       let ann_url = APIFunction.job_anniversary("active",biz.business_id);
@@ -102,17 +128,21 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setActiveBirthDay(active_res.results);
       setWhosOut(whos_out_res.results)
       setAnniversary(active_ann.results);
-      if(res.active.length === 0){
-        var margin = 30;
-        setMargin(width(margin));
-        setIndex(1)
-      }else{
-        setIndex(0)
-        setMargin(width(0.1))
-      }
+      var margin = 30;
+      setMargin(width(margin));
+      setIndex(1)
+      // if(res.active.length === 0){
+      //   var margin = 30;
+      //   setMargin(width(margin));
+      //   setIndex(1)
+      // }else{
+      //   setIndex(0)
+      //   setMargin(width(0.1))
+      // }
       setLoading(false);
       setProcess(false);
     }catch(err){
+      console.log("err---",err)
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       ToastError(msg)
     }
@@ -123,7 +153,12 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     },[])
   )
   return (
-    <ScreenWrapper scrollEnabled={false}>
+    <ScreenWrapper scrollEnabled={false}
+      statusBarColor={AppColors.lightGreen}
+    >
+      <Container
+        backgroundColor={AppColors.lightGreen}
+      >
       <View style={styles.header}>
         <View style={styles.row}>
           <TouchableOpacity onPress={() => toggleDrawer()}>
@@ -131,7 +166,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               business && business.logo ? (
                 <Image resizeMode="contain" source={{uri : business.logo}} style={styles.logo} />
               ) : (
-                <Rounded  size={10} backgroundColor={AppColors.gray}>
+                <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
                   <H1>
                       {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
                   </H1>
@@ -152,6 +187,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
         </TouchableOpacity> */}
       </View>
       <View style={styles.line} />
+      </Container>
       {/*<View style={styles.nameContainer}>
          <Text style={styles.text2}>{getGreetingTime()}</Text> 
         <Text numberOfLines={1} style={styles.text3}>
@@ -196,9 +232,11 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   <View style={styles.line} />
                   <Todo data={smallListUnCompleteTodo} />
                 </View>
-                <Text numberOfLines={1} style={styles.timeOffText}>
-                  Time Off
-                </Text>
+                <Container marginTop={2}>
+                  <Text numberOfLines={1} style={styles.timeOffText}>
+                    Time Off
+                  </Text>
+                </Container>
                 <View style={styles.threeButtonCont}>
                   {
                     ['Active', 'Available','Request'].map((item,i)=>(
@@ -270,7 +308,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                 {
                   benefits && Array.isArray(benefits) && benefits.length > 0 ? (
                     <React.Fragment>
-                      <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
+                      <Text style={styles.heading}>Benefit</Text>
                       <BenifitList 
                         data={['#C2D4FF', '#99E6FF']} 
                         horizontal={benefits.length === 1 ? false : true}
@@ -281,11 +319,13 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                 }
                 {/* <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text> */}
                 <TasksList data={tasksData} 
-                  whos_out={whos_out}
+                  whos_out={tab === "Leave" ? whos_out : tab === "Remote Work" ? remote  : tab === training  ? training : []}
                   birthdays={active_birthdays}
                   upcoming_birthdays={upcoming_birthdays}
                   anniversary={anniversary}
                   navigate={navigate}
+                  getWhosOut={getWhosOut}
+                  fetch={fetching}
                 />
               </React.Fragment>
                  </ScrollView>

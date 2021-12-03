@@ -15,16 +15,17 @@ import {
 import Button from '../Button';
 import {giftIcon, placeholderIcon, upIcon} from '../../assets/images';
 import styles from './styles';
-import {height} from 'react-native-dimension';
-import { Capitalize, getData } from '../../utills/Methods';
-import { getAPIs } from '../../utills/api';
+import {height, width} from 'react-native-dimension';
+import { Capitalize, getData, getStoredBusiness, ToastError } from '../../utills/Methods';
+import { APIFunction, getAPIs } from '../../utills/api';
 import moment from 'moment';
-import { Container, H1, ImageWrap, LottieIcon, P, Rounded, SizedBox } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, P, Reload, Rounded, SizedBox } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
 import Emptyjson from '../../assets/lottie/birthday-icon.json'
 import Outjson from '../../assets/lottie/out.json'
 import { useNavigation } from '@react-navigation/core';
-import { ColorList } from '../../utills/AppColors';
+import AppColors, { ColorList } from '../../utills/AppColors';
+import { FontFamily } from '../../utills/FontFamily';
 
 if (
   Platform.OS === 'android' &&
@@ -32,7 +33,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary}) => {
+const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching}) => {
   return (
     <FlatList
       data={data}
@@ -46,17 +47,18 @@ const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,annivers
         upcoming_birthdays={upcoming_birthdays}
         navigate={navigate}
         anniversary={anniversary}
+        getWhosOut={getWhosOut}
+        fetching={fetching}
       />}
     />
   );
 };
-const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary}) => {
+const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching}) => {
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
   var [selected, setSelected] = useState(headings[0]);
   const [hasMore, setHasMore] = useState(true);
   const spinValue = new Animated.Value(0);
-
   const [show, setShow] = useState(true);
   const [spin, setSpin] = useState(
     spinValue.interpolate({
@@ -118,18 +120,29 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
     <View style={styles.container}>
       <ScrollView
         nestedScrollEnabled={true}
-        contentContainerStyle={{paddingTop: height(2)}}
+        contentContainerStyle={{paddingTop: height(0.5),paddingHorizontal : width(1.3)}}
         showsHorizontalScrollIndicator={false}
         horizontal={true}>
         {headings.map((item) => (
-          <TouchableOpacity onPress={(e) => onSelection(item)}>
-            <Text style={styles.heading}>{item}</Text>
+          <TouchableOpacity onPress={(e) => {
+            onSelection(item)
+            if(!['Leave', 'Remote Work', 'Training'].includes(item)) return
+            getWhosOut(item)
+          }}>
+            <Text style={[
+              styles.heading,selected === item ? 
+              {color : AppColors.green,fontFamily : FontFamily.BlackSansSemiBold} : {color: AppColors.black3}
+            ]}>{item}</Text>
             {selected == item && <View style={styles.animated} />}
           </TouchableOpacity>
         ))}
       </ScrollView>
+      {console.log("SELECTED--",selected)}
 
       <View style={styles.line} />
+          {
+            fetching ? <Reload /> : null
+          }
         {selected == 'Birthdays' ? (
               <React.Fragment>
                 {
@@ -182,7 +195,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                             fit={"contain"}
                           />
                           <SizedBox height={1}/>
-                          <P textAlign="center">{`No upcoming birthdays`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`No upcoming`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`birthdays`}</P>
                         </Container>
                     </Container>
                   )
@@ -218,7 +232,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                 fit={"contain"}
               />
               <SizedBox height={1}/>
-              <P textAlign="center">{`No upcoming anniversaries`}</P>
+              <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`No upcoming`}</P>
+              <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`anniversaries`}</P>
             </Container>
           </Container>
         ) : null
@@ -231,13 +246,21 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
             marginTop={3}
           >
               <Container width={50}>
-                <ImageWrap 
-                  url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638362875/myedge%20mobile/Vector_iz1psh.png'}
-                  height={3}
-                  fit={"contain"}
-                />
+                <Container
+                  style={{
+                    alignItems : "center"
+                  }}
+                >
+                  <ImageWrap 
+                      url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638362875/myedge%20mobile/Vector_iz1psh.png'}
+                      height={3}
+                      fit={"contain"}
+                      width={6}
+                    />
+                </Container>
                 <SizedBox height={1}/>
-                <P textAlign="center">{`No one is currently on leave`}</P>
+                <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`No one is currently`}</P>
+                <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>on {selected && selected.toLowerCase()}</P>
               </Container>
           </Container>
         ) : null
@@ -351,4 +374,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
     </React.Fragment>
   );
 };
-export default TasksList;
+const areEqual = (prevProps,nextProps)=>{
+  return prevProps.fetching === nextProps.fetching
+}
+export default React.memo(TasksList,areEqual);

@@ -28,11 +28,11 @@ const BenifitList = ({data, horizontal,benefits}) => {
               <View>
                 <View style={styles.row}>
                   <Text style={styles.text}>{item && item.plan ? Capitalize(item.plan) : ""}</Text>
-                  <Image
+                  {/* <Image
                     resizeMode="contain"
                     source={rightIcon}
                     style={styles.icon}
-                  />
+                  /> */}
                 </View>
                 <Text style={styles.text1}>{item && item.provider ? Capitalize(item.provider) : ""}</Text>
               </View>

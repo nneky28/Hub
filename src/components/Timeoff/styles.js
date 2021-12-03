@@ -49,11 +49,6 @@ const styles = StyleSheet.create({
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold
   },
-  count: {
-    fontSize: width(5),
-    color: AppColors.green,
-    fontFamily: FontFamily.BlackSansBold
-  },
   endText: {
     fontSize: width(3.4),
     color: AppColors.red,
@@ -70,7 +65,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansRegular
   },
   count1: {
-    fontSize: width(5),
+    fontSize: width(4),
+    color: AppColors.grayBorder,
+    fontFamily: FontFamily.BlackSansBold
+  },
+  count: {
+    fontSize: width(4),
     color: AppColors.grayBorder,
     fontFamily: FontFamily.BlackSansBold
   },
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   text1: {
     fontSize: width(3),
-    color: AppColors.black,
+    color: AppColors.black3,
     marginVertical: height(1),
     fontFamily: FontFamily.BlackSansRegular
   },

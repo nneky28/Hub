@@ -17,6 +17,7 @@ import Button from '../Button';
 import styles from './styles';
 import Timeoffjson from '../../assets/lottie/timeoff.json'
 import { Images } from '../../component2/image/Image';
+import { FontFamily } from '../../utills/FontFamily';
 
 if (
   Platform.OS === 'android' &&
@@ -138,25 +139,39 @@ const RenderItem = ({item,tab,showModal}) => {
   var status = item;
   return (
     <Animated.View activeOpacity={0.8} style={styles.container}>
-      <TouchableOpacity onPress={hide} style={styles.row1}>
-        <Text style={styles.text}>{item && item.title ? Capitalize(item.title) : null}</Text>
-        <Animated.Image
+      <TouchableOpacity 
+        //onPress={hide} 
+        style={styles.row1}
+      >
+        {console.log("ITEM---",item)}
+
+        <Text style={styles.text}>{item && item.title ? Capitalize(item.title) : item.timeoff && item.timeoff.title ? Capitalize(item.timeoff.title) : null}</Text>
+        {/* <Animated.Image
           resizeMode="contain"
           source={upIcon}
           style={[styles.icon, {transform: [{rotate: spin}]}]}
-        />
+        /> */}
       </TouchableOpacity>
       {show ? (
         <>
-          <Text style={styles.text1}>{item && item.category ? Capitalize(item.category) : null}</Text>
+          <Text style={styles.text1}>{item && item.is_paid ? "Paid" : "Unpaid"}</Text>
+          {/* {
+                    item && item.is_paid ? (
+                      <Button
+                        title="Paid"
+                        textStyle={styles.buttonText}
+                        containerStyle={styles.button}
+                      />
+                    ) : null
+                  } */}
           <View style={{width: width(35), height: width(35)}}>
             <Circle
               borderWidth={0}
-              thickness={width(3)}
-              color={AppColors.green}
+              thickness={width(4)}
+              color={AppColors.gray1}
               size={width(35)}
               key={Math.random()}
-              unfilledColor={AppColors.gray1}
+              unfilledColor={AppColors.lightMediumGreen}
               progress={
                 tab == 'active' && item && item.days_taken && item.days_requested ? 
                 numeral(item.days_taken/item.days_requested).format("0.00") : tab === "available" && item.total_days_taken ?  
@@ -174,42 +189,44 @@ const RenderItem = ({item,tab,showModal}) => {
               ) : tab == 'available' ? (
                 <>
                 {
-                  item && item.total_days_taken > 0 ? (
+                  item && item.max_days_allowed && item.total_days_taken > 0 ? (
                     <>
-                      <Text style={styles.count}>{item.total_days_taken}</Text>
+                      <Text style={styles.count1}>{item && item.total_days_taken ?  item.total_days_taken : 0} Days</Text>
+                      <P color={AppColors.grayBorder} fontSize={width(3.1)}>Taken</P>
                       <View style={styles.line1} />
-                      <Text style={styles.count1}>{item && item.max_days_allowed ?  item.max_days_allowed : 0}</Text>
-                      <Text style={styles.count2}>Days</Text>
+                      <Text style={[styles.count,{color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{item.max_days_allowed - item.total_days_taken} Days</Text>
+                      <Text style={
+                        [styles.count,
+                          {fontSize : width(3)},
+                          {color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}
+                        ]
+                      }>Available</Text>
                     </>
                   ) : null
                 }
                 {
                   item && item.total_days_taken === 0 ? (
                     <>
-                      <Text style={[styles.count, {color: AppColors.black1}]}>
-                        {item && item.max_days_allowed ? item.max_days_allowed : 0}
+                      <Text style={[styles.count, {color: AppColors.lightMediumGreen}]}>
+                        {item && item.max_days_allowed ? item.max_days_allowed : 0} {item && item.max_days_allowed && item.max_days_allowed > 1 ? `Days` : "Day"}
                       </Text>
-                      <Text style={[styles.count2, {color: AppColors.black1}]}>
+                      <Text style={
+                        [styles.count,
+                          {fontSize : width(3)},
+                          {color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}
+                        ]
+                      }>Available</Text>
+                      {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
                         Days
-                      </Text>
+                      </Text> */}
                     </>
                   ) : null
                 }
-                  {
-                    item && item.is_paid ? (
-                      <Button
-                        title="Paid"
-                        textStyle={styles.buttonText}
-                        containerStyle={styles.button}
-                      />
-                    ) : null
-                  }
                 </>
               ) : (
                 <>
-                  {console.log("item--",item)}
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    {item && item.days_requested ? item.days_requested : 0}
+                    {item && item.days_requested ? item.days_requested : 0} Days
                   </Text>
                   <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
@@ -258,12 +275,13 @@ const RenderItem = ({item,tab,showModal}) => {
               </TouchableOpacity>
             ) : tab == 'available' && item && item.max_days_allowed && 
             item.total_days_taken !== undefined && item.max_days_allowed > item.total_days_taken ? (
-              <Text style={[styles.endText, {color: AppColors.green}]}>
+              <Text style={[styles.endText, {color: AppColors.lightMediumGreen},{fontFamily : FontFamily.BlackSansSemiBold}]}>
                 Request
               </Text>
             ) : tab == 'available' ? <React.Fragment>
                 <Text style={{
-                  color : AppColors.gray1
+                  color : AppColors.gray1,
+                  fontFamily : FontFamily.BlackSansSemiBold
                 }}>Request</Text>
               </React.Fragment> : null
             }

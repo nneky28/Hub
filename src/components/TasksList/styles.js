@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
   },
 
   heading: {
-    fontSize: width(3.4),
-    color: AppColors.black1,
+    fontSize: width(3.1),
+    color: AppColors.black3,
     paddingRight: width(5),
     fontFamily: FontFamily.BlackSansRegular
   },
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     borderColor: AppColors.grayBorder,
     ...AppColors.smallShadow,
 
-    borderRadius: 20,
+    borderRadius: 15,
     paddingVertical: height(2),
     paddingHorizontal: width(3),
   },
