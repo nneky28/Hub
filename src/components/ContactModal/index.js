@@ -18,12 +18,13 @@ import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
 import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
-import { Container, H1, LottieIcon, P, SizedBox } from '../../utills/components';
+import { Container, CustomCalender, H1, LottieIcon, P, SizedBox } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
 import { showFlashMessage } from '../SuccessFlash';
+import { Calendar } from 'react-native-calendars';
 
 const ContactModal = ({isVisible, onHide,data}) => {
 //   email: ""
@@ -116,12 +117,22 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
   const dispatch = useDispatch();
   const defaultColor = "";
   const blackColor = "";
+  const [action,setAction] = React.useState(null)
   const [data,setData] = React.useState({
     "timeoff": timeoff_id,
     "start_date": "",
     "end_date": "",
     "reason": ""
   })
+  const [show,setShow] = React.useState(false)
+  useEffect(()=>{
+    setData({
+      "timeoff": timeoff_id,
+      "start_date": "",
+      "end_date": "",
+      "reason": ""
+    })
+  },[isVisible])
   const handleSubmit = async () => {
     try{
       let failed = false;
@@ -183,7 +194,19 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.inner}>
           <View style={styles.bodyWrap}>
-            <Formik>
+            {
+              show ? <CustomCalender 
+                date={action === "start_date" ? data.start_date : data.end_date}
+                setShow={(date)=>{
+                  if(action === "start_date"){
+                    setData({...data,start_date : date.dateString})
+                  }
+                  if(action === "end_date"){
+                    setData({...data,end_date : date.dateString})
+                  }
+                  setShow(false)
+                }} 
+              /> : <Formik>
               <React.Fragment>
                 <View
                   style={{
@@ -202,14 +225,6 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                       }}
                     />
                 </View>
-                <CustomText
-                  textSize={12}
-                  textWeight={'normal'}
-                  textcolor={blackColor}
-                  textStyle={{
-                    marginTop: 5,
-                  }}
-                />
                 <Field
                     name="start_date"
                     placeholder="Start Date"
@@ -217,6 +232,10 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                     value={data.start_date}
                     onChangeData={(value)=>{
                       setData({...data,start_date : value})
+                    }}
+                    setShow={()=>{
+                      setAction("start_date")
+                      setShow(true)
                     }}
                     maximumDate={null}
                     color={AppColors.black}
@@ -228,6 +247,10 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                     value={data.end_date}
                     onChangeData={(value)=>{
                       setData({...data,end_date : value})
+                    }}
+                    setShow={()=>{
+                      setAction("end_date")
+                      setShow(true)
                     }}
                     maximumDate={null}
                     color={AppColors.black}
@@ -254,6 +277,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                   </View> 
                 </React.Fragment>
             </Formik>
+            }
         </View>
       </ScrollView>
 
@@ -353,6 +377,7 @@ const FilterModal = ({isVisible, onHide, onPressHandle}) => {
     </Modal>
   );
 };
+
 const areEqual = (prevProps,nextProps)=>{
   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
 }

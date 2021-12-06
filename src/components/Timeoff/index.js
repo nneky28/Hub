@@ -79,7 +79,8 @@ const Timeoff = ({data,tab,showModal}) => {
               contentContainerStyle={styles.flatList}
               showsHorizontalScrollIndicator={false}
               renderItem={({item}) => <RenderItem 
-                item={item} tab={tab} 
+                item={item} 
+                tab={tab} 
                 showModal={showModal}
               />}
             />
@@ -143,7 +144,6 @@ const RenderItem = ({item,tab,showModal}) => {
         //onPress={hide} 
         style={styles.row1}
       >
-        {console.log("ITEM---",item)}
 
         <Text style={styles.text}>{item && item.title ? Capitalize(item.title) : item.timeoff && item.timeoff.title ? Capitalize(item.timeoff.title) : null}</Text>
         {/* <Animated.Image
@@ -339,34 +339,38 @@ const RenderItemVertical = ({item,fData,setModal}) => {
   var status = item;
   return (
     <Animated.View activeOpacity={0.8} style={styles.container}>
-      <TouchableOpacity onPress={hide} style={styles.row1}>
+      <TouchableOpacity 
+        //onPress={hide} 
+      
+      style={styles.row1}>
         <Text style={styles.text} numberOfLines={1}>
           {fData && fData.timeoff && fData.timeoff.title ? Capitalize(fData.timeoff.title)
            : fData && fData.title ? Capitalize(fData.title) : ""
           }
         </Text>
-        <Animated.Image
+        {/* <Animated.Image
           resizeMode="contain"
           source={rightIcon}
           style={[styles.icon, {transform: [{rotate: spin}]}]}
-        />
+        /> */}
       </TouchableOpacity>
       {show ? (
         <>
-          <Text style={styles.text1}>
+          {/* <Text style={styles.text1}>
             {
               fData && fData.timeoff && fData.timeoff.category ? Capitalize(fData.timeoff.category) : 
                 fData && fData.category ? Capitalize(fData.category) : "" 
             }
-          </Text>
+          </Text> */}
+           <Text style={styles.text1}>{fData && fData.is_paid ? "Paid" : "Unpaid"}</Text>
           <View style={{width: width(35), height: width(35)}}>
             <Circle
               borderWidth={0}
-              thickness={width(3)}
-              color={AppColors.green}
+              thickness={width(4)}
+              color={AppColors.gray1}
               size={width(35)}
               key={Math.random()}
-              unfilledColor={AppColors.gray1}
+              unfilledColor={AppColors.lightMediumGreen}
               progress={
                 fData && fData.days_taken &&
                 fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : fData.total_days_taken > 0 ?
@@ -377,43 +381,53 @@ const RenderItemVertical = ({item,fData,setModal}) => {
             <View style={styles.absolute}>
               {status == 'active' ? (
                 <>
-                  <Text style={styles.count}>{fData && fData.days_taken ? fData.days_taken : ""}</Text>
+                  <Text style={styles.count}>{fData && fData.days_taken ? fData.days_taken : "0"}</Text>
                   <View style={styles.line1} />
-                  <Text style={styles.count1}>{fData && fData.days_requested ? fData.days_requested : ""}</Text>
+                  <Text style={styles.count1}>{fData && fData.days_requested ? fData.days_requested : "0"}</Text>
                   <Text style={styles.count2}>Days</Text>
                 </>
               ) : status == 'balance' ? (
                 <>
-                  {console.log("Balance",fData)}
                   {
                   fData && fData.total_days_taken > 0 ? (
+                    // <>
+                    //   <Text style={styles.count}>{fData.total_days_taken}</Text>
+                    //   <View style={styles.line1} />
+                    //   <Text style={styles.count1}>{fData && fData.max_days_allowed ?  fData.max_days_allowed : 0}</Text>
+                    //   <Text style={styles.count2}>Days</Text>
+                    // </>
+                    <React.Fragment>
                     <>
-                      <Text style={styles.count}>{fData.total_days_taken}</Text>
+                      <Text style={styles.count1}>{fData && fData.total_days_taken ?  fData.total_days_taken : 0} Days</Text>
+                      <P color={AppColors.grayBorder} fontSize={width(3.1)}>Taken</P>
                       <View style={styles.line1} />
-                      <Text style={styles.count1}>{fData && fData.max_days_allowed ?  fData.max_days_allowed : 0}</Text>
-                      <Text style={styles.count2}>Days</Text>
+                      <Text style={[styles.count,{color :  (Number(fData.max_days_allowed) - Number(fData.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{fData.max_days_allowed - fData.total_days_taken} Days</Text>
+                      <Text style={
+                        [styles.count,
+                          {fontSize : width(3)},
+                          {color :  (Number(fData.max_days_allowed) - Number(fData.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}
+                        ]
+                      }>Available</Text>
                     </>
+                  </React.Fragment>
                   ) : null
                 }
                   {
                     fData && fData.total_days_taken === 0 ? (
-                      <React.Fragment>
-                        <Text style={[styles.count, {color: AppColors.black1}]}>
-                          {fData && fData.max_days_allowed ? fData.max_days_allowed : 0}
-                        </Text>
-                        <Text style={[styles.count2, {color: AppColors.black1}]}>
-                          Days
-                        </Text>
-                      </React.Fragment>
-                    ) : null
-                  }
-                  {
-                    fData && fData.is_paid ? (
-                      <Button
-                        title="Paid"
-                        textStyle={styles.buttonText}
-                        containerStyle={styles.button}
-                      />
+                      <>
+                      <Text style={[styles.count, {color: AppColors.lightMediumGreen}]}>
+                        {item && item.max_days_allowed ? item.max_days_allowed : 0} {item && item.max_days_allowed && item.max_days_allowed > 1 ? `Days` : "Day"}
+                      </Text>
+                      <Text style={
+                        [styles.count,
+                          {fontSize : width(3)},
+                          {color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}
+                        ]
+                      }>Available</Text>
+                      {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
+                        Days
+                      </Text> */}
+                    </>
                     ) : null
                   }
                 </>
@@ -441,7 +455,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                   <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
                   </Text>
-                  {
+                  {/* {
                     fData && fData.timeoff && fData.timeoff.is_paid ? (
                       <Button
                         title="Paid"
@@ -449,7 +463,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                         containerStyle={styles.button}
                       />
                     ) : null
-                  }
+                  } */}
                 </>
               )}
             </View>
@@ -461,14 +475,14 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 <View>
                   <Text style={styles.date1}>Start date</Text>
                   <Text style={styles.date}>
-                    {fData && fData.start_date ? moment(fData.start_date).format("DD/MMM/YY") : ""}
+                    {fData && fData.start_date ? moment(fData.start_date).format("DD/MMM/YY")  : null}
                   </Text>
                 </View>
                 <View style={styles.line2} />
                 <View>
                   <Text style={styles.date1}>End date</Text>
                   <Text style={styles.date}>
-                    {fData && fData.start_date ? moment(fData.end_date).format("DD/MMM/YY") : ""}
+                    {fData && fData.end_date ? moment(fData.end_date).format("DD/MMM/YY")  : null}
                   </Text>
                 </View>
               </View>
@@ -491,11 +505,14 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 {/* End Leave */}
               </Text>
             ) : status == 'balance' && fData && fData.max_days_allowed && fData.total_days_taken !== undefined && fData.max_days_allowed > fData.total_days_taken  ? (
-              <Text style={[styles.endText, {color: AppColors.green}]}>
+              <Text style={[styles.endText, {color: AppColors.lightMediumGreen},{fontFamily : FontFamily.BlackSansSemiBold}]}>
                 Request
               </Text>
             ) : status == 'balance' ? <React.Fragment>
-                <Text style={[styles.endText, {color: AppColors.gray1}]}>Request</Text>
+                <Text style={{
+                  color : AppColors.gray1,
+                  fontFamily : FontFamily.BlackSansSemiBold
+                }}>Request</Text>
               </React.Fragment> : null
             }
             {

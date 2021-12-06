@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: width(5),
-    paddingVertical: height(2.5),
+    paddingBottom: height(2.5),
   },
   image: {
     width: width(10),

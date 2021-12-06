@@ -28,8 +28,11 @@ import AppColors from './AppColors';
 import { View ,Dimensions} from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
-import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, Modal, TouchableRipple } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Calendar } from 'react-native-calendars';
+import moment from 'moment';
+import DatePicker from 'react-native-date-picker';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -143,7 +146,7 @@ export const SizedBox = (props) => (
         flex : props.flex || 0,
         flexDirection : props.direction,
         width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
-        padding : props.padding ? width(props.padding) : height(2),
+        padding : props.padding ? width(props.padding) : width(0),
         paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop : props.marginTop ? height(props.marginTop) : 0,
@@ -151,6 +154,7 @@ export const SizedBox = (props) => (
         marginLeft : props.marginLeft ? width(props.marginLeft) : 0,
         paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
         paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
+        paddingLeft : props.paddingLeft ? width(props.paddingLeft) : 0,
         marginRight : props.marginRight ? width(props.marginRight) : 0,
         backgroundColor : props.backgroundColor || AppColors.white,
         borderWidth : props.borderWidth,
@@ -238,3 +242,111 @@ export const SizedBox = (props) => (
       {props.children}
   </Container>
   )
+
+  export const CustomCalender = (props) => {
+    return(
+      <Container
+        paddingVertical={5}
+      >
+          <Container
+            direction="row"
+            marginTop={1}
+            marginBottom={1}
+            style={{
+              justifyContent : "space-between",
+              alignItems : "center"
+            }}
+            paddingRight={5}
+            paddingLeft={5}
+          >
+            <TouchWrap
+              onPress={()=>props.setShow(false)}
+            >
+                <P>Cancel</P>
+            </TouchWrap>
+            {/* <TouchWrap
+              onPress={()=>props.setShow(false)}
+            >
+                <H1>Done</H1>
+            </TouchWrap> */}
+          </Container>
+          <Calendar
+            // Collection of dates that have to be marked. Default = {}
+            markedDates={{
+              [props.date] : {selected: true, selectedColor: AppColors.green}
+            }}
+            current={moment().format("YYYY-MM-DD")}
+            minDate={moment().format("YYYY-MM-DD")}
+            onDayPress={(day) => {
+              props.setShow(day)
+            }}
+          />
+        </Container>
+    
+    )
+}
+
+export const DatePickerModal = (props) => {
+  return(
+      <Modal visible={props.show}>
+        <DatePicker 
+              date={date || new Date()} 
+            // onDateChange={(newDate) => {
+            //   setDate(newDate);
+            //   props.onChangeData ? props.onChangeData(moment(newDate).format("YYYY-MM-DD")) : null
+            //   //onChange(newDate.toDateString())
+            // }} 
+            mode="date" 
+            maximumDate={props.maximumDate === null ? props.maximumDate : new Date()}
+          /> 
+      </Modal>
+  )
+}
+
+
+
+// <Calendar
+//             // Initially visible month. Default = Date()
+//             current={'2012-03-01'}
+//             // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
+//             minDate={'2012-05-10'}
+//             // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
+//             maxDate={'2012-05-30'}
+//             // Handler which gets executed on day press. Default = undefined
+//             onDayPress={(day) => {console.log('selected day', day)}}
+//             // Handler which gets executed on day long press. Default = undefined
+//             onDayLongPress={(day) => {console.log('selected day', day)}}
+//             // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
+//             monthFormat={'yyyy MM'}
+//             // Handler which gets executed when visible month changes in calendar. Default = undefined
+//             onMonthChange={(month) => {console.log('month changed', month)}}
+//             // Hide month navigation arrows. Default = false
+//             hideArrows={true}
+//             // Replace default arrows with custom ones (direction can be 'left' or 'right')
+//             renderArrow={(direction) => (<Arrow/>)}
+//             // Do not show days of other months in month page. Default = false
+//             hideExtraDays={true}
+//             // If hideArrows = false and hideExtraDays = false do not switch month when tapping on greyed out
+//             // day from another month that is visible in calendar page. Default = false
+//             disableMonthChange={false}
+//             // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
+//             firstDay={1}
+//             // Hide day names. Default = false
+//             hideDayNames={true}
+//             // Show week numbers to the left. Default = false
+//             showWeekNumbers={true}
+//             // Handler which gets executed when press arrow icon left. It receive a callback can go back month
+//             onPressArrowLeft={subtractMonth => subtractMonth()}
+//             // Handler which gets executed when press arrow icon right. It receive a callback can go next month
+//             onPressArrowRight={addMonth => addMonth()}
+//             // Disable left arrow. Default = false
+//             disableArrowLeft={false}
+//             // Disable right arrow. Default = false
+//             disableArrowRight={false}
+//             // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
+//             disableAllTouchEventsForDisabledDays={true}
+//             // Replace default month and year title with custom one. the function receive a date as parameter
+//             //renderHeader={(date) => {/*Return JSX}}
+//             // Enable the option to swipe between months. Default = false
+//             enableSwipeMonths={true}
+//           />

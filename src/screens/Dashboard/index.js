@@ -49,23 +49,24 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [tab,setTab] = React.useState("Leave")
   const [fetching,setFetching] = React.useState(false)
 
-  const getWhosOut = async (category) => {
+  const getWhosOut = async (param) => {
     try{
       let about = await getStoredBusiness();
-      setTab(category)
-      console.log("CATEGORY",category,about)
+      let category = param == "Remote Work" ? "work_from_home" : "timeoff";
+      setTab(param)
+      setFetching(true)
       let whos_url = APIFunction.whos_out(about.business_id,category)
-      let res = getAPIs(whos_url)
-      if(category === "Remote Work"){
+      let res = await getAPIs(whos_url)
+      if(param === "Remote Work"){
         res && res.results && Array.isArray(res.results) ? setRemote(res.results) : setRemote([])
       }
-      if(category === "Leave"){
+      if(param === "Leave"){
         res && res.results && Array.isArray(res.results) ? setWhosOut(res.results) : setWhosOut([])
       }
-      if(category === "Training"){
+      if(param === "Training"){
         res && res.results && Array.isArray(res.results) ? setTraining(res.results) : setTraining([])
       }
-      
+      setFetching(false)
     }catch(err){
       ToastError(err.msg)
     }
@@ -142,7 +143,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setLoading(false);
       setProcess(false);
     }catch(err){
-      console.log("err---",err)
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       ToastError(msg)
     }
@@ -319,10 +319,11 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                 }
                 {/* <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text> */}
                 <TasksList data={tasksData} 
-                  whos_out={tab === "Leave" ? whos_out : tab === "Remote Work" ? remote  : tab === training  ? training : []}
+                  whos_out={tab === "Leave" ? whos_out : tab === "Remote Work" ? remote  : tab === "Training"  ? training : []}
                   birthdays={active_birthdays}
                   upcoming_birthdays={upcoming_birthdays}
                   anniversary={anniversary}
+                  tab={tab}
                   navigate={navigate}
                   getWhosOut={getWhosOut}
                   fetch={fetching}
@@ -340,13 +341,13 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                    getInfo();
                 }} 
                 timeoff_id={current} active={active}
-                hideAndOpen={(msg)=>{
-                    setModal(false);
-                    ToastError(msg)
-                    setTimeout(()=>{
-                        setModal(true);
-                    },2500)
-                }}
+                // hideAndOpen={(msg)=>{
+                //     setModal(false);
+                //     ToastError(msg)
+                //     setTimeout(()=>{
+                //         setModal(true);
+                //     },2500)
+                // }}
             />  
             <WarningModal 
               isVisible={show}

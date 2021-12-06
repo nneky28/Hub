@@ -19,13 +19,15 @@ import {height, width} from 'react-native-dimension';
 import { Capitalize, getData, getStoredBusiness, ToastError } from '../../utills/Methods';
 import { APIFunction, getAPIs } from '../../utills/api';
 import moment from 'moment';
-import { Container, H1, ImageWrap, LottieIcon, P, Reload, Rounded, SizedBox } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, P, Rounded, SizedBox } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
 import Emptyjson from '../../assets/lottie/birthday-icon.json'
 import Outjson from '../../assets/lottie/out.json'
 import { useNavigation } from '@react-navigation/core';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
+import { ActivityIndicator } from 'react-native-paper';
+import { Images } from '../../component2/image/Image';
 
 if (
   Platform.OS === 'android' &&
@@ -33,7 +35,8 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching}) => {
+const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetch,tab}) => {
+  console.log("WHOS--",whos_out)
   return (
     <FlatList
       data={data}
@@ -48,15 +51,18 @@ const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,annivers
         navigate={navigate}
         anniversary={anniversary}
         getWhosOut={getWhosOut}
-        fetching={fetching}
+        fetching={fetch}
+        tab={tab}
       />}
     />
   );
 };
-const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching}) => {
+const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching,tab}) => {
+  console.log("TAB--",tab)
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
-  var [selected, setSelected] = useState(headings[0]);
+  let default_tab = title === "Who’s Out" ? tab : headings[0]
+  var [selected, setSelected] = useState(default_tab);
   const [hasMore, setHasMore] = useState(true);
   const spinValue = new Animated.Value(0);
   const [show, setShow] = useState(true);
@@ -137,11 +143,12 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {console.log("SELECTED--",selected)}
 
       <View style={styles.line} />
           {
-            fetching ? <Reload /> : null
+            fetching && title === "Who’s Out" ? <Container marginTop={2}>
+                <ActivityIndicator color={AppColors.green} size={15} />
+              </Container> : null
           }
         {selected == 'Birthdays' ? (
               <React.Fragment>
@@ -190,7 +197,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                     >
                         <Container width={50}>
                           <ImageWrap 
-                            url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638365299/myedge%20mobile/Vector_3_bt64pb.png'}
+                            url={Images.CakeIcon}
                             height={3}
                             fit={"contain"}
                           />
@@ -227,7 +234,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
           >
             <Container width={50}>
               <ImageWrap 
-                url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638365299/myedge%20mobile/Vector_3_bt64pb.png'}
+                url={Images.AnnivIcon}
                 height={3}
                 fit={"contain"}
               />
@@ -252,7 +259,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                   }}
                 >
                   <ImageWrap 
-                      url={'https://res.cloudinary.com/dgny8sjrg/image/upload/v1638362875/myedge%20mobile/Vector_iz1psh.png'}
+                      url={selected === "Leave" ? Images.LeaveIcon : selected === "Training" ? Images.TrainingIcon : Images.RemoteIcon}
                       height={3}
                       fit={"contain"}
                       width={6}
@@ -375,6 +382,6 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
   );
 };
 const areEqual = (prevProps,nextProps)=>{
-  return prevProps.fetching === nextProps.fetching
+  return prevProps.fetch === nextProps.fetch
 }
 export default React.memo(TasksList,areEqual);

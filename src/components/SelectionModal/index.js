@@ -19,6 +19,7 @@ import styles from './styles';
 import Modal from 'react-native-modal';
 import {height, width} from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
+import { Images } from '../../component2/image/Image';
 
 const SelectionModal = ({isVisible, onHide, navigation}) => {
   const [selected, setSelected] = useState('Documents');
@@ -38,7 +39,7 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
             styles.icon,
             selected == text && {tintColor: AppColors.green},
           ]}
-          source={icon}
+          source={{uri : icon}}
         />
         <Text
           style={[styles.text, selected == text && {color: AppColors.green}]}>
@@ -64,15 +65,16 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
       <View style={styles.container}>
         <View style={styles.line1} />
         <View style={styles.row}>
-          <TextWithIcon text="Time off" icon={timeOffIcon} />
-          <TextWithIcon text="Documents" icon={documentIcon} />
-          <TextWithIcon text="People" icon={threeMenIcon} />
+        <TextWithIcon text="People" icon={Images.PeopleIcon} />
+          <TextWithIcon text="Time off" icon={Images.RadioIcon} />
+          <TextWithIcon text="Benefits" icon={Images.BenefitIcon} />
         </View>
         <View style={styles.line} />
         <View style={styles.row}>
-          <TextWithIcon text="Payslip" icon={payslipIcon} />
-          <TextWithIcon text="Trainings" icon={lighteningIcon} />
-          <TextWithIcon text="Benefits" icon={benefitIcon} />
+          <TextWithIcon text="Payslip" icon={Images.PayslipIcon} />
+          <TextWithIcon text="Documents" icon={Images.DocumentIcon} />
+          <TextWithIcon text="Trainings" icon={Images.TrainingIcon} />
+          
         </View>
       </View>
     </Modal>

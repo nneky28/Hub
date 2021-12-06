@@ -81,10 +81,10 @@ export const APIFunction = {
   }
 }
 export const getAPIs = async (path, token) => {
-    let expiry = await getData("token_expiry");
-    if(expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
+    // let expiry = await getData("token_expiry");
+    // if(expiry && !moment(new Date()).isBefore(expiry)){
+    //    await refreshToken()
+    // }
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       let split = path.split("/?");
@@ -104,7 +104,6 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("Err-",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"

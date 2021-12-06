@@ -121,7 +121,7 @@ export default function TimeOff({navigation}) {
                                 {selected == item && <View style={styles.animated} />}
                             </TouchableOpacity>
                             ))}
-                    </ScrollView>
+                        </ScrollView>
                         }
                         {
                             tabs && Array.isArray(tabs) && tabs.length > 0 && <View style={styles.line2} />

@@ -14,6 +14,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
+import { DatePickerModal } from '../../utills/components';
 import { Capitalize, getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
@@ -92,6 +93,9 @@ export default function PersonalInfo({navigation}) {
         city : "",
         postal_code : ''
     })
+    const [show,setShow] = React.useState(false)
+    const [action,setAction] = React.useState(null)
+
     const getProfile = async () => {
         try{
             let profile = await getData("profile");
@@ -132,7 +136,14 @@ export default function PersonalInfo({navigation}) {
     <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
         <ScrollView>
         <View style={styles.mainViewContainer}>
-                <Formik
+               {
+                   show ? <DatePickerModal 
+                        setShow={()=>{
+                            setShow(false)
+                        }}
+                        show={show}
+                   /> : (
+                    <Formik
                     initialValues={{
                         first_name: '',
                         last_name: '',
@@ -227,8 +238,12 @@ export default function PersonalInfo({navigation}) {
                         placeholder="Date of Birth"
                         component={CustomDatePicker}
                         value={data.birth_date}
-                        onChangeData={(value)=>setData({...data,birth_date : value})
+                            onChangeData={(value)=>setData({...data,birth_date : value})
                         }
+                        setShow={()=>{
+                            setAction("dob")
+                            setShow(true)
+                        }}
                         color={AppColors.black}
                     />
             
@@ -320,6 +335,8 @@ export default function PersonalInfo({navigation}) {
                 </>
                 )}
             </Formik>
+                   )
+               }
             </View>
         </ScrollView>
     </KeyboardAvoidingScrollView>

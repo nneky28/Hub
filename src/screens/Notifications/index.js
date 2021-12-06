@@ -147,15 +147,15 @@ export default function Notifications({navigation}) {
             <TouchWrap
                 onPress={()=>{
                     //APIFunction.read_notification(item.id);
-                    if(item && item.type === "birthday"){
-                        return navigation.navigate("People",{tab : "Celebrations"})
-                    }
-                    if(item && item.type && ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type)){
-                        return navigation.navigate("People",{tab : "Who's out"})
-                    }
-                    if(item && item.type === "work-anniversary"){
-                        return navigation.navigate("People",{tab : "Celebrations"})
-                    }
+                    // if(item && item.type === "birthday"){
+                    //     return navigation.navigate("People",{tab : "Celebrations"})
+                    // }
+                    // if(item && item.type && ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type)){
+                    //     return navigation.navigate("People",{tab : "Who's out"})
+                    // }
+                    // if(item && item.type === "work-anniversary"){
+                    //     return navigation.navigate("People",{tab : "Celebrations"})
+                    // }
                 }}
             >
                 <View 
@@ -165,6 +165,11 @@ export default function Notifications({navigation}) {
                         {
                             item && item.avatar ? (
                                 <Image source={item.avatar} style={styles.avatarStyle} />
+                            ) : ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type) ? (
+                                <View style={styles.iconAndTextContainer}>
+                                    <Image source={item.icon} style={styles.flatListIcon} />
+                                    <Text style={styles.subText}>{item.date ? moment(item.date).format("MMM DD") : null}</Text>
+                                </View>
                             ) : (
                                 <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={10}>
                                     <H1>
@@ -178,10 +183,7 @@ export default function Notifications({navigation}) {
                             {/* <Text style={styles.subText}>{item.subtitle}</Text> */}
                         </View>
                     </View>
-                    <View style={styles.iconAndTextContainer}>
-                        <Image source={item.icon} style={styles.flatListIcon} />
-                        <Text style={styles.subText}>{item.date ? moment(item.date).format("MMM DD") : null}</Text>
-                    </View>
+                    
                 </View>
             </TouchWrap>
         );
@@ -228,7 +230,7 @@ export default function Notifications({navigation}) {
                                     section.date && moment(section.date).format("MMM DD") === moment().format("MMM DD") ? <Text numberOfLines={1} style={styles.heading}>Today</Text>:
                                     <Text numberOfLines={1} style={styles.heading2}>{section && section.date ? moment(section.date).format("MMM DD") : null}</Text>
                                 }
-                                    <Image resizeMode="contain" source={downIcon} style={styles.downIcon} />
+                                    {/* <Image resizeMode="contain" source={downIcon} style={styles.downIcon} /> */}
                                 </View>
                                 )}}
                             />

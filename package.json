@@ -14,7 +14,6 @@
     "assembleDebug:unlink": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "assembleDebug:clean": "cd android && ./gradlew clean",
     "assembleDebug:assemble": "cd android && ./gradlew assembleDebug",
-    
     "android_staging": "appcenter codepush release-react -a Torilo/myedge-android -d Staging",
     "android_prod": "appcenter codepush release-react -a Torilo/myedge-android -d Production",
     "ios_staging": "appcenter codepush release-react -a Torilo/myedge-ios -d Staging",
@@ -43,6 +42,7 @@
     "react": "17.0.1",
     "react-content-loader": "^6.0.3",
     "react-native": "0.64.2",
+    "react-native-calendars": "^1.1270.0",
     "react-native-code-push": "^7.0.3",
     "react-native-date-picker": "^4.1.0",
     "react-native-dimension": "^1.0.6",
