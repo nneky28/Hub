@@ -15,7 +15,19 @@ export const Images = {
   TrainingIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638795073/myedge%20mobile/Group_8657_1_ejagj8.png",
   PeopleIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638794654/myedge%20mobile/three-men_qeesrb.png",
   AnnivIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638793722/myedge%20mobile/Vector_4_u137ta.png",
-  RemoteIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638362875/myedge%20mobile/Vector_iz1psh.png"
+  RemoteIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638362875/myedge%20mobile/Vector_iz1psh.png",
+  HomeFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/home-fill_h3gfhf.png",
+  NotificationIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/notification_nta31q.png",
+  NotificationFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/notification-fill_fdsfwq.png",
+  HomeIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869621/myedge%20mobile/home_slvnla.png",
+  MenuFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869621/myedge%20mobile/Category-fill_yvixtm.png",
+  ProfileFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/profile-fill_hk8oat.png",
+  ProfileIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/profile_rouc3z.png",
+  MenuIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/category_vjknog.png",
+  
+
+
+
 }
 
 

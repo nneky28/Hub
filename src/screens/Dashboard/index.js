@@ -100,6 +100,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const getInfo = async () => {
     try{
       setProcess(true);
+      setFetching(true)
       let token = await getData("token");
       let user =  await getData("user");
       let about_me = await getData("about_me");
@@ -140,6 +141,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       //   setIndex(0)
       //   setMargin(width(0.1))
       // }
+      setFetching(false)
       setLoading(false);
       setProcess(false);
     }catch(err){
@@ -200,17 +202,18 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             ) : ( 
                  <ScrollView>
                              <React.Fragment>
-                   {
+                   {/* {
                      process ? (
                       <Reload />
                      ) : null
-                   }
+                   } */}
                 <Container
                   marginTop={3}
                   marginBottom={3}
                 >
-                   <P textAlign="center">Hello.</P>
-                   <H1 textAlign="center">Welcome back</H1>
+                   <P textAlign="center">Hello,</P>
+                   {/* <H1 textAlign="center">Welcome back</H1> */}
+                   <H1 textAlign="center">{getGreetingTime()}</H1>
                 </Container>
                 <View style={styles.toDoContainer}>
                    <View style={styles.row1}>

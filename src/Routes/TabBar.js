@@ -11,6 +11,7 @@ import {
   profileFillIcon,
   profileIcon
 } from '../assets/images';
+import { Images } from '../component2/image/Image';
 import SelectionModal from '../components/SelectionModal';
 import AppColors from '../utills/AppColors';
 import { Container, H1, Rounded } from '../utills/components';
@@ -69,20 +70,20 @@ function TabBar({state, descriptors, navigation}) {
           var image;
           var image1;
           if (index == 0) {
-            image = homeIcon;
-            image1 = homeFillIcon;
+            image = Images.HomeIcon;
+            image1 = Images.HomeFillIcon;
           }
           if (index == 1) {
-            image = categoryIcon;
-            image1 = categoryFillIcon;
+            image = Images.MenuIcon;
+            image1 = Images.MenuFillIcon;
           }
           if (index == 2) {
-            image = notificationIcon;
-            image1 = notificationFillIcon;
+            image = Images.NotificationIcon;
+            image1 = Images.NotificationFillIcon;
           }
           if (index == 3) {
-            image = profileIcon;
-            image1 = profileFillIcon;
+            image = Images.ProfileIcon;
+            image1 = Images.ProfileFillIcon;
           }
           return (
             <TouchableOpacity
