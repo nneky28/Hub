@@ -158,7 +158,7 @@ export const storeData = async (key, value) => {
          Array.isArray(req_res.results) &&
          req_res.results.length > 0
      ){
-        tabs.push("Request")
+        tabs.push("Requests")
         requests = [...requests,...req_res.results]
      }
      return {

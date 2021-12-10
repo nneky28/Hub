@@ -34,6 +34,7 @@ const Drawer = ({navigation, ...props}) => {
   const logoutMethod = async () => {
     let keys = await AsyncStorage.getAllKeys()
     await AsyncStorage.multiRemove(keys);
+    navigation.closeDrawer();
     dispatch(login({...auth,route : "auth",isLogin : false}));
     ToastSuccess("Successfully logged out")
   };
@@ -57,7 +58,7 @@ const Drawer = ({navigation, ...props}) => {
             item && item.logo ? (
               <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
             ) : (
-              <Rounded  size={10} backgroundColor={AppColors.white}>
+              <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
                   <H1>
                       {item && item.business_name && item.business_name.length > 0 ? Capitalize([...item.business_name][0]) : ""}
                   </H1>
@@ -104,9 +105,10 @@ const Drawer = ({navigation, ...props}) => {
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />
-      <ItemWithText icon={settingIcon} text="Settings" onPress={()=>{
-        navigation.navigate("Settings")
-      }}/>
+      <ItemWithText icon={settingIcon} text="Change Password" onPress={()=>{
+          navigation.navigate("Settings")
+        }}
+      />
       <ItemWithText onPress={logoutMethod} icon={logoutIcon} text="Sign Out" />
     </Fragment>
   );

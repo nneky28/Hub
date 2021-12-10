@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Image, Platform, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
-import { totalSize, width } from 'react-native-dimension'
+import { height, totalSize, width } from 'react-native-dimension'
 import { useDispatch, useSelector } from 'react-redux'
 import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
 import { FilterModal } from '../../components/ContactModal'
@@ -9,9 +9,9 @@ import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
-import AppColors, { ColorList } from '../../utills/AppColors'
+import AppColors, { ColorList, ColorList2 } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, H1, LottieIcon, PageLoader, Reload, Rounded } from '../../utills/components'
+import { Container, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import Outjson from '../../assets/lottie/out.json'
@@ -20,6 +20,7 @@ import Teamjson from '../../assets/lottie/teams.json'
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
+import { Images } from '../../component2/image/Image'
 
 
 
@@ -52,24 +53,26 @@ export default function People({route,navigation}) {
     }
     const fetchData = async () => {
         try{
+            
             let page = await getData("page")
             if(page > 1){
                 setFetch(true)
             }else{
+                page = 1;
                 setLoading(true)
             }
-            console.log("FETCHDATA___PAGE",page)
+            let selected = await getData("tab");
             let token = await getData("token");
             let user =  await getData("user");
             let about_me = await getData("about_me")
+            console.log("selected--fetchData",selected)
             let biz = user.employee_user_memberships &&
             Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
-            let selected = await getData("tab");
             if(selected === "All" || selected === "My Team"){
                 let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
+                console.log("URL==",url)
                 let res = await getAPIs(url,token);
-                console.log("ALL---",res)
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
                 let arr = [...personsList,...persons_arr]
@@ -185,11 +188,9 @@ export default function People({route,navigation}) {
             setFetch(false)
             await storeData("page",page + 1)
         }catch(err){
-            console.log("ERRR",err)
             setLoading(false);
             setFetch(false)
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg  ? err.msg : "Something went wrong. Please retry"
-            console.log("err|||",err,msg)
             if(msg === "Invalid page."){
                 return;
             }
@@ -201,8 +202,14 @@ export default function People({route,navigation}) {
         storeData("tab",tab);
         setSelected(tab);
     }
+    const resetPageNumber = () =>{
+        storeData("page",1)
+    }   
     useEffect(()=>{
         location()
+        return ()=>{
+            resetPageNumber()
+        }
     },[])
     useEffect(()=>{
         fetchData()
@@ -231,7 +238,7 @@ export default function People({route,navigation}) {
                     item.photo ? (
                         <Image url={item.avatar} style={styles.avatarStyle} />
                     ) : (
-                        <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={11}>
+                        <Rounded backgroundColor={item && item.background === "pink" ? ColorList2[Math.floor(Math.random()*4)]  : ColorList[Math.floor(Math.random()*4)]} size={11}>
                           <H1>
                             {item && item.title && item.title.length > 0 ? Capitalize([...item.title][0]) : ""}
                             {item && item.title && item.title.length > 1 ? `${Capitalize([...item.title][1])}` : ""}
@@ -300,7 +307,7 @@ export default function People({route,navigation}) {
                 <View style={[styles.smallBtnContainer, {backgroundColor: btnColor}]}>
                     <Text style={[styles.smallText, {color: textColor}]}>{item.status}</Text>
                 </View>
-                <Text style={styles.subText}>{date}</Text>
+                {/* <Text style={styles.subText}>{date}</Text> */}
             </View>
         </View>
         );
@@ -354,6 +361,9 @@ export default function People({route,navigation}) {
                     ))}
                 </ScrollView>
                 {/* <View style={styles.line2} /> */}
+                {
+                    selected === "All" ? <SizedBox size={2} /> : null
+                }
                 {selected === "All" && Platform.OS === "android" ? (
                     <View style={styles.searchBoxContainer}>
                         <SearchBox 
@@ -361,9 +371,9 @@ export default function People({route,navigation}) {
                             containerStyle={styles.searchBoxStyle}
                             onSubmitEditing={handleSearch}    
                         />
-                        <TouchableOpacity style={styles.filterIconContainer} onPress={() => setModal(!modal)}>
+                        {/* <TouchableOpacity style={styles.filterIconContainer} onPress={() => setModal(!modal)}>
                             <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     ) : selected === "All" ? (
                         <View style={styles.searchBoxContainer}>
@@ -383,6 +393,7 @@ export default function People({route,navigation}) {
                 {
                     loading ? <PageLoader /> : null
                 }
+                <SizedBox size={2} />
                 {
                     selected === "Celebrations" && celebrations && !loading ? (
                         <SectionList
@@ -435,14 +446,26 @@ export default function People({route,navigation}) {
                         whosOut.length === 0 && !loading
                     ? (
                         <Container
+                            marginTop={8}
+                            flex={1}
                             style={{
-                                alignItems : "center",
-                                flex : 2
+                                alignItems : "center"
                             }}
                         >
-                            <LottieIcon icon={Outjson} />
-                            <H1 color={AppColors.darkGray}>No one is out of office today</H1>
-                        </Container>
+                            <ImageWrap 
+                                url={Images.EmptyTimeoff}
+                                height={30}
+                                fit="contain"
+                            />
+                                <H1
+                                    color={AppColors.black3}
+                                    fontSize={5}
+                                >No is out of office</H1>
+                                <H1 color={AppColors.black3}
+                                    fontSize={5}>today.</H1>
+                                <SizedBox height={2} />
+                                <P color={AppColors.black2}>When anyone is, they will show up here.</P>
+                            </Container>
                     ) : null
                 }
                 {
@@ -482,8 +505,8 @@ export default function People({route,navigation}) {
                                     ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
                                     showsVerticalScrollIndicator={false}
                                     nestedScrollEnabled={true}
-                                    contentContainerStyle={CommonStyles.marginTop_1}
-                                    onEndReachedThreshold={0.3}
+                                    contentContainerStyle={[CommonStyles.marginTop_1,{paddingBottom : height(30)}]}
+                                    onEndReachedThreshold={0.5}
                                     onEndReached={({ distanceFromEnd }) => {
                                         fetchData();
                                     }}

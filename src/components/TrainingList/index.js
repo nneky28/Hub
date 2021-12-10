@@ -6,7 +6,6 @@ import { Capitalize, getData } from '../../utills/Methods';
 import moment from  "moment"
 
 const TrainingList = ({data, opacity = 1}) => {
-  console.log("TrainingList",data)
   return (
     <FlatList
       data={data}

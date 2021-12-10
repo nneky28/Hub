@@ -38,10 +38,10 @@ const ErrorIcon = () => (<Image resizeMode="contain" source={{uri : Images.Error
 export const showFlashMessage = (props) => {
     showMessage({
     statusBarHeight: height(2),
-    message: props?.title || 'Update Saved!',
+    message: props && props.title ? props.title  : 'Update Saved!',
     position: 'top',
     floating: true,
-    renderFlashMessageIcon: () => props.type === "error" ? <ErrorIcon /> : <CustomIcon />,
+    renderFlashMessageIcon: () => props && props.type === "error" ? <ErrorIcon /> : <CustomIcon />,
     animated: true,
     backgroundColor: AppColors.lightGreen,
     color: AppColors.black,

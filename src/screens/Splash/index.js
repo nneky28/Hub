@@ -8,9 +8,9 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import {showMessage} from 'react-native-flash-message';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
-import { getData } from '../../utills/Methods';
+import { getData, storeData } from '../../utills/Methods';
 import CustomText from '../../component2/customText/CustomText';
-import { Container } from '../../utills/components';
+import { Container, H1 } from '../../utills/components';
 import { height, width } from 'react-native-dimension';
 
 const Splash = (props) => {
@@ -18,12 +18,16 @@ const Splash = (props) => {
   const dispatch = useDispatch();
   const loginMethod = async () => {
     //dispatch(setLoaderVisible(true));
-    let user = await getData("user") 
+    let user = await getData("user")
+    await storeData("page",1)
     setTimeout(() => {
-      if(user){
-        dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
-      }else{
-        dispatch(login({...auth,user : user,isLogin : true,route : "auth"}));
+      try{
+        if(user){
+          dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
+        }else{
+          dispatch(login({...auth,isLogin : true,route : "auth"}));
+        }
+      }catch(err){
       }
     }, 3000);
   };
@@ -47,7 +51,7 @@ const Splash = (props) => {
               marginTop: -3,
             }}
         /> */}
-          <Image source={require('../../assets/images/icons/loader.gif')} 
+         <Image source={require('../../assets/images/icons/loader.gif')} 
             style={style.resize}
           />
       </View>

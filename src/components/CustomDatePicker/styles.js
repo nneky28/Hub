@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: AppColors.white,
     width: width(90),
-    paddingVertical: height(2.5),
+    paddingVertical: height(2.3),
     paddingHorizontal: width(5),
     justifyContent:'flex-start',
     alignSelf:'center',
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     width: width(100)
    },
     text1: {
-        fontSize: width(2.75), 
-        color: AppColors.black3,
+        fontSize: width(3.2), 
+        color: AppColors.black,
         fontFamily: FontFamily.BlackSansRegular
     },
     errorText: {

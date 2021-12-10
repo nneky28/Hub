@@ -1,25 +1,29 @@
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, Modal } from 'react-native-paper';
+import WebView from 'react-native-webview';
 import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
-import { TimeoffModal, WarningModal } from '../../components/ContactModal';
+import { ReportModal, TimeoffModal, WarningModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
+import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { Container, H1, P, PageLoader, Reload, Rounded } from '../../utills/components';
+import { Container, CustomWebView, H1, P, PageLoader, Reload, Rounded } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
+  const navigation = useNavigation()
   const [margin, setMargin] = useState(0.1);
   const [index, setIndex] = useState(0);
   const [user,setUser] = React.useState(null);
@@ -48,6 +52,15 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [training,setTraining] = React.useState(null)
   const [tab,setTab] = React.useState("Leave")
   const [fetching,setFetching] = React.useState(false)
+  const [web,setWeb] = React.useState(false)
+  const [web_url,setWebUrl] = React.useState(null)
+  const [report,setReport] = React.useState(false)
+  const [asset,setAsset] = React.useState(null)
+  const [tasks,setTasks] = React.useState([])
+  const goToWeb = (url) => {
+    setWebUrl(url)
+    setWeb(true)
+  }
 
   const getWhosOut = async (param) => {
     try{
@@ -67,6 +80,18 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
         res && res.results && Array.isArray(res.results) ? setTraining(res.results) : setTraining([])
       }
       setFetching(false)
+    }catch(err){
+      ToastError(err.msg)
+    }
+  }
+
+  const markAsCompleted = async (task) =>{
+    try{
+      let about = await getData("about_me")
+      await APIFunction.toggle_completed(about.id,task.id,{is_completed : true})
+      let arr = [...tasks].filter(item=> item.id !== task.id)
+      setTasks([...arr])
+      showFlashMessage({title : "Marked as done"})
     }catch(err){
       ToastError(err.msg)
     }
@@ -97,6 +122,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     if (margin == 0) margin = 0.1;
     setMargin(width(margin));
   };
+  const closeWeb = () => {
+    setWeb(false)
+  }
   const getInfo = async () => {
     try{
       setProcess(true);
@@ -117,6 +145,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
       let active_res = await getAPIs(active_birthdays_url,token);
       let active_ann = await getAPIs(ann_url,token);
+      let task_res = await APIFunction.employee_tasks(about_me.id);
+      task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
+      console.log("task_res",task_res)
       let res = await getTimeOffsFunction();
       setAvailable(res.available)
       setTabs(res.tabs);
@@ -149,6 +180,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       ToastError(msg)
     }
   }
+  const openReport = (item) => {
+    try{
+      setReport(true)
+      setAsset(item)
+    }catch(err){
+      ToastError(err.msg)
+    }
+  }
   useFocusEffect(
     React.useCallback(()=>{
       getInfo()
@@ -158,7 +197,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     <ScreenWrapper scrollEnabled={false}
       statusBarColor={AppColors.lightGreen}
     >
-      <Container
+      {
+                                web ? <CustomWebView setShow={closeWeb} web_url={web_url}/> : (
+                                        <React.Fragment>
+                                                  <Container
         backgroundColor={AppColors.lightGreen}
       >
       <View style={styles.header}>
@@ -187,6 +229,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             style={styles.logo1}
           />
         </TouchableOpacity> */}
+        {
+                     process ? (
+                      <ActivityIndicator 
+                        size={10}
+                        color={AppColors.green}
+                      />
+                     ) : null
+                   }
       </View>
       <View style={styles.line} />
       </Container>
@@ -202,11 +252,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             ) : ( 
                  <ScrollView>
                              <React.Fragment>
-                   {/* {
-                     process ? (
-                      <Reload />
-                     ) : null
-                   } */}
+                   
                 <Container
                   marginTop={3}
                   marginBottom={3}
@@ -215,34 +261,43 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                    {/* <H1 textAlign="center">Welcome back</H1> */}
                    <H1 textAlign="center">{getGreetingTime()}</H1>
                 </Container>
-                <View style={styles.toDoContainer}>
-                   <View style={styles.row1}>
-                    <Text numberOfLines={1} style={styles.text3}>
-                      Tasks
-                    </Text>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => navigate('Todos')}
-                      style={styles.row}>
-                      <Text style={styles.text4}>See all task</Text>
-                      <Image
-                        resizeMode="contain"
-                        source={rightIcon}
-                        style={styles.icon}
-                      />
-                    </TouchableOpacity>
-                  </View> 
-                  <View style={styles.line} />
-                  <Todo data={smallListUnCompleteTodo} />
-                </View>
-                <Container marginTop={2}>
+                {
+                  tasks && Array.isArray(tasks) && tasks.length >  0 ? 
+                  (
+                    <View style={styles.toDoContainer}>
+                      <View style={styles.row1}>
+                      <Text numberOfLines={1} style={styles.text3}>
+                        Tasks
+                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          navigate("Todos")
+                        }}
+                        style={styles.row}>
+                        <Text style={styles.text4}>See all task</Text>
+                        <Image
+                          resizeMode="contain"
+                          source={rightIcon}
+                          style={styles.icon}
+                        />
+                      </TouchableOpacity>
+                    </View> 
+                    <View style={styles.line} />
+                    <Todo data={[...tasks].splice(0,2)} 
+                      markAsCompleted={markAsCompleted}
+                    />
+                  </View>
+                  ) : null
+                }
+                <Container marginTop={tasks && Array.isArray(tasks) && tasks.length > 1 ? 2 : 0}>
                   <Text numberOfLines={1} style={styles.timeOffText}>
                     Time Off
                   </Text>
                 </Container>
                 <View style={styles.threeButtonCont}>
                   {
-                    ['Active', 'Available','Request'].map((item,i)=>(
+                    ['Active', 'Available','Requests'].map((item,i)=>(
                       <TouchableOpacity
                         onPress={() =>setButtons(i)}
                         style={styles.button}
@@ -303,7 +358,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                             {assets && Array.isArray(assets) && assets.length > 1 ? `(${assets.length})` : "" }
                         </Text>
                         <View>
-                          <AssetsList data={assets} />
+                          <AssetsList data={assets} 
+                            onPressHandler={openReport}
+                          />
                         </View>
                       </React.Fragment>
                   ) : null
@@ -316,10 +373,12 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                         data={['#C2D4FF', '#99E6FF']} 
                         horizontal={benefits.length === 1 ? false : true}
                         benefits={benefits}
+                        goToWeb={goToWeb}
                       />
                     </React.Fragment>
                   ) : null
                 }
+
                 {/* <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text> */}
                 <TasksList data={tasksData} 
                   whos_out={tab === "Leave" ? whos_out : tab === "Remote Work" ? remote  : tab === "Training"  ? training : []}
@@ -335,22 +394,15 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                  </ScrollView>
             )
           }
-              <TimeoffModal 
-                isVisible={modal} 
-                onHide={()=>setModal(false)}
-                closeAndRefresh={() => {
-                    setModal(false)
-                    ToastSuccess("Request has been submitted for processing")
-                   getInfo();
-                }} 
-                timeoff_id={current} active={active}
-                // hideAndOpen={(msg)=>{
-                //     setModal(false);
-                //     ToastError(msg)
-                //     setTimeout(()=>{
-                //         setModal(true);
-                //     },2500)
-                // }}
+            <TimeoffModal 
+              isVisible={modal} 
+              onHide={()=>setModal(false)}
+              closeAndRefresh={() => {
+                  setModal(false)
+                  ToastSuccess("Request has been submitted for processing")
+                getInfo();
+              }} 
+              timeoff_id={current} active={active}
             />  
             <WarningModal 
               isVisible={show}
@@ -361,6 +413,23 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               performAction={cancelRequest}
               loading={cancel}
             />
+
+            <ReportModal
+              isVisible={report}
+              onHide={()=>{
+                setReport(false)
+                setAsset(null)
+              }}
+              asset={asset}
+              btnText={"Submit Report"}
+            />
+                                        </React.Fragment>
+                                )
+                              }
+      
     </ScreenWrapper>
   );
 }
+
+
+

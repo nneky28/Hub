@@ -20,6 +20,7 @@ import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
 import { Container, SizedBox } from '../../utills/components';
+import Feather from "react-native-vector-icons/Feather"
 
 
 export default function Dashboard(props) {
@@ -32,6 +33,9 @@ export default function Dashboard(props) {
   const auth = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
   useEffect(() => {
+    if(auth && auth.user && auth.user.email){
+      setData({...data,email : auth.user.email})
+    }
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
     return () => backHandler.remove()
   }, [])
@@ -48,9 +52,9 @@ export default function Dashboard(props) {
       }
       dispatch(setLoaderVisible(true));
       let res = await postNoToken('/accounts/auth/employees/login/',fd);
+      console.log("RES===",res)
       let token  = res.access_token ? res.access_token : null;
       await storeData("token",token)
-      console.log("postNoToken-res",res,token)
       let refresh = res.refresh_token ? res.refresh_token : null;
       let business = res.user.employee_user_memberships && 
       Array.isArray(res.user.employee_user_memberships) && 
@@ -66,9 +70,8 @@ export default function Dashboard(props) {
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));
-      return dispatch(login({...auth,user : {userName: "Joe"}, route : "main",isLogin : true}));
+      return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : "main",isLogin : true}));
     }catch(err){
-      console.log("errr",err);
       dispatch(setLoaderVisible(false));
       let msg = "";
       if(err.msg && err.msg.code === "invalid_credentials"){
@@ -140,6 +143,7 @@ export default function Dashboard(props) {
                       component={CustomInput}
                       name="password"
                       placeholder="Password"
+                      icon={<Feather name="eye" />}
                       value={data.password}
                     // secure={true}
                       onChangeData={(value)=>{

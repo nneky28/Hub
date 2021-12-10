@@ -8,7 +8,7 @@ import { H1, Rounded } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import { width } from 'react-native-dimension';
 
-const AssetsList = ({data}) => {
+const AssetsList = ({data,onPressHandler}) => {
   return (
     <FlatList
       data={data}
@@ -40,6 +40,7 @@ const AssetsList = ({data}) => {
                 title="Report"
                 textStyle={styles.buttonText}
                 containerStyle={styles.button}
+                onPress={()=>onPressHandler(item)}
               />
             </View>
           </View>

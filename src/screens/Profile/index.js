@@ -230,7 +230,7 @@ export default function Profile({navigation}) {
 
 
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper scrollEnabled={true} allowScrollToPosition={true}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>

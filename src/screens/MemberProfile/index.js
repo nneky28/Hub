@@ -189,6 +189,68 @@ export default function MemberProfile({route,navigation}) {
                       ))
                     }
                   </Container> */}
+
+<Container 
+                    marginTop={5}
+                    width={90}
+                  >
+                    {
+                      [
+                        {
+                          key: '1',
+                          title: member && member.email ? member.email : "",
+                          iconLeft: require('../../assets/images/icons/message.png')
+                      },
+                      {
+                          key: '2',
+                          title: member && member.address && member.address.address1 ? member.address.address1 : 
+                          member && member.address ? member.address : "",
+                          iconLeft: require('../../assets/images/icons/location.png')
+                      },
+                      {
+                          key: '3',
+                          title: member && member.phone_number1 ? member.phone_number1 : "",
+                          iconLeft: require('../../assets/images/icons/phone.png')
+                      }
+                      ].map((item,key)=>(
+                        <Container
+                          direction="row" 
+                          key={key}
+                          paddingVertical={2}
+                          marginBottom={2}
+                          borderBottomWidth={0.5}
+                          borderColor={AppColors.grayBorder}
+                          style={{
+                            alignItems : 'center'
+                          }}
+                        >
+                          <Container
+                            width={20}
+                          >
+                            <ImageWrap 
+                              fit="contain"
+                              source={item.iconLeft}
+                              height={2}
+                            />
+                          </Container>
+                          <Container
+                            width={50}
+                          > 
+                            <P>{item.title}</P>
+                          </Container>
+                          {/* <Container
+                            width={20}
+                          >
+                            <ImageWrap 
+                              fit="contain"
+                              source={item.iconRight}
+                              height={2}
+                            />
+                          </Container> */}
+                        </Container>
+                      ))
+                    }
+                  </Container> 
                   {
                     member && member.line_manager ? (
                       <React.Fragment>

@@ -7,14 +7,15 @@ const styles = StyleSheet.create({
     textInput:{
         backgroundColor: AppColors.white,
         width: width(90),
-        paddingVertical: height(1.75),
+        paddingVertical: height(1.2),
         paddingHorizontal: width(5),
         justifyContent:'center',
         alignSelf:'center',
         borderRadius: width(1.5),
         borderColor: AppColors.grayBorder,
         borderWidth: 1,
-        marginTop: height(2)
+        marginTop: height(2),
+        fontSize : width(4)
     },
     text1: {
         fontSize: width(2.75), 

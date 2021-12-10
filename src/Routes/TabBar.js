@@ -114,7 +114,7 @@ function TabBar({state, descriptors, navigation}) {
               }
               <Image
                 resizeMode="contain"
-                source={isFocused ? image1 : image}
+                source={isFocused ? {uri : image1} : {uri : image}}
                 style={styles.image}
               />
               <Text

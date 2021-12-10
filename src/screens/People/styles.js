@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: 'space-between',
     height: height(5),
-    marginLeft: width(2)
+    marginLeft: width(2),
+    //alignItems : "center"
   },
 
   flatListIcon: {
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   searchBoxStyle: {
-    width: width(79), 
+    width: width(90), 
     alignSelf: 'flex-start'
   },
 });

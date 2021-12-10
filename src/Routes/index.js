@@ -36,6 +36,7 @@ import NextKin from '../screens/NextKin';
 import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
 import { APIFunction } from '../utills/api';
+import { Container } from '../utills/components';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();

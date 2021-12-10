@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View,ScrollView
+  Text, View,ScrollView, Share, Linking
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
@@ -87,8 +87,17 @@ const ContactModal = ({isVisible, onHide,data}) => {
   );
 };
 
-const DocumentModal = ({isVisible, onHide}) => {
-
+const DocumentModal = ({isVisible, onHide,document}) => {
+  const onPressHandle = (action) => {
+    if(!document || !document.file) return
+    if(action === "share"){
+      return Share.share({
+        message : `${document.file}`
+      })
+    }
+    if(!Linking.canOpenURL(document.file)) return
+    return Linking.openURL(document.file)
+  }
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -105,9 +114,15 @@ const DocumentModal = ({isVisible, onHide}) => {
       style={{justifyContent: 'flex-end', margin: 0}}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <TextWithIcon item={{title: 'Share', iconLeft: shareIcon}} textStyle={styles.text2}/>
-        <TextWithIcon item={{title: 'Download', iconLeft: downloadIcon}} textStyle={styles.text2}/>
-        <TextWithIcon item={{title: 'Delete', iconLeft: deleteIcon}} textStyle={styles.text2}/>
+        <TextWithIcon item={{title: 'Share', iconLeft: shareIcon}} textStyle={styles.text2}
+          onPressHandle={()=>onPressHandle("share")}
+        />
+        <TextWithIcon item={{title: 'Download', iconLeft: downloadIcon}} textStyle={styles.text2}
+          onPressHandle={()=>onPressHandle("download")}
+        />
+        {/* <TextWithIcon item={{title: 'Delete', iconLeft: deleteIcon}} textStyle={styles.text2}
+          onPressHandle={()=>onPressHandle("share")}
+        /> */}
       </View>
     </Modal>
   );
@@ -132,6 +147,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
       "end_date": "",
       "reason": ""
     })
+    setShow(false)
   },[isVisible])
   const handleSubmit = async () => {
     try{
@@ -150,14 +166,6 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
       if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
         return showFlashMessage({type : "error",title : "Date must be in the future"})
       }
-      // console.log("err--",active,data)
-      // let check = active && Array.isArray(active) && active.length > 0 ?  active.some(item=>{
-      //   return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
-      //   item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
-      // }) : true;
-      // if(!check){
-      //   return showFlashMessage({type : "error",title : "Please select dates that do not fall within active timeoffs"})
-      // }
       let about_me = await getData("about_me")
       let biz = await getStoredBusiness();
       dispatch(setLoaderVisible(true));
@@ -170,7 +178,6 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
       dispatch(setLoaderVisible(false));
       closeAndRefresh()
     }catch(err){
-      console.log("err00",err)
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg
       dispatch(setLoaderVisible(false));
       return showFlashMessage({type : "error",title : msg})
@@ -272,7 +279,6 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                     <CustomButton
                       btnText={'Submit'}
                       handelButtonPress={handleSubmit}
-                      //isloading={isprocessing}
                     />
                   </View> 
                 </React.Fragment>
@@ -289,7 +295,103 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
 
 
 
-const __WarningModal = ({isVisible, onHide, onPressHandle,question,performAction,loading}) => {
+const __ReportModal = ({isVisible, onHide,asset}) => {
+  const dispatch = useDispatch();
+  const defaultColor = "";
+  const [message,setMessage] = React.useState("")
+  useEffect(()=>{
+    setMessage("")
+  },[isVisible])
+  const handleSubmit = async () => {
+    try{
+      let failed = false;
+      for(let req of required){
+        if(!message || (message === "") || (message.trim() === "")) failed = true;
+      }
+      if(failed) {
+        return showFlashMessage({type : "error",title : "Message field is required"})
+      };
+      dispatch(setLoaderVisible(true));
+      let fd = {message : message,date : moment().format("YYYY-MM-DD")}
+      await APIFunction.report_asset(fd,asset.id)
+      dispatch(setLoaderVisible(false));
+      showFlashMessage({title : "Issue has been reported to HR"})
+      onHide()
+    }catch(err){
+      dispatch(setLoaderVisible(false));
+      return showFlashMessage({type : "error",title : err.msg})
+    }
+  }
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{justifyContent: 'flex-end', margin: 0}}
+      isVisible={isVisible}>
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.inner}>
+          <View style={styles.bodyWrap}>
+            <Formik>
+                <React.Fragment>
+                  <View
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginTop: 25,
+                    }}>
+                      <CustomText
+                        textSize={20}
+                        textWeight={'bold'}
+                        textcolor={defaultColor}
+                        displayText={'Report Issue'}
+                        textStyle={{
+                          marginTop: -3,
+                        }}
+                      />
+                  </View>
+                    <Field
+                      component={CustomInput}
+                      name="message"
+                      placeholder="Message"
+                      keyboardType="default"
+                      value={message}
+                      onChangeData={(value)=>{
+                        setMessage(value)
+                      }}
+                      height={100}
+                      multiline={true}
+                      color={AppColors.black}
+                    />
+                    <View style={{width: '100%', padding : '5%'}}>
+                      <CustomButton
+                        btnText={'Submit'}
+                        handelButtonPress={handleSubmit}
+                      />
+                    </View> 
+                  </React.Fragment>
+              </Formik>
+          </View>
+        </ScrollView>
+
+
+      </View>
+    </Modal>
+  );
+};
+
+
+
+const __WarningModal = ({isVisible, onHide, onPressHandle,question,performAction,loading,btnText}) => {
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -327,7 +429,7 @@ const __WarningModal = ({isVisible, onHide, onPressHandle,question,performAction
                   />
                 ) : (
                   <CustomButton 
-                    btnText={"Cancel Request"}
+                    btnText={btnText || "Cancel Request"}
                     btnStyle={{
                       backgroundColor : "#FF7372",
                       width : "100%",
@@ -383,5 +485,6 @@ const areEqual = (prevProps,nextProps)=>{
 }
 export const WarningModal = React.memo(__WarningModal,areEqual)
 export const TimeoffModal = React.memo(__TimeoffModal,areEqual)
+export const ReportModal = React.memo(__ReportModal,areEqual)
 export { DocumentModal, FilterModal};
 export default ContactModal;

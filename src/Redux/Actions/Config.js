@@ -15,6 +15,7 @@ export const setBottomTabBarVisible = (payload) => {
 };
 
 export const scrollToPosition = (payload) => {
+  console.log("scrollToPosition",payload)
   return {
     type: SCROLLTOPOSITION,
     payload: payload,

@@ -21,14 +21,14 @@ export default function SearchBox({title, containerStyle, onSubmitEditing}) {
         <View style={[styles.container, containerStyle]}>
             <Image source={searchIcon} style={styles.searchIcon}/>
             <TextInput 
-            style={styles.inputStyle}
-            placeholder={title}
-            fontFamily={FontFamily.BlackSansRegular}
-            placeholderTextColor={AppColors.black3}
-            keyboardType='default'
-            onChangeText={onSubmitEditing}
-            onSubmitEditing={onSubmitEditing}
-            color={AppColors.black}
+                style={styles.inputStyle}
+                placeholder={title}
+                fontFamily={FontFamily.BlackSansRegular}
+                placeholderTextColor={AppColors.black3}
+                keyboardType='default'
+                onChangeText={onSubmitEditing}
+                onSubmitEditing={onSubmitEditing}
+                color={AppColors.black}
             />
             
         </View>

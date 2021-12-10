@@ -13,7 +13,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction, deleteAPIs, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, LottieIcon, PageLoader, Reload } from '../../utills/components'
+import { Container, LottieIcon, PageLoader, Reload, SizedBox } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -111,7 +111,7 @@ export default function TimeOff({navigation}) {
                             contentContainerStyle={styles.scrollViewContainer}
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}>
-                            {['Active', 'Available','Request', 'History'].filter(tab=>{
+                            {['Active', 'Available','Requests', 'History'].filter(tab=>{
                                 return tabs.includes(tab)
                             }).map((item) => (
                             <TouchableOpacity 
@@ -144,9 +144,11 @@ export default function TimeOff({navigation}) {
                         } */}
                         {selected === 'Active' &&
                             <>
+                                <SizedBox height={2} />
                                 <View style={styles.headingContainer}>
                                     <Text style={styles.heading}>Active and upcoming</Text>
                                 </View>
+                                <SizedBox height={2} />
                                 <TimeoffVertical
                                     tab={"active"}
                                     data={'active'}
@@ -159,7 +161,7 @@ export default function TimeOff({navigation}) {
                                 />
                             </>
                         }
-                        {selected === 'Request' &&
+                        {selected === 'Requests' &&
                             <React.Fragment>
                                 <View style={styles.headingContainer}>
                                     <Text style={styles.heading}></Text>
@@ -227,13 +229,6 @@ export default function TimeOff({navigation}) {
                     getTimeOffs();
                 }} 
                 timeoff_id={current} active={active}
-                hideAndOpen={(msg)=>{
-                    setModal(false);
-                    ToastError(msg)
-                    setTimeout(()=>{
-                        setModal(true);
-                    },2500)
-                }}
             />
             <WarningModal 
               isVisible={show}

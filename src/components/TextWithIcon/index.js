@@ -30,7 +30,7 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
       <>
       <View style={[styles.contactComponentContainer]}>
         <TouchableOpacity 
-        onLongPress={() => handleLongPress(item && item.title ? item.title : "")}
+        onPress={() => handleLongPress(item && item.title ? item.title : "")}
         style={[styles.row]}
         >
           <View style={CommonStyles.rowAlignItemCenter}>

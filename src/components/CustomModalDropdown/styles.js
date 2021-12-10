@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: AppColors.white,
     width: width(90),
-    paddingVertical: height(2.5),
+    paddingVertical: height(2.3),
     // paddingHorizontal: width(5),
     justifyContent:'flex-start',
     alignSelf:'center',
@@ -21,14 +21,15 @@ const styles = StyleSheet.create({
   dropDownContainer: {
     backgroundColor: AppColors.white,
     width: width(90),
-    borderBottomColor: AppColors.grayBorder,
+    //borderBottomColor: AppColors.grayBorder,
     height: height(15),
     marginTop: height(2),
+    ...AppColors.bigShadow
     // borderLeftWidth: 1
    },
    text1: {
-    fontSize: width(3.1), 
-    color: AppColors.black3,
+    fontSize: width(3.2), 
+    color: AppColors.black,
     marginLeft: width(5),
     fontFamily: FontFamily.BlackSansRegular
   },

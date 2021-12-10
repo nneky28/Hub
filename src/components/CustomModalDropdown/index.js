@@ -4,6 +4,7 @@ import { height, width } from 'react-native-dimension';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { downIcon } from '../../assets/images';
 import CommonStyles from '../../utills/CommonStyles';
+import { Container } from '../../utills/components';
 import styles from './styles';
 
 
@@ -40,11 +41,12 @@ const CustomModalDropdown = (props) => {
         props.placeholder === text ?  setSelected(false) : setSelected(true)
         props.onChangeData ? props.onChangeData(text) : null
       }}
+      renderSeparator={()=><Container></Container>}
       renderRightComponent={() => <Image 
                   resizeMode="contain" 
                   source={downIcon} 
                   style={[styles.downIcon2]}
-                  />
+                />
       }
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}

@@ -6,11 +6,12 @@ import { downIcon, fileIcon, HorDotIcon, leftIcon } from '../../assets/images';
 import { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, LottieIcon } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, P, SizedBox } from '../../utills/components';
 import { payslips } from '../../utills/data/payslips';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
 import AppColors from '../../utills/AppColors';
+import { Images } from '../../component2/image/Image';
 
 
 export default function Payslips({navigation}) {
@@ -111,17 +112,27 @@ export default function Payslips({navigation}) {
                 contentContainerStyle={CommonStyles.marginTop_2}
                 /> */}
             </View>
-                <Container
-                    flex={1}
-                    style={{
-                        justifyContent : "center",
-                        alignItems : "center"
-                    }}
-                >
+            <Container
+                marginTop={8}
+                flex={1}
+                style={{
+                    alignItems : "center"
+                }}
+            >
+                <ImageWrap 
+                    url={Images.EmptyPayslip}
+                    height={30}
+                    fit="contain"
+                />
                     <H1
                         color={AppColors.black3}
-                    >Looks like you have not received a payslip yet.</H1>
-                    </Container>
+                        fontSize={5}
+                    >You do not have</H1>
+                    <H1 color={AppColors.black3}
+                        fontSize={5}>any payslips yet.</H1>
+                    <SizedBox height={2} />
+                    <P color={AppColors.black2}>When you do, they will show up here.</P>
+                </Container>
             <DocumentModal isVisible={modal} onHide={() => setModal(false)}/> 
         </ScreenWrapper>  
     );

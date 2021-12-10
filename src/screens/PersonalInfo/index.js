@@ -14,7 +14,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { DatePickerModal } from '../../utills/components';
+import { CustomCalender, DatePickerModal } from '../../utills/components';
 import { Capitalize, getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
@@ -70,7 +70,6 @@ export default function PersonalInfo({navigation}) {
             navigation.goBack();
             setLoading(false)
         }catch(err){
-            
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             console.log("err|||",err,msg)
             ToastError(msg)
@@ -95,7 +94,7 @@ export default function PersonalInfo({navigation}) {
     })
     const [show,setShow] = React.useState(false)
     const [action,setAction] = React.useState(null)
-
+    
     const getProfile = async () => {
         try{
             let profile = await getData("profile");
@@ -134,6 +133,13 @@ export default function PersonalInfo({navigation}) {
     },[])
     return (
     <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
+        {
+            show ? <DatePickerModal 
+            setShow={()=>{
+                setShow(false)
+            }}
+            show={show}
+       />   : (
         <ScrollView>
         <View style={styles.mainViewContainer}>
                {
@@ -339,6 +345,9 @@ export default function PersonalInfo({navigation}) {
                }
             </View>
         </ScrollView>
+       )
+        }
+        
     </KeyboardAvoidingScrollView>
     );
 }

@@ -226,11 +226,11 @@ const RenderItem = ({item,tab,showModal}) => {
               ) : (
                 <>
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    {item && item.days_requested ? item.days_requested : 0} Days
+                    {item && item.days_requested ? item.days_requested : 0} {item && item.max_days_allowed && item.max_days_allowed > 1 ? `Days` : "Day"}
                   </Text>
-                  <Text style={[styles.count2, {color: AppColors.black1}]}>
+                  {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
-                  </Text>
+                  </Text> */}
                 </>
               )}
             </View>
@@ -376,7 +376,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : fData.total_days_taken > 0 ?
                 numeral(fData.total_days_taken/fData.max_days_allowed).format("0.00") : 0
               }
-              direction='counter-clockwise'
+              //direction='counter-clockwise'
             />
             <View style={styles.absolute}>
               {status == 'active' ? (
@@ -416,12 +416,12 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                     fData && fData.total_days_taken === 0 ? (
                       <>
                       <Text style={[styles.count, {color: AppColors.lightMediumGreen}]}>
-                        {item && item.max_days_allowed ? item.max_days_allowed : 0} {item && item.max_days_allowed && item.max_days_allowed > 1 ? `Days` : "Day"}
+                        {fData && fData.max_days_allowed ? fData.max_days_allowed : 0} {fData && fData.max_days_allowed && fData.max_days_allowed > 1 ? `Days` : "Day"}
                       </Text>
                       <Text style={
                         [styles.count,
                           {fontSize : width(3)},
-                          {color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}
+                          {color :  (Number(fData.max_days_allowed) - Number(fData.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}
                         ]
                       }>Available</Text>
                       {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
@@ -433,15 +433,15 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 </>
               ) : status == 'fewDays' ? (
                 <>
-                  <Text style={[styles.text, {color: AppColors.green}]}>
+                  {/* <Text style={[styles.text, {color: AppColors.green}]}>
                     {fData && fData.timeoff && fData.timeoff.max_days_allowed ? fData.timeoff.max_days_allowed : 0} Days
                   </Text>
                   <Text style={[styles.text2, {color: AppColors.green}]}>
                     Available
                   </Text>
-                  <View style={styles.line3} />
+                  <View style={styles.line3} /> */}
                   <Text style={[styles.text, {color: AppColors.black2}]}>
-                    {fData && fData.days_taken? fData.days_taken : 0} Days
+                    {fData && fData.days_taken ? fData.days_taken : 0} {fData && fData.days_taken && fData.days_taken > 1 ? "Days" : "Day"}
                   </Text>
                   <Text style={[styles.text2, {color: AppColors.black2}]}>
                     Taken
@@ -449,12 +449,17 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 </>
               ) : (
                 <>
-                  <Text style={[styles.count, {color: AppColors.black1}]}>
+                  {/* <Text style={[styles.count, {color: AppColors.black1}]}>
                     {fData && fData.days_requested ? fData.days_requested : 0}
+                  </Text> */}
+
+                  <Text style={[styles.count, {color: AppColors.black1}]}>
+                    {fData && fData.days_requested ? fData.days_requested : 0} {fData && fData.max_days_allowed && fData.max_days_allowed > 1 ? `Days` : "Day"}
                   </Text>
-                  <Text style={[styles.count2, {color: AppColors.black1}]}>
+
+                  {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
-                  </Text>
+                  </Text> */}
                   {/* {
                     fData && fData.timeoff && fData.timeoff.is_paid ? (
                       <Button

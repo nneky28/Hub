@@ -25,6 +25,13 @@ const AppColors = {
     shadowRadius: 2,
     elevation: 1.1,
   },
+  bigShadow : {
+    shadowColor: this.gray,
+    shadowOffset: {width: 1, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5,
+  },
   shadowStyles: {
     shadowColor: '#F2F2F2',
     shadowOffset: {width: 0, height: 2},
@@ -42,6 +49,11 @@ const AppColors = {
 
 export const ColorList = [
   "#FFE7E7",
+  "#C2D4FF",
+  "#FCE2AF",
+  "#99E6FF"
+]
+export const ColorList2 = [
   "#C2D4FF",
   "#FCE2AF",
   "#99E6FF"

@@ -140,6 +140,7 @@ export default function PensionInfo({navigation}) {
                         <Container
                             paddingHorizontal={5}
                             marginTop={2}
+                            marginLeft={5}
                         >
                             <Text numberOfLines={1} style={styles.screenTitle}>
                                 Bank Information
@@ -213,6 +214,7 @@ export default function PensionInfo({navigation}) {
                         <Container
                             paddingHorizontal={5}
                             marginTop={2}
+                            marginLeft={5}
                         >
                             <Text numberOfLines={1} style={styles.screenTitle}>
                                 Pension Information

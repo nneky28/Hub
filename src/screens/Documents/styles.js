@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: width(3),
     color: AppColors.black1,
+    flexWrap : 'wrap',
     marginRight: width(2),
     fontFamily: FontFamily.BlackSansBold,
   },

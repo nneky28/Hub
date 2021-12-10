@@ -25,7 +25,6 @@ const CustomInput = (props) => {
 
   return (
     <>
-      {/* {console.log("inputProps>>",inputProps)} */}
       <TextInput
         style={[
           styles.textInput,
@@ -36,7 +35,6 @@ const CustomInput = (props) => {
         color={AppColors.black}
         value={value}
         onChangeText={(text) => {
-          console.log("Text---",text)
           if(data){
             setData({...data,name : text})
           }

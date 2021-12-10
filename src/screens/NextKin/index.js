@@ -110,6 +110,7 @@ export default function NextKin({navigation,route}) {
                 <Container
                     paddingHorizontal={5}
                     marginTop={1}
+                    width={90}
                 >
                     <H1 color={AppColors.green}>All fields are required *</H1>
                 </Container>

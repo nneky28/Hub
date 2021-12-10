@@ -36,7 +36,6 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetch,tab}) => {
-  console.log("WHOS--",whos_out)
   return (
     <FlatList
       data={data}
@@ -58,7 +57,6 @@ const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,annivers
   );
 };
 const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching,tab}) => {
-  console.log("TAB--",tab)
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
   let default_tab = title === "Who’s Out" ? tab : headings[0]
@@ -159,7 +157,9 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                         item && item.photo ? (
                           <Image source={{uri : item.photo}} style={styles.image} />
                         ) : (
-                          <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                          <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
+                            size={10}
+                          >
                             <H1>
                               {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
                               {item && item.last_name && item.last_name.length > 1 ? `${Capitalize([...item.last_name][0])}` : ""}
@@ -209,7 +209,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                   )
                 }
             {
-               false ? (
+               upcoming_birthdays && Array. isArray(upcoming_birthdays) && upcoming_birthdays.length ? (
                 <React.Fragment>
                   <TouchableOpacity onPress={hide} style={styles.row}>
                     <Text style={styles.upcomming}>Upcoming Birthdays</Text>
@@ -287,7 +287,7 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
             ItemSeparatorComponent={() => <View style={styles.margin} />}
             renderItem={({item}) => {
               return (
-                <View style={whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
+                <View style={title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
                   {
                     item && item.employee && item.employee.photo ? (
                       <Image source={item.employee.photo} style={styles.image} />
@@ -327,9 +327,12 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                           <Text numberOfLines={1} style={styles.text3}>
                               {item && item.first_name ? Capitalize(item.first_name) : ""}
                             </Text>
-                            <Text numberOfLines={1} style={styles.text1}>
-                            {item && item.job && item.job.title ? Capitalize(item.job.title) : ""}
-                          </Text>
+                            {
+                              item && item.job && item.job.title ?  <Text numberOfLines={1} style={styles.text1}>
+                              {Capitalize(item.job.title)}
+                            </Text> : null
+                            }
+                           
                         </React.Fragment>
                       )
                     }

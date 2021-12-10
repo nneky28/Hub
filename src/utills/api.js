@@ -78,13 +78,29 @@ export const APIFunction = {
   seen_all : async () => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/employees/notifications/seen_all/`)
+  },
+  remove_photo : async (employee_id) =>{
+    let biz = await getStoredBusiness();
+    return putAPIs(`/c/${biz.business_id}/employees/${employee_id}/delete-photo/`)
+  },
+  employee_tasks : async (employee_id,completed = false) =>{
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/employees/${employee_id}/onboarding_tasks/?is_completed=${completed}`)
+  },
+  toggle_completed : async (employee_id,task_id,fd) => {
+    let biz = await getStoredBusiness()
+    return putAPIs(`/c/${biz.business_id}/employees/${employee_id}/onboarding_tasks/${task_id}/toggle_completed/`,fd)
+  },
+  employee_doc : async (id) => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/employees/${id}/documents/`)
+  },
+  report_asset : async (fd,id) =>{
+    let biz = await getStoredBusiness()
+    return postAPIs(`/c/${biz.business_id}/asset-management/assets/${id}/issues/report/`,fd)
   }
 }
 export const getAPIs = async (path, token) => {
-    // let expiry = await getData("token_expiry");
-    // if(expiry && !moment(new Date()).isBefore(expiry)){
-    //    await refreshToken()
-    // }
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       let split = path.split("/?");
@@ -113,16 +129,10 @@ export const getAPIs = async (path, token) => {
             reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
-      //setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
   
 export const postAPIs = async (path, fd) => {
-  console.log("postAPIs",path,fd)
-  let expiry = await getData("token_expiry");
-    if(expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -138,7 +148,6 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("ERR--",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -152,10 +161,6 @@ export const postAPIs = async (path, fd) => {
   };
 
   export const deleteAPIs = async (path, fd) => {
-    let expiry = await getData("token_expiry");
-      if(expiry && !moment(new Date()).isBefore(expiry)){
-         await refreshToken()
-      }
       let _token = await getData("token");
       return new Promise((resolve, reject) => {
         axios.delete(
@@ -180,16 +185,11 @@ export const postAPIs = async (path, fd) => {
               reject({status: 500, msg: 'Something went wrong. Please retry.'});
             }
           });
-    
-        setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
       });
     };
   
 export const putAPIs = async (path,fd) => {
-  let expiry = await getData("token_expiry");
-    if(expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
+    console.log("FD--",path,fd)
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -215,8 +215,6 @@ export const putAPIs = async (path,fd) => {
             reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
-  
-      setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
   

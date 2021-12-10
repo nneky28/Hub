@@ -68,10 +68,12 @@ export default function Setting({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <Container 
-                paddingHorizontal={3}
-            style={{
-                flexDirection : "row"
-            }}>
+                //paddingHorizontal={3}
+                marginLeft={3}
+                style={{
+                    flexDirection : "row"
+                }}
+            >
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
                 </TouchableOpacity>

@@ -25,14 +25,15 @@ import Svg, {
     SvgUri,
   } from 'react-native-svg';
 import AppColors from './AppColors';
-import { View ,Dimensions} from 'react-native';
+import { View ,Dimensions,Modal} from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
-import { ActivityIndicator, Modal, TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
+import WebView from 'react-native-webview';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -143,6 +144,7 @@ export const SizedBox = (props) => (
   export const Container = (props) => (
     <View 
       style={{
+        borderColor : props.borderColor,
         flex : props.flex || 0,
         flexDirection : props.direction,
         width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
@@ -218,7 +220,7 @@ export const SizedBox = (props) => (
   export const TouchWrap = (props) => (
     <TouchableRipple
       onPress={props.onPress}
-      rippleColor="transparent"
+      rippleColor="rgba(0, 0, 0, .32)"
     >
       {props.children}
     </TouchableRipple>
@@ -264,11 +266,6 @@ export const SizedBox = (props) => (
             >
                 <P>Cancel</P>
             </TouchWrap>
-            {/* <TouchWrap
-              onPress={()=>props.setShow(false)}
-            >
-                <H1>Done</H1>
-            </TouchWrap> */}
           </Container>
           <Calendar
             // Collection of dates that have to be marked. Default = {}
@@ -288,65 +285,74 @@ export const SizedBox = (props) => (
 
 export const DatePickerModal = (props) => {
   return(
-      <Modal visible={props.show}>
-        <DatePicker 
-              date={date || new Date()} 
-            // onDateChange={(newDate) => {
-            //   setDate(newDate);
-            //   props.onChangeData ? props.onChangeData(moment(newDate).format("YYYY-MM-DD")) : null
-            //   //onChange(newDate.toDateString())
-            // }} 
-            mode="date" 
-            maximumDate={props.maximumDate === null ? props.maximumDate : new Date()}
-          /> 
+      <Modal visible={true}>
+        <Container
+          flex={1}
+          style={{
+            justifyContent : "center",
+            alignItems : 'center'
+          }}
+        >
+            <Container
+              style={{
+                justifyContent : "center",
+                alignItems : "center"
+              }}
+            >
+              <DatePicker 
+                  date={new Date()} 
+                  onDateChange={(newDate) => {
+                  //setDate(newDate);
+                  //props.onChangeData ? props.onChangeData(moment(newDate).format("YYYY-MM-DD")) : null
+                  //onChange(newDate.toDateString())
+                  }} 
+                  mode="date" 
+                  maximumDate={new Date()}
+              /> 
+              <Container 
+                marginTop={5}
+                width={90}
+                direction="row"
+                style={{
+                  justifyContent : 'space-between'
+                }}
+              >
+                  <TouchWrap
+                    onPress={props.setShow}
+                  >
+                    <P color={AppColors.black3}>Cancel</P>
+                  </TouchWrap>
+
+                  <TouchWrap
+                    onPress={props.setShow}
+                  >
+                    <H1 color={AppColors.lightMediumGreen}>Select</H1>
+                  </TouchWrap>
+              </Container>
+            </Container>
+        </Container>
       </Modal>
   )
 }
 
-
-
-// <Calendar
-//             // Initially visible month. Default = Date()
-//             current={'2012-03-01'}
-//             // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-//             minDate={'2012-05-10'}
-//             // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
-//             maxDate={'2012-05-30'}
-//             // Handler which gets executed on day press. Default = undefined
-//             onDayPress={(day) => {console.log('selected day', day)}}
-//             // Handler which gets executed on day long press. Default = undefined
-//             onDayLongPress={(day) => {console.log('selected day', day)}}
-//             // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-//             monthFormat={'yyyy MM'}
-//             // Handler which gets executed when visible month changes in calendar. Default = undefined
-//             onMonthChange={(month) => {console.log('month changed', month)}}
-//             // Hide month navigation arrows. Default = false
-//             hideArrows={true}
-//             // Replace default arrows with custom ones (direction can be 'left' or 'right')
-//             renderArrow={(direction) => (<Arrow/>)}
-//             // Do not show days of other months in month page. Default = false
-//             hideExtraDays={true}
-//             // If hideArrows = false and hideExtraDays = false do not switch month when tapping on greyed out
-//             // day from another month that is visible in calendar page. Default = false
-//             disableMonthChange={false}
-//             // If firstDay=1 week starts from Monday. Note that dayNames and dayNamesShort should still start from Sunday
-//             firstDay={1}
-//             // Hide day names. Default = false
-//             hideDayNames={true}
-//             // Show week numbers to the left. Default = false
-//             showWeekNumbers={true}
-//             // Handler which gets executed when press arrow icon left. It receive a callback can go back month
-//             onPressArrowLeft={subtractMonth => subtractMonth()}
-//             // Handler which gets executed when press arrow icon right. It receive a callback can go next month
-//             onPressArrowRight={addMonth => addMonth()}
-//             // Disable left arrow. Default = false
-//             disableArrowLeft={false}
-//             // Disable right arrow. Default = false
-//             disableArrowRight={false}
-//             // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
-//             disableAllTouchEventsForDisabledDays={true}
-//             // Replace default month and year title with custom one. the function receive a date as parameter
-//             //renderHeader={(date) => {/*Return JSX}}
-//             // Enable the option to swipe between months. Default = false
-//             enableSwipeMonths={true}
-//           />
+export const CustomWebView = (props) => (
+  <Container
+    flex={1}
+  >
+    <Container
+      marginTop={2}
+      marginLeft={2}
+    >
+      <TouchableOpacity
+        onPress={()=>props.setShow(false)}
+      >
+        <H1>Close</H1>
+      </TouchableOpacity>
+    </Container>
+    <WebView 
+      source={{ uri: props.web_url }}
+        style={{ marginTop: 20
+      }}
+    />
+  </Container>
+)

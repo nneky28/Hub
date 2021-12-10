@@ -19,6 +19,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { H1, Rounded } from '../../utills/components';
 import { PermissionsAndroid } from 'react-native';
+import { WarningModal } from '../../components/ContactModal';
 
 
 
@@ -30,6 +31,7 @@ export default function EditPhoto({navigation}) {
   const [loading,setLoading] = useState(null);
   const [file,setFile] = useState(null)
   const [fileMeta,setFileMeta] = useState(null)
+  const [show,setShow] = React.useState(false)
   const dispatch = useDispatch();
     var cropValues;
     const SvgCircle = (props) => {
@@ -41,7 +43,6 @@ export default function EditPhoto({navigation}) {
                 <Circle 
                 onLayout={async event => {
                     var {x, y, width, height} = await event.nativeEvent.layout;
-                    console.log(x, y, width, height);
                     cropValues = {x: x, y: y, width: width, height: height}
                 }}
                 r={width(25)} 
@@ -88,7 +89,6 @@ export default function EditPhoto({navigation}) {
           }
           setProfilePicture(response);
         } catch (error) {
-          console.log("ERR--",error)
         }
       });
     };
@@ -119,17 +119,37 @@ export default function EditPhoto({navigation}) {
       }
     };
     
+    const removeImage = async () =>{
+      try{
+        setProcess(true)
+        let about = await getData("about_me");
+        let res =  await APIFunction.remove_photo(about.id)
+        let user = {...about,photo : null}
+        let profile = await getData("profile")
+        profile["about"] = {...about,photo : null}
+        setProfilePicture(null)
+        storeData("about_me",{...about,photo : null})
+        await storeData("profile",profile)
+        setProcess(false)
+        setShow(false)
+        setAbout(user)
+        showFlashMessage({title : "Photo removed"})
+      }catch(err){
+        ToastError(err.msg)
+      }
+    }
 
     const getProfile = async () => {
       try{
           const profile = await getData("profile");
           setAbout(profile.about);
       }catch(err){
-          console.log("member---",err)
           let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
           ToastError(msg)
       }
     }
+
+    const [processing,setProcess] = React.useState(false)
     
     useEffect(() => {
         getProfile();
@@ -167,7 +187,6 @@ export default function EditPhoto({navigation}) {
         showFlashMessage();
       }catch(err){
         let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-        console.log("err|||",err,msg)
         dispatch(setLoaderVisible(false));
         ToastError(msg)
         setLoading(false)
@@ -252,15 +271,23 @@ export default function EditPhoto({navigation}) {
                     />
                 </View>
                 <Button 
-                title="Remove Photo"
-                onPress={() => {
-                  setIsSaved(false)
-                  setProfilePicture(null)
-                }}
-                containerStyle={styles.removeBtn}
-                textStyle={[styles.btnText, {color: AppColors.red}]}
+                  title="Remove Photo"
+                  onPress={()=>setShow(true)}
+                  containerStyle={styles.removeBtn}
+                  textStyle={[styles.btnText, {color: AppColors.red}]}
                 />
             </View>
+            <WarningModal 
+              btnText={"Remove Photo"}
+              isVisible={show}
+              onHide={()=>{
+                setShow(false)
+              }}
+              question={"Are you sure you want to delete this image?"}
+              performAction={removeImage}
+              butto
+              loading={processing}
+            />
         </ScreenWrapper>  
     );
 }
