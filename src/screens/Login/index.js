@@ -120,7 +120,7 @@ export default function Dashboard(props) {
               textWeight={'normal'}
               textcolor={blackColor}
               displayText={
-                'Login to your myEdge account.'
+                'MyEdge is part of BizEdge Productivity Tool.'
               }
               textStyle={{
                 marginTop: 5,

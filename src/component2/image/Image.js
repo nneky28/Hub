@@ -28,7 +28,10 @@ export const Images = {
   EmptyDoc : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/DocGen-LOW_edreng.png",
   EmptyPayslip : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/Payslips-LOW_l9nyy6.png",
   EmptyTraining : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/Training-LOW_mknwjt.png",
-  EmptyBenefits : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/Benefits-LOW_tftbof.png"
+  EmptyBenefits : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/Benefits-LOW_tftbof.png",
+  EmptyTeams : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639147364/myedge%20mobile/Teams-LOW_e3f0fr.png",
+  EmptyCelebration : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639147364/myedge%20mobile/Celebration-LOW_oikr4z.png",
+  EmptyNotification : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639147364/myedge%20mobile/Notification-LOW_vlg8os.png"
   
 
 

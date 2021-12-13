@@ -144,6 +144,7 @@ export const SizedBox = (props) => (
   export const Container = (props) => (
     <View 
       style={{
+        position : props.position,
         borderColor : props.borderColor,
         flex : props.flex || 0,
         flexDirection : props.direction,
@@ -355,4 +356,31 @@ export const CustomWebView = (props) => (
       }}
     />
   </Container>
+)
+
+export const EmptyStateWrapper =  (props) => (
+  <Container
+                            marginTop={8}
+                            style={{
+                                alignItems : "center"
+                            }}
+                        >
+                            <ImageWrap 
+                                url={props.icon}
+                                height={30}
+                                fit="contain"
+                            />
+                                <H1
+                                    color={AppColors.black3}
+                                    fontSize={5}
+                                >{props.header_1}</H1>
+                               {
+                                 props.header_2 ? <React.Fragment>
+                                    <H1 color={AppColors.black3}
+                                      fontSize={5}>{props.header_2}</H1>
+                                  <SizedBox height={2} />
+                                 </React.Fragment> : null
+                               }
+                                <P color={AppColors.black2}>{props.sub_text}</P>
+                            </Container>
 )

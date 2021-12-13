@@ -23,7 +23,7 @@ import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
-import { H1, Rounded, TouchWrap } from '../utills/components';
+import { Container, H1, ImageWrap, Rounded, TouchWrap } from '../utills/components';
 const Drawer = ({navigation, ...props}) => {
 
   const dispatch = useDispatch();
@@ -91,7 +91,15 @@ const Drawer = ({navigation, ...props}) => {
   };
   return (
     <Fragment>
-      <Text style={styles.text}>Businesses</Text>
+      {/* <Text style={styles.text}></Text> */}
+      <Container
+        marginTop={3}
+      >
+        <ImageWrap 
+          url={"https://res.cloudinary.com/dgny8sjrg/image/upload/v1639140554/myedge%20mobile/myedge_qedb32.png"}
+          fit="contain"
+        />
+      </Container>
       <View style={styles.line} />
       <View style={{height: height(63)}}>
         <FlatList

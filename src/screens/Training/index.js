@@ -28,7 +28,7 @@ import { Images } from '../../component2/image/Image'
 
 
 export default function Training({navigation}) {
-    var [selected, setSelected] = useState('Overview');
+    var [selected, setSelected] = useState('Upcoming');
     const [loading,setLoading] = useState(true);
     const [histories,setHistories] = useState(null);
     const [trainings,setTrainings] = useState(null);

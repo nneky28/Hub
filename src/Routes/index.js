@@ -104,6 +104,7 @@ const Routes = () => {
                         <Stack.Screen name="People" component={People} />
                         <Stack.Screen name="MemberProfile" component={MemberProfile} />
                         <Stack.Screen name="Time off" component={TimeOff} />
+                        <Stack.Screen name="Notifications" component={Notifications} />
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>

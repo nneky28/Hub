@@ -9,7 +9,7 @@ import { totalSize } from 'react-native-dimension'
 import AppColors, { ColorList } from '../../utills/AppColors'
 import { getData, getStoredBusiness, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api';
-import { Container, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components'
+import { Container, EmptyStateWrapper, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components'
 import { useFocusEffect} from '@react-navigation/core'
 import {Capitalize} from '../../utills/Methods';
 import moment from 'moment'
@@ -19,6 +19,7 @@ import { login } from '../../Redux/Actions/Auth'
 import Swipeable from 'react-native-swipeable';
 import Feather from "react-native-vector-icons/Feather"
 import { showFlashMessage } from '../../components/SuccessFlash'
+import { Images } from '../../component2/image/Image'
 
 
 
@@ -245,17 +246,11 @@ export default function Notifications({navigation}) {
                         {
                             !process && notifications && Array.isArray(notifications) && notifications.length === 0 ?
                             (
-                                <Container
-                                    flex={1}
-                                    style={{
-                                        justifyContent : "center",
-                                        alignItems : "center"
-                                    }}
-                                >
-                                    <H1
-                                        color={AppColors.black3}
-                                    >You have no notifications yet.</H1>
-                                </Container>
+                                <EmptyStateWrapper
+                                    icon={Images.EmptyNotification} 
+                                    header_1={"You have no notifications yet"}
+                                    sub_text={"When you do, they will show up here."}
+                                />
                             ) : null
                         }
                     </React.Fragment>

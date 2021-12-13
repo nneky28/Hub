@@ -11,7 +11,7 @@ import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors, { ColorList, ColorList2 } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox } from '../../utills/components'
+import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import Outjson from '../../assets/lottie/out.json'
@@ -21,6 +21,7 @@ import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods
 import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
 import { Images } from '../../component2/image/Image'
+import { ActivityIndicator } from 'react-native-paper'
 
 
 
@@ -40,6 +41,7 @@ export default function People({route,navigation}) {
     const [loading,setLoading] = React.useState(true);
     const [data,setData] = React.useState([])
     const [fetch,setFetch] = React.useState(false)
+    const [end_reached,setEndReached] = React.useState(false)
 
     const handleSearch = (text) => {
         if (text.length > 0){
@@ -53,7 +55,7 @@ export default function People({route,navigation}) {
     }
     const fetchData = async () => {
         try{
-            
+            if(end_reached) return
             let page = await getData("page")
             if(page > 1){
                 setFetch(true)
@@ -155,8 +157,10 @@ export default function People({route,navigation}) {
                         
                     } : null,
                 ].filter(item=>item !== null);
-                setCelebrations(celeb);
-                setData(celeb)
+                // setCelebrations(celeb);
+                // setData(celeb)
+                setCelebrations([]);
+                setData([])
             }
 
             if(selected === "Who's out"){
@@ -192,6 +196,7 @@ export default function People({route,navigation}) {
             setFetch(false)
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg  ? err.msg : "Something went wrong. Please retry"
             if(msg === "Invalid page."){
+                setEndReached(true)
                 return;
             }
             ToastError(msg)
@@ -208,10 +213,12 @@ export default function People({route,navigation}) {
     useEffect(()=>{
         location()
         return ()=>{
+            setEndReached(false)
             resetPageNumber()
         }
     },[])
     useEffect(()=>{
+        setEndReached(false)
         fetchData()
     },[selected])
     const CelebrationItem = ({item, section}) => {
@@ -336,10 +343,7 @@ export default function People({route,navigation}) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.line} />
-            <View style={
-                !loading && data && Array.isArray(data) && data.length === 0 ? styles.mainViewContainer2 : 
-                styles.mainViewContainer
-            }>
+            <View style={styles.mainViewContainer}>
 
                 <ScrollView
                     nestedScrollEnabled={true}
@@ -415,13 +419,13 @@ export default function People({route,navigation}) {
                 }
                 {
                     !loading && celebrations && selected === "Celebrations" && Array.isArray(celebrations) && celebrations.length === 0 ? (
-                        <Container style={{
-                            alignItems : "center",
-                            flex : 3
-                        }}>
-                            <LottieIcon icon={Celebrationjson} />
-                            <H1 color={AppColors.darkGray}>No active celebration</H1>
-                        </Container>
+                        <EmptyStateWrapper 
+                            icon={Images.EmptyCelebration}
+                            header_1={"No record of upcoming"} 
+                            header_2={"celebration."}
+                            sub_text={"When you do, they will show up here."}
+
+                        />
                     ) : null
                 }
                 
@@ -430,42 +434,26 @@ export default function People({route,navigation}) {
                         (selected === "All" || selected === "My Team") && personsList && Array.isArray(personsList) &&
                         personsList.length === 0 && !loading
                     ) ? (
-                        <Container
-                            style={{
-                                alignItems : "center",
-                                flex : 2
-                            }}
-                        >
-                            <LottieIcon icon={Teamjson} />
-                            <H1 color={AppColors.darkGray}>You have no team member</H1>
-                        </Container>
+                        <EmptyStateWrapper 
+                            icon={Images.EmptyTeams}
+                            header_1={"You have no team"} 
+                            header_2={"member yet."}
+                            sub_text={"When you do, they will show up here."}
+
+                        />
                     ) : null
                 }
                 {
                     selected === "Who's out" && Array.isArray(whosOut) &&
                         whosOut.length === 0 && !loading
                     ? (
-                        <Container
-                            marginTop={8}
-                            flex={1}
-                            style={{
-                                alignItems : "center"
-                            }}
-                        >
-                            <ImageWrap 
-                                url={Images.EmptyTimeoff}
-                                height={30}
-                                fit="contain"
-                            />
-                                <H1
-                                    color={AppColors.black3}
-                                    fontSize={5}
-                                >No is out of office</H1>
-                                <H1 color={AppColors.black3}
-                                    fontSize={5}>today.</H1>
-                                <SizedBox height={2} />
-                                <P color={AppColors.black2}>When anyone is, they will show up here.</P>
-                            </Container>
+                        <EmptyStateWrapper 
+                            icon={Images.EmptyTimeoff}
+                            header_1={"No one is out of office"} 
+                            header_2={"today."}
+                            sub_text={"When anyone is, they will show up here."}
+                        
+                        />
                     ) : null
                 }
                 {
@@ -505,16 +493,27 @@ export default function People({route,navigation}) {
                                     ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
                                     showsVerticalScrollIndicator={false}
                                     nestedScrollEnabled={true}
-                                    contentContainerStyle={[CommonStyles.marginTop_1,{paddingBottom : height(30)}]}
+                                    contentContainerStyle={[CommonStyles.marginTop_1,{paddingBottom : height(40)}]}
                                     onEndReachedThreshold={0.5}
                                     onEndReached={({ distanceFromEnd }) => {
                                         fetchData();
                                     }}
-                                    refreshing={fetch}
-                                    onRefresh={async ()=> {
-                                        await storeData("page",1)
-                                        fetchData();
+
+                                    ListFooterComponent={()=>{
+                                        if(fetch){
+                                            return(
+                                                <Container marginTop={3} fontSize={10}>
+                                                    <ActivityIndicator color={AppColors.green}/>
+                                                </Container> 
+                                            )
+                                        }  
+                                        return <React.Fragment></React.Fragment> 
                                     }}
+                                    // //refreshing={fetch}
+                                    // onRefresh={async ()=> {
+                                    //     await storeData("page",1)
+                                    //     fetchData();
+                                    // }}
                                 /> 
                             </React.Fragment>
                         ) : null

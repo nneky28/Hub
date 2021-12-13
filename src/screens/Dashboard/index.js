@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { width } from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ActivityIndicator, Modal } from 'react-native-paper';
 import WebView from 'react-native-webview';
@@ -17,11 +17,13 @@ import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { Container, CustomWebView, H1, P, PageLoader, Reload, Rounded } from '../../utills/components';
+import { Container, CustomWebView, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
+import Feather from "react-native-vector-icons/Feather"
 import styles from './styles';
+import { useSelector } from 'react-redux';
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const navigation = useNavigation()
   const [margin, setMargin] = useState(0.1);
@@ -57,6 +59,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [report,setReport] = React.useState(false)
   const [asset,setAsset] = React.useState(null)
   const [tasks,setTasks] = React.useState([])
+  const auth = useSelector(state=>state.Auth)
   const goToWeb = (url) => {
     setWebUrl(url)
     setWeb(true)
@@ -230,13 +233,41 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
           />
         </TouchableOpacity> */}
         {
-                     process ? (
-                      <ActivityIndicator 
-                        size={10}
-                        color={AppColors.green}
-                      />
-                     ) : null
-                   }
+          process ? (
+          <ActivityIndicator 
+            size={10}
+            color={AppColors.green}
+          />
+          ) : null
+        }
+        <TouchWrap
+          onPress={()=>{
+            navigate("Notification")
+          }}
+        >
+             <React.Fragment>
+             {/* auth && auth.notifications > 0 */}
+               {
+                 true ? <Container
+                 position="absolute"
+                 backgroundColor={"transparent"}
+                 style={{
+                   top : -4,
+                   left : 5,
+                   zIndex : 10
+                 }}
+               >
+                 <Rounded size={4} 
+                    backgroundColor={AppColors.pink}
+
+                 ></Rounded>
+               </Container> : null
+               }
+                <Feather name="bell" 
+                  size={20}
+                />
+             </React.Fragment>
+        </TouchWrap>
       </View>
       <View style={styles.line} />
       </Container>
