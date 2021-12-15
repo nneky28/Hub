@@ -37,6 +37,8 @@ import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
 import { APIFunction } from '../utills/api';
 import { Container } from '../utills/components';
+import { Linking } from 'react-native';
+import { BASE_URL } from '../utills/Constants';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
@@ -54,6 +56,26 @@ const Routes = () => {
       console.log("logout-err",err)
     }
   };
+
+
+   
+   const getDeepLinkInfo = async () => {
+      let url = await Linking.getInitialURL()
+      if(route === "main" || !url) return
+      let split = url.split("https://coolowo.com/")
+      console.log("URL---",url)
+      dispatch(login({...auth,onboard : true,url : split.length > 1 ? split[1] : null}))
+      // https://coolowo.com/signup-mobile?token=eyJidXNpbmVzc19pZCI6ImQzYTI5NTY2LTQ5YTMtNDAwMy1iNzcyLTIzMDAxNzMyNGE4MyIsImludml0ZV9rZXkiOiJRSjV6c29Od1N2YXFrbHFRVlZMUjVoempURjg3dDhmNGxnRkw5QTNRZjNVZ3lPajlDdDFybFhMS3dqc1NHcWxmIiwiZW1haWwiOiJqb3dlY29zNjg0QGhhZ2VuZGVzLmNvbSJ9:1mx4q3:VYe1Qd8my-EWGShumeloGCjKIOQSzhWLzS0BrVVgiRA&email=jowecos684@hagendes.com
+   }
+   useEffect(()=>{
+    getDeepLinkInfo()
+    Linking.addEventListener('url', ({url}) => {
+      console.log("url!---",url)
+      if(route === "main" || !url) return
+      let split = url.split("https://coolowo.com/")
+      dispatch(login({...auth,onboard : true,url : split.length > 1 ? split[1] : null}))
+    })
+   },[])
 
   return (
     <NavigationContainer>

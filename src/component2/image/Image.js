@@ -25,6 +25,7 @@ export const Images = {
   ProfileIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/profile_rouc3z.png",
   MenuIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1638869622/myedge%20mobile/category_vjknog.png",
   EmptyTimeoff : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/TimeOff-LOW_abcaru.png",
+  EmptyWhosOut : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639148623/myedge%20mobile/TimeOff-2-LOW_jaf5af.png",
   EmptyDoc : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/DocGen-LOW_edreng.png",
   EmptyPayslip : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/Payslips-LOW_l9nyy6.png",
   EmptyTraining : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639046163/myedge%20mobile/Training-LOW_mknwjt.png",

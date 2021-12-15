@@ -63,8 +63,16 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/employees/${id}/update_pension_bank_account/`,fd)
   },
-  about_me : async () => {
-    let biz = await getStoredBusiness();
+  about_me : async (biz_id = null) => {
+    let biz = {}
+    if(biz_id) {
+      biz = {
+        business_id : biz_id
+      }
+    }
+    if(!biz_id){
+      biz = await getStoredBusiness();
+    }
     return getAPIs(`/c/${biz.business_id}/employees/me/`);
   },
   read_notification : async (id) => {
@@ -98,7 +106,11 @@ export const APIFunction = {
   report_asset : async (fd,id) =>{
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz.business_id}/asset-management/assets/${id}/issues/report/`,fd)
+  },
+  user_info : async () => {
+    return getAPIs(`/accounts/auth/user/`)
   }
+  
 }
 export const getAPIs = async (path, token) => {
     let _token = await getData("token");

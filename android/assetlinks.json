@@ -1,0 +1,5 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "com.reactnativeboilerplacehermes",
+               "sha256_cert_fingerprints": ["17:1C:32:CF:8C:78:31:0E:AC:06:89:4F:9B:E4:E0:C7:7A:4A:17:8A:FE:3B:B5:79:57:A2:D0:A5:93:81:B6:08"] }
+}]

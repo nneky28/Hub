@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image} from 'react-native';
+import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image, Linking} from 'react-native';
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
@@ -19,8 +19,10 @@ import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
-import { Container, SizedBox } from '../../utills/components';
+import { Container, H1, OnboardModal, SizedBox } from '../../utills/components';
 import Feather from "react-native-vector-icons/Feather"
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BASE_URL } from '../../utills/Constants';
 
 
 export default function Dashboard(props) {
@@ -63,8 +65,9 @@ export default function Dashboard(props) {
       if(!business) return ToastError("No business connected to this account");
       let employees_me_url = employees_me(business.business_id);
       let about_me = await getAPIs(employees_me_url,token);
+      console.log("ABOUT---",about_me)
       await storeData("refresh",refresh);
-      await storeData("about_me",about_me)
+      await storeData("about_me",about_me);
       await storeData("user",res.user);
       await storeData("logout_time",moment(new Date()).add(2,'hours'));
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
@@ -161,9 +164,21 @@ export default function Dashboard(props) {
                 handelButtonPress={loginMethod}
                 //isloading={isprocessing}
               />
+              <SizedBox size={3} />
+              <TouchableOpacity
+                onPress={()=>{
+                  console.log("====",`${BASE_URL}mobile-app-redirect`)
+                  Linking.openURL(`${BASE_URL}mobile-app-redirect`)
+                }}
+              >
+                <H1 fontSize={3} textAlign="center">Invited to Myedge? Click here to onboard.</H1>
+              </TouchableOpacity>
             </Container> 
         </View>
     </ScrollView>
+    {
+          auth.onboard ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
+        }
     </KeyboardAvoidingScrollView>
   );
 }

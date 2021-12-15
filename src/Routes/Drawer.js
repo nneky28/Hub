@@ -35,7 +35,7 @@ const Drawer = ({navigation, ...props}) => {
     let keys = await AsyncStorage.getAllKeys()
     await AsyncStorage.multiRemove(keys);
     navigation.closeDrawer();
-    dispatch(login({...auth,route : "auth",isLogin : false}));
+    dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
     ToastSuccess("Successfully logged out")
   };
   const getUserDetails = async () => {

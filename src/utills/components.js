@@ -33,7 +33,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
-import WebView from 'react-native-webview';
+import {WebView, WebViewNavigation} from 'react-native-webview';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../Redux/Actions/Auth';
+import { storeData, ToastSuccess } from './Methods';
+import { APIFunction } from './api';
+import {setLoaderVisible} from '../Redux/Actions/Config';
+import { BASE_URL } from './Constants';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -336,6 +342,84 @@ export const DatePickerModal = (props) => {
   )
 }
 
+
+const onNavigationStateChange = async (param,dispatch,auth) => {
+  try{
+    let split = param.url && typeof(param.url) == "string" ? param.url.split("&business_id") : []
+    console.log("onNavigationStateChange",WebViewNavigation,param,auth,split)
+    if(split.length === 1) return
+    var regexp = /[?&]([^=#]+)=([^&#]*)/g,payload = {},check;
+    while (check = regexp.exec(param.url)) {
+      payload[check[1]] = check[2];
+    }
+    // let token = split[1];
+    
+    // // parseURLParams is a pseudo function.
+    // // Make sure to write your own function or install a package
+    // const params = parseURLParams(url);
+  
+    // if (params.token) {
+    //   // Save token for native requests & move to the next screen
+    // }
+    dispatch(setLoaderVisible(true))
+    console.log("PAYLOAD---",payload)
+    await storeData("token",payload.token)
+    let about_me = await APIFunction.about_me(payload.business_id)
+    let user = await APIFunction.user_info()
+    console.log("USER---",user,about_me)
+    let refresh = null;
+    let data = {
+      access_token : payload.token,
+      refresh_token : null,
+      user : user
+    }
+    console.log("ABOUT--ME",about_me,user,data)
+    await storeData("refresh",data.refresh_token);
+    await storeData("about_me",about_me)
+    await storeData("user",data.user);
+    await storeData("logout_time",moment(new Date()).add(2,'hours'));
+    await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
+    ToastSuccess("Login was successful")
+    dispatch(setLoaderVisible(false));
+    return dispatch(login({...auth,onboard : false,url : null,user : {userName: "Joe",...data.user}, route : "main",isLogin : true}));
+  }catch(err){
+    console.log("err-",err)
+  }
+};
+
+export const OnboardModal = (props) => {
+  const dispatch = useDispatch()
+  const auth = useSelector(state=>state.Auth)
+  return(
+    <Modal visible={props.visible}>
+            <Container
+            flex={1}
+          >
+      <Container
+        marginTop={2}
+        marginLeft={2}
+        width={width(5)}
+      >
+        <TouchWrap
+          onPress={()=>{
+            dispatch(login({...auth,onboard : false,url : null}))
+          }}
+        >
+          <H1>Close</H1>
+        </TouchWrap>
+      </Container>
+      <WebView 
+        //props.url
+        source={{ uri: `${BASE_URL}${props.url}`}}
+        style={{ marginTop: 20}}
+        onNavigationStateChange={(param)=>onNavigationStateChange(param,dispatch,auth)}
+
+      />
+    </Container>
+    </Modal>
+  )
+}
+
 export const CustomWebView = (props) => (
   <Container
     flex={1}
@@ -360,27 +444,27 @@ export const CustomWebView = (props) => (
 
 export const EmptyStateWrapper =  (props) => (
   <Container
-                            marginTop={8}
-                            style={{
-                                alignItems : "center"
-                            }}
-                        >
-                            <ImageWrap 
-                                url={props.icon}
-                                height={30}
-                                fit="contain"
-                            />
-                                <H1
-                                    color={AppColors.black3}
-                                    fontSize={5}
-                                >{props.header_1}</H1>
-                               {
-                                 props.header_2 ? <React.Fragment>
-                                    <H1 color={AppColors.black3}
-                                      fontSize={5}>{props.header_2}</H1>
-                                  <SizedBox height={2} />
-                                 </React.Fragment> : null
-                               }
-                                <P color={AppColors.black2}>{props.sub_text}</P>
-                            </Container>
+      marginTop={8}
+      style={{
+          alignItems : "center"
+      }}
+  >
+      <ImageWrap 
+        url={props.icon}
+        height={30}
+        fit="contain"
+      />
+      <H1
+          color={AppColors.black3}
+          fontSize={5}
+      >{props.header_1}</H1>
+      {
+        props.header_2 ? <React.Fragment>
+          <H1 color={AppColors.black3}
+            fontSize={5}>{props.header_2}</H1>
+        <SizedBox height={2} />
+        </React.Fragment> : null
+      }
+      <P color={AppColors.black2}>{props.sub_text}</P>
+  </Container>
 )

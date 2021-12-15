@@ -62,5 +62,11 @@ Following Scripts added
     [Which will create android bundle, clean gradlew and assembleDebug]
     
     Note: Make sure "assets" folder is created at "android/app/src/main"
-
+3. <b>For Deep Links/Universal Links<b/>
+    Use the following urls to confirm universal links are correctly configured
+    <ul>
+        <li>For android https://developers.google.com/digital-asset-links/tools/generator</li>
+        <li>For ios https://branch.io/resources/aasa-validator/</li>
+    </ul>
 <em><b>Author<b/>: Shoaib Ahmed <b>[Develo IT Solutions Pvt Ltd.]<b/></em>
+
