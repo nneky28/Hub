@@ -25,16 +25,9 @@ import { ActivityIndicator } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
 import { showFlashMessage } from '../SuccessFlash';
 import { Calendar } from 'react-native-calendars';
+import { Images } from '../../component2/image/Image';
 
 const ContactModal = ({isVisible, onHide,data}) => {
-//   email: ""
-// first_name: "asha"
-// hire_date: "2021-09-21"
-// job: Object
-// last_name: "abi"
-// line_manager: null
-// phone_number1: ""
-// photo: null
   const contactData = [
       {
           key: '1',
@@ -89,14 +82,21 @@ const ContactModal = ({isVisible, onHide,data}) => {
 
 const DocumentModal = ({isVisible, onHide,document}) => {
   const onPressHandle = (action) => {
-    if(!document || !document.file) return
-    if(action === "share"){
-      return Share.share({
-        message : `${document.file}`
-      })
+    try{
+      if(!document || !document.file) return
+      if(action === "view"){
+        return
+      }
+      if(action === "share"){
+        return Share.share({
+          message : `${document.file}`
+        })
+      }
+      if(!Linking.canOpenURL(document.file)) return
+      return Linking.openURL(document.file)
+    }catch(err){
+      console.log("Errr--",err)
     }
-    if(!Linking.canOpenURL(document.file)) return
-    return Linking.openURL(document.file)
   }
   return (
     <Modal
@@ -114,15 +114,15 @@ const DocumentModal = ({isVisible, onHide,document}) => {
       style={{justifyContent: 'flex-end', margin: 0}}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <TextWithIcon item={{title: 'Share', iconLeft: shareIcon}} textStyle={styles.text2}
+        <TextWithIcon item={{title: 'Share', iconLeft: Images.ShareIcon}} textStyle={styles.text2}
           onPressHandle={()=>onPressHandle("share")}
         />
-        <TextWithIcon item={{title: 'Download', iconLeft: downloadIcon}} textStyle={styles.text2}
+        <TextWithIcon item={{title: 'Download', iconLeft: Images.DownloadIcon}} textStyle={styles.text2}
           onPressHandle={()=>onPressHandle("download")}
         />
-        {/* <TextWithIcon item={{title: 'Delete', iconLeft: deleteIcon}} textStyle={styles.text2}
-          onPressHandle={()=>onPressHandle("share")}
-        /> */}
+        <TextWithIcon item={{title: 'View', iconLeft: Images.EyeIcon}} textStyle={styles.text2}
+          onPressHandle={()=>onPressHandle("view")}
+        />
       </View>
     </Modal>
   );
@@ -305,9 +305,7 @@ const __ReportModal = ({isVisible, onHide,asset}) => {
   const handleSubmit = async () => {
     try{
       let failed = false;
-      for(let req of required){
-        if(!message || (message === "") || (message.trim() === "")) failed = true;
-      }
+      if(!message || (message === "") || (message.trim() === "")) failed = true;
       if(failed) {
         return showFlashMessage({type : "error",title : "Message field is required"})
       };
@@ -318,6 +316,7 @@ const __ReportModal = ({isVisible, onHide,asset}) => {
       showFlashMessage({title : "Issue has been reported to HR"})
       onHide()
     }catch(err){
+      console.log("er--",err)
       dispatch(setLoaderVisible(false));
       return showFlashMessage({type : "error",title : err.msg})
     }

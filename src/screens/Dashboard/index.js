@@ -59,7 +59,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [report,setReport] = React.useState(false)
   const [asset,setAsset] = React.useState(null)
   const [tasks,setTasks] = React.useState([])
+  const [task,setTask]  = React.useState(null)
   const auth = useSelector(state=>state.Auth)
+  const [processing,setProcessing] = React.useState(false)
   const goToWeb = (url) => {
     setWebUrl(url)
     setWeb(true)
@@ -88,15 +90,29 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     }
   }
 
-  const markAsCompleted = async (task) =>{
+  const markAsCompleted = async () =>{
     try{
       let about = await getData("about_me")
-      await APIFunction.toggle_completed(about.id,task.id,{is_completed : true})
+      setProcessing(true)
+      await APIFunction.toggle_completed(about.id,task.id,{is_completed : !task.is_completed})
       let arr = [...tasks].filter(item=> item.id !== task.id)
+      setProcessing(false)
+      setShow(false)
       setTasks([...arr])
       showFlashMessage({title : "Marked as done"})
     }catch(err){
-      ToastError(err.msg)
+      console.log("ER00",err)
+      showFlashMessage({title : "Marked as done",type : "error"})
+    }
+  }
+
+  const openWarningModal = (data) => {
+    try{
+      setTask(data)
+      setText(`Are you sure you have completed "${data?.title}"?`)
+      setShow(true)
+    }catch(err){
+      //console.log("Err---",err)
     }
   }
 
@@ -215,7 +231,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               ) : (
                 <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
                   <H1>
-                      {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
+                    {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
                   </H1>
               </Rounded>
               )
@@ -242,13 +258,12 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
         }
         <TouchWrap
           onPress={()=>{
-            navigate("Notification")
+            navigate("Notifications")
           }}
         >
              <React.Fragment>
-             {/* auth && auth.notifications > 0 */}
                {
-                 true ? <Container
+                 auth && auth.notifications > 0 ? <Container
                  position="absolute"
                  backgroundColor={"transparent"}
                  style={{
@@ -316,7 +331,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     </View> 
                     <View style={styles.line} />
                     <Todo data={[...tasks].splice(0,2)} 
-                      markAsCompleted={markAsCompleted}
+                      openWarningModal={openWarningModal}
                     />
                   </View>
                   ) : null
@@ -438,11 +453,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             <WarningModal 
               isVisible={show}
               onHide={()=>{
+                setCancel(false)
+                setProcessing(false)
                 setShow(false)
               }}
               question={text}
-              performAction={cancelRequest}
-              loading={cancel}
+              performAction={["Are you sure you want to end this leave?","Are you sure you want to cancel this request?"].includes(text) ? cancelRequest : markAsCompleted}
+              loading={cancel || processing}
+              btnText={"Mark as Completed"}
             />
 
             <ReportModal

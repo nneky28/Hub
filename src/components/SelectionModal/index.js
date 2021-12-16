@@ -65,7 +65,7 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
       <View style={styles.container}>
         <View style={styles.line1} />
         <View style={styles.row}>
-        <TextWithIcon text="People" icon={Images.PeopleIcon} />
+        <TextWithIcon text="Todos" icon={Images.PeopleIcon} />
           <TextWithIcon text="Time off" icon={Images.RadioIcon} />
           <TextWithIcon text="Benefits" icon={Images.BenefitIcon} />
         </View>

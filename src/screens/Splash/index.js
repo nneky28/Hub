@@ -20,12 +20,20 @@ const Splash = (props) => {
     //dispatch(setLoaderVisible(true));
     let user = await getData("user")
     await storeData("page",1)
-    setTimeout(() => {
+    setTimeout(async () => {
       try{
         if(user){
           dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
         }else{
-          dispatch(login({...auth,isLogin : true,route : "auth"}));
+          let auth = await getData("auth");
+          if(!auth){
+            auth = {
+              isLogin: false,
+              route: "splash",
+              user: null
+            }
+          }
+          dispatch(login({...auth,isLogin : false,route : "auth"}));
         }
       }catch(err){
       }

@@ -27,7 +27,7 @@ import Training from '../screens/Training';
 import Settings from '../screens/Settings';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
-import { getData, ToastSuccess } from '../utills/Methods';
+import { getData, ToastSuccess,storeData } from '../utills/Methods';
 import codePush from 'react-native-code-push';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -37,7 +37,7 @@ import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
 import { APIFunction } from '../utills/api';
 import { Container } from '../utills/components';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 
 const Stack = createStackNavigator();
@@ -50,6 +50,8 @@ const Routes = () => {
 
   const logoutMethod = async () => {
     try{
+      let keys = await AsyncStorage.getAllKeys()
+      AsyncStorage.multiRemove(keys);
       dispatch(login({...auth,route : "auth",isLogin : false}));
       ToastSuccess("Successfully logged out")
     }catch(err){
@@ -60,23 +62,28 @@ const Routes = () => {
 
    
    const getDeepLinkInfo = async () => {
+      console.log("getDeepLinkInfo before")
       let url = await Linking.getInitialURL()
       if(route === "main" || !url) return
-      let split = url.split("https://coolowo.com/")
-      console.log("URL---",url)
-      dispatch(login({...auth,onboard : true,url : split.length > 1 ? split[1] : null}))
-      // https://coolowo.com/signup-mobile?token=eyJidXNpbmVzc19pZCI6ImQzYTI5NTY2LTQ5YTMtNDAwMy1iNzcyLTIzMDAxNzMyNGE4MyIsImludml0ZV9rZXkiOiJRSjV6c29Od1N2YXFrbHFRVlZMUjVoempURjg3dDhmNGxnRkw5QTNRZjNVZ3lPajlDdDFybFhMS3dqc1NHcWxmIiwiZW1haWwiOiJqb3dlY29zNjg0QGhhZ2VuZGVzLmNvbSJ9:1mx4q3:VYe1Qd8my-EWGShumeloGCjKIOQSzhWLzS0BrVVgiRA&email=jowecos684@hagendes.com
+      console.log("getDeepLinkInfo after")
+      let split = Platform.OS === "ios" ?  url.split("myedgeapp://") : url.split("https://coolowo.com/")
+      let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
+      await storeData("auth",load)
+      dispatch(login(load))
+   }
+   const deepLinkListener = () => {
+    Linking.addEventListener('url', async ({url}) => {
+      if(route === "main" || !url) return
+      let split = Platform.OS === "ios" ?  url.split("myedgeapp://") : url.split("https://coolowo.com/")
+      let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
+      await storeData("auth",load)
+      dispatch(login(load))
+    })
    }
    useEffect(()=>{
     getDeepLinkInfo()
-    Linking.addEventListener('url', ({url}) => {
-      console.log("url!---",url)
-      if(route === "main" || !url) return
-      let split = url.split("https://coolowo.com/")
-      dispatch(login({...auth,onboard : true,url : split.length > 1 ? split[1] : null}))
-    })
+    deepLinkListener()
    },[])
-
   return (
     <NavigationContainer>
       <Loader />
@@ -134,7 +141,7 @@ const Routes = () => {
                   {() => (
                       <Stack.Navigator
                         screenOptions={{headerMode: false}}>
-                          <Stack.Screen name="People" component={People} />
+                          <Stack.Screen name="Todos" component={Todos} />
                           <Stack.Screen name="Time off" component={TimeOff} />
                         <Stack.Screen name="Payslip" component={Payslips} />
                         <Stack.Screen name="Benefits" component={Benefits} />
@@ -144,7 +151,7 @@ const Routes = () => {
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>
-                  <Tab.Screen name="Notifications" component={Notifications} />
+                  <Tab.Screen name="People" component={People} />
                   <Tab.Screen name="Profile">
                   {() => (
                       <Stack.Navigator

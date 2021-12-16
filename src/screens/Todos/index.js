@@ -20,6 +20,8 @@ import { getData, ToastError } from '../../utills/Methods';
 import { APIFunction } from '../../utills/api';
 import { PageLoader } from '../../utills/components';
 import { showFlashMessage } from '../../components/SuccessFlash';
+import { useFocusEffect } from '@react-navigation/native';
+import { WarningModal } from '../../components/ContactModal';
 
 if (
   Platform.OS === 'android' &&
@@ -32,6 +34,10 @@ export default function Dashboard({navigation: {goBack}}) {
   const[todoList, setTodoList] = useState(unCompleteTodo);
   const[completeList, setCompleteList] = useState(completedTodo);
   const [loading,setLoading] = React.useState(true)
+  const [processing,setProcessing] = React.useState(false)
+  const [show,setShow] = React.useState(false)
+  const [task,setTask] = React.useState(null)
+  const [warning,setWarning] = React.useState(null)
   const getTasks = async () =>{
     try{
       let about = await getData("about_me")
@@ -47,40 +53,43 @@ export default function Dashboard({navigation: {goBack}}) {
       ToastError(err.msg)
     }
   }
+  useFocusEffect(
+    React.useCallback(()=>{
+      getTasks()
+    },[])
+  )
 
-  useEffect(()=>{
-    getTasks()
-  },[])
-
-  const markComplete = ({item}) => {
-    let toMarkIdx = todoList.findIndex(e => e.id === item.id);
-    let toMark = todoList.find(e => e.id === item.id);
-    setCompleteList([...completeList, toMark]);
-    let newList = todoList.splice(toMarkIdx, 1);
-    setTodoList(newList);
-  }
-
-  const markAsCompleted = async (task) =>{
+  const markAsCompleted = async () =>{
     try{
-      console.log("markAsCompleted",task)
       let about = await getData("about_me")
+      setProcessing(true)
       await APIFunction.toggle_completed(about.id,task.id,{is_completed : !task.is_completed})
       if(task.is_completed){
         let arr = [...completeList].filter(item=> item.id !== task.id)
         setCompleteList([...arr])
-        setTodoList([...todoList,{...task,is_completed : false}])
+        setTodoList([{...task,is_completed : false},...todoList])
         return showFlashMessage({title : "Marked as undone"})
       }
       let arr = [...todoList].filter(item=> item.id !== task.id)
+      setProcessing(false)
+      setShow(false)
       setTodoList([...arr])
-      setCompleteList([...completeList,{...task,is_completed : true}])
+      setCompleteList([{...task,is_completed : true},...completeList])
       showFlashMessage({title : "Marked as done"})
     }catch(err){
-      console.log("err00",err)
       ToastError(err.msg)
     }
   }
 
+  const openWarningModal = (data) => {
+    try{
+      setTask(data)
+      setWarning(`Are you sure you have completed "${data?.title}"?`)
+      setShow(true)
+    }catch(err){
+      //console.log("Err---",err)
+    }
+  }
 
   const RenderList = ({data, title}) => {
     const spinValue = new Animated.Value(0);
@@ -127,7 +136,7 @@ export default function Dashboard({navigation: {goBack}}) {
           />
         </TouchableOpacity>
         <View style={styles.line} />
-        {show && <Todo data={data} markAsCompleted={markAsCompleted}/>}
+        {show && <Todo data={data} openWarningModal={openWarningModal}/>}
       </View>
     );
   };
@@ -146,6 +155,16 @@ export default function Dashboard({navigation: {goBack}}) {
         <RenderList title="Completed" data={completeList} />
       </View>
       }
+      <WarningModal 
+              isVisible={show}
+              onHide={()=>{
+                setShow(false)
+              }}
+              question={warning}
+              performAction={markAsCompleted}
+              loading={processing}
+              btnText={"Mark as Completed"}
+            />
     </ScreenWrapper>
   );
 }

@@ -7,8 +7,10 @@ import {
   View
 } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
-import { lockIcon } from '../../assets/images';
+import { leftIcon, lockIcon } from '../../assets/images';
+import { Images } from '../../component2/image/Image';
 import CommonStyles from '../../utills/CommonStyles';
+import { ImageWrap } from '../../utills/components';
 import styles from './styles';
 
 const TextWithIconCopy = ({item, iconStyle, onHide}) => {
@@ -61,12 +63,18 @@ const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle
     return (
       <View style={[styles.contactComponentContainer, {opacity:  lock ? 0.5 : 1}, containerStyle]}>
         <TouchableOpacity 
-        style={[styles.row]}
-        disabled={lock}
-        onPress={onPressHandle}
+          style={[styles.row]}
+          disabled={lock}
+          onPress={onPressHandle}
         >
           <View style={CommonStyles.rowAlignItemCenter}>
-            {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={item.iconLeft} style={styles.iconStyle} />} 
+            <ImageWrap 
+              url={item.iconLeft}
+              width={5}
+              height={3}
+              fit={'contain'}
+            />
+            {/* {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={!uri ? item.iconLeft : {uri : item.iconLeft}} style={styles.iconStyle} />}  */}
             <Text style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>{item.title}</Text>
           </View>
           {lock? <Image

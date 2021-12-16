@@ -11,7 +11,7 @@ import { Circle } from 'react-native-progress';
 import { rightIcon, upIcon } from '../../assets/images';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, ImageWrap, LottieIcon, P } from '../../utills/components';
+import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
@@ -45,20 +45,12 @@ const TimeoffVertical = ({data,load,setModal,tab}) => {
             />}
           />
         ) : (
-          <Container 
-            style={{justifyContent : "center", alignItems : "center"}}
-            flex={1}
-          >
-                <ImageWrap 
-                  url={Images.TimeoffIcon}
-                  height={20}
-                  fit={"contain"}
-                />
-                <Container width={50}>
-                  <H1 textAlign="center">Oops!</H1>
-                  <P textAlign="center">{`You do not have any ${tab === "request" ? "request" : tab+" timeoff"}`}</P>
-                </Container>
-            </Container>
+          <EmptyStateWrapper 
+            icon={Images.EmptyTimeoff}
+            header_1={"You have no upcoming"} 
+            header_2={"timeoff."}
+            sub_text={"When there is, they will show up here."}
+        />
         )
       }
     </React.Fragment>

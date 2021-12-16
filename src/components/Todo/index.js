@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 import {checkIcon, unCheckIcon} from '../../assets/images';
 import styles from './styles';
 
-const Todo = ({data, onPressHandle,markAsCompleted}) => {
+const Todo = ({data, onPressHandle,openWarningModal}) => {
   return (
     <FlatList
       data={data}
@@ -30,7 +30,7 @@ const Todo = ({data, onPressHandle,markAsCompleted}) => {
             </View>
             <TouchableOpacity onPress={()=>{
               if(item.is_completed) return
-              markAsCompleted(item)
+              openWarningModal(item)
             }}>
               <Image
                 resizeMode="contain"

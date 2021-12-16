@@ -346,7 +346,6 @@ export const DatePickerModal = (props) => {
 const onNavigationStateChange = async (param,dispatch,auth) => {
   try{
     let split = param.url && typeof(param.url) == "string" ? param.url.split("&business_id") : []
-    console.log("onNavigationStateChange",WebViewNavigation,param,auth,split)
     if(split.length === 1) return
     var regexp = /[?&]([^=#]+)=([^&#]*)/g,payload = {},check;
     while (check = regexp.exec(param.url)) {
@@ -362,18 +361,15 @@ const onNavigationStateChange = async (param,dispatch,auth) => {
     //   // Save token for native requests & move to the next screen
     // }
     dispatch(setLoaderVisible(true))
-    console.log("PAYLOAD---",payload)
     await storeData("token",payload.token)
     let about_me = await APIFunction.about_me(payload.business_id)
     let user = await APIFunction.user_info()
-    console.log("USER---",user,about_me)
     let refresh = null;
     let data = {
       access_token : payload.token,
       refresh_token : null,
       user : user
     }
-    console.log("ABOUT--ME",about_me,user,data)
     await storeData("refresh",data.refresh_token);
     await storeData("about_me",about_me)
     await storeData("user",data.user);
@@ -383,7 +379,6 @@ const onNavigationStateChange = async (param,dispatch,auth) => {
     dispatch(setLoaderVisible(false));
     return dispatch(login({...auth,onboard : false,url : null,user : {userName: "Joe",...data.user}, route : "main",isLogin : true}));
   }catch(err){
-    console.log("err-",err)
   }
 };
 
@@ -392,22 +387,24 @@ export const OnboardModal = (props) => {
   const auth = useSelector(state=>state.Auth)
   return(
     <Modal visible={props.visible}>
-            <Container
-            flex={1}
-          >
       <Container
-        marginTop={2}
-        marginLeft={2}
-        width={width(5)}
+        flex={1}
       >
-        <TouchWrap
-          onPress={()=>{
-            dispatch(login({...auth,onboard : false,url : null}))
-          }}
+        <Container
+          marginTop={5}
+          marginLeft={2}
+          width={width(3)}
         >
-          <H1>Close</H1>
-        </TouchWrap>
-      </Container>
+          <TouchWrap
+            onPress={()=>{
+              let load = {...auth,onboard : false,url : null}
+              storeData("auth",load)
+              dispatch(login(load))
+            }}
+          >
+            <H1>Close</H1>
+          </TouchWrap>
+        </Container>
       <WebView 
         //props.url
         source={{ uri: `${BASE_URL}${props.url}`}}

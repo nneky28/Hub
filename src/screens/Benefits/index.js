@@ -7,7 +7,7 @@ import BenifitList from '../../components/BenifitList';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
+import { Container, CustomWebView, EmptyStateWrapper, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
 import { getData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 
@@ -76,35 +76,23 @@ export default function Benefits({navigation}) {
                     }
                     {
                         !loading && benefits && Array.isArray(benefits) && benefits.length === 0 ? (
-                            <Container
-                                flex={1}
-                                marginTop={8}
-                                style={{
-                                    //justifyContent : "center",
-                                    alignItems : "center"
-                                }}
-                                paddingHorizontal={5}
-                            >
-                                 <ImageWrap 
-                                        url={Images.EmptyBenefits}
-                                        height={40}
-                                        fit="contain"
-                                    />
-                                <H1
-                                                    color={AppColors.black3}
-                                                    fontSize={5}
-                                                >You have no active</H1>
-                                                <H1 color={AppColors.black3}
-                                                    fontSize={5}>benefits yet.</H1>
-                                                    <SizedBox height={2} />
-                                                <P color={AppColors.black2}>When you do, they will show up here.</P>
-                            </Container>
-                        ) : (
-                            <BenifitList data={['#C2D4FF', '#99E6FF']} 
-                                horizontal={false}
-                                benefits={benefits}
-                                goToWeb={goToWeb}
+                            <EmptyStateWrapper 
+                                icon={Images.EmptyBenefits}
+                                header_1={"You have no active"} 
+                                header_2={"benefits yet."}
+                                sub_text={"When you do, they will show up here."}
                             />
+                        ) : (
+                            <React.Fragment>
+                                <Container width={90} marginTop={2}>
+                                    <H1 fontSize={3.4}>Company benefits you are enrolled on</H1>
+                                </Container>
+                                <BenifitList data={['#C2D4FF', '#99E6FF']} 
+                                    horizontal={false}
+                                    benefits={benefits}
+                                    goToWeb={goToWeb}
+                                />
+                            </React.Fragment>
                         )
                     }
                 </View>

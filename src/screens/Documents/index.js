@@ -15,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/core';
 import { Capitalize, getData, ToastError } from '../../utills/Methods';
 import { APIFunction } from '../../utills/api';
 import moment from 'moment';
+import { width } from 'react-native-dimension';
 
 
 
@@ -69,7 +70,7 @@ export default function Documents({navigation}) {
             }}
             style={[styles.listItemContainer]}
             >
-                <View style={CommonStyles.rowJustifySpaceBtw}>
+                <View style={[CommonStyles.rowJustifySpaceBtw,{width : width(80)}]}>
                     <Image source={fileIcon} style={styles.fileIcon} />
                     <View style={styles.textContainer}>
                         <Text style={styles.titleText}>{title ? Capitalize(title) : null}</Text>

@@ -96,7 +96,7 @@ function TabBar({state, descriptors, navigation}) {
               onLongPress={onLongPress}
               style={styles.container}
             >
-              {
+              {/* {
                 index === 2  && auth && auth.notifications > 0 && (moment().isAfter(auth.last_checked) || !auth.last_checked) ? (
                   <Container
                     style={{
@@ -111,7 +111,7 @@ function TabBar({state, descriptors, navigation}) {
                     </Rounded>
                   </Container>
                 ) : null
-              }
+              } */}
               <Image
                 resizeMode="contain"
                 source={isFocused ? {uri : image1} : {uri : image}}

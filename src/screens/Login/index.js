@@ -176,7 +176,7 @@ export default function Dashboard(props) {
             </Container> 
         </View>
     </ScrollView>
-    {
+        {
           auth.onboard ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
         }
     </KeyboardAvoidingScrollView>

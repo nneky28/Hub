@@ -55,6 +55,7 @@ export default function People({route,navigation}) {
     }
     const fetchData = async () => {
         try{
+            console.log("REACHED",end_reached)
             if(end_reached) return
             let page = await getData("page")
             if(page > 1){
@@ -157,10 +158,8 @@ export default function People({route,navigation}) {
                         
                     } : null,
                 ].filter(item=>item !== null);
-                // setCelebrations(celeb);
-                // setData(celeb)
-                setCelebrations([]);
-                setData([])
+                    setCelebrations(celeb);
+                    setData(celeb)
             }
 
             if(selected === "Who's out"){
@@ -218,7 +217,6 @@ export default function People({route,navigation}) {
         }
     },[])
     useEffect(()=>{
-        setEndReached(false)
         fetchData()
     },[selected])
     const CelebrationItem = ({item, section}) => {
@@ -323,7 +321,7 @@ export default function People({route,navigation}) {
     return (
         <ScreenWrapper scrollEnabled={
             //!loading && data && Array.isArray(data) && data.length === 0 ? false : true
-            false
+            !["All","Team"].includes(selected)
         }>
             <Container flex={1}>
                 <View style={styles.header}>
@@ -355,6 +353,7 @@ export default function People({route,navigation}) {
                     onPress={async () => {
                         await storeData("tab",item)
                         await storeData("page",1)
+                        setEndReached(false)
                         setPersonsList([])
                         setSelected(item)
                     }}
@@ -423,8 +422,7 @@ export default function People({route,navigation}) {
                             icon={Images.EmptyCelebration}
                             header_1={"No record of upcoming"} 
                             header_2={"celebration."}
-                            sub_text={"When you do, they will show up here."}
-
+                            sub_text={"When there is, it will show up here."}
                         />
                     ) : null
                 }
@@ -448,7 +446,7 @@ export default function People({route,navigation}) {
                         whosOut.length === 0 && !loading
                     ? (
                         <EmptyStateWrapper 
-                            icon={Images.EmptyTimeoff}
+                            icon={Images.EmptyWhosOut}
                             header_1={"No one is out of office"} 
                             header_2={"today."}
                             sub_text={"When anyone is, they will show up here."}
