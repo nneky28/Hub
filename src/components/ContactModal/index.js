@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View,ScrollView, Share, Linking
+  Text, View,ScrollView, Share, Linking, KeyboardAvoidingView
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
 import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
-import { Container, CustomCalender, H1, LottieIcon, P, SizedBox } from '../../utills/components';
+import { Container, CustomCalender, H1, LottieIcon, P, SizedBox, TouchWrap } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native-paper';
@@ -116,13 +116,16 @@ const DocumentModal = ({isVisible, onHide,document}) => {
       <View style={styles.container}>
         <TextWithIcon item={{title: 'Share', iconLeft: Images.ShareIcon}} textStyle={styles.text2}
           onPressHandle={()=>onPressHandle("share")}
+          url={true}
         />
         <TextWithIcon item={{title: 'Download', iconLeft: Images.DownloadIcon}} textStyle={styles.text2}
           onPressHandle={()=>onPressHandle("download")}
+          url={true}
         />
-        <TextWithIcon item={{title: 'View', iconLeft: Images.EyeIcon}} textStyle={styles.text2}
+        {/* <TextWithIcon item={{title: 'View', iconLeft: Images.EyeIcon}} textStyle={styles.text2}
           onPressHandle={()=>onPressHandle("view")}
-        />
+          url={true}
+        /> */}
       </View>
     </Modal>
   );
@@ -198,97 +201,107 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
       swipeThreshold={0.3}
       style={{justifyContent: 'flex-end', margin: 0}}
       isVisible={isVisible}>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.inner}>
-          <View style={styles.bodyWrap}>
-            {
-              show ? <CustomCalender 
-                date={action === "start_date" ? data.start_date : data.end_date}
-                setShow={(date)=>{
-                  if(action === "start_date"){
-                    setData({...data,start_date : date.dateString})
-                  }
-                  if(action === "end_date"){
-                    setData({...data,end_date : date.dateString})
-                  }
-                  setShow(false)
-                }} 
-              /> : <Formik>
-              <React.Fragment>
-                <View
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginTop: 25,
-                  }}>
-                    <CustomText
-                      textSize={20}
-                      textWeight={'bold'}
-                      textcolor={defaultColor}
-                      displayText={'Timeoff Request'}
-                      textStyle={{
-                        marginTop: -3,
-                      }}
-                    />
-                </View>
-                <Field
-                    name="start_date"
-                    placeholder="Start Date"
-                    component={CustomDatePicker}
-                    value={data.start_date}
-                    onChangeData={(value)=>{
-                      setData({...data,start_date : value})
-                    }}
-                    setShow={()=>{
-                      setAction("start_date")
-                      setShow(true)
-                    }}
-                    maximumDate={null}
-                    color={AppColors.black}
-                />
-                <Field
-                    name="end_date"
-                    placeholder="End Date"
-                    component={CustomDatePicker}
-                    value={data.end_date}
-                    onChangeData={(value)=>{
-                      setData({...data,end_date : value})
-                    }}
-                    setShow={()=>{
-                      setAction("end_date")
-                      setShow(true)
-                    }}
-                    maximumDate={null}
-                    color={AppColors.black}
-                />
-                  <Field
-                    component={CustomInput}
-                    name="reason"
-                    placeholder="Reason"
-                    keyboardType="default"
-                    value={data.email}
-                    onChangeData={(value)=>{
-                      setData({...data,reason : value})
-                    }}
-                    height={100}
-                    multiline={true}
-                    color={AppColors.black}
-                  />
-                  <View style={{width: '100%', padding : '5%'}}>
-                    <CustomButton
-                      btnText={'Submit'}
-                      handelButtonPress={handleSubmit}
-                    />
-                  </View> 
-                </React.Fragment>
-            </Formik>
-            }
-        </View>
-      </ScrollView>
-
-
-      </View>
+        <KeyboardAvoidingView  
+          behavior={Platform.OS === "ios" ? "padding" : "height"} 
+          style={{flex : 1,justifyContent : "flex-end"}}
+        >
+              <View style={styles.container}>
+                  <ScrollView contentContainerStyle={styles.inner}>
+                    <View style={styles.bodyWrap}>
+                      {
+                        show ? <CustomCalender 
+                          date={action === "start_date" ? data.start_date : data.end_date}
+                          setShow={(date)=>{
+                            if(action === "start_date"){
+                              setData({...data,start_date : date.dateString})
+                            }
+                            if(action === "end_date"){
+                              setData({...data,end_date : date.dateString})
+                            }
+                            setShow(false)
+                          }} 
+                        /> : <Formik>
+                        <React.Fragment>
+                          <Container marginLeft={4}
+                            width={10}
+                          >
+                            <TouchWrap onPress={onHide}>
+                              <P>Close</P>
+                            </TouchWrap>
+                          </Container>
+                          <View
+                            style={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              marginTop: 25,
+                            }}>
+                              <CustomText
+                                textSize={20}
+                                textWeight={'bold'}
+                                textcolor={defaultColor}
+                                displayText={'Timeoff Request'}
+                                textStyle={{
+                                  marginTop: -3,
+                                }}
+                              />
+                          </View>
+                          <Field
+                              name="start_date"
+                              placeholder="Start Date"
+                              component={CustomDatePicker}
+                              value={data.start_date}
+                              onChangeData={(value)=>{
+                                setData({...data,start_date : value})
+                              }}
+                              setShow={()=>{
+                                setAction("start_date")
+                                setShow(true)
+                              }}
+                              maximumDate={null}
+                              color={AppColors.black}
+                          />
+                          <Field
+                              name="end_date"
+                              placeholder="End Date"
+                              component={CustomDatePicker}
+                              value={data.end_date}
+                              onChangeData={(value)=>{
+                                setData({...data,end_date : value})
+                              }}
+                              setShow={()=>{
+                                setAction("end_date")
+                                setShow(true)
+                              }}
+                              maximumDate={null}
+                              color={AppColors.black}
+                          />
+                            <Field
+                              component={CustomInput}
+                              name="reason"
+                              placeholder="Reason"
+                              keyboardType="default"
+                              value={data.email}
+                              onChangeData={(value)=>{
+                                setData({...data,reason : value})
+                              }}
+                              height={100}
+                              multiline={true}
+                              color={AppColors.black}
+                            />
+                            <View style={{width: '100%', padding : '5%'}}>
+                              <CustomButton
+                                btnText={'Submit'}
+                                handelButtonPress={handleSubmit}
+                              />
+                            </View> 
+                          </React.Fragment>
+                      </Formik>
+                      }
+                  </View>
+                </ScrollView>
+            </View>
+        </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -336,54 +349,64 @@ const __ReportModal = ({isVisible, onHide,asset}) => {
       swipeThreshold={0.3}
       style={{justifyContent: 'flex-end', margin: 0}}
       isVisible={isVisible}>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.inner}>
-          <View style={styles.bodyWrap}>
-            <Formik>
-                <React.Fragment>
-                  <View
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginTop: 25,
-                    }}>
-                      <CustomText
-                        textSize={20}
-                        textWeight={'bold'}
-                        textcolor={defaultColor}
-                        displayText={'Report Issue'}
-                        textStyle={{
-                          marginTop: -3,
-                        }}
-                      />
-                  </View>
-                    <Field
-                      component={CustomInput}
-                      name="message"
-                      placeholder="Message"
-                      keyboardType="default"
-                      value={message}
-                      onChangeData={(value)=>{
-                        setMessage(value)
-                      }}
-                      height={100}
-                      multiline={true}
-                      color={AppColors.black}
-                    />
-                    <View style={{width: '100%', padding : '5%'}}>
-                      <CustomButton
-                        btnText={'Submit'}
-                        handelButtonPress={handleSubmit}
-                      />
-                    </View> 
-                  </React.Fragment>
-              </Formik>
+        <KeyboardAvoidingView  
+          behavior={Platform.OS === "ios" ? "padding" : "height"} 
+          style={{flex : 1,justifyContent : "flex-end"}}
+        >
+          <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.inner}>
+              <View style={styles.bodyWrap}>
+                <Formik>
+                    <React.Fragment>
+                      <Container marginLeft={4}
+                        width={10}
+                      >
+                        <TouchWrap onPress={onHide}>
+                          <P>Close</P>
+                        </TouchWrap>
+                      </Container>
+                      <View
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginTop: 25,
+                        }}>
+                          <CustomText
+                            textSize={20}
+                            textWeight={'bold'}
+                            textcolor={defaultColor}
+                            displayText={'Report Issue'}
+                            textStyle={{
+                              marginTop: -3,
+                            }}
+                          />
+                      </View>
+                        <Field
+                          component={CustomInput}
+                          name="message"
+                          placeholder="Message"
+                          keyboardType="default"
+                          value={message}
+                          onChangeData={(value)=>{
+                            setMessage(value)
+                          }}
+                          height={100}
+                          multiline={true}
+                          color={AppColors.black}
+                        />
+                        <View style={{width: '100%', padding : '5%'}}>
+                          <CustomButton
+                            btnText={'Submit'}
+                            handelButtonPress={handleSubmit}
+                          />
+                        </View> 
+                      </React.Fragment>
+                  </Formik>
+              </View>
+            </ScrollView>
           </View>
-        </ScrollView>
-
-
-      </View>
+        </KeyboardAvoidingView>
     </Modal>
   );
 };

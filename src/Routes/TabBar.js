@@ -78,8 +78,8 @@ function TabBar({state, descriptors, navigation}) {
             image1 = Images.MenuFillIcon;
           }
           if (index == 2) {
-            image = Images.NotificationIcon;
-            image1 = Images.NotificationFillIcon;
+            image = Images.PeopleIcon;
+            image1 = Images.PeopleFillIcon;
           }
           if (index == 3) {
             image = Images.ProfileIcon;

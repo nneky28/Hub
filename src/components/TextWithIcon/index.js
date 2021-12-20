@@ -52,7 +52,7 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
     );
   };
 
-const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle}) => {
+const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle,url}) => {
 
     let lock = false;
 
@@ -68,13 +68,25 @@ const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle
           onPress={onPressHandle}
         >
           <View style={CommonStyles.rowAlignItemCenter}>
-            <ImageWrap 
+            {
+              url ? <ImageWrap 
+                  url={item.iconLeft}
+                  width={5}
+                  height={3}
+                  fit={'contain'}
+                /> : (
+                  <React.Fragment>
+                    {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={!url ? item.iconLeft : {uri : item.iconLeft}} style={styles.iconStyle} />} 
+                  </React.Fragment>
+                )
+            }
+            {/* <ImageWrap 
               url={item.iconLeft}
               width={5}
               height={3}
               fit={'contain'}
-            />
-            {/* {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={!uri ? item.iconLeft : {uri : item.iconLeft}} style={styles.iconStyle} />}  */}
+            /> */}
+            
             <Text style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>{item.title}</Text>
           </View>
           {lock? <Image

@@ -82,18 +82,19 @@ export default function Benefits({navigation}) {
                                 header_2={"benefits yet."}
                                 sub_text={"When you do, they will show up here."}
                             />
-                        ) : (
-                            <React.Fragment>
-                                <Container width={90} marginTop={2}>
-                                    <H1 fontSize={3.4}>Company benefits you are enrolled on</H1>
-                                </Container>
-                                <BenifitList data={['#C2D4FF', '#99E6FF']} 
-                                    horizontal={false}
-                                    benefits={benefits}
-                                    goToWeb={goToWeb}
-                                />
-                            </React.Fragment>
-                        )
+                        ) : null
+                    }
+                    {
+                       !loading && benefits && Array.isArray(benefits) && benefits.length > 0 ?  <React.Fragment>
+                            <Container width={90} marginTop={2}>
+                                <H1 fontSize={3.4}>Company benefits you are enrolled on</H1>
+                            </Container>
+                            <BenifitList data={['#C2D4FF', '#99E6FF']} 
+                                horizontal={false}
+                                benefits={benefits}
+                                goToWeb={goToWeb}
+                            />
+                   </React.Fragment> : null 
                     }
                 </View>
             </React.Fragment>

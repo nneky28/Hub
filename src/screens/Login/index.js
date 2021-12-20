@@ -52,6 +52,7 @@ export default function Dashboard(props) {
         email : data.email,
         password : data.password
       }
+      console.log("fd--",fd)
       dispatch(setLoaderVisible(true));
       let res = await postNoToken('/accounts/auth/employees/login/',fd);
       console.log("RES===",res)
@@ -85,8 +86,11 @@ export default function Dashboard(props) {
     }
   };
   return (
-    <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
-      <ScrollView contentContainerStyle={styles.inner}>
+    <KeyboardAvoidingScrollView 
+      showsVerticalScrollIndicator={false}
+      backgroundColor={AppColors.white}
+    >
+      {/* <ScrollView contentContainerStyle={styles.inner}> */}
         <View
           style={{
             flex : 1,
@@ -175,7 +179,7 @@ export default function Dashboard(props) {
               </TouchableOpacity>
             </Container> 
         </View>
-    </ScrollView>
+    {/* </ScrollView> */}
         {
           auth.onboard ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
         }

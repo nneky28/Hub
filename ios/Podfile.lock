@@ -317,8 +317,6 @@ PODS:
     - React
   - RNDateTimePicker (3.5.2):
     - React-Core
-  - RNFileViewer (2.1.5):
-    - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNImageCropPicker (0.20.1):
@@ -413,7 +411,6 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
-  - RNFileViewer (from `../node_modules/react-native-file-viewer`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPDF (from `../node_modules/react-native-view-pdf`)
@@ -520,8 +517,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
-  RNFileViewer:
-    :path: "../node_modules/react-native-file-viewer"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -588,7 +583,6 @@ SPEC CHECKSUMS:
   RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3
   RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
   RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
-  RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: 7f5155afc74364b4c4cc378fd30aa0f493edd86d
   RNPDF: 3b28a8d26d98ba057dfbb0f49beedfc59a0572b6

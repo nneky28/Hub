@@ -127,6 +127,8 @@ export const getAPIs = async (path, token) => {
             'Pragma': 'no-cache',
             'Expires': 0
           },
+        },{
+          timeout : 200
         })
         .then(result => {
           resolve(result.data);

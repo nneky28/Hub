@@ -17,13 +17,14 @@ import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { Container, CustomWebView, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import Feather from "react-native-vector-icons/Feather"
 import styles from './styles';
 import { useSelector } from 'react-redux';
+import { Images } from '../../component2/image/Image';
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const navigation = useNavigation()
   const [margin, setMargin] = useState(0.1);
@@ -256,18 +257,18 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
           />
           ) : null
         }
-        <TouchWrap
+        <TouchableOpacity
           onPress={()=>{
             navigate("Notifications")
           }}
         >
              <React.Fragment>
                {
-                 auth && auth.notifications > 0 ? <Container
+                  auth && auth.notifications > 0 ? <Container
                  position="absolute"
                  backgroundColor={"transparent"}
                  style={{
-                   top : -4,
+                   top : 5,
                    left : 5,
                    zIndex : 10
                  }}
@@ -278,11 +279,14 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                  ></Rounded>
                </Container> : null
                }
-                <Feather name="bell" 
-                  size={20}
+                <ImageWrap 
+                  url={Images.BellIcon}
+                  height={5}
+                  fit={"contain"}
+                  width={5}
                 />
              </React.Fragment>
-        </TouchWrap>
+        </TouchableOpacity>
       </View>
       <View style={styles.line} />
       </Container>

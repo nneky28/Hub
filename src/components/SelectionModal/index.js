@@ -22,8 +22,8 @@ import AppColors from '../../utills/AppColors';
 import { Images } from '../../component2/image/Image';
 
 const SelectionModal = ({isVisible, onHide, navigation}) => {
-  const [selected, setSelected] = useState('Documents');
-  const TextWithIcon = ({text, icon}) => {
+  const [selected, setSelected] = useState('Todos');
+  const TextWithIcon = ({text, icon,fill}) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -39,7 +39,7 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
             styles.icon,
             selected == text && {tintColor: AppColors.green},
           ]}
-          source={{uri : icon}}
+          source={{uri : selected == text ? fill : icon}}
         />
         <Text
           style={[styles.text, selected == text && {color: AppColors.green}]}>
@@ -65,15 +65,15 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
       <View style={styles.container}>
         <View style={styles.line1} />
         <View style={styles.row}>
-        <TextWithIcon text="Todos" icon={Images.PeopleIcon} />
-          <TextWithIcon text="Time off" icon={Images.RadioIcon} />
-          <TextWithIcon text="Benefits" icon={Images.BenefitIcon} />
+          <TextWithIcon text="Todos" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
+          <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon}/>
+          <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
         </View>
         <View style={styles.line} />
         <View style={styles.row}>
-          <TextWithIcon text="Payslip" icon={Images.PayslipIcon} />
-          <TextWithIcon text="Documents" icon={Images.DocumentIcon} />
-          <TextWithIcon text="Trainings" icon={Images.TrainingIcon} />
+          <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
+          <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
+          <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
           
         </View>
       </View>
