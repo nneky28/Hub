@@ -5,6 +5,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import { ActivityIndicator } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { leftIcon } from '../../assets/images';
 import Button from '../../components/Button';
 import CustomDatePicker from '../../components/CustomDatePicker';
@@ -23,6 +24,7 @@ import styles from './styles';
 
 export default function PersonalInfo({navigation}) {
     const [loading,setLoading] = React.useState(null);
+    const auth = useSelector(state=>state.Auth)
     const updateProfile = async () => {
         try{
             let failed = false;
@@ -67,8 +69,12 @@ export default function PersonalInfo({navigation}) {
                 ...profile,about : res
             })
             showFlashMessage()
-            navigation.goBack();
             setLoading(false)
+            if(!auth.onboard){
+                let profile = await getData("profile") 
+                return navigation.navigate("NextKin",{kins : profile.kins})
+            }
+            navigation.goBack();
         }catch(err){
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
             console.log("err|||",err,msg)
@@ -134,22 +140,18 @@ export default function PersonalInfo({navigation}) {
     return (
     <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
         {
-            show ? <DatePickerModal 
-            setShow={()=>{
-                setShow(false)
-            }}
-            show={show}
+            show ? <DatePickerModal
+                onChangeData={(date)=>{
+                    setData({...data,birth_date : moment(new Date(date)).format("YYYY-MM-DD")})
+                    setShow(false)
+                }} 
+                current={data.birth_date}
+                setShow={setShow}
+                show={show}
        />   : (
         <ScrollView>
         <View style={styles.mainViewContainer}>
-               {
-                   show ? <DatePickerModal 
-                        setShow={()=>{
-                            setShow(false)
-                        }}
-                        show={show}
-                   /> : (
-                    <Formik
+        <Formik
                     initialValues={{
                         first_name: '',
                         last_name: '',
@@ -341,8 +343,6 @@ export default function PersonalInfo({navigation}) {
                 </>
                 )}
             </Formik>
-                   )
-               }
             </View>
         </ScrollView>
        )

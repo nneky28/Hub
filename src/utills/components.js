@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
 import {ImageBackground, Text} from  'react-native';
@@ -114,10 +114,11 @@ export const Reload = props => {
   export const P = (props) => (
     <Text
       style={{
-        fontSize : props.fontSize || width(3.5),
+        fontSize : props.fontSize ? width(props.fontSize) : width(3.5),
         fontFamily : FontFamily.BlackSansRegular,
         textAlign : props.textAlign,
         color : props.color || AppColors.black,
+        lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
         ...props.style
       }}
     >
@@ -132,6 +133,9 @@ export const Reload = props => {
         fontFamily : FontFamily.BlackSansBold,
         color : props.color || 'black',
         textAlign: props.textAlign,
+        textDecorationLine: props.underline || "none",
+        textDecorationColor : props.lineColor,
+        textDecorationStyle: "solid",
         ...props.style
       }}
     >
@@ -142,7 +146,8 @@ export const Reload = props => {
 export const SizedBox = (props) => (
   <View 
     style={{
-      height : height(props.size || 1)
+      height : height(props.size || 1),
+      backgroundColor : props.backgroundColor || AppColors.white
     }}
   />
 )
@@ -291,6 +296,7 @@ export const SizedBox = (props) => (
 }
 
 export const DatePickerModal = (props) => {
+  const [selected,setSelected] = useState(null)
   return(
       <Modal visible={true}>
         <Container
@@ -307,11 +313,9 @@ export const DatePickerModal = (props) => {
               }}
             >
               <DatePicker 
-                  date={new Date()} 
+                  date={selected || new Date()} 
                   onDateChange={(newDate) => {
-                  //setDate(newDate);
-                  //props.onChangeData ? props.onChangeData(moment(newDate).format("YYYY-MM-DD")) : null
-                  //onChange(newDate.toDateString())
+                    setSelected(new Date(newDate))
                   }} 
                   mode="date" 
                   maximumDate={new Date()}
@@ -325,13 +329,15 @@ export const DatePickerModal = (props) => {
                 }}
               >
                   <TouchWrap
-                    onPress={props.setShow}
+                    onPress={()=>props.setShow(false)}
                   >
                     <P color={AppColors.black3}>Cancel</P>
                   </TouchWrap>
 
                   <TouchWrap
-                    onPress={props.setShow}
+                    onPress={()=>{
+                      props.onChangeData(selected)
+                    }}
                   >
                     <H1 color={AppColors.lightMediumGreen}>Select</H1>
                   </TouchWrap>
@@ -441,20 +447,25 @@ export const CustomWebView = (props) => (
 
 export const EmptyStateWrapper =  (props) => (
   <Container
-      marginTop={8}
+      marginTop={props.marginTop || 8}
       style={{
-          alignItems : "center"
+          alignItems : "center",
+          backgroundColor : props.backgroundColor || AppColors.white
       }}
   >
       <ImageWrap 
         url={props.icon}
-        height={30}
+        height={props.height || 30}
         fit="contain"
       />
-      <H1
+      {
+        props.header_1 ? (
+          <H1
           color={AppColors.black3}
-          fontSize={5}
-      >{props.header_1}</H1>
+              fontSize={5}
+          >{props.header_1}</H1>
+        ) : null
+      }
       {
         props.header_2 ? <React.Fragment>
           <H1 color={AppColors.black3}
@@ -462,6 +473,8 @@ export const EmptyStateWrapper =  (props) => (
         <SizedBox height={2} />
         </React.Fragment> : null
       }
-      <P color={AppColors.black2}>{props.sub_text}</P>
+     {
+       props.sub_text ?  <P color={AppColors.black2}>{props.sub_text}</P> : null
+     }
   </Container>
 )

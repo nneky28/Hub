@@ -1,4 +1,6 @@
 const AppColors = {
+  welcome_green : "#e5fcfb",
+  welcomePink : "#ffb3b3",
   green: '#2898A4',
   black2: '#A8A8A8',
   white: '#ffffff',

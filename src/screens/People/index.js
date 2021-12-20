@@ -55,7 +55,6 @@ export default function People({route,navigation}) {
     }
     const fetchData = async () => {
         try{
-            console.log("REACHED",end_reached)
             if(end_reached) return
             let page = await getData("page")
             if(page > 1){
@@ -68,13 +67,11 @@ export default function People({route,navigation}) {
             let token = await getData("token");
             let user =  await getData("user");
             let about_me = await getData("about_me")
-            console.log("selected--fetchData",selected)
             let biz = user.employee_user_memberships &&
             Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             if(selected === "All" || selected === "My Team"){
                 let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
-                console.log("URL==",url)
                 let res = await getAPIs(url,token);
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
@@ -93,6 +90,8 @@ export default function People({route,navigation}) {
                 let active_res = await getAPIs(active_birthdays_url,token);
                 let active_ann_res = await getAPIs(active_ann_url,token);
                 let up_ann_res = await getAPIs(up_ann_url,token);
+
+                console.log("upcoming_res",upcoming_res,active_res,active_ann_res,up_ann_res)
                 let active_birthdays = active_res && active_res.results && Array.isArray(active_res.results) ? 
                 active_res.results.map((item)=>(
                     {
@@ -101,6 +100,7 @@ export default function People({route,navigation}) {
                         subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : '',
                         icon: require('../../assets/images/icons/cake.png'),
                         background: 'pink',
+                        date : item.birth_date ? moment(item.birth_date).format("MMM DD") : null
                     }
                 )) : []
 
@@ -110,7 +110,8 @@ export default function People({route,navigation}) {
                         title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
                         avatar: item.photo,
                         subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : "",
-                        icon: require('../../assets/images/icons/cake.png')
+                        icon: require('../../assets/images/icons/cake.png'),
+                        date : item.birth_date ? moment(item.birth_date).format("MMM DD") : null
                     }
                 )) : []
 
@@ -120,6 +121,7 @@ export default function People({route,navigation}) {
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
                     icon: require('../../assets/images/icons/document2.png'),
+                    date : item.hire_date ? moment(item.hire_date).format("MMM DD") : null
                 })) : [];
 
                 let active_ann = active_ann_res && active_ann_res.results && Array.isArray(active_ann_res.results) ? 
@@ -128,6 +130,8 @@ export default function People({route,navigation}) {
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
                     icon: require('../../assets/images/icons/document2.png'),
+                    background : "pink",
+                    date : item.hire_date ? moment(item.hire_date).format("MMM DD") : null
                 })) : [];
 
                 let celeb = [
@@ -258,7 +262,7 @@ export default function People({route,navigation}) {
             </View>
             <View style={styles.iconAndTextContainer}>
                 <Image source={item.icon} style={styles.flatListIcon} />
-                <Text style={styles.subText}>{date}</Text>
+                <Text style={styles.subText}>{item.date}</Text>
             </View>
         </View>
         );
@@ -410,7 +414,7 @@ export default function People({route,navigation}) {
                             return (
                             <View style={[styles.headingContainer]}>
                                 <Text numberOfLines={1} style={styles.heading2}>{section.heading}</Text> 
-                                <Image resizeMode="contain" source={downIcon} style={styles.downIcon} />
+                                {/* <Image resizeMode="contain" source={downIcon} style={styles.downIcon} /> */}
                             </View>
                             )}}
                         />
@@ -467,7 +471,7 @@ export default function People({route,navigation}) {
                                 return (
                                 <View style={[styles.headingContainer]}>
                                     <Text numberOfLines={1} style={styles.heading2}>{section.heading}</Text>
-                                    <Image resizeMode="contain" source={downIcon} style={styles.downIcon} />
+                                    {/* <Image resizeMode="contain" source={downIcon} style={styles.downIcon} /> */}
                                 </View>
                                 )}}
                             />

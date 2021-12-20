@@ -11,7 +11,7 @@ import styles from './styles'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
 import { setLoaderVisible } from '../../Redux/Actions/Config'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
 import { ActivityIndicator } from 'react-native-paper'
 
@@ -31,6 +31,7 @@ export default function PensionInfo({navigation}) {
     const [provHolder,setProvHolder] = useState([]);
     const [disabled,setDisabled] = useState(false)
     const [verifying,setVerifying] = useState(false)
+    const auth = useSelector(state=>state.Auth)
     const handleSubmit = async () => {
         try{
             let required = disabled ? ["account_number","account_number"] : ["pension_number","provider"];
@@ -61,7 +62,7 @@ export default function PensionInfo({navigation}) {
             }
             let fd  = {
                 "bank_account": {
-                  "bank": bank.id,
+                  "bank": bank ? bank.id : "",
                   "account_number": data.account_number
                 },
                 "pension": {
@@ -75,7 +76,11 @@ export default function PensionInfo({navigation}) {
             await storeData("about_me",res)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been saved");
+            if(!auth.onboard){
+                return navigation.navigate("EditPhoto")
+            }
         }catch(err){
+            console.log("errr",err)
             setVerifying(false)
             dispatch(setLoaderVisible(false));
             ToastError(err.msg)

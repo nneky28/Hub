@@ -11,7 +11,7 @@ import styles from './styles'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
 import { setLoaderVisible } from '../../Redux/Actions/Config'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
 import Button from '../../components/Button';
 import { ActivityIndicator } from 'react-native-paper'
@@ -21,6 +21,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 
 export default function NextKin({navigation,route}) {
     const dispatch = useDispatch()
+    const auth = useSelector(state=>state.Auth)
     const [loading,setLoading] = useState(false)
     const [data,setData] = useState({
         first_name : "",
@@ -58,6 +59,10 @@ export default function NextKin({navigation,route}) {
             let res = await APIFunction.update_emergency({...data,country : "NG"},about.id)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been updated");
+            if(!auth.onboard){
+                let profile = await getData("profile") 
+                return navigation.navigate("PensionInfo",{pension : profile.pension})
+            }
         }catch(err){
             console.log("errr--",err)
             dispatch(setLoaderVisible(false));
@@ -155,6 +160,7 @@ export default function NextKin({navigation,route}) {
                                 setData({...data,phone_number : value})
                             }}
                             color={AppColors.black}
+                            keyboardType="numeric"
                         />
                         <Field
                             component={CustomInput}

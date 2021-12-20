@@ -12,6 +12,7 @@ import Documents from '../screens/Documents';
 import EditPhoto from '../screens/EditPhoto';
 import EditProfile from '../screens/EditProfile';
 import Login from '../screens/Login';
+import Welcome from '../screens/Welcome';
 import MemberProfile from '../screens/MemberProfile';
 import Notifications from '../screens/Notifications';
 import Payslips from '../screens/Payslips';
@@ -39,6 +40,7 @@ import { APIFunction } from '../utills/api';
 import { Container } from '../utills/components';
 import { Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
+import LandingPage from '../screens/LandingPage';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
@@ -64,9 +66,10 @@ const Routes = () => {
    const getDeepLinkInfo = async () => {
       console.log("getDeepLinkInfo before")
       let url = await Linking.getInitialURL()
+      console.log("getDeepLinkInfo after",url)
       if(route === "main" || !url) return
-      console.log("getDeepLinkInfo after")
-      let split = Platform.OS === "ios" ?  url.split("myedgeapp://") : url.split("https://coolowo.com/")
+      console.log("getDeepLinkInfo after",url)
+      let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
       let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
       await storeData("auth",load)
       dispatch(login(load))
@@ -74,7 +77,8 @@ const Routes = () => {
    const deepLinkListener = () => {
     Linking.addEventListener('url', async ({url}) => {
       if(route === "main" || !url) return
-      let split = Platform.OS === "ios" ?  url.split("myedgeapp://") : url.split("https://coolowo.com/")
+      console.log("deepLinkListener",url)
+      let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
       let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
       await storeData("auth",load)
       dispatch(login(load))
@@ -176,10 +180,25 @@ const Routes = () => {
           </DrawerStack.Screen>
           <DrawerStack.Screen name="Settings" component={Settings} />
         </DrawerStack.Navigator>
-      ) : (
+      ) :
+       route === "onboard"  ? (
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName="LandingPage"
+          screenOptions={{headerMode: false}}
+        >
+          <Stack.Screen name="LandingPage" component={LandingPage} />
+          <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
+          <Stack.Screen name="EditPhoto" component={EditPhoto} />
+          <Stack.Screen name="Emergency" component={Emergency}/>
+          <Stack.Screen name="NextKin" component={NextKin}/>
+          <Stack.Screen name="PensionInfo" component={PensionInfo}/>
+      </Stack.Navigator>
+      ) : 
+      (
+        <Stack.Navigator
+          initialRouteName="Welcome"
           screenOptions={{headerMode: false}}>
+            <Stack.Screen name="Welcome" component={Welcome} />
             <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       )}

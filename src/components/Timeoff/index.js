@@ -78,15 +78,22 @@ const Timeoff = ({data,tab,showModal}) => {
             />
           ) : (
             <Container style={{justifyContent : "center", alignItems : "center"}}>
-                <ImageWrap 
+                <EmptyStateWrapper 
+                  icon={Images.EmptyTimeoff}
+                  height={18}
+                  marginTop={1}
+                  header_1={"Oops!"}
+                  sub_text={`You do not have any ${tab === "request" ? "request" : tab+" timeoff"}`}
+                />
+                {/* <ImageWrap 
                   url={Images.TimeoffIcon}
                   height={20}
                   fit={"contain"}
-                />
-                <Container width={50}>
+                /> */}
+                {/* <Container width={50}>
                   <H1 textAlign="center">Oops!</H1>
                   <P textAlign="center">{`You do not have any ${tab === "request" ? "request" : tab+" timeoff"}`}</P>
-                </Container>
+                </Container> */}
             </Container>
           )
         }

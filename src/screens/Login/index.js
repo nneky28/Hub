@@ -52,10 +52,9 @@ export default function Dashboard(props) {
         email : data.email,
         password : data.password
       }
-      console.log("fd--",fd)
       dispatch(setLoaderVisible(true));
       let res = await postNoToken('/accounts/auth/employees/login/',fd);
-      console.log("RES===",res)
+      dispatch(setLoaderVisible(false));
       let token  = res.access_token ? res.access_token : null;
       await storeData("token",token)
       let refresh = res.refresh_token ? res.refresh_token : null;
@@ -66,7 +65,6 @@ export default function Dashboard(props) {
       if(!business) return ToastError("No business connected to this account");
       let employees_me_url = employees_me(business.business_id);
       let about_me = await getAPIs(employees_me_url,token);
-      console.log("ABOUT---",about_me)
       await storeData("refresh",refresh);
       await storeData("about_me",about_me);
       await storeData("user",res.user);
@@ -74,7 +72,7 @@ export default function Dashboard(props) {
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));
-      return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : "main",isLogin : true}));
+      return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : res.onboard ? "main" : "onboard",isLogin : true}));
     }catch(err){
       dispatch(setLoaderVisible(false));
       let msg = "";
@@ -122,18 +120,6 @@ export default function Dashboard(props) {
                 marginTop: 3,
               }}
             />
-            <CustomText
-              textSize={12}
-              textWeight={'normal'}
-              textcolor={blackColor}
-              displayText={
-                'MyEdge is part of BizEdge Productivity Tool.'
-              }
-              textStyle={{
-                marginTop: 5,
-              }}
-            />
-
               <Formik>
                     <React.Fragment>
                       <Field
@@ -161,14 +147,13 @@ export default function Dashboard(props) {
                     />
                     </React.Fragment>
               </Formik>
-
             <Container marginTop={3} width={90}>
               <CustomButton
                 btnText={'Sign In'}
                 handelButtonPress={loginMethod}
                 //isloading={isprocessing}
               />
-              <SizedBox size={3} />
+              {/* <SizedBox size={3} />
               <TouchableOpacity
                 onPress={()=>{
                   console.log("====",`${BASE_URL}mobile-app-redirect`)
@@ -176,8 +161,20 @@ export default function Dashboard(props) {
                 }}
               >
                 <H1 fontSize={3} textAlign="center">Invited to Myedge? Click here to onboard.</H1>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </Container> 
+            <SizedBox size={25} />
+            <CustomText
+                textSize={12}
+                textWeight={'normal'}
+                textcolor={AppColors.black2}
+                  displayText={
+                    'MyEdge is part of BizEdge Productivity Tool.'
+                  }
+                  textStyle={{
+                    marginTop: 5,
+                  }}
+              />
         </View>
     {/* </ScrollView> */}
         {

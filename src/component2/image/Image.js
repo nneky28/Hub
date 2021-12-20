@@ -45,6 +45,8 @@ export const Images = {
   RadioFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639745653/myedge%20mobile/Group_8660_wnrhlr.png",
   PayFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639745654/myedge%20mobile/Group_8661_nassdz.png",
   DocumentFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639745654/myedge%20mobile/Subtract_of6v8c.png",
+  EmailSent : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1640003529/myedge%20mobile/E-mail_sent_nhnwz5.png",
+  Welcome : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1640006399/myedge%20mobile/APP-LANDING-PNG_cgedoa.png"
   
 
 
