@@ -102,7 +102,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setTasks([...arr])
       showFlashMessage({title : "Marked as done"})
     }catch(err){
-      console.log("ER00",err)
       showFlashMessage({title : "Marked as done",type : "error"})
     }
   }
@@ -113,7 +112,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setText(`Are you sure you have completed "${data?.title}"?`)
       setShow(true)
     }catch(err){
-      //console.log("Err---",err)
     }
   }
 
@@ -167,7 +165,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       let active_ann = await getAPIs(ann_url,token);
       let task_res = await APIFunction.employee_tasks(about_me.id);
       task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
-      console.log("task_res",task_res)
       let res = await getTimeOffsFunction();
       setAvailable(res.available)
       setTabs(res.tabs);

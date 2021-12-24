@@ -16,7 +16,7 @@ import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
 import { CustomCalender, DatePickerModal } from '../../utills/components';
-import { Capitalize, getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods';
+import { Capitalize, getData, getStoredBusiness, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
 
@@ -68,16 +68,15 @@ export default function PersonalInfo({navigation}) {
             await storeData("profile",{
                 ...profile,about : res
             })
-            showFlashMessage()
+            ToastSuccess("Profile Updated")
             setLoading(false)
-            if(!auth.onboard){
+            if(auth.route !== "main"){
                 let profile = await getData("profile") 
-                return navigation.navigate("NextKin",{kins : profile.kins})
+                return navigation.navigate("NextKin",{kins : profile.kin})
             }
             navigation.goBack();
         }catch(err){
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-            console.log("err|||",err,msg)
             ToastError(msg)
             setLoading(false);
         }
@@ -104,7 +103,6 @@ export default function PersonalInfo({navigation}) {
     const getProfile = async () => {
         try{
             let profile = await getData("profile");
-            console.log("profile.about",profile.about)
             if(profile && profile.about){
                 setData(
                     {
@@ -131,7 +129,6 @@ export default function PersonalInfo({navigation}) {
                 )
             }
         }catch(err){
-            console.log("err",err)
         }
     }
     useEffect(()=>{

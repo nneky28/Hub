@@ -109,8 +109,10 @@ export const APIFunction = {
   },
   user_info : async () => {
     return getAPIs(`/accounts/auth/user/`)
+  },
+  onboarded : async (employee_id) => {
+    return postAPIs(`/employees/${employee_id}/complete_self_service_onboarding/`)
   }
-  
 }
 export const getAPIs = async (path, token) => {
     let _token = await getData("token");
@@ -162,7 +164,6 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("---errr",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -204,7 +205,6 @@ export const postAPIs = async (path, fd) => {
     };
   
 export const putAPIs = async (path,fd) => {
-    console.log("FD--",path,fd)
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -220,7 +220,6 @@ export const putAPIs = async (path,fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("---ERROR--",error.response)
           if (
             error.response && error.response.data && error.response.data.msg && 
             error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"
@@ -330,6 +329,5 @@ export const storeFilePut = async (path, token, fd) => {
         await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
         await storeData("token",res.data.access)
     }catch(err){
-        console.log("refresh-error",err);
     }
 }

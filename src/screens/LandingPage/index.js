@@ -35,7 +35,6 @@ export default function LandingPage(props) {
     const [banking,setBanking] = useState(null);
     const [pension,setPension] = useState(null);
     const [emergency,setEmergency] = useState(null);
-    const dispatch = useDispatch();
     const getRecord = async () => {
         try{
             setLoading(true)

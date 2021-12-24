@@ -34,7 +34,7 @@ export default function PensionInfo({navigation}) {
     const auth = useSelector(state=>state.Auth)
     const handleSubmit = async () => {
         try{
-            let required = disabled ? ["account_number","account_number"] : ["pension_number","provider"];
+            let required = disabled ? ["account_number","bank"] : ["pension_number","provider"];
             let failed = false;
             let fData = await getData("load")
             let data = fData
@@ -45,6 +45,7 @@ export default function PensionInfo({navigation}) {
                 }
             }
             if(failed){
+                setVerifying(false)
                 return ToastError(msg);
             }
             let pension = provHolder[providers.indexOf(data.provider)]
@@ -55,32 +56,33 @@ export default function PensionInfo({navigation}) {
                     bank_code : bank.code,
                     account_number : data.account_number
                 }
-                res = await APIFunction.bank_verification(fd)
+
+                let res = await APIFunction.bank_verification(fd)
                 setVerifying(false)
                 setDisabled(false)
-                return setData({...data,account_name : res.account_name})
+                setData({...data,account_name : res.account_name})
+                return 
             }
             let fd  = {
-                "bank_account": {
-                  "bank": bank ? bank.id : "",
+                "bank_account": bank && bank.id ? {
+                  "bank": bank.id,
                   "account_number": data.account_number
-                },
-                "pension": {
+                } : null,
+                "pension": pension && pension.id ? {
                   "provider": pension.id,
                   "pension_number": data.pension_number
-                }
-              }
+                } : null
+            }
             dispatch(setLoaderVisible(true));
             let about = await getData("about_me");
             let res = await APIFunction.update_pension(fd,about.id)
             await storeData("about_me",res)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been saved");
-            if(!auth.onboard){
+            if(auth.route !== "main"){
                 return navigation.navigate("EditPhoto")
             }
         }catch(err){
-            console.log("errr",err)
             setVerifying(false)
             dispatch(setLoaderVisible(false));
             ToastError(err.msg)
@@ -89,6 +91,7 @@ export default function PensionInfo({navigation}) {
 
     const fetchRecord = async () => {
         try{
+            let token = await getData("token")
             let about = await getData("about_me");
             let bank_res = await APIFunction.banks();
             let prov_res = await APIFunction.pension_providers();
@@ -205,16 +208,9 @@ export default function PensionInfo({navigation}) {
                             }}
                         />
                         {
-                            verifying ? <Container
-                            style={{direction : "row", 
-                                alignItems : "flex-end",
-                                justifyContent : "center"
-                            }}
-                            paddingRight={8}
-                            marginTop={3}
-                        >
-                            <ActivityIndicator size={10} color={AppColors.green} />
-                        </Container> : null
+                            verifying ? <Container marginTop={2}>
+                                <ActivityIndicator size={10} color={AppColors.green} />
+                            </Container> : null
                         }
                         <Container
                             paddingHorizontal={5}

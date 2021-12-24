@@ -57,18 +57,14 @@ const Routes = () => {
       dispatch(login({...auth,route : "auth",isLogin : false}));
       ToastSuccess("Successfully logged out")
     }catch(err){
-      console.log("logout-err",err)
     }
   };
 
 
    
    const getDeepLinkInfo = async () => {
-      console.log("getDeepLinkInfo before")
       let url = await Linking.getInitialURL()
-      console.log("getDeepLinkInfo after",url)
       if(route === "main" || !url) return
-      console.log("getDeepLinkInfo after",url)
       let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
       let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
       await storeData("auth",load)
@@ -77,7 +73,6 @@ const Routes = () => {
    const deepLinkListener = () => {
     Linking.addEventListener('url', async ({url}) => {
       if(route === "main" || !url) return
-      console.log("deepLinkListener",url)
       let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
       let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
       await storeData("auth",load)

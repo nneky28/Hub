@@ -49,7 +49,6 @@ export default function Dashboard({navigation: {goBack}}) {
       setCompleteList(res1.results) : setCompleteList([])
       setLoading(false)
     }catch(err){
-      console.log("Er---",err)
       ToastError(err.msg)
     }
   }
@@ -87,7 +86,6 @@ export default function Dashboard({navigation: {goBack}}) {
       setWarning(`Are you sure you have completed "${data?.title}"?`)
       setShow(true)
     }catch(err){
-      //console.log("Err---",err)
     }
   }
 

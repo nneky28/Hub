@@ -13,18 +13,19 @@ import CommonStyles from '../../utills/CommonStyles';
 import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
 import { ActivityIndicator } from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { H1, Rounded } from '../../utills/components';
 import { PermissionsAndroid } from 'react-native';
 import { WarningModal } from '../../components/ContactModal';
+import { login } from '../../Redux/Actions/Auth';
 
 
 
 export default function EditPhoto({navigation}) {
-
+  const auth = useSelector(state=>state.Auth)
   const [profilePicture, setProfilePicture] = useState(null);
   const [isSaved, setIsSaved] = useState(true);
   const [about,setAbout] = useState(null);
@@ -185,7 +186,14 @@ export default function EditPhoto({navigation}) {
         setLoading(false);
         dispatch(setLoaderVisible(false));
         showFlashMessage();
+        
+        if(auth.route !== "main"){
+          let res = await APIFunction.onboarded(about_me.id)
+          console.log("ONBOAREDED",res)
+          dispatch(login({...auth,onboard : false,[user["onboard"]]: true , route : "main"}))
+        }
       }catch(err){
+        console.log("err--",err)
         let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
         dispatch(setLoaderVisible(false));
         ToastError(msg)

@@ -34,12 +34,14 @@ PODS:
     - React-jsi (= 0.64.2)
     - ReactCommon/turbomodule/core (= 0.64.2)
   - glog (0.3.5)
+  - hermes-engine (0.7.2)
   - JWT (3.0.0-beta.14):
     - Base64 (~> 1.1.2)
-  - lottie-ios (3.1.8)
-  - lottie-react-native (3.5.0):
-    - lottie-ios (~> 3.1.8)
-    - React
+  - libevent (2.1.12)
+  - lottie-ios (3.2.3)
+  - lottie-react-native (4.0.3):
+    - lottie-ios (~> 3.2.3)
+    - React-Core
   - QBImagePickerController (3.4.0)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
@@ -50,6 +52,11 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
+  - RCT-Folly/Futures (2020.01.13.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - glog
+    - libevent
   - RCTRequired (0.64.2)
   - RCTTypeSafety (0.64.2):
     - FBLazyVector (= 0.64.2)
@@ -105,6 +112,16 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-jsiexecutor (= 0.64.2)
     - React-jsinspector (= 0.64.2)
+    - React-perflogger (= 0.64.2)
+    - Yoga
+  - React-Core/Hermes (0.64.2):
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2020.01.13.00)
+    - RCT-Folly/Futures
+    - React-cxxreact (= 0.64.2)
+    - React-jsi (= 0.64.2)
+    - React-jsiexecutor (= 0.64.2)
     - React-perflogger (= 0.64.2)
     - Yoga
   - React-Core/RCTActionSheetHeaders (0.64.2):
@@ -375,6 +392,8 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - hermes-engine (~> 0.7.2)
+  - libevent (~> 2.1.12)
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -384,6 +403,7 @@ DEPENDENCIES:
   - React-callinvoker (from `../node_modules/react-native/ReactCommon/callinvoker`)
   - React-Core (from `../node_modules/react-native/`)
   - React-Core/DevSupport (from `../node_modules/react-native/`)
+  - React-Core/Hermes (from `../node_modules/react-native/`)
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
@@ -426,7 +446,9 @@ SPEC REPOS:
     - AppCenterReactNativeShared
     - Base64
     - boost-for-react-native
+    - hermes-engine
     - JWT
+    - libevent
     - QBImagePickerController
     - RSKImageCropper
     - SSZipArchive
@@ -547,9 +569,11 @@ SPEC CHECKSUMS:
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 71d2e2d65f9b618d81b256563fbb62a69887e486
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  hermes-engine: 7d97ba46a1e29bacf3e3c61ecb2804a5ddd02d4f
   JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
-  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  lottie-react-native: 1fb4ce21d6ad37dab8343eaff8719df76035bd93
+  libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
+  lottie-react-native: 96361a9891cf651534ea35c4f85f33d4cf14ed13
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
@@ -595,6 +619,6 @@ SPEC CHECKSUMS:
   WCPhotoManipulator: 45b7be19b75c9edf6d2b44f2f61dbc3673862a8f
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: dc72507ed581c0894dbbe7e3e9b9308500d56e97
+PODFILE CHECKSUM: 9742ef786a95a217208a9f948e071b09cfd3fb29
 
 COCOAPODS: 1.11.2

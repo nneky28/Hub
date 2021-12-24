@@ -59,12 +59,11 @@ export default function NextKin({navigation,route}) {
             let res = await APIFunction.update_next_of_kin({...data,country : "NG"},about.id)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been updated");
-            if(!auth.onboard){
+            if(auth.route !== "main"){
                 let profile = await getData("profile") 
                 return navigation.navigate("Emergency",{emergency : profile.emergency})
             }
         }catch(err){
-            console.log("errr--",err)
             dispatch(setLoaderVisible(false));
             let msg = err.msg && Object.values(err.msg) && Object.values(err.msg).length > 0 ? Object.values(err.msg)[0][0] : 
             "Something went wrong.Please retry";
@@ -73,7 +72,6 @@ export default function NextKin({navigation,route}) {
     }
     const getRecord = () => {
         const {kins} = route.params;
-        console.log("getRecord",kins)
         setData({
             ...data,
            ...kins
@@ -173,6 +171,7 @@ export default function NextKin({navigation,route}) {
                                     setData({...data,email : value})
                                 }}
                                 color={AppColors.black}
+                                keyboardType={"email-address"}
                             />
                             <Field
                                 name="marital_status" 

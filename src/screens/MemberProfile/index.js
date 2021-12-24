@@ -8,12 +8,13 @@ import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, ImageWrap, LottieIcon, PageLoader, ProfileLoader, Rounded,P } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, PageLoader, ProfileLoader, Rounded,P, EmptyStateWrapper } from '../../utills/components';
 import { FontFamily } from '../../utills/FontFamily';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import Teamjson from '../../assets/lottie/teams.json'
+import { Images } from '../../component2/image/Image';
 
 
 
@@ -67,16 +68,13 @@ export default function MemberProfile({route,navigation}) {
         && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
         let url = APIFunction.team_members(biz.business_id,member.id);
         let detail_url = APIFunction.basic_details(biz.business_id,member.id);
-        console.log("url<<<",url)
         let res = await getAPIs(url,token);
         let detail_res = await getAPIs(detail_url,token);
         let members = res && res.results && Array.isArray(res.results) ? res.results : [];
         setMembers(members)
-        console.log("members---",detail_res,members)
         setMember({...member,...detail_res});
         setLoading(false);
      }catch(err){
-       console.log("member---",err)
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       ToastError(msg)
      }
@@ -274,21 +272,27 @@ export default function MemberProfile({route,navigation}) {
                   </View>
                   {
                     members && Array.isArray(members) && members.length === 0 ? (
-                      <Container
-                        style={{
-                          alignItems : "center",
-                          justifyContent : "center"
-                        }}
-                      >
-                          <LottieIcon 
-                            icon={Teamjson}
-                          />
-                          <H1
-                            color={AppColors.black3}
-                          >{member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}</H1>
-                      </Container>
+                      <EmptyStateWrapper
+                        marginTop={0.1}
+                        icon={Images.EmptyTeams}
+                        header_1={member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}
+                      />
                     ) : null
                   }
+
+{/* // <Container
+                      //   style={{
+                      //     alignItems : "center",
+                      //     justifyContent : "center"
+                      //   }}
+                      // >
+                      //     <LottieIcon 
+                      //       icon={Teamjson}
+                      //     />
+                      //     <H1
+                      //       color={AppColors.black3}
+                      //     >{member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}</H1>
+                      // </Container> */}
                   <FlatList
                   data={members}
                   horizontal

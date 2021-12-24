@@ -153,15 +153,6 @@ export default function Dashboard(props) {
                 handelButtonPress={loginMethod}
                 //isloading={isprocessing}
               />
-              {/* <SizedBox size={3} />
-              <TouchableOpacity
-                onPress={()=>{
-                  console.log("====",`${BASE_URL}mobile-app-redirect`)
-                  Linking.openURL(`${BASE_URL}mobile-app-redirect`)
-                }}
-              >
-                <H1 fontSize={3} textAlign="center">Invited to Myedge? Click here to onboard.</H1>
-              </TouchableOpacity> */}
             </Container> 
             <SizedBox size={25} />
             <CustomText

@@ -71,7 +71,6 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
     }),
   );
   const showMore = (title,selected) => {
-    //return console.log("showMore",title,selected)
     let tab = title == "Celebrations" ? title : "Who's out"
     return navigate("People",{tab})
     setArr((a) => [...a, '', '', '', '']);
@@ -202,8 +201,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                             fit={"contain"}
                           />
                           <SizedBox height={1}/>
-                          <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`No upcoming`}</P>
-                          <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`birthdays`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No upcoming`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`birthdays`}</P>
                         </Container>
                     </Container>
                   )
@@ -239,8 +238,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                 fit={"contain"}
               />
               <SizedBox height={1}/>
-              <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`No upcoming`}</P>
-              <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`anniversaries`}</P>
+              <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No upcoming`}</P>
+              <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`anniversaries`}</P>
             </Container>
           </Container>
         ) : null
@@ -266,8 +265,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                     />
                 </Container>
                 <SizedBox height={1}/>
-                <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>{`No one is currently`}</P>
-                <P textAlign="center" color={AppColors.black3} fontSize={width(3.1)}>on {selected && selected.toLowerCase()}</P>
+                <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No one is currently`}</P>
+                <P textAlign="center" color={AppColors.black3} fontSize={3.1}>on {selected && selected.toLowerCase()}</P>
               </Container>
           </Container>
         ) : null

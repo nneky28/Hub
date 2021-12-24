@@ -191,7 +191,7 @@ const RenderItem = ({item,tab,showModal}) => {
                   item && item.max_days_allowed && item.total_days_taken > 0 ? (
                     <>
                       <Text style={styles.count1}>{item && item.total_days_taken ?  item.total_days_taken : 0} Days</Text>
-                      <P color={AppColors.grayBorder} fontSize={width(3.1)}>Taken</P>
+                      <P color={AppColors.grayBorder} fontSize={3.1}>Taken</P>
                       <View style={styles.line1} />
                       <Text style={[styles.count,{color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{item.max_days_allowed - item.total_days_taken} Days</Text>
                       <Text style={
@@ -398,7 +398,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                     <React.Fragment>
                     <>
                       <Text style={styles.count1}>{fData && fData.total_days_taken ?  fData.total_days_taken : 0} Days</Text>
-                      <P color={AppColors.grayBorder} fontSize={width(3.1)}>Taken</P>
+                      <P color={AppColors.grayBorder} fontSize={3.1}>Taken</P>
                       <View style={styles.line1} />
                       <Text style={[styles.count,{color :  (Number(fData.max_days_allowed) - Number(fData.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{fData.max_days_allowed - fData.total_days_taken} Days</Text>
                       <Text style={

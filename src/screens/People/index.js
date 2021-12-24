@@ -91,7 +91,6 @@ export default function People({route,navigation}) {
                 let active_ann_res = await getAPIs(active_ann_url,token);
                 let up_ann_res = await getAPIs(up_ann_url,token);
 
-                console.log("upcoming_res",upcoming_res,active_res,active_ann_res,up_ann_res)
                 let active_birthdays = active_res && active_res.results && Array.isArray(active_res.results) ? 
                 active_res.results.map((item)=>(
                     {
@@ -125,7 +124,7 @@ export default function People({route,navigation}) {
                 })) : [];
 
                 let active_ann = active_ann_res && active_ann_res.results && Array.isArray(active_ann_res.results) ? 
-                up_ann_res.results.map((item)=>({
+                active_ann_res.results.map((item)=>({
                     title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,

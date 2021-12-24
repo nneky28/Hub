@@ -95,7 +95,6 @@ const DocumentModal = ({isVisible, onHide,document}) => {
       if(!Linking.canOpenURL(document.file)) return
       return Linking.openURL(document.file)
     }catch(err){
-      console.log("Errr--",err)
     }
   }
   return (
@@ -329,7 +328,6 @@ const __ReportModal = ({isVisible, onHide,asset}) => {
       showFlashMessage({title : "Issue has been reported to HR"})
       onHide()
     }catch(err){
-      console.log("er--",err)
       dispatch(setLoaderVisible(false));
       return showFlashMessage({type : "error",title : err.msg})
     }

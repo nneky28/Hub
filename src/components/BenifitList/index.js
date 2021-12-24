@@ -5,6 +5,7 @@ import { Modal } from 'react-native-paper';
 import { rightIcon, twoMenIcon } from '../../assets/images';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
+import { Container } from '../../utills/components';
 import { Capitalize, getData } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
@@ -21,21 +22,20 @@ const BenifitList = ({data, horizontal,benefits,goToWeb}) => {
     horizontal={horizontal}
     renderItem={({item}) => {
       color = color === data[0] ? data[1] : data[0];
-      console.log("color",color)
       return (
         <View style={[styles.container, {backgroundColor: color}, !horizontal && {width: width(90)}]}>
           <View style={[styles.row, styles.between]}>
-            <View>
+            <Container width={50} backgroundColor={"transparent"}>
               <View style={styles.row}>
-                <Text style={styles.text}>{item && item.plan ? Capitalize(item.plan) : ""}</Text>
-                {/* <Image
-                  resizeMode="contain"
-                  source={rightIcon}
-                  style={styles.icon}
-                /> */}
-              </View>
-              <Text style={styles.text1}>{item && item.provider ? Capitalize(item.provider) : ""}</Text>
-            </View>
+                  <Text style={styles.text}>{item && item.plan ? Capitalize(item.plan) : ""}</Text>
+                  {/* <Image
+                    resizeMode="contain"
+                    source={rightIcon}
+                    style={styles.icon}
+                  /> */}
+                </View>
+                <Text style={styles.text1}>{item && item.provider ? Capitalize(item.provider) : ""}</Text>
+            </Container>
             <Button
               title="Visit Website"
               textStyle={styles.buttonText}

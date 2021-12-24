@@ -30,7 +30,6 @@ export default function Benefits({navigation}) {
             setLoading(false);
         }catch(err){
             let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-            console.log("err|||",err,msg)
             ToastError(msg)
         }
 

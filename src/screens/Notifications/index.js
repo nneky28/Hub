@@ -121,7 +121,6 @@ export default function Notifications({navigation}) {
             setLoading(false)
             setProcess(false)
         }catch(err){
-            console.log("err",err);
             ToastError(err.msg)
         }
     }
