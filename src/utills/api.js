@@ -111,7 +111,8 @@ export const APIFunction = {
     return getAPIs(`/accounts/auth/user/`)
   },
   onboarded : async (employee_id) => {
-    return postAPIs(`/employees/${employee_id}/complete_self_service_onboarding/`)
+    let biz = await getStoredBusiness()
+    return postAPIs(`/c/${biz.business_id}/employees/${employee_id}/complete_user_onboarding/`)
   }
 }
 export const getAPIs = async (path, token) => {
@@ -256,10 +257,7 @@ export const postNoToken = (path, fd) => {
   };
   
 export const storeFile = async (path, token, fd) => {
-  let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
+  
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -287,10 +285,6 @@ export const storeFile = async (path, token, fd) => {
   };
   
 export const storeFilePut = async (path, token, fd) => {
-  let expiry = await getData("token_expiry");
-    if(token && expiry && !moment(new Date()).isBefore(expiry)){
-       await refreshToken()
-    }
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({

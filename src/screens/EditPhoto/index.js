@@ -180,21 +180,31 @@ export default function EditPhoto({navigation}) {
         }
         fd.append("photo",file)
         let res = await storeFilePut(url,token,fd);
-        await storeData("about_me",res);
-        await storeData("profile",{...profile,about : res })
+        if(auth.route !== "main"){
+          await APIFunction.onboarded(about_me.id)
+          setIsSaved(true);
+          setLoading(false);
+          dispatch(setLoaderVisible(false));
+          let about = {...res,completed_user_onboarding : true}
+          await storeData("about_me",about);
+          await storeData("profile",{...profile,about})
+          return dispatch(login({...auth,onboard : false, route : "main"}))
+        }
         setIsSaved(true);
         setLoading(false);
         dispatch(setLoaderVisible(false));
+        await storeData("about_me",res);
+        await storeData("profile",{...profile,about : res })
         showFlashMessage();
-        
-        if(auth.route !== "main"){
-          let res = await APIFunction.onboarded(about_me.id)
-          console.log("ONBOAREDED",res)
-          dispatch(login({...auth,onboard : false,[user["onboard"]]: true , route : "main"}))
-        }
       }catch(err){
-        console.log("err--",err)
-        let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
+        let msg = "Something went wrong. Please retry"
+        if(err.msg && err.msg.detail && typeof(err.msg.detail) == "string"){
+          msg = err.msg.detail
+        }
+        if(err.msg && err.msg.photo && Array.isArray(err.msg.photo) && err.msg.photo[0] &&
+         typeof(err.msg.photo[0]) == "string"){
+          msg = err.msg.photo[0]
+        }
         dispatch(setLoaderVisible(false));
         ToastError(msg)
         setLoading(false)

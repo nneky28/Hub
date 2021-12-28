@@ -19,12 +19,13 @@ const Splash = (props) => {
   const loginMethod = async () => {
     //dispatch(setLoaderVisible(true));
     let user = await getData("user")
+    let about = await getData("about_me")
     await storeData("page",1)
     setTimeout(async () => {
       try{
-        if(user && user.onboard){
+        if(user && about && about.completed_user_onboarding){
           dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
-        }else if(user && !user.onboard){
+        }else if(user && about && !about.completed_user_onboarding){
           dispatch(login({...auth,user : user,isLogin : true,route : "onboard"}));
         }else{
           let auth = await getData("auth");

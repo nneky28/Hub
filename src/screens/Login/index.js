@@ -72,7 +72,7 @@ export default function Dashboard(props) {
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       ToastSuccess("Login was successful")
       dispatch(setLoaderVisible(false));
-      return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : res.onboard ? "main" : "onboard",isLogin : true}));
+      return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : about_me.completed_user_onboarding ? "main" : "onboard",isLogin : true}));
     }catch(err){
       dispatch(setLoaderVisible(false));
       let msg = "";
