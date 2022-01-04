@@ -118,7 +118,7 @@ export const Reload = props => {
         fontFamily : FontFamily.BlackSansRegular,
         textAlign : props.textAlign,
         color : props.color || AppColors.black,
-        lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
+        //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
         ...props.style
       }}
     >
