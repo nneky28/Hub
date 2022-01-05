@@ -34,12 +34,22 @@ export default function PensionInfo({navigation}) {
     const auth = useSelector(state=>state.Auth)
     const handleSubmit = async () => {
         try{
-            let required = disabled ? ["account_number","bank"] : ["pension_number","provider"];
+            let required = disabled ? ["account_number","bank"] : [];
             let failed = false;
             let fData = await getData("load")
             let data = fData
+            if(!disabled && (
+                (data["pension_number"] && data["pension_number"] !== "" && data["pension_number"].trim() !== "") 
+                ||
+                (data["provider"] && data["provider"] !== "" && data["provider"].trim() !== "" && data["provider"] !== "--Providers--") 
+            )){
+                required = [...required,"pension_number","provider"]
+            }
             for(let req of required){
-                if(data[req] === "" || data[req].trim() === ""){
+                if(
+                    data[req] === "" || data[req].trim() === "" || (disabled && data[req] === "--Banks--")
+                    || (!disabled && data[req] === "--Providers--")
+                ){
                     failed = true
                     msg = `${Capitalize(req.replace("_"," "))} is required`
                 }
@@ -176,6 +186,10 @@ export default function PensionInfo({navigation}) {
                                 let load = {...data,bank : value}
                                 setData(load)
                                 await storeData("load",load)
+                                if(value === "" || value === "--Banks--" && (!data.account_number || data.account_number === "" 
+                                || data.account_number.trim() === "")){
+                                    return setDisabled(false)
+                                }
                                 setDisabled(true)
                                 if(
                                     !data.account_number || data.account_number === "" 
@@ -187,7 +201,7 @@ export default function PensionInfo({navigation}) {
                                 
                             }}
                             color={AppColors.black}
-                            options={banks && Array.isArray(banks) ? banks : []}
+                            options={banks && Array.isArray(banks) ? ["--Banks--",...banks] : []}
                         />
                         <Field
                             component={CustomInput}
@@ -204,6 +218,12 @@ export default function PensionInfo({navigation}) {
                             keyboardType={'numeric'}
                             maxLength={10}
                             onBlur={()=>{
+                                if(
+                                    (!data.account_number || data.account_number === "" || data.account_number.toString().trim() === "")
+                                    && (data.bank === "" || data.bank === "--Banks--")
+                                ){
+                                    return setDisabled(false)
+                                }
                                 handleSubmit()
                             }}
                         />
@@ -233,7 +253,7 @@ export default function PensionInfo({navigation}) {
                                 await storeData("load",load)
                             }}
                             color={AppColors.black}
-                            options={providers && Array.isArray(providers) ? providers : []}
+                            options={providers && Array.isArray(providers) ? ["--Providers--",...providers] : []}
                         />
                         <Field
                             component={CustomInput}

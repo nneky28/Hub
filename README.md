@@ -70,3 +70,12 @@ Following Scripts added
     </ul>
 <em><b>Author<b/>: Shoaib Ahmed <b>[Develo IT Solutions Pvt Ltd.]<b/></em>
 
+4. <b>STEPS TO FOLLOW WHILE PUSHING TO PRODUCTION</b>
+    <ul>
+        <li>Change the BASE_URL IN api.js</li>
+        <li>Change the BASE_URL in constants.js</li>
+        <li>For android, change the codepush key in strings.xml</li>
+        <li>For ios, change the codepush key in info.plist</li>
+    </ul>
+
+
