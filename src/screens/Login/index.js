@@ -19,7 +19,7 @@ import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
-import { Container, H1, ImageWrap, OnboardModal, SizedBox } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox } from '../../utills/components';
 import Feather from "react-native-vector-icons/Feather"
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
@@ -29,6 +29,7 @@ import {Images} from "../../component2/image/Image"
 export default function Dashboard(props) {
   const defaultColor = "black";
   const blackColor = "black";
+  const [show,setShow] = React.useState(false)
   const [data,setData] = React.useState({
     email  : "",
     password  : ""
@@ -158,6 +159,12 @@ export default function Dashboard(props) {
                 //isloading={isprocessing}
               />
             </Container> 
+            <SizedBox height={1} />
+            <TouchableOpacity
+              onPress={()=>setShow(true)}
+            >
+              <H1 color={AppColors.green}>Forgot Password</H1>
+            </TouchableOpacity>
             <SizedBox size={25} />
             <CustomText
                 textSize={12}
@@ -175,6 +182,7 @@ export default function Dashboard(props) {
         {
           auth.onboard ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
         }
+        {show ? <CustomWebView web_url={`${BASE_URL}forgot-password`} setShow={setShow} show={show} /> : null } 
     </KeyboardAvoidingScrollView>
   );
 }

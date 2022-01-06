@@ -426,25 +426,28 @@ export const OnboardModal = (props) => {
 }
 
 export const CustomWebView = (props) => (
-  <Container
-    flex={1}
-  >
-    <Container
-      marginTop={2}
-      marginLeft={2}
-    >
-      <TouchableOpacity
-        onPress={()=>props.setShow(false)}
+  <Modal visible={props.show}>
+      <Container
+        flex={1}
       >
-        <H1>Close</H1>
-      </TouchableOpacity>
-    </Container>
-    <WebView 
-      source={{ uri: props.web_url }}
-        style={{ marginTop: 20
-      }}
-    />
-  </Container>
+          <Container
+            marginTop={2}
+            marginLeft={2}
+            width={20}
+          >
+            <TouchWrap
+              onPress={()=>props.setShow(false)}
+            >
+              <H1 textAlign="center">Close</H1>
+            </TouchWrap>
+          </Container>
+          <WebView 
+            source={{ uri: props.web_url }}
+              style={{ marginTop: 20
+            }}
+          />
+        </Container>
+  </Modal>
 )
 
 export const BackHandler = () => {

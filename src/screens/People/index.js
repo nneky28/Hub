@@ -360,7 +360,7 @@ export default function People({route,navigation}) {
                     }}
                     >
                         <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
-                        {selected == item && <View style={styles.animated} />}
+                        {selected == item && <View style={[styles.animated,personsList && Array.isArray(personsList) && personsList.length >= 9 ? {height : height(1.5)} : null]} />}
                     </TouchableOpacity>
                     ))}
                 </ScrollView>

@@ -15,7 +15,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { BackHandler, CustomCalender, DatePickerModal } from '../../utills/components';
+import { BackHandler, Container, CustomCalender, DatePickerModal, H1 } from '../../utills/components';
 import { Capitalize, getData, getStoredBusiness, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
@@ -189,6 +189,13 @@ export default function PersonalInfo({navigation}) {
                        }
                     </View>
                     <View style={styles.line} />
+                    <Container
+                        paddingHorizontal={5}
+                        marginTop={1}
+                        width={90}
+                    >
+                        <H1 color={AppColors.green}>All fields are required *</H1>
+                    </Container>
                     <Field
                         component={CustomInput}
                         name="firstName"

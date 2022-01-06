@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: 'space-evenly',
     height: height(5),
-    marginLeft: width(3.5)
+    marginLeft: width(3.5),
+    width : width(80)
   },
 
   fileIcon: {

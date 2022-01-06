@@ -145,12 +145,20 @@ const Routes = () => {
                         <Stack.Screen name="Payslip" component={Payslips} />
                         <Stack.Screen name="Benefits" component={Benefits} />
                         <Stack.Screen name="Documents" component={Documents} />
-                        <Stack.Screen name="MemberProfile" component={MemberProfile} />
                         <Stack.Screen name="Trainings" component={Training} />
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>
-                  <Tab.Screen name="People" component={People} />
+                  <Tab.Screen name="People">
+                  {() => (
+                      <Stack.Navigator
+                        initialRouteName="People"
+                        screenOptions={{headerMode: false}}>
+                           <Stack.Screen name="People" component={People} />
+                           <Stack.Screen name="MemberProfile" component={MemberProfile} />
+                      </Stack.Navigator>
+                    )}
+                  </Tab.Screen>
                   <Tab.Screen name="Profile">
                   {() => (
                       <Stack.Navigator

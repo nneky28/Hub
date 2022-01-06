@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, Image, FlatList, SectionList, Touchable } from 'react-native'
 import { downIcon, leftIcon } from '../../assets/images'
 import ScreenWrapper from '../../components/ScreenWrapper'
@@ -9,7 +9,7 @@ import { totalSize } from 'react-native-dimension'
 import AppColors, { ColorList } from '../../utills/AppColors'
 import { getData, getStoredBusiness, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api';
-import { Container, EmptyStateWrapper, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components'
+import { BackHandler, Container, EmptyStateWrapper, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components'
 import { useFocusEffect} from '@react-navigation/core'
 import {Capitalize} from '../../utills/Methods';
 import moment from 'moment'
@@ -124,11 +124,14 @@ export default function Notifications({navigation}) {
             ToastError(err.msg)
         }
     }
-    useFocusEffect(
-        React.useCallback(()=>{
-            getNotifications()        
-        },[])
-    )
+    // useFocusEffect(
+    //     React.useCallback(()=>{
+    //         getNotifications()        
+    //     },[])
+    // )
+    useEffect(()=>{
+        getNotifications()  
+    },[])
 
     const markAsRead = async (id,index) => {
         var holders = [...notifications]
@@ -200,11 +203,7 @@ export default function Notifications({navigation}) {
             scrollEnabled={!process && notifications && Array.isArray(notifications) && notifications.length === 0 ? false : true}
         >
             <View style={styles.header}>
-                <TouchableOpacity
-                    onPress={()=>navigation.goBack()}
-                >
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon} />
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.text1}>
                 Notifications
                 </Text>

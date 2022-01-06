@@ -205,17 +205,20 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       ToastError(err.msg)
     }
   }
-  useFocusEffect(
-    React.useCallback(()=>{
-      getInfo()
-    },[])
-  )
+  // useFocusEffect(
+  //   React.useCallback(()=>{
+  //     getInfo()
+  //   },[])
+  // )
+  useEffect(()=>{
+    getInfo()
+  },[])
   return (
     <ScreenWrapper scrollEnabled={false}
       statusBarColor={AppColors.lightGreen}
     >
       {
-                                web ? <CustomWebView setShow={closeWeb} web_url={web_url}/> : (
+                                web ? <CustomWebView show={web} setShow={closeWeb} web_url={web_url}/> : (
                                         <React.Fragment>
                                                   <Container
         backgroundColor={AppColors.lightGreen}

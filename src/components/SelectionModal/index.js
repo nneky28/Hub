@@ -29,7 +29,7 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
         onPress={() => {
           setSelected(text)
           navigation.navigate('Menu', { screen: text })
-          // navigation.navigate(text)
+          //navigation.navigate(text)
           onHide();
         }}
         style={{alignItems: 'center'}}>
