@@ -75,7 +75,7 @@ const Drawer = ({navigation, ...props}) => {
             </Text>
           </View>
         </View>
-        <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
+        <Image resizeMode="contain" source={{uri : Images.ArrowRight}} style={styles.icon} />
       </TouchableOpacity>
     );
   };
@@ -114,11 +114,11 @@ const Drawer = ({navigation, ...props}) => {
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />
-      <ItemWithText icon={settingIcon} text="Change Password" onPress={()=>{
+      <ItemWithText icon={{uri : Images.Settings}} text="Change Password" onPress={()=>{
           navigation.navigate("Settings")
         }}
       />
-      <ItemWithText onPress={logoutMethod} icon={logoutIcon} text="Sign Out" />
+      <ItemWithText onPress={logoutMethod} icon={{uri : Images.Signout}} text="Sign Out" />
     </Fragment>
   );
 };

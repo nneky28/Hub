@@ -64,7 +64,9 @@ export const Images = {
   TwoFillMen : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470750/myedge%20mobile/two-mens_ypv2s7.png",
   EmergencyIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470784/myedge%20mobile/link_ahbfmh.png",
   BankingIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470871/myedge%20mobile/banking_sn08iq.png",
-  CameraIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641471572/myedge%20mobile/camera_of1pk5.png"
+  CameraIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641471572/myedge%20mobile/camera_of1pk5.png",
+  Signout  : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641474008/myedge%20mobile/log-out_pkrsow.png",
+  ArrowRight : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641474017/myedge%20mobile/right_xjabjx.png"
 }
 
 
