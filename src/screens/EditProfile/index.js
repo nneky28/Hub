@@ -2,11 +2,12 @@ import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { cameraIcon, leftIcon } from '../../assets/images';
+import { Images } from '../../component2/image/Image';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TextWithIcon from '../../components/TextWithIcon';
 import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { H1, Rounded } from '../../utills/components';
+import { BackHandler, H1, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
 import { Capitalize, getData } from '../../utills/Methods';
 import styles from './styles';
@@ -38,9 +39,7 @@ export default function EditProfile({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
                     Edit Profile
                 </Text>
@@ -68,7 +67,7 @@ export default function EditProfile({navigation}) {
                         onPress={() => navigation.navigate('EditPhoto')}
                         activeOpacity={0.8}
                         style={[styles.buttonStyle]}>
-                            <Image resizeMode="contain" source={cameraIcon} style={styles.cameraIcon}/>
+                            <Image resizeMode="contain" source={{uri : Images.CameraIcon}} style={styles.cameraIcon}/>
                             <Text style={[styles.buttonText]}>Edit Photo</Text>
                         </TouchableOpacity>
                         <Text numberOfLines={1} style={styles.subText}>Click a section below to edit</Text>

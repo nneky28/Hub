@@ -12,6 +12,7 @@ import {Fragment} from 'react';
 import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import {login, logout} from '../Redux/Actions/Auth';
+import {Images} from "../component2/image/Image"
 import {
   rightIcon,
   logoIcon,
@@ -56,7 +57,7 @@ const Drawer = ({navigation, ...props}) => {
         <View style={styles.row}>
           {
             item && item.logo ? (
-              <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
+              <Image resizeMode="contain" source={{uri : item.logo}} style={styles.logo} />
             ) : (
               <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
                   <H1>
@@ -93,10 +94,10 @@ const Drawer = ({navigation, ...props}) => {
     <Fragment>
       {/* <Text style={styles.text}></Text> */}
       <Container
-        marginTop={3}
+        marginTop={5}
       >
         <ImageWrap 
-          url={"https://res.cloudinary.com/dgny8sjrg/image/upload/v1639140554/myedge%20mobile/myedge_qedb32.png"}
+          url={Images.AppLogo}
           fit="contain"
         />
       </Container>

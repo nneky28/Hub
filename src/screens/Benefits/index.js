@@ -7,7 +7,7 @@ import BenifitList from '../../components/BenifitList';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { Container, CustomWebView, EmptyStateWrapper, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
+import { BackHandler, Container, CustomWebView, EmptyStateWrapper, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
 import { getData, ToastError } from '../../utills/Methods';
 import styles from './styles';
 
@@ -55,11 +55,9 @@ export default function Benefits({navigation}) {
                     setShow={closeWeb} web_url={web_url}
                 /> : <React.Fragment>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                    </TouchableOpacity>
+                    <BackHandler />
                     <Text numberOfLines={1} style={styles.screenTitle}>
-                    Benefits
+                        Benefits
                     </Text>
                 </View>
                 <View style={styles.line} />

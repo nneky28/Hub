@@ -5,7 +5,7 @@ import { leftIcon} from '../../assets/images'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import { APIFunction} from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import { AppButton, Container, H1, P} from '../../utills/components'
+import { AppButton, BackHandler, Container, H1, P} from '../../utills/components'
 import {Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
 import { Field, Formik } from 'formik'
@@ -86,12 +86,10 @@ export default function NextKin({navigation,route}) {
             <ScrollView>
                 <View style={styles.mainViewContainer}>
                 <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
-                    Update Contact
+                    Emergency Contact
                   </Text>
                 </View>
                {

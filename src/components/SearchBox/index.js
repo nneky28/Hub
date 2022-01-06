@@ -5,6 +5,7 @@ import { searchIcon } from '../../assets/images';
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config';
 import AppColors from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
+import {Images} from "../../component2/image/Image"
 import styles from './styles';
 
 
@@ -19,7 +20,7 @@ export default function SearchBox({title, containerStyle, onSubmitEditing}) {
     }, []);
     return (
         <View style={[styles.container, containerStyle]}>
-            <Image source={searchIcon} style={styles.searchIcon}/>
+            <Image source={{uri:Images.SearchIcon}} style={styles.searchIcon}/>
             <TextInput 
                 style={styles.inputStyle}
                 placeholder={title}

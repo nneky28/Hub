@@ -18,7 +18,7 @@ import Todo from '../../components/Todo';
 import {completedTodo, unCompleteTodo} from '../../utills/data/todoData';
 import { getData, ToastError } from '../../utills/Methods';
 import { APIFunction } from '../../utills/api';
-import { PageLoader } from '../../utills/components';
+import { BackHandler, PageLoader } from '../../utills/components';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { useFocusEffect } from '@react-navigation/native';
 import { WarningModal } from '../../components/ContactModal';
@@ -143,9 +143,10 @@ export default function Dashboard({navigation: {goBack}}) {
       {
         loading ? <PageLoader /> : <View style={styles.container}>
         <View style={styles.row}>
-          <TouchableOpacity onPress={goBack}>
+          <BackHandler />
+          {/* <TouchableOpacity onPress={goBack}>
             <Image resizeMode="contain" source={leftIcon} style={styles.icon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.text}>Tasks</Text>
           <View style={{width: width(5)}} />
         </View>

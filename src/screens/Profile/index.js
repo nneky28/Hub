@@ -6,6 +6,7 @@ import { FlatList, Image, LayoutAnimation, Platform, Text, TouchableOpacity, UIM
 import { height, width } from 'react-native-dimension';
 import { useDispatch } from 'react-redux';
 import { downIcon, leftIcon, settingIcon } from '../../assets/images';
+import { Images } from '../../component2/image/Image';
 import Button from '../../components/Button';
 import ContactModal from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
@@ -13,7 +14,7 @@ import { scrollToPosition } from '../../Redux/Actions/Config';
 import { APIFunction, getAPIs } from '../../utills/api';
 import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { H1, ProfileLoader, Rounded } from '../../utills/components';
+import { BackHandler, H1, ProfileLoader, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
@@ -232,16 +233,14 @@ export default function Profile({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true} allowScrollToPosition={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
-                Profile
+                  Profile
                 </Text>
                 <TouchableOpacity
                   onPress={()=>navigation.navigate("Settings")}
                 >
-                  <Image resizeMode="contain" source={settingIcon} style={styles.leftIcon} />
+                  <Image resizeMode="contain" source={{uri : Images.Settings}} style={styles.leftIcon} />
                 </TouchableOpacity>
             </View>
 

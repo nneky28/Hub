@@ -40,9 +40,9 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
             <Text style={[styles.listCompTitle, CommonStyles.marginLeft_4]}>{item && item.title ? item.title : ""}</Text>
           </View>
           <Image
-          resizeMode={'contain'}
-          source={item.iconRight}
-          style={[styles.iconStyle, iconStyle]}
+            resizeMode={'contain'}
+            source={item.iconRight}
+            style={[styles.iconStyle, iconStyle]}
           />
         </TouchableOpacity>
         <View style={styles.line}/>

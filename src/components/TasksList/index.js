@@ -289,8 +289,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                 <View style={title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
                   {
                     item && item.employee && item.employee.photo ? (
-                      <Image source={item.employee.photo} style={styles.image} />
-                    ) : (
+                      <Image source={{uri : item.employee.photo}} style={styles.image} />
+                    ) : item && item.photo ?  <Image source={{uri : item.photo}} style={styles.image} /> :  (
                       <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
                         size={10}
                       >

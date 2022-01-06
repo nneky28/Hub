@@ -6,7 +6,7 @@ import { downIcon, fileIcon, HorDotIcon, leftIcon } from '../../assets/images';
 import { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, ImageWrap, LottieIcon, P, SizedBox } from '../../utills/components';
+import { BackHandler, Container, H1, ImageWrap, LottieIcon, P, SizedBox } from '../../utills/components';
 import { payslips } from '../../utills/data/payslips';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
@@ -44,9 +44,7 @@ export default function Payslips({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={false}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
                 Payslips
                 </Text>
@@ -72,7 +70,7 @@ export default function Payslips({navigation}) {
                         //onSelect={(index,text) => setFieldValue(name, text)}
                         renderRightComponent={() => <Image 
                                     resizeMode="contain" 
-                                    source={downIcon} 
+                                    source={{uri : Images.ArrowDown}} 
                                     style={[styles.downIcon]}
                                     />
                         }
@@ -95,7 +93,7 @@ export default function Payslips({navigation}) {
                         //onSelect={(index,text) => setFieldValue(name, text)}
                         renderRightComponent={() => <Image 
                                     resizeMode="contain" 
-                                    source={downIcon} 
+                                    source={{uri : Images.ArrowDown}} 
                                     style={[styles.downIcon]}
                                     />
                         }

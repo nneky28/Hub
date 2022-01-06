@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 
 export const Images = {
@@ -46,11 +46,25 @@ export const Images = {
   PayFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639745654/myedge%20mobile/Group_8661_nassdz.png",
   DocumentFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1639745654/myedge%20mobile/Subtract_of6v8c.png",
   EmailSent : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1640003529/myedge%20mobile/E-mail_sent_nhnwz5.png",
-  Welcome : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1640006399/myedge%20mobile/APP-LANDING-PNG_cgedoa.png"
-  
-
-
-
+  Welcome : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1640006399/myedge%20mobile/APP-LANDING-PNG_cgedoa.png",
+  AppLogo : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641462334/myedge%20mobile/myedge_l7tjva.png",
+  BackArrow : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641463806/myedge%20mobile/left_jzv37i.png",
+  Listing : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641464641/myedge%20mobile/listings_elicuq.png",
+  ArrowDown : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641467874/myedge%20mobile/down_vbprxc.png",
+  SearchIcon  : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641468060/myedge%20mobile/search_lvuqco.png",
+  ArrowRight : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641468573/myedge%20mobile/right_l6fhzc.png",
+  MapPIN : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641468566/myedge%20mobile/location_b1ivus.png",
+  Settings : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641468558/myedge%20mobile/settings_rwobah.png",
+  PhoneIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641468550/myedge%20mobile/phone_tljg31.png",
+  MessageIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641468543/myedge%20mobile/message_j5uy9s.png",
+  CopyIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641469056/myedge%20mobile/copy_ruiqir.png",
+  DocumentIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470133/myedge%20mobile/document2_z2gktr.png",
+  ManFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470686/myedge%20mobile/man-fill_d6gcte.png",
+  ShopFillIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470697/myedge%20mobile/home_wnkvfd.png",
+  TwoFillMen : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470750/myedge%20mobile/two-mens_ypv2s7.png",
+  EmergencyIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470784/myedge%20mobile/link_ahbfmh.png",
+  BankingIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641470871/myedge%20mobile/banking_sn08iq.png",
+  CameraIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641471572/myedge%20mobile/camera_of1pk5.png"
 }
 
 

@@ -12,7 +12,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction} from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { AppButton, Container, H1, LottieIcon, PageLoader } from '../../utills/components'
+import { AppButton, BackHandler, Container, H1, LottieIcon, PageLoader } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -74,9 +74,7 @@ export default function Setting({navigation}) {
                     flexDirection : "row"
                 }}
             >
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
                     Change Password

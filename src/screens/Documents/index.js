@@ -6,7 +6,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, ImageWrap, LottieIcon, P, PageLoader, SizedBox } from '../../utills/components';
+import { BackHandler, Container, H1, ImageWrap, LottieIcon, P, PageLoader, SizedBox } from '../../utills/components';
 import { documents } from '../../utills/data/documents';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
@@ -89,16 +89,12 @@ export default function Documents({navigation}) {
             scrollEnabled={false}
         >
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
                 Documents
                 </Text>
             </View>
             <View style={styles.line} />
-
-            
                     <View style={styles.mainViewContainer}>
                         {
                             Platform.OS === "android" ? (

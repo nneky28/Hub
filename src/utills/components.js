@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
 import {ImageBackground, Text} from  'react-native';
+import {Images} from "../component2/image/Image"
 import Svg, {
     Circle,
     Ellipse,
@@ -40,6 +41,7 @@ import { storeData, ToastSuccess } from './Methods';
 import { APIFunction } from './api';
 import {setLoaderVisible} from '../Redux/Actions/Config';
 import { BASE_URL } from './Constants';
+import { useNavigation } from '@react-navigation/native';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -383,7 +385,7 @@ const onNavigationStateChange = async (param,dispatch,auth) => {
     await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
     ToastSuccess("Login was successful")
     dispatch(setLoaderVisible(false));
-    return dispatch(login({...auth,onboard : false,url : null,user : {userName: "Joe",...data.user}, route : "main",isLogin : true}));
+    return dispatch(login({...auth,onboard : false,url : null,user : {userName: "Joe",...data.user}, route : "onboard",isLogin : true}));
   }catch(err){
   }
 };
@@ -444,6 +446,26 @@ export const CustomWebView = (props) => (
     />
   </Container>
 )
+
+export const BackHandler = () => {
+  const navigation = useNavigation()
+  return(
+    <Container
+      width={5}
+    >
+      <TouchableOpacity onPress={()=>{
+        if(!navigation.canGoBack()) return
+        navigation.goBack()
+      }}>
+        <ImageWrap 
+          url={Images.BackArrow}
+          fit={"contain"}
+          height={5}
+        />
+      </TouchableOpacity>
+    </Container>
+  ) 
+}
 
 export const EmptyStateWrapper =  (props) => (
   <Container

@@ -13,7 +13,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction, deleteAPIs, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, LottieIcon, PageLoader, Reload, SizedBox } from '../../utills/components'
+import { BackHandler, Container, LottieIcon, PageLoader, Reload, SizedBox } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -90,9 +90,7 @@ export default function TimeOff({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
                     Time Off

@@ -5,7 +5,7 @@ import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../.
 import ScreenWrapper from '../../components/ScreenWrapper'
 import { APIFunction, } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import {Container, H1, P } from '../../utills/components'
+import {BackHandler, Container, H1, P } from '../../utills/components'
 import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
 import { Field, Formik } from 'formik'
@@ -133,9 +133,7 @@ export default function PensionInfo({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
                     Update Information

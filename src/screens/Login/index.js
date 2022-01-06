@@ -19,10 +19,11 @@ import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
-import { Container, H1, OnboardModal, SizedBox } from '../../utills/components';
+import { Container, H1, ImageWrap, OnboardModal, SizedBox } from '../../utills/components';
 import Feather from "react-native-vector-icons/Feather"
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
+import {Images} from "../../component2/image/Image"
 
 
 export default function Dashboard(props) {
@@ -38,7 +39,9 @@ export default function Dashboard(props) {
     if(auth && auth.user && auth.user.email){
       setData({...data,email : auth.user.email})
     }
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      props.navigation.navigate("Welcome")
+    })
     return () => backHandler.remove()
   }, [])
   const loginMethod = async () => {
@@ -105,9 +108,10 @@ export default function Dashboard(props) {
               alignItems : "center"
             }}
           >
-            <Image
-              source={require('../../assets/images_2/logo/myedge.png')}
-              style={styles.Image1Sty}
+            <ImageWrap
+              url={Images.AppLogo}
+              height={5}
+              fit={"contain"}
             />
           </Container>
           <CustomText

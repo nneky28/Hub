@@ -8,7 +8,7 @@ import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, ImageWrap, LottieIcon, PageLoader, ProfileLoader, Rounded,P, EmptyStateWrapper } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, PageLoader, ProfileLoader, Rounded,P, EmptyStateWrapper, BackHandler } from '../../utills/components';
 import { FontFamily } from '../../utills/FontFamily';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
@@ -86,9 +86,7 @@ export default function MemberProfile({route,navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
                     {`${member && member.first_name ? Capitalize(member.first_name) : ""} ${member && member.last_name ? Capitalize(member.last_name) : ""}`}
@@ -125,7 +123,6 @@ export default function MemberProfile({route,navigation}) {
                       <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
                         {`${member && member.job && member.job.title ? Capitalize(member.job.title) : ""}`}
                       </Text>
-                      {/* <Text numberOfLines={1} style={[styles.designationText]}>Tech and Design</Text> */}
                       <Text numberOfLines={1} style={[styles.designationText, {fontFamily: FontFamily.BlackSansBold}]}>
                         {member && member.type ? Capitalize(member.type.replace("_"," ")) : ""} | {member && member.hire_date ? Capitalize(moment(member.hire_date).fromNow().replace("ago","")) : ""}
                       </Text>
@@ -136,59 +133,8 @@ export default function MemberProfile({route,navigation}) {
                     textStyle={styles.buttonText} 
                     onPress={() => setModal(true)}
                   />
-                  {/* <Container marginTop={5}
-                    paddingHorizontal={5}
-                  >
-                    {
-                      [
-                          {
-                              key: '1',
-                              title: member && member.email ? member.email : "",
-                              iconLeft: require('../../assets/images/icons/message.png'),
-                              iconRight: require('../../assets/images/icons/copy.png'),
-                          },
-                          {
-                              key: '2',
-                              title: member && member.address && member.address.address1 ? member.address.address1 : 
-                              member && member.address ? member.address : "",
-                              iconLeft: require('../../assets/images/icons/location.png'),
-                              iconRight: require('../../assets/images/icons/copy.png'),
-                          },
-                          {
-                              key: '3',
-                              title: member && member.phone_number1 ? member.phone_number1 : "",
-                              iconLeft: require('../../assets/images/icons/phone.png'),
-                              iconRight: require('../../assets/images/icons/copy.png'),
-                          }
-                      ].map((item,key)=>(
-                        <Container
-                          direction="row" 
-                          key={key}
-                          paddingVertical={2}
-                          borderBottomWidth={0.5}
-                          borderColor={AppColors.gray1}
-                          style={{
-                            alignItems : 'center'
 
-                          }}
-                        >
-                          <ImageWrap 
-                            fit="contain"
-                            source={item.iconLeft}
-                            height={2}
-                          />
-                          <P>{item.title}</P>
-                          <ImageWrap 
-                            fit="contain"
-                            source={item.iconRight}
-                            height={2}
-                          />
-                        </Container>
-                      ))
-                    }
-                  </Container> */}
-
-<Container 
+                  <Container 
                     marginTop={5}
                     width={90}
                   >
@@ -197,18 +143,18 @@ export default function MemberProfile({route,navigation}) {
                         {
                           key: '1',
                           title: member && member.email ? member.email : "",
-                          iconLeft: require('../../assets/images/icons/message.png')
+                          iconLeft: Images.MessageIcon
                       },
                       {
                           key: '2',
                           title: member && member.address && member.address.address1 ? member.address.address1 : 
                           member && member.address ? member.address : "",
-                          iconLeft: require('../../assets/images/icons/location.png')
+                          iconLeft: Images.MapPIN
                       },
                       {
                           key: '3',
                           title: member && member.phone_number1 ? member.phone_number1 : "",
-                          iconLeft: require('../../assets/images/icons/phone.png')
+                          iconLeft: Images.PhoneIcon
                       }
                       ].map((item,key)=>(
                         <Container
@@ -227,7 +173,7 @@ export default function MemberProfile({route,navigation}) {
                           >
                             <ImageWrap 
                               fit="contain"
-                              source={item.iconLeft}
+                              url={item.iconLeft}
                               height={2}
                             />
                           </Container>
@@ -236,15 +182,6 @@ export default function MemberProfile({route,navigation}) {
                           > 
                             <P>{item.title}</P>
                           </Container>
-                          {/* <Container
-                            width={20}
-                          >
-                            <ImageWrap 
-                              fit="contain"
-                              source={item.iconRight}
-                              height={2}
-                            />
-                          </Container> */}
                         </Container>
                       ))
                     }
@@ -279,20 +216,6 @@ export default function MemberProfile({route,navigation}) {
                       />
                     ) : null
                   }
-
-{/* // <Container
-                      //   style={{
-                      //     alignItems : "center",
-                      //     justifyContent : "center"
-                      //   }}
-                      // >
-                      //     <LottieIcon 
-                      //       icon={Teamjson}
-                      //     />
-                      //     <H1
-                      //       color={AppColors.black3}
-                      //     >{member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}</H1>
-                      // </Container> */}
                   <FlatList
                   data={members}
                   horizontal

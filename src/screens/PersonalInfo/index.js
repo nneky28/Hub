@@ -15,7 +15,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { CustomCalender, DatePickerModal } from '../../utills/components';
+import { BackHandler, CustomCalender, DatePickerModal } from '../../utills/components';
 import { Capitalize, getData, getStoredBusiness, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
@@ -171,9 +171,7 @@ export default function PersonalInfo({navigation}) {
                 {({ handleSubmit, isValid, errors, onSubmit, values, setFieldTouched, setFieldValue, setFieldError }) => (
                 <>
                     <View style={styles.header}>
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                        </TouchableOpacity>
+                        <BackHandler />
                         <Text numberOfLines={1} style={styles.screenTitle}>
                             Personal Information
                         </Text>

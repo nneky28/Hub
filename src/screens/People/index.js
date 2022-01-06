@@ -11,7 +11,7 @@ import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors, { ColorList, ColorList2 } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox } from '../../utills/components'
+import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox,BackHandler } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import Outjson from '../../assets/lottie/out.json'
@@ -97,7 +97,7 @@ export default function People({route,navigation}) {
                         title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
                         avatar: item.photo,
                         subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : '',
-                        icon: require('../../assets/images/icons/cake.png'),
+                        icon: {uri : Images.CakeIcon},
                         background: 'pink',
                         date : item.birth_date ? moment(item.birth_date).format("MMM DD") : null
                     }
@@ -109,7 +109,7 @@ export default function People({route,navigation}) {
                         title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
                         avatar: item.photo,
                         subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : "",
-                        icon: require('../../assets/images/icons/cake.png'),
+                        icon: {uri : Images.CakeIcon},
                         date : item.birth_date ? moment(item.birth_date).format("MMM DD") : null
                     }
                 )) : []
@@ -119,7 +119,7 @@ export default function People({route,navigation}) {
                     title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
-                    icon: require('../../assets/images/icons/document2.png'),
+                    icon: {uri : Images.DocumentIcon},
                     date : item.hire_date ? moment(item.hire_date).format("MMM DD") : null
                 })) : [];
 
@@ -128,7 +128,7 @@ export default function People({route,navigation}) {
                     title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
-                    icon: require('../../assets/images/icons/document2.png'),
+                    icon: {uri : Images.DocumentIcon},
                     background : "pink",
                     date : item.hire_date ? moment(item.hire_date).format("MMM DD") : null
                 })) : [];
@@ -328,17 +328,15 @@ export default function People({route,navigation}) {
         }>
             <Container flex={1}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                    </TouchableOpacity>
+                    <BackHandler />
                     <Text numberOfLines={1} style={styles.screenTitle}>
                         People
                     </Text>
                     <TouchableOpacity 
                     onPress={() => setIsListView(!isListView)}
                     >
-                    {isListView ? <Image resizeMode="contain" source={categoryIcon1} style={styles.rightIcon} /> :
-                                <Image resizeMode="contain" source={listingIcon} style={styles.rightIcon} />
+                    {isListView ? <Image resizeMode="contain" source={{uri : Images.MenuFillIcon}} style={styles.rightIcon} /> :
+                        <Image resizeMode="contain" source={{uri : Images.Listing}} style={styles.rightIcon} />
                     }
                         
                     </TouchableOpacity>

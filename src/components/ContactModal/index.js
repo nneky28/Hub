@@ -24,29 +24,29 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
 import { showFlashMessage } from '../SuccessFlash';
-import { Calendar } from 'react-native-calendars';
 import { Images } from '../../component2/image/Image';
+
 
 const ContactModal = ({isVisible, onHide,data}) => {
   const contactData = [
       {
           key: '1',
           title: data && data.email ? data.email : "",
-          iconLeft: require('../../assets/images/icons/message.png'),
-          iconRight: require('../../assets/images/icons/copy.png'),
+          iconLeft: {uri : Images.MessageIcon},
+          iconRight: {uri : Images.CopyIcon},
       },
       {
           key: '2',
           title: data && data.address && data.address.address1 ? data.address.address1 : 
           data && data.address ? data.address : "",
-          iconLeft: require('../../assets/images/icons/location.png'),
-          iconRight: require('../../assets/images/icons/copy.png'),
+          iconLeft: {uri:Images.MapPIN},
+          iconRight: {uri : Images.CopyIcon},
       },
       {
           key: '3',
           title: data && data.phone_number1 ? data.phone_number1 : "",
-          iconLeft: require('../../assets/images/icons/phone.png'),
-          iconRight: require('../../assets/images/icons/copy.png'),
+          iconLeft: {uri:Images.PhoneIcon},
+          iconRight: {uri : Images.CopyIcon},
       },
       // {
       //     key: '4',
