@@ -34,6 +34,7 @@ export default function LandingPage(props) {
     const [loading,setLoading] = useState(false);
     const [banking,setBanking] = useState(null);
     const [pension,setPension] = useState(null);
+    const dispatch = useDispatch();
     const [emergency,setEmergency] = useState(null);
     const getRecord = async () => {
         try{
@@ -51,6 +52,7 @@ export default function LandingPage(props) {
             setPension(pen_res);
             setBanking(bank_res);
             setLoading(false)
+            dispatch(setLoaderVisible(false))
         }catch(err){
         }
     }

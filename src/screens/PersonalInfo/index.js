@@ -135,7 +135,8 @@ export default function PersonalInfo({navigation}) {
         getProfile()
     },[])
     return (
-    <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
+        <ScreenWrapper scrollEnabled={false}>
+                        {/* <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}> */}
         {
             show ? <DatePickerModal
                 onChangeData={(date)=>{
@@ -146,28 +147,27 @@ export default function PersonalInfo({navigation}) {
                 setShow={setShow}
                 show={show}
        />   : (
-        <ScrollView>
         <View style={styles.mainViewContainer}>
-        <Formik
-                    initialValues={{
-                        first_name: '',
-                        last_name: '',
-                        middle_name: '',
-                        gender: '',
-                        birth_date: '',
-                        marital_status:'',
-                        email: '',
-                        address: '',
-                        address2: '',
-                        phone_number: '',
-                        mobileNumber2: '',
-                        city : "",
-                        state : "",
-                        postal_code : ""
-                    }}
-                    //validationSchema={validationSchema}
-                    onSubmit={showFlashMessage}
-                >
+            <Formik
+                initialValues={{
+                    first_name: '',
+                    last_name: '',
+                    middle_name: '',
+                    gender: '',
+                    birth_date: '',
+                    marital_status:'',
+                    email: '',
+                    address: '',
+                    address2: '',
+                    phone_number: '',
+                    mobileNumber2: '',
+                    city : "",
+                    state : "",
+                    postal_code : ""
+                }}
+                //validationSchema={validationSchema}
+                onSubmit={showFlashMessage}
+            >
                 {({ handleSubmit, isValid, errors, onSubmit, values, setFieldTouched, setFieldValue, setFieldError }) => (
                 <>
                     <View style={styles.header}>
@@ -196,6 +196,7 @@ export default function PersonalInfo({navigation}) {
                     >
                         <H1 color={AppColors.green}>All fields are required *</H1>
                     </Container>
+                    <ScrollView>
                     <Field
                         component={CustomInput}
                         name="firstName"
@@ -342,14 +343,15 @@ export default function PersonalInfo({navigation}) {
                         onChangeData={(value)=>setData({...data,postal_code : value})}
                         color={AppColors.black}
                     />
+                    </ScrollView>
                 </>
                 )}
             </Formik>
             </View>
-        </ScrollView>
        )
         }
         
-    </KeyboardAvoidingScrollView>
+    {/* </KeyboardAvoidingScrollView> */}
+        </ScreenWrapper>
     );
 }

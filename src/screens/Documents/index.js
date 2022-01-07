@@ -71,7 +71,7 @@ export default function Documents({navigation}) {
             style={[styles.listItemContainer]}
             >
                 <View style={[CommonStyles.rowJustifySpaceBtw,{width : width(80)}]}>
-                    <Image source={fileIcon} style={styles.fileIcon} />
+                    <Image source={{uri : Images.FileIcon}} style={styles.fileIcon} />
                     <View style={styles.textContainer}>
                         <Text style={styles.titleText}>{title ? Capitalize(title) : null}</Text>
                         <Text style={styles.subText}>{item && item.created_at ? moment(item.created_at).format("dd MMM YYYY") : null}</Text>

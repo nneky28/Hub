@@ -67,7 +67,8 @@ export const Images = {
   CameraIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641471572/myedge%20mobile/camera_of1pk5.png",
   Signout  : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641474008/myedge%20mobile/log-out_pkrsow.png",
   ArrowRight : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641474017/myedge%20mobile/right_xjabjx.png",
-  TickIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641550291/myedge%20mobile/tick_abvk6r.png"
+  TickIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641550291/myedge%20mobile/tick_abvk6r.png",
+  FileIcon : "https://res.cloudinary.com/dgny8sjrg/image/upload/v1641558947/myedge%20mobile/file_cgzrqp.png"
 }
 
 

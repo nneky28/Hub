@@ -298,7 +298,10 @@ export const SizedBox = (props) => (
 }
 
 export const DatePickerModal = (props) => {
-  const [selected,setSelected] = useState(null)
+  const [selected,setSelected] = useState(moment().format("YYYY-MM-DD"))
+  useEffect(()=>{
+    setSelected(moment().subtract(18,"years").format("YYYY-MM-DD"))
+  },[])
   return(
       <Modal visible={true}>
         <Container
@@ -314,13 +317,14 @@ export const DatePickerModal = (props) => {
                 alignItems : "center"
               }}
             >
+              
               <DatePicker 
-                  date={selected || new Date()} 
+                  date={new Date(null)} 
                   onDateChange={(newDate) => {
-                    setSelected(new Date(newDate))
+                    setSelected(moment(newDate).format("YYYY-MM-DD"))
                   }} 
                   mode="date" 
-                  maximumDate={new Date()}
+                  maximumDate={new Date(moment().subtract(18,"years").format("YYYY-MM-DD"))}
               /> 
               <Container 
                 marginTop={5}
