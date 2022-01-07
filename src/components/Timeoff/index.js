@@ -144,7 +144,7 @@ const RenderItem = ({item,tab,showModal}) => {
         style={styles.row1}
       >
 
-        <Text style={styles.text}>{item && item.title ? Capitalize(item.title) : item.timeoff && item.timeoff.title ? Capitalize(item.timeoff.title) : null}</Text>
+        <Text style={styles.text} numberOfLines={1}>{item && item.title ? Capitalize(item.title) : item.timeoff && item.timeoff.title ? Capitalize(item.timeoff.title) : null}</Text>
         {/* <Animated.Image
           resizeMode="contain"
           source={upIcon}
