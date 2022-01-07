@@ -431,7 +431,7 @@ export const CustomWebView = (props) => (
         flex={1}
       >
           <Container
-            marginTop={2}
+            marginTop={8}
             marginLeft={2}
             width={20}
           >
@@ -443,8 +443,7 @@ export const CustomWebView = (props) => (
           </Container>
           <WebView 
             source={{ uri: props.web_url }}
-              style={{ marginTop: 20
-            }}
+              style={{ marginTop: 20}}
           />
         </Container>
   </Modal>
