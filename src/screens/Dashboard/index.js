@@ -310,7 +310,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     <RefreshControl
                       refreshing={false}
                       onRefresh={getInfo}
-                      progressBackgroundColor={"#1976D2"}
                     />
                   }
                  >

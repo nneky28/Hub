@@ -32,7 +32,7 @@ import { FontFamily } from '../../utills/FontFamily';
 // }
 
 
-const CustomIcon = () => (<Image resizeMode="contain" source={tickIcon} style={styles.tickIcon} />);
+const CustomIcon = () => (<Image resizeMode="contain" source={{uri : Images.TickIcon}} style={styles.tickIcon} />);
 const ErrorIcon = () => (<Image resizeMode="contain" source={{uri : Images.ErrorIcon}} style={styles.tickIcon} />);
 
 export const showFlashMessage = (props) => {
