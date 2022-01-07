@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ActivityIndicator, Modal } from 'react-native-paper';
@@ -23,10 +23,12 @@ import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import Feather from "react-native-vector-icons/Feather"
 import styles from './styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
+import { setLoaderVisible } from '../../Redux/Actions/Config';
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
   const [margin, setMargin] = useState(0.1);
   const [index, setIndex] = useState(0);
   const [user,setUser] = React.useState(null);
@@ -145,6 +147,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   }
   const getInfo = async () => {
     try{
+      dispatch(setLoaderVisible(true));
       setProcess(true);
       setFetching(true)
       let token = await getData("token");
@@ -192,6 +195,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       setFetching(false)
       setLoading(false);
       setProcess(false);
+      dispatch(setLoaderVisible(false));
     }catch(err){
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       ToastError(msg)
@@ -300,7 +304,16 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             loading ? (
               <PageLoader />
             ) : ( 
-                 <ScrollView>
+                 <ScrollView
+                  horizontal={false}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={false}
+                      onRefresh={getInfo}
+                      progressBackgroundColor={"#1976D2"}
+                    />
+                  }
+                 >
                              <React.Fragment>
                    
                 <Container

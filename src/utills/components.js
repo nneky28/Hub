@@ -384,7 +384,7 @@ const onNavigationStateChange = async (param,dispatch,auth) => {
     await storeData("logout_time",moment(new Date()).add(2,'hours'));
     await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
     ToastSuccess("Login was successful")
-    dispatch(setLoaderVisible(false));
+    //dispatch(setLoaderVisible(false));
     return dispatch(login({...auth,onboard : false,url : null,user : {userName: "Joe",...data.user}, route : "onboard",isLogin : true}));
   }catch(err){
   }
