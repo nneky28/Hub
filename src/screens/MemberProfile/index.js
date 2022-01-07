@@ -86,11 +86,6 @@ export default function MemberProfile({route,navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                {/* <TouchableOpacity
-                  onPress={()=>navigation.goBack()}
-                >
-                  <H1>Back</H1>
-                </TouchableOpacity> */}
                 <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
@@ -100,7 +95,7 @@ export default function MemberProfile({route,navigation}) {
             </View>
             <View style={styles.line} />
             {
-              false ? (
+              loading ? (
                 <View style={{alignItems : "center", 
                     justifyContent : "center",flex : 1,
                     marginTop : "20%"  
