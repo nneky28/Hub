@@ -82,10 +82,10 @@ export default function NextKin({navigation,route}) {
     },[])
     
     return (
-        <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
-            <ScrollView>
-                <View style={styles.mainViewContainer}>
-                <View style={styles.header}>
+        <ScreenWrapper
+            scrollEnabled={false}
+        >
+             <View style={styles.header}>
                 <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
@@ -108,15 +108,15 @@ export default function NextKin({navigation,route}) {
             <Container
                 paddingHorizontal={5}
                 marginTop={1}
+                marginLeft={5}
                 width={90}
+
             >
                 <H1 color={AppColors.green}>All fields are required *</H1>
             </Container>
-            <Container 
-                flex={1}
-            >
+            <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
                 <Formik>
-                    <Container>
+                    <>
                         <Field
                             component={CustomInput}
                             name="first_name"
@@ -258,12 +258,10 @@ export default function NextKin({navigation,route}) {
                             }}
                             color={AppColors.black}
                         />
-                    </Container>
+                    </>
                 </Formik>
-            </Container>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingScrollView>
+            </KeyboardAvoidingScrollView>
+        </ScreenWrapper>
     )
 }
 

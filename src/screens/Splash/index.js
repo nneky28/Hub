@@ -17,7 +17,6 @@ const Splash = (props) => {
   const auth = useSelector((state) => state.Auth);
   const dispatch = useDispatch();
   const loginMethod = async () => {
-    //dispatch(setLoaderVisible(true));
     let user = await getData("user")
     let about = await getData("about_me")
     await storeData("page",1)
@@ -32,11 +31,11 @@ const Splash = (props) => {
           if(!auth){
             auth = {
               isLogin: false,
-              route: "splash",
+              route: "auth",
               user: null
             }
           }
-          dispatch(login({...auth,isLogin : false,route : "auth"}));
+          dispatch(login({...auth,isLogin : false}));
         }
       }catch(err){
       }

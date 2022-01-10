@@ -300,8 +300,9 @@ export const SizedBox = (props) => (
 export const DatePickerModal = (props) => {
   const [selected,setSelected] = useState(moment().format("YYYY-MM-DD"))
   useEffect(()=>{
-    setSelected(moment().subtract(18,"years").format("YYYY-MM-DD"))
-  },[])
+    let current = props.current ? props.current : moment().subtract(18,"years").format("YYYY-MM-DD")
+    setSelected(current)
+  },[props.show])
   return(
       <Modal visible={true}>
         <Container
@@ -319,7 +320,7 @@ export const DatePickerModal = (props) => {
             >
               
               <DatePicker 
-                  date={new Date(null)} 
+                  date={new Date(selected)} 
                   onDateChange={(newDate) => {
                     setSelected(moment(newDate).format("YYYY-MM-DD"))
                   }} 

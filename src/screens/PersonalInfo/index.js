@@ -1,7 +1,8 @@
 import { Field, Formik } from 'formik';
 import moment from 'moment';
 import React, { useEffect } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
+import { height } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import { ActivityIndicator } from 'react-native-paper';
@@ -136,7 +137,6 @@ export default function PersonalInfo({navigation}) {
     },[])
     return (
         <ScreenWrapper scrollEnabled={false}>
-                        {/* <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}> */}
         {
             show ? <DatePickerModal
                 onChangeData={(date)=>{
@@ -146,212 +146,213 @@ export default function PersonalInfo({navigation}) {
                 current={data.birth_date}
                 setShow={setShow}
                 show={show}
-       />   : (
-        <View style={styles.mainViewContainer}>
-            <Formik
-                initialValues={{
-                    first_name: '',
-                    last_name: '',
-                    middle_name: '',
-                    gender: '',
-                    birth_date: '',
-                    marital_status:'',
-                    email: '',
-                    address: '',
-                    address2: '',
-                    phone_number: '',
-                    mobileNumber2: '',
-                    city : "",
-                    state : "",
-                    postal_code : ""
-                }}
-                //validationSchema={validationSchema}
-                onSubmit={showFlashMessage}
-            >
-                {({ handleSubmit, isValid, errors, onSubmit, values, setFieldTouched, setFieldValue, setFieldError }) => (
-                <>
-                    <View style={styles.header}>
-                        <BackHandler />
-                        <Text numberOfLines={1} style={styles.screenTitle}>
-                            Personal Information
-                        </Text>
-                       {
-                           !loading ? (
-                                <Button 
-                                    title="save" 
-                                    containerStyle={styles.saveBtnStyle} 
-                                    textStyle={styles.saveBtnText}
-                                    onPress={() =>updateProfile()}
-                                />
-                           ) : (
-                               <ActivityIndicator size={15} color={AppColors.green} />
-                           )
-                       }
-                    </View>
-                    <View style={styles.line} />
-                    <Container
-                        paddingHorizontal={5}
-                        marginTop={1}
-                        width={90}
-                    >
-                        <H1 color={AppColors.green}>All fields are required *</H1>
-                    </Container>
-                    <ScrollView>
-                    <Field
-                        component={CustomInput}
-                        name="firstName"
-                        placeholder="First Name"
-                        value={data.first_name}
-                        setData={setData}
-                        data={data}
-                        color={AppColors.black}
-                        onChangeData={(value)=>setData({...data,first_name : value})}
-                    />
-                    <Field
-                        component={CustomInput}
-                        name="middleName"
-                        placeholder="Middle Name"
-                        value={data.middle_name}
-                        onChangeData={(value)=>setData({...data,middle_name : value})}
-                        color={AppColors.black}
-                    />
-                    <Field
-                        component={CustomInput}
-                        name="lastName"
-                        placeholder="Last Name"
-                        value={data.last_name}
-                        onChangeData={(value)=>setData({...data,last_name : value})}
-                        color={AppColors.black}
-                    />
-                    <Field
-                        name="gender" 
-                        placeholder="Gender"
-                        component={CustomModalDropdown}
-                        value={data.gender}
-                        onChangeData={(value)=>setData({...data,gender : value})}
-                        color={AppColors.black}
-                        options={["Male","Female","Others"]}
-                    />
+            />   : null}
 
-                    <Field
-                        name="maritalStatus" 
-                        placeholder="Marital Status"
-                        component={CustomModalDropdown}
-                        value={data.marital_status}
-                        onChangeData={(value)=>setData({...data,marital_status : value})}
-                        color={AppColors.black}
-                        options={["Single","Married","Divorced"]}
-                    />
-                    
-
-                    <Field
-                        name="dateOfBirth"
-                        placeholder="Date of Birth"
-                        component={CustomDatePicker}
-                        value={data.birth_date}
-                            onChangeData={(value)=>setData({...data,birth_date : value})
-                        }
-                        setShow={()=>{
-                            setAction("dob")
-                            setShow(true)
-                        }}
-                        color={AppColors.black}
-                    />
-            
-                    
-                    <Field
-                        component={CustomInput}
-                        name="email"
-                        placeholder="Email"
-                        keyboardType="email-address"
-                        editable={false}
-                        value={data.email}
-                        onChangeData={(value)=>setData({...data,email : value})}
-                        color={AppColors.black}
-                    />
-                    <Field
-                        component={CustomInput}
-                        name="address"
-                        placeholder="Address"
-                        value={data.address}
-                        onChangeData={(value)=>setData({...data,address : value})}
-                        color={AppColors.black}
-                    />
-                    <Field
-                        component={CustomInput}
-                        name="address2"
-                        placeholder="Address 2"
-                        value={data.address2}
-                        onChangeData={(value)=>setData({...data,address2 : value})}
-                        color={AppColors.black}
-                    />
-                    <Field
-                        component={CustomInput}
-                        name="mobileNumber1"
-                        placeholder="Mobile Number 1"
-                        keyboardType='phone-pad'
-                        value={data.phone_number}
-                        onChangeData={(value)=>setData({...data,phone_number : value})}
-                        color={AppColors.black}
-                    />
-                    <Field
-                        component={CustomInput}
-                        name="mobileNumber2"
-                        placeholder="Mobile Number 2 (Optional)"
-                        keyboardType='phone-pad'
-                        value={data.mobileNumber2}
-                        onChangeData={(value)=>setData({...data,mobileNumber2 : value})}
-                        color={AppColors.black}
-                    />
-
-                    <Field
-                        name="country" 
-                        placeholder="Country"
-                        component={CustomModalDropdown}
-                        value={data.country}
-                        onChangeData={(value)=>setData({...data,country : value})}
-                        color={AppColors.black}
-                        options={["Nigeria"]}
-                    />
-
-                    <Field
-                        component={CustomInput}
-                        name="city"
-                        placeholder="City"
-                        keyboardType='default'
-                        value={data.city}
-                        onChangeData={(value)=>setData({...data,city : value})}
-                        color={AppColors.black}
-                    />
-
-                    <Field
-                        component={CustomInput}
-                        name="state"
-                        placeholder="State"
-                        keyboardType='default'
-                        value={data.state}
-                        onChangeData={(value)=>setData({...data,state : value})}
-                        color={AppColors.black}
-                    />
-
-                    <Field
-                        component={CustomInput}
-                        name="state"
-                        placeholder="Postal Code"
-                        keyboardType='number-pad'
-                        value={data.postal_code}
-                        onChangeData={(value)=>setData({...data,postal_code : value})}
-                        color={AppColors.black}
-                    />
-                    </ScrollView>
-                </>
-                )}
-            </Formik>
+            <View style={styles.mainViewContainer}>
+                <View 
+                    style={styles.header}
+                >
+                    <BackHandler />
+                    <Text numberOfLines={1} style={styles.screenTitle}>
+                        Personal Information
+                    </Text>
+                {
+                    !loading ? (
+                            <Button 
+                                title="save" 
+                                containerStyle={styles.saveBtnStyle} 
+                                textStyle={styles.saveBtnText}
+                                onPress={() =>updateProfile()}
+                            />
+                    ) : (
+                        <ActivityIndicator size={15} color={AppColors.green} />
+                    )
+                }
+                </View>
+                <View style={styles.line} />
+                <Container
+                    paddingHorizontal={5}
+                    marginTop={1}
+                    marginBottom={1}
+                    width={90}
+                >
+                    <H1 color={AppColors.green}>All fields are required *</H1>
+                </Container>
             </View>
-       )
-        }
         
-    {/* </KeyboardAvoidingScrollView> */}
+            <KeyboardAvoidingScrollView>
+                <Formik
+                    initialValues={{
+                        first_name: '',
+                        last_name: '',
+                        middle_name: '',
+                        gender: '',
+                        birth_date: '',
+                        marital_status:'',
+                        email: '',
+                        address: '',
+                        address2: '',
+                        phone_number: '',
+                        mobileNumber2: '',
+                        city : "",
+                        state : "",
+                        postal_code : ""
+                    }}
+                    //validationSchema={validationSchema}
+                    onSubmit={showFlashMessage}
+                >
+                    {({ handleSubmit, isValid, errors, onSubmit, values, setFieldTouched, setFieldValue, setFieldError }) => (
+                            <>
+                            <Field
+                                    component={CustomInput}
+                                    name="firstName"
+                                    placeholder="First Name"
+                                    value={data.first_name}
+                                    setData={setData}
+                                    data={data}
+                                    color={AppColors.black}
+                                    onChangeData={(value)=>setData({...data,first_name : value})}
+                                />
+                                <Field
+                                    component={CustomInput}
+                                    name="middleName"
+                                    placeholder="Middle Name"
+                                    value={data.middle_name}
+                                    onChangeData={(value)=>setData({...data,middle_name : value})}
+                                    color={AppColors.black}
+                                />
+                                <Field
+                                    component={CustomInput}
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    value={data.last_name}
+                                    onChangeData={(value)=>setData({...data,last_name : value})}
+                                    color={AppColors.black}
+                                />
+                                <Field
+                                    name="gender" 
+                                    placeholder="Gender"
+                                    component={CustomModalDropdown}
+                                    value={data.gender}
+                                    onChangeData={(value)=>setData({...data,gender : value})}
+                                    color={AppColors.black}
+                                    options={["Male","Female","Others"]}
+                                />
+
+                                <Field
+                                    name="maritalStatus" 
+                                    placeholder="Marital Status"
+                                    component={CustomModalDropdown}
+                                    value={data.marital_status}
+                                    onChangeData={(value)=>setData({...data,marital_status : value})}
+                                    color={AppColors.black}
+                                    options={["Single","Married","Divorced"]}
+                                />
+                                
+
+                                <Field
+                                    name="dateOfBirth"
+                                    placeholder="Date of Birth"
+                                    component={CustomDatePicker}
+                                    value={data.birth_date}
+                                        onChangeData={(value)=>setData({...data,birth_date : value})
+                                    }
+                                    setShow={()=>{
+                                        setAction("dob")
+                                        setShow(true)
+                                    }}
+                                    color={AppColors.black}
+                                />
+                        
+                                
+                                <Field
+                                    component={CustomInput}
+                                    name="email"
+                                    placeholder="Email"
+                                    keyboardType="email-address"
+                                    editable={false}
+                                    value={data.email}
+                                    onChangeData={(value)=>setData({...data,email : value})}
+                                    color={AppColors.black}
+                                />
+                                <Field
+                                    component={CustomInput}
+                                    name="address"
+                                    placeholder="Address"
+                                    value={data.address}
+                                    onChangeData={(value)=>setData({...data,address : value})}
+                                    color={AppColors.black}
+                                />
+                                <Field
+                                    component={CustomInput}
+                                    name="address2"
+                                    placeholder="Address 2"
+                                    value={data.address2}
+                                    onChangeData={(value)=>setData({...data,address2 : value})}
+                                    color={AppColors.black}
+                                />
+                                <Field
+                                    component={CustomInput}
+                                    name="mobileNumber1"
+                                    placeholder="Mobile Number 1"
+                                    keyboardType='phone-pad'
+                                    value={data.phone_number}
+                                    onChangeData={(value)=>setData({...data,phone_number : value})}
+                                    color={AppColors.black}
+                                />
+                                <Field
+                                    component={CustomInput}
+                                    name="mobileNumber2"
+                                    placeholder="Mobile Number 2 (Optional)"
+                                    keyboardType='phone-pad'
+                                    value={data.mobileNumber2}
+                                    onChangeData={(value)=>setData({...data,mobileNumber2 : value})}
+                                    color={AppColors.black}
+                                />
+
+                                <Field
+                                    name="country" 
+                                    placeholder="Country"
+                                    component={CustomModalDropdown}
+                                    value={data.country}
+                                    onChangeData={(value)=>setData({...data,country : value})}
+                                    color={AppColors.black}
+                                    options={["Nigeria"]}
+                                />
+
+                                <Field
+                                    component={CustomInput}
+                                    name="city"
+                                    placeholder="City"
+                                    keyboardType='default'
+                                    value={data.city}
+                                    onChangeData={(value)=>setData({...data,city : value})}
+                                    color={AppColors.black}
+                                />
+
+                                <Field
+                                    component={CustomInput}
+                                    name="state"
+                                    placeholder="State"
+                                    keyboardType='default'
+                                    value={data.state}
+                                    onChangeData={(value)=>setData({...data,state : value})}
+                                    color={AppColors.black}
+                                />
+
+                                <Field
+                                    component={CustomInput}
+                                    name="state"
+                                    placeholder="Postal Code"
+                                    keyboardType='number-pad'
+                                    value={data.postal_code}
+                                    onChangeData={(value)=>setData({...data,postal_code : value})}
+                                    color={AppColors.black}
+                                />
+                            </>
+                    )}
+                </Formik>
+            </KeyboardAvoidingScrollView>
         </ScreenWrapper>
     );
 }

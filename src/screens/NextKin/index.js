@@ -17,6 +17,7 @@ import Button from '../../components/Button';
 import { ActivityIndicator } from 'react-native-paper'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view'
 import { ScrollView } from 'react-native-gesture-handler'
+import { height } from 'react-native-dimension'
 
 
 export default function NextKin({navigation,route}) {
@@ -84,42 +85,41 @@ export default function NextKin({navigation,route}) {
     return (
 
         
-        <KeyboardAvoidingScrollView showsVerticalScrollIndicator={false}>
-            <ScrollView>
+        <ScreenWrapper scrollEnabled={false}>
                 <View style={styles.mainViewContainer}>
                     <View style={styles.header}>
-                    <BackHandler />
-                    <View style={styles.titleContainer}>
-                    <Text numberOfLines={1} style={styles.screenTitle}>
-                        Update Next of Kin
-                    </Text>
+                        <BackHandler />
+                        <View style={styles.titleContainer}>
+                            <Text numberOfLines={1} style={styles.screenTitle}>
+                                Update Next of Kin
+                            </Text>
+                        </View>
+                        {
+                            loading ? (
+                                <ActivityIndicator />
+                            ) : ( 
+                                    <TouchableOpacity
+                                        onPress={handleSubmit}
+                                    >
+                                        <H1 color={AppColors.green}>Save</H1>
+                                    </TouchableOpacity>
+                                )
+                        }
                     </View>
-                {
-                    loading ? (
-                        <ActivityIndicator />
-                    ) : ( 
-                            <TouchableOpacity
-                                onPress={handleSubmit}
-                            >
-                                <H1 color={AppColors.green}>Save</H1>
-                            </TouchableOpacity>
-                        )
-                }
+                    <View style={styles.line} />
+                    <Container
+                        paddingHorizontal={5}
+                        marginTop={1}
+                        marginBottom={1}
+                        width={90}
+                    >
+                        <H1 color={AppColors.green}>All fields are required *</H1>
+                    </Container>
                 </View>
-                <View style={styles.line} />
-                <Container
-                    paddingHorizontal={5}
-                    marginTop={1}
-                    width={90}
-                >
-                    <H1 color={AppColors.green}>All fields are required *</H1>
-                </Container>
-                <Container 
-                    flex={1}
-                >
+                <KeyboardAvoidingScrollView>
                     <Formik>
-                        <Container>
-                            <Field
+                        <>
+                        <Field
                                 component={CustomInput}
                                 name="first_name"
                                 placeholder="First Name"
@@ -261,25 +261,10 @@ export default function NextKin({navigation,route}) {
                                 }}
                                 color={AppColors.black}
                             />
-                        </Container>
+                        </>
                     </Formik>
-                    {/* <Container
-                        marginTop={3}
-                        marginBottom={3}
-                        padding={3}
-                    >
-                        <AppButton 
-                            text={"SUBMIT"}
-                            color={AppColors.white}
-                            onPress={()=>{
-                                handleSubmit()
-                            }}
-                        />
-                    </Container> */}
-                </Container>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingScrollView>
+                </KeyboardAvoidingScrollView>
+        </ScreenWrapper>
     )
 }
 
