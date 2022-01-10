@@ -41,6 +41,7 @@ import { Container } from '../utills/components';
 import { Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
+import { setLoaderVisible } from '../Redux/Actions/Config';
 
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
@@ -54,6 +55,7 @@ const Routes = () => {
     try{
       let keys = await AsyncStorage.getAllKeys()
       AsyncStorage.multiRemove(keys);
+      dispatch(setLoaderVisible(false))
       dispatch(login({...auth,route : "auth",isLogin : false}));
       ToastSuccess("Successfully logged out")
     }catch(err){

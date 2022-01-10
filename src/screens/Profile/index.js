@@ -135,7 +135,7 @@ export default function Profile({navigation}) {
                   <View style={styles.line}/>
                   <Text style={styles.subHeading}>Compensation</Text>
                   <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_1]}>
-                    <TextWithButton topText={data[8]} bottomText={about && about.compensation ? numeral(about.compensation).format("0,0.00") : ""} onPressHandle={() => navigation.navigate('Compensation')}/>
+                    <TextWithButton topText={data[8]} bottomText={about && about.compensation && about.compensation.amount ? numeral(about.compensation.amount).format("0,0.00") : ""} onPressHandle={() => navigation.navigate('Compensation')}/>
                   </View>
                   
                 </View> 

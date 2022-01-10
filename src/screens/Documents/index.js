@@ -77,7 +77,7 @@ export default function Documents({navigation}) {
                         <Text style={styles.subText}>{item && item.created_at ? moment(item.created_at).format("dd MMM YYYY") : null}</Text>
                     </View>
                 </View>
-                <Image source={HorDotIcon} style={styles.dotsIcon} />
+                <Image source={{uri : Images.DotsIcon}} style={styles.dotsIcon} />
             </TouchableOpacity>
             <View style={styles.line}/>
         </>

@@ -19,17 +19,19 @@ import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
-import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchWrap } from '../../utills/components';
 import Feather from "react-native-vector-icons/Feather"
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
+import { height, width } from 'react-native-dimension';
 
 
 export default function Dashboard(props) {
   const defaultColor = "black";
   const blackColor = "black";
   const [show,setShow] = React.useState(false)
+  const [secure,setSecure] = React.useState(true)
   const [data,setData] = React.useState({
     email  : "",
     password  : ""
@@ -135,19 +137,42 @@ export default function Dashboard(props) {
                         }}
                         color={AppColors.black}
                       />
-                    <Field
-                      component={CustomInput}
-                      name="password"
-                      placeholder="Password"
-                      icon={<Feather name="eye" />}
-                      value={data.password}
-                    // secure={true}
-                      onChangeData={(value)=>{
-                        setData({...data,password : value})
+                      <Container
+                        paddingHorizontal={2}
+                        width={90}
+                        borderRadius={1.5}
+                        direction={"row"}
+                        borderWidth={1}
+                        marginTop={1}
+                        borderColor={AppColors.grayBorder}
+                        style={{
+                          borderRadius: width(1.5)
                       }}
-                      secureTextEntry={true}
-                      color={AppColors.black}
-                    />
+                      >
+                      <TextInput 
+                        style={{
+                          width : width(75),
+                          paddingLeft : width(4),
+                          color : AppColors.black
+                        }}
+                        onChangeText={(value)=>setData({...data,password : value})}
+                        secureTextEntry={secure}
+                      />
+                        <TouchWrap
+                          onPress={()=>setSecure(!secure)}
+                        >
+                            <Container 
+                              flex={1}
+                              style={{
+                                alignItems : "center",
+                                justifyContent : "center"
+                              }}
+                              width={14}
+                            >
+                              <Feather name={secure ? "eye" : "eye-off" } size={width(4)}/>
+                            </Container>
+                        </TouchWrap>
+                      </Container>
                     </React.Fragment>
               </Formik>
             <Container marginTop={3} width={90}>
