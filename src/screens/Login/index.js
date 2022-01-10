@@ -3,9 +3,8 @@ import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Ima
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
-import ScreenWrapper from '../../components/ScreenWrapper';
+import {TextInput} from "react-native"
 import AppColors from '../../utills/AppColors';
-import {showMessage} from 'react-native-flash-message';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
 import CustomText from '../../component2/customText/CustomText';
 import CusInput from '../../component2/input/inputElement';
@@ -21,7 +20,7 @@ import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-
 import moment from 'moment';
 import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchWrap } from '../../utills/components';
 import Feather from "react-native-vector-icons/Feather"
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
 import { height, width } from 'react-native-dimension';
@@ -126,8 +125,8 @@ export default function Dashboard(props) {
               }}
             />
               <Formik>
-                    <React.Fragment>
-                      <Field
+                    <>
+                     <Field
                         component={CustomInput}
                         name="email"
                         placeholder="Email"
@@ -137,7 +136,7 @@ export default function Dashboard(props) {
                         }}
                         color={AppColors.black}
                       />
-                      <Container
+                     <Container
                         paddingHorizontal={2}
                         width={90}
                         borderRadius={1.5}
@@ -173,7 +172,7 @@ export default function Dashboard(props) {
                             </Container>
                         </TouchWrap>
                       </Container>
-                    </React.Fragment>
+                    </>
               </Formik>
             <Container marginTop={3} width={90}>
               <CustomButton
