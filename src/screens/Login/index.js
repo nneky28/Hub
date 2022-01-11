@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image, Linking} from 'react-native';
+import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image, Linking, Platform} from 'react-native';
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
@@ -19,7 +19,6 @@ import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
 import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchWrap } from '../../utills/components';
-import Feather from "react-native-vector-icons/Feather"
 import {TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
@@ -138,7 +137,7 @@ export default function Dashboard(props) {
                       />
                      <Container
                         paddingHorizontal={2}
-                        paddingTop={0.8}
+                        paddingTop={Platform.OS !== "android" ? 0.8 : 0}
                         width={90}
                         borderRadius={1.5}
                         direction={"row"}
@@ -147,8 +146,8 @@ export default function Dashboard(props) {
                         borderColor={AppColors.grayBorder}
                         style={{
                           borderRadius: width(1.5),
-                          paddingBottom : height(0.8)
-                      }}
+                          paddingBottom : Platform.OS !== "android" ? height(0.8) : height(0)
+                        }}
                       >
                       <TextInput 
                         style={{
@@ -158,7 +157,6 @@ export default function Dashboard(props) {
                         }}
                         placeholder='Password'
                         placeholderTextColor={AppColors.black3}
-                        place
                         onChangeText={(value)=>setData({...data,password : value})}
                         secureTextEntry={secure}
                       />
