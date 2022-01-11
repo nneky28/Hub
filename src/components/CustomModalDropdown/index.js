@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
-import { Image, Text, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity,Platform } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { downIcon } from '../../assets/images';
 import CommonStyles from '../../utills/CommonStyles';
 import { Container } from '../../utills/components';
 import styles from './styles';
+
 
 
 const CustomModalDropdown = (props) => {

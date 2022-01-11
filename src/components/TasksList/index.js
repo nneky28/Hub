@@ -287,7 +287,6 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
             renderItem={({item}) => {
               return (
                 <View style={title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
-                  {console.log("TITLE",title,item)}
                   {
                     item && item.employee && item.employee.photo ? (
                       <Image source={{uri : item.employee.photo}} style={styles.image} />

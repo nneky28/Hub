@@ -11,13 +11,13 @@ import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors, { ColorList, ColorList2 } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox,BackHandler } from '../../utills/components'
+import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox,BackHandler, useDebounce } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import Outjson from '../../assets/lottie/out.json'
 import Celebrationjson from '../../assets/lottie/birthday-icon.json'
 import Teamjson from '../../assets/lottie/teams.json'
-import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods'
+import { Capitalize, getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
 import { Images } from '../../component2/image/Image'
@@ -37,22 +37,16 @@ export default function People({route,navigation}) {
     const [celebrations,setCelebrations] = useState(null);
     const [whosOut,setWhosOut] = useState(null)
     const [persons,setPersons] = useState([]);
-    const dispatch = useDispatch();
     const [loading,setLoading] = React.useState(true);
     const [data,setData] = React.useState([])
     const [fetch,setFetch] = React.useState(false)
     const [end_reached,setEndReached] = React.useState(false)
+    const [searchTerm,setSearchTerm] = React.useState(null)
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-    const handleSearch = (text) => {
-        if (text.length > 0){
-            let filtered = persons.filter(item => {
-                return (item && item.first_name && item.first_name.toLowerCase() && item.first_name.toLowerCase().includes(text.toLowerCase())) || (item && item.last_name && item.last_name.toLowerCase() && item.last_name.toLowerCase().includes(text.toLowerCase()))
-            });
-            setPersonsList(filtered);
-        }
-        else
-            setPersonsList(persons);
-    }
+
+    
+
     const fetchData = async () => {
         try{
             if(end_reached) return
@@ -71,7 +65,10 @@ export default function People({route,navigation}) {
             Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
             && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
             if(selected === "All" || selected === "My Team"){
-                let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1) : APIFunction.team_members(biz.business_id,about_me.id,page || 1);
+                let searchParam = debouncedSearchTerm && debouncedSearchTerm.toString("").trim() ? 
+                debouncedSearchTerm : "";
+                let url = selected === "All" ? APIFunction.employees(biz.business_id,page || 1,searchParam) : 
+                APIFunction.team_members(biz.business_id,about_me.id,page || 1);
                 let res = await getAPIs(url,token);
                 let persons_arr = res && res.results && Array.isArray(res.results) ? 
                 res.results : [];
@@ -204,6 +201,40 @@ export default function People({route,navigation}) {
             ToastError(msg)
         }
     }
+    const handleSearch = (text) => {
+        setSearchTerm(text)
+    }
+    const searchQueryHandler = async () => {
+        try{
+            setEndReached(false)
+            if(!debouncedSearchTerm || debouncedSearchTerm.toString().trim() === ""){
+                return setPersonsList([...persons])
+            }
+            setLoading(true)
+            let biz = await getStoredBusiness()
+            let url = APIFunction.employees(biz.business_id,1,debouncedSearchTerm)
+            let res = await getAPIs(url)
+            let results = []
+            if(res && res.results && Array.isArray(res.results)){
+                setPersonsList(res.results)
+            }
+            setLoading(false)
+        }catch(err){
+            ToastError(err.msg)
+        }
+    }
+
+
+    useEffect(()=>{
+        setSearchTerm(null)
+        fetchData()
+    },[selected])
+
+    
+    useEffect(()=>{
+        searchQueryHandler()
+    },[debouncedSearchTerm])
+
     const location = async () => {
         let {tab} = route.params ? route.params : {tab : 'All'}
         storeData("tab",tab);
@@ -214,14 +245,14 @@ export default function People({route,navigation}) {
     }   
     useEffect(()=>{
         location()
+        setSearchTerm(null)
         return ()=>{
+            setSearchTerm(null)
             setEndReached(false)
             resetPageNumber()
         }
     },[])
-    useEffect(()=>{
-        fetchData()
-    },[selected])
+    
     const CelebrationItem = ({item, section}) => {
         let bgColor, borderColor;
         const {date} = section;

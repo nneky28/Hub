@@ -11,7 +11,7 @@ export const APIFunction = {
   benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
   whos_out : (business_id,category="timeoff") => `/c/${business_id}/timeoff_taken/widgets/whos_out/?category=${category}`,
   birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,
-  employees : (business_id,page=1) => `/c/${business_id}/employees/?page=${page}`,
+  employees : (business_id,page=1,search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
   team_members : (business_id,id,page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
   basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
   next_of_kins : async (id) => {

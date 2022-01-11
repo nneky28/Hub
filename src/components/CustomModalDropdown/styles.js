@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet,Platform} from 'react-native';
 import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: AppColors.white,
     width: width(90),
-    paddingVertical: height(2.3),
+    paddingVertical: Platform.OS === "android" ? height(2.3) : height(1.8),
     // paddingHorizontal: width(5),
     justifyContent:'flex-start',
     alignSelf:'center',

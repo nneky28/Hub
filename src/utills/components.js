@@ -145,14 +145,35 @@ export const Reload = props => {
     </Text>
   )
   
-export const SizedBox = (props) => (
-  <View 
-    style={{
-      height : height(props.size || 1),
-      backgroundColor : props.backgroundColor || AppColors.white
-    }}
-  />
-)
+  export const SizedBox = (props) => (
+    <View 
+      style={{
+        height : height(props.size || 1),
+        backgroundColor : props.backgroundColor || AppColors.white
+      }}
+    />
+  )
+
+  export const  useDebounce = (value, delay) => {
+    // State and setters for debounced value
+    const [debouncedValue, setDebouncedValue] = useState(value);
+    useEffect(
+      () => {
+        // Update debounced value after delay
+        const handler = setTimeout(() => {
+          setDebouncedValue(value);
+        }, delay);
+        // Cancel the timeout if value changes (also on delay change or unmount)
+        // This is how we prevent debounced value from updating if value is changed ...
+        // .. within the delay period. Timeout gets cleared and restarted.
+        return () => {
+          clearTimeout(handler);
+        };
+      },
+      [value, delay] // Only re-call effect if value or delay changes
+    );
+    return debouncedValue;
+  }
 
   export const Container = (props) => (
     <View 
@@ -163,12 +184,14 @@ export const SizedBox = (props) => (
         flexDirection : props.direction,
         width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
         padding : props.padding ? width(props.padding) : width(0),
-        paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
+        
         paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop : props.marginTop ? height(props.marginTop) : 0,
         marginBottom : props.marginBottom ? height(props.marginBottom) : 0,
         marginLeft : props.marginLeft ? width(props.marginLeft) : 0,
         paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
+        //paddingBottom : props.paddingBottom ? height(props.paddingBottom) : 0,
+        paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
         paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
         paddingLeft : props.paddingLeft ? width(props.paddingLeft) : 0,
         marginRight : props.marginRight ? width(props.marginRight) : 0,

@@ -42,7 +42,7 @@ export default function NextKin({navigation,route}) {
    const handleSubmit = async () => {
         try{
             let required = ["first_name","middle_name","last_name","phone_number",
-            "email","marital_status","gender","nationality","address1","country","state","city","postal_code"];
+            "email","marital_status","gender","nationality","address1","country","state","city"];
             let failed = false;
             let msg = ""
             for(let req of required){

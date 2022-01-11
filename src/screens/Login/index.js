@@ -138,6 +138,7 @@ export default function Dashboard(props) {
                       />
                      <Container
                         paddingHorizontal={2}
+                        paddingTop={0.8}
                         width={90}
                         borderRadius={1.5}
                         direction={"row"}
@@ -145,7 +146,8 @@ export default function Dashboard(props) {
                         marginTop={1}
                         borderColor={AppColors.grayBorder}
                         style={{
-                          borderRadius: width(1.5)
+                          borderRadius: width(1.5),
+                          paddingBottom : height(0.8)
                       }}
                       >
                       <TextInput 
@@ -154,6 +156,9 @@ export default function Dashboard(props) {
                           paddingLeft : width(4),
                           color : AppColors.black
                         }}
+                        placeholder='Password'
+                        placeholderTextColor={AppColors.black3}
+                        place
                         onChangeText={(value)=>setData({...data,password : value})}
                         secureTextEntry={secure}
                       />
@@ -168,7 +173,11 @@ export default function Dashboard(props) {
                               }}
                               width={14}
                             >
-                              <Feather name={secure ? "eye" : "eye-off" } size={width(4)}/>
+                              <ImageWrap 
+                                url={secure ? Images.EyeIcon : Images.EyeOffIcon}
+                                fit={"contain"}
+                                height={3}
+                              />
                             </Container>
                         </TouchWrap>
                       </Container>

@@ -29,9 +29,9 @@ function TabBar({state, descriptors, navigation}) {
     return (
       <>
       <Container
-        paddingVertical={3}
         style={{
-          flexDirection : "row"
+          flexDirection : "row",
+          paddingBottom : height(3)
         }}
       >
         {state.routes.map((route, index) => {
