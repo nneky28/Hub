@@ -276,10 +276,10 @@ export default function EditPhoto({navigation}) {
                 
                 <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_5]}>
                     <Button 
-                    title="Take Photo"
-                    onPress={imageFromCamera}
-                    containerStyle={styles.takePhotoBtn}
-                    textStyle={styles.btnText}
+                      title="Take Photo"
+                      onPress={imageFromCamera}
+                      containerStyle={styles.takePhotoBtn}
+                      textStyle={styles.btnText}
                     />
                     <Button 
                     title="Choose Photo"

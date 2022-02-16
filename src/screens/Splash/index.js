@@ -27,15 +27,8 @@ const Splash = (props) => {
         }else if(user && about && !about.completed_user_onboarding){
           dispatch(login({...auth,user : user,isLogin : true,route : "onboard"}));
         }else{
-          let auth = await getData("auth");
-          if(!auth){
-            auth = {
-              isLogin: false,
-              route: "auth",
-              user: null
-            }
-          }
-          dispatch(login({...auth,isLogin : false}));
+          //I have a feeling that is another case that needs to be captured here.
+          dispatch(login({...auth,route : "auth",isLogin : false}));
         }
       }catch(err){
       }

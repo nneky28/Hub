@@ -348,7 +348,7 @@ export const DatePickerModal = (props) => {
                     setSelected(moment(newDate).format("YYYY-MM-DD"))
                   }} 
                   mode="date" 
-                  maximumDate={new Date(moment().subtract(18,"years").format("YYYY-MM-DD"))}
+                  maximumDate={null}
               /> 
               <Container 
                 marginTop={5}
@@ -441,8 +441,7 @@ export const OnboardModal = (props) => {
             <H1>Close</H1>
           </TouchWrap>
         </Container>
-      <WebView 
-        //props.url
+      <WebView
         source={{ uri: `${BASE_URL}${props.url}`}}
         style={{ marginTop: 20}}
         onNavigationStateChange={(param)=>onNavigationStateChange(param,dispatch,auth)}

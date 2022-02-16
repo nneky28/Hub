@@ -54,6 +54,7 @@ export default function LandingPage(props) {
             setLoading(false)
             dispatch(setLoaderVisible(false))
         }catch(err){
+          console.log("ERR",err)
         }
     }
   useEffect(() => {

@@ -64,27 +64,27 @@ const Routes = () => {
 
 
    
-   const getDeepLinkInfo = async () => {
+    const getDeepLinkInfo = async () => {
       let url = await Linking.getInitialURL()
       if(route === "main" || !url) return
       let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
       let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
       await storeData("auth",load)
       dispatch(login(load))
-   }
-   const deepLinkListener = () => {
-    Linking.addEventListener('url', async ({url}) => {
-      if(route === "main" || !url) return
-      let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
-      let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
-      await storeData("auth",load)
-      dispatch(login(load))
-    })
-   }
-   useEffect(()=>{
-    getDeepLinkInfo()
-    deepLinkListener()
-   },[])
+    }
+    const deepLinkListener = () => {
+      Linking.addEventListener('url', async ({url}) => {
+        if(route === "main" || !url) return
+        let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
+        let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
+        await storeData("auth",load)
+        dispatch(login(load))
+      })
+    }
+    useEffect(()=>{
+      getDeepLinkInfo()
+      deepLinkListener()
+    },[])
   return (
     <NavigationContainer>
       <Loader />
