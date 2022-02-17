@@ -67,6 +67,8 @@ Following Scripts added
     <ul>
         <li>For android https://developers.google.com/digital-asset-links/tools/generator</li>
         <li>For ios https://branch.io/resources/aasa-validator/</li>
+        <li>https://digitalassetlinks.googleapis.com/v1/statements:list?source.web.site=https://coolowo.com&relation=delegate_permission/common.handle_all_urls
+</li>
     </ul>
 <em><b>Author<b/>: Shoaib Ahmed <b>[Develo IT Solutions Pvt Ltd.]<b/></em>
 
