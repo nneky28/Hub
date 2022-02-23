@@ -162,12 +162,12 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
       if(failed) {
         return showFlashMessage({type : "error",title : "All fields are required"})
       };
-      if(!moment(data.start_date).isBefore(moment(data.end_date))){
-        return showFlashMessage({type : "error",title : "Start date must be before end date"})
-      }
-      if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
-        return showFlashMessage({type : "error",title : "Date must be in the future"})
-      }
+      // if(!moment(data.start_date).isBefore(moment(data.end_date))){
+      //   return showFlashMessage({type : "error",title : "Start date must be before end date"})
+      // }
+      // if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
+      //   return showFlashMessage({type : "error",title : "Date must be in the future"})
+      // }
       let about_me = await getData("about_me")
       let biz = await getStoredBusiness();
       dispatch(setLoaderVisible(true));
