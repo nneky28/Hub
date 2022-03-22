@@ -1,4 +1,4 @@
-export default BaseUrl = "https://google.com"
+//export default BaseUrl = "https://google.com"
 //export const BASE_URL = "https://dev-app.coolowo.com/"
 export const BASE_URL =  "https://my.bizedgeapp.com/"
 
