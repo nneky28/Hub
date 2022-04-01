@@ -23,11 +23,13 @@ import {TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
 import { height, width } from 'react-native-dimension';
+import { useQueryClient } from 'react-query';
 
 
 export default function Dashboard(props) {
   const defaultColor = "black";
   const blackColor = "black";
+  const queryClient = useQueryClient()
   const [show,setShow] = React.useState(false)
   const [secure,setSecure] = React.useState(true)
   const [data,setData] = React.useState({
@@ -73,6 +75,7 @@ export default function Dashboard(props) {
       await storeData("user",res.user);
       await storeData("logout_time",moment(new Date()).add(2,'hours'));
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
+      queryClient.invalidateQueries()
       ToastSuccess("Login was successful")
       return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : about_me.completed_user_onboarding ? "main" : "onboard",isLogin : true}));
     }catch(err){

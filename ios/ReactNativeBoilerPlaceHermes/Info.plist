@@ -58,6 +58,8 @@
 	<string>This app requires access to the phone microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs to get your location...</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This lets you upload a profile image to your account.</string>
 	<key>UIAppFonts</key>

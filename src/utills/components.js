@@ -37,11 +37,15 @@ import DatePicker from 'react-native-date-picker';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
-import { storeData, ToastSuccess } from './Methods';
-import { APIFunction } from './api';
+import { getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
+import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus } from './api';
 import {setLoaderVisible} from '../Redux/Actions/Config';
 import { BASE_URL } from './Constants';
 import { useNavigation } from '@react-navigation/native';
+import Button from '../components/Button';
+import { useMutation, useQueryClient } from 'react-query';
+import GetLocation from 'react-native-get-location'
+
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -529,3 +533,170 @@ export const EmptyStateWrapper =  (props) => (
      }
   </Container>
 )
+
+export const ClockINContainer = () => {
+  const [current,setCurrent] = React.useState("")
+  const dispatch = useDispatch()
+  const queryClient = useQueryClient()
+  const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
+  const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out())
+  const [location,setLocation] = React.useState(null)
+  // const {
+  //   data : config,
+  //   isFetching : fetching
+  // } = useFetchAttendanceConfig()
+  const {
+    data : status,
+    isFetching : fetchingStatus
+  } = useFetchAttendanceStatus()
+
+  var interval
+  useEffect(()=>{
+    setInterval(() => {
+      interval = setCurrent(moment().format("hh : mma"))
+    }, 1000);
+    return () => {
+      clearInterval(interval)
+    }
+  },[])
+
+  const submitHandler = async () => {
+    try{
+      if(!location) return
+      if(status?.is_clocked_in){
+        dispatch(setLoaderVisible(true))
+        await clockEmployeeOut.mutateAsync()
+        queryClient.invalidateQueries("attendance_status")
+        return dispatch(setLoaderVisible(false))
+      }
+      dispatch(setLoaderVisible(true))
+      await clockEmployeeIn.mutateAsync(location)
+      queryClient.invalidateQueries("attendance_status")
+      dispatch(setLoaderVisible(false))
+    }catch(err){
+      console.log("ERR",err)
+      ToastError(err.msg)
+      dispatch(setLoaderVisible(false))
+    }
+  }
+  const getLocation = async () => {
+    try{
+      let res = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 15000,
+     })
+     setLocation({
+       latitude : res.latitude,
+       longitude : res.longitude
+     })
+    }catch(err){
+    }
+  }
+  useEffect(()=>{
+    getLocation()
+  },[])
+
+  return(
+    <View
+                  style={{
+                    alignItems : "center"
+                  }}
+                >
+                <Container
+                  marginTop={3}
+                  marginBottom={3}
+                  style={{
+                    alignItems : "center",
+                    height : height(28),
+                    width : width(90),
+                    borderRadius : width(8)
+                  }}
+                  backgroundColor={AppColors.lightOrange}
+                  borderWidth={1.5}
+                  borderColor={AppColors.yellow}
+                >
+                  <Container marginTop={5} direction="row"
+                    style={{
+                      justifyContent : "center"
+                    }}
+                    backgroundColor={AppColors.lightOrange}
+                  >
+                    <P fontSize={4} color={AppColors.black1}>
+                      {getGreetingTime()}
+                    </P>
+                  </Container>
+                    <SizedBox height={1} />
+                    <H1 fontSize={4} color={AppColors.black1}>
+                      {moment().format("dddd, DD MMM YYYY")}
+                    </H1>
+                    <SizedBox height={1} />
+                    <P fontSize={3.3} color={AppColors.black1}>
+                      Working Hours - 0 Hrs : 00Mins
+                    </P>
+                    <Container
+                        style={{
+                          alignItems : "center",
+                          top : height(15),
+                          width : width(80),
+                          paddingTop : height(3),
+                          paddingBottom : height(3),
+                          zIndex: 1000,
+                          borderRadius : width(5)
+                        }}
+                        position="absolute"
+                        borderWidth={1.5}
+                        borderColor={AppColors.yellow}
+                    >
+                      <Container
+                        style={{
+                          alignItems : "center",
+                        }}
+                        marginBottom={2}
+                      >
+                          <P fontSize={3.3} color={AppColors.darkGray}>Time</P>
+                          <H1 fontSize={10} color={AppColors.black}>{current}</H1>
+                      </Container>
+                      <Container 
+                        borderBottomWidth={1.5}
+                        borderColor={AppColors.grayBorder}
+                        width={60}
+                      />
+                      <Container
+                        marginTop={2}
+                        direction="row"
+                        width={35}
+                      >
+                        {console.log("fetchingStatus",fetchingStatus)}
+                         {
+                           fetchingStatus ? <ActivityIndicator size={width(2)} 
+                              color={AppColors.green}
+                           /> :
+                           status?.is_clocked_in ? <React.Fragment>
+                           <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
+                           <P fontSize={3.3} color={AppColors.black}> 02 : 15am</P>
+                          </React.Fragment> : <React.Fragment>
+                          <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
+                          <P fontSize={3.3} color={AppColors.black}> -- : --</P>
+                         </React.Fragment>
+                         }
+                      </Container>
+                    </Container>
+                </Container>
+                <Button title="Clock In" 
+                  onPress={submitHandler}
+                        containerStyle={{
+                          borderRadius : 7,
+                          backgroundColor: (status?.is_clocked_in || !location || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+                          height : height(6),
+                          marginTop : height(7)
+                        }}
+                        textStyle={{
+                          fontFamily : FontFamily.BlackSansBold,
+                          color : AppColors.white,
+                          fontSize : width(4)
+                        }}
+                        disabled={(status?.is_clocked_in || !location || fetchingStatus) ? true : false}
+                      />
+                </View>
+  )
+}

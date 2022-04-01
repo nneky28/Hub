@@ -1,9 +1,10 @@
 import axios from "axios";
 import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
+import {useQuery} from "react-query"
 
-//export const endPoint = 'https://coolowo.com';
-export const endPoint = 'https://api.bizedgeapp.com';
+export const endPoint = 'https://coolowo.com';
+//export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -113,17 +114,38 @@ export const APIFunction = {
   onboarded : async (employee_id) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz.business_id}/employees/${employee_id}/complete_user_onboarding/`)
-  }
+  },
+  attendance_config : async () => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/attendance_config/`)
+  },
+  attendance_status : async () => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/attendance/status/`)
+  },
+  employee_clock_in : async (fd) => {
+    let biz = await getStoredBusiness()
+    return postAPIs(`/c/${biz.business_id}/attendance/clock_in/`,fd)
+  },
+  employee_clock_out : async (fd) => {
+    let biz = await getStoredBusiness()
+    return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`)
+  },
 }
-export const getAPIs = async (path, token) => {
+
+export const useFetchAttendanceConfig = () => {
+  return useQuery("attendance_config",APIFunction.attendance_config)
+}
+export const useFetchAttendanceStatus = () => {
+  return useQuery("attendance_status",APIFunction.attendance_status)
+}
+
+export const getAPIs = async (path) => {
     let _token = await getData("token");
+    console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
-      let split = path.split("/?");
-      let url = split && split.length > 1 ? 
-      `${endPoint}${path}&timestamp=${new Date().getTime()}` : 
-      `${endPoint}${path}?timestamp=${new Date().getTime()}`;
       axios
-        .get(`${url}`, {
+        .get(`${endPoint}${path}`, {
           headers: {
             Authorization: `Bearer ${_token}`,
             'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -137,6 +159,7 @@ export const getAPIs = async (path, token) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -151,6 +174,7 @@ export const getAPIs = async (path, token) => {
   
 export const postAPIs = async (path, fd) => {
     let _token = await getData("token");
+    console.log("postAPIs",path,fd)
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -165,11 +189,17 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("postAPIs ERR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
-          ) {
+          ){
             reject({status: 400, msg:error.response.data.detail});
+          } else if (
+            error.response && error.response.data && 
+            error.response.data.message && typeof(error.response.data.message) === "string"
+          ) {
+            reject({status: 400, msg:error.response.data.message});
           } else {
             reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
@@ -234,30 +264,27 @@ export const putAPIs = async (path,fd) => {
   };
   
 export const postNoToken = (path, fd) => {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(`${endPoint}${path}`, fd, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(result => {
-          resolve(result.data);
-        })
-        .catch(error => {
-          if (error.response) {
-            reject({status: 400, msg: error.response.data});
-          } else {
-            reject({status: 400, msg: 'Something went wrong. Please retry.'});
-          }
-        });
-  
-      setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
-    });
-  };
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${endPoint}${path}`, fd, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(result => {
+        resolve(result.data);
+      })
+      .catch(error => {
+        if (error.response) {
+          reject({status: 400, msg: error.response.data});
+        } else {
+          reject({status: 400, msg: 'Something went wrong. Please retry.'});
+        }
+      });
+  });
+};
   
 export const storeFile = async (path, token, fd) => {
-  
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -307,8 +334,6 @@ export const storeFilePut = async (path, token, fd) => {
             reject({status: 500, msg: 'Something went wrong. Please retry.'});
           }
         });
-  
-      //setTimeout(() => reject({status: 500, msg: 'Something went wrong. Please retry.'}), 50000);
     });
   };
 

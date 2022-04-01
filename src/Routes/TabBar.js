@@ -95,6 +95,7 @@ function TabBar({state, descriptors, navigation}) {
               activeOpacity={1}
               onLongPress={onLongPress}
               style={styles.container}
+              key={index}
             >
               <Image
                 resizeMode="contain"

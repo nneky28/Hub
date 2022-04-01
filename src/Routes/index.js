@@ -42,10 +42,23 @@ import { Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible } from '../Redux/Actions/Config';
+import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      cacheTime : 1000 * 250 * 60, //cache expires in 250 minutes
+      staleTime : 1000 * 250 * 60 //fetch new records every 250 minutes for stale records.
+    },
+  },
+})
+const queryCache = new QueryCache()
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+
+
 const Routes = () => {
   const route = useSelector((state) => state.Auth.route);
   const auth = useSelector((state)=>state.Auth)
@@ -56,6 +69,7 @@ const Routes = () => {
       let keys = await AsyncStorage.getAllKeys()
       AsyncStorage.multiRemove(keys);
       dispatch(setLoaderVisible(false))
+      queryCache.clear()
       dispatch(login({...auth,route : "auth",isLogin : false}));
       ToastSuccess("Successfully logged out")
     }catch(err){
@@ -86,7 +100,8 @@ const Routes = () => {
       deepLinkListener()
     },[])
   return (
-    <NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+            <NavigationContainer>
       <Loader />
       {
         route === "splash" ? (
@@ -208,6 +223,7 @@ const Routes = () => {
         </Stack.Navigator>
       )}
     </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};

@@ -17,7 +17,7 @@ import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components';
+import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
@@ -26,6 +26,9 @@ import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
+
+
+
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -314,15 +317,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   }
                  >
                              <React.Fragment>
-                   
-                <Container
-                  marginTop={3}
-                  marginBottom={3}
-                >
-                   <P textAlign="center">Hello,</P>
-                   {/* <H1 textAlign="center">Welcome back</H1> */}
-                   <H1 textAlign="center">{getGreetingTime()}</H1>
-                </Container>
+
+                               <ClockINContainer />
+                
                 {
                   tasks && Array.isArray(tasks) && tasks.length >  0 ? 
                   (
