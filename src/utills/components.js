@@ -37,7 +37,7 @@ import DatePicker from 'react-native-date-picker';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
-import { getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
+import { getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
 import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus } from './api';
 import {setLoaderVisible} from '../Redux/Actions/Config';
 import { BASE_URL } from './Constants';
@@ -536,19 +536,22 @@ export const EmptyStateWrapper =  (props) => (
 
 export const ClockINContainer = () => {
   const [current,setCurrent] = React.useState("")
+  const auth = useSelector(state=>state.Auth)
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
-  const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out())
+  const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
   const [location,setLocation] = React.useState(null)
-  // const {
-  //   data : config,
-  //   isFetching : fetching
-  // } = useFetchAttendanceConfig()
+  const {
+    data : config,
+    isFetching : fetching
+  } = useFetchAttendanceConfig()
+
   const {
     data : status,
     isFetching : fetchingStatus
   } = useFetchAttendanceStatus()
+
 
   var interval
   useEffect(()=>{
@@ -564,8 +567,14 @@ export const ClockINContainer = () => {
     try{
       if(!location) return
       if(status?.is_clocked_in){
+        let user = await getData("about_me")
         dispatch(setLoaderVisible(true))
-        await clockEmployeeOut.mutateAsync()
+        let fd = {
+          employee : user.id,
+          clock_in_time : status?.clock_in_time,
+          clock_out_time : moment().toISOString()
+        }
+        await clockEmployeeOut.mutateAsync(fd)
         queryClient.invalidateQueries("attendance_status")
         return dispatch(setLoaderVisible(false))
       }
@@ -574,7 +583,6 @@ export const ClockINContainer = () => {
       queryClient.invalidateQueries("attendance_status")
       dispatch(setLoaderVisible(false))
     }catch(err){
-      console.log("ERR",err)
       ToastError(err.msg)
       dispatch(setLoaderVisible(false))
     }
@@ -617,10 +625,18 @@ export const ClockINContainer = () => {
                 >
                   <Container marginTop={5} direction="row"
                     style={{
-                      justifyContent : "center"
+                      justifyContent : "center",
+                      alignItems: "center"
                     }}
                     backgroundColor={AppColors.lightOrange}
                   >
+                    <ImageWrap 
+                      height={3}
+                      width={5}
+                      fit="contain"
+                      url={getGreetingTime() === "Good morning" ? Images.Sunrise : Images.Sunset}
+                    />
+                    <Container width={1} backgroundColor="transparent" />
                     <P fontSize={4} color={AppColors.black1}>
                       {getGreetingTime()}
                     </P>
@@ -630,9 +646,9 @@ export const ClockINContainer = () => {
                       {moment().format("dddd, DD MMM YYYY")}
                     </H1>
                     <SizedBox height={1} />
-                    <P fontSize={3.3} color={AppColors.black1}>
+                    {/* <P fontSize={3.3} color={AppColors.black1}>
                       Working Hours - 0 Hrs : 00Mins
-                    </P>
+                    </P> */}
                     <Container
                         style={{
                           alignItems : "center",
@@ -666,27 +682,29 @@ export const ClockINContainer = () => {
                         direction="row"
                         width={35}
                       >
-                        {console.log("fetchingStatus",fetchingStatus)}
                          {
                            fetchingStatus ? <ActivityIndicator size={width(2)} 
                               color={AppColors.green}
                            /> :
-                           status?.is_clocked_in ? <React.Fragment>
+                           status?.is_clocked_in && status?.clock_in_time ? <React.Fragment>
                            <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
-                           <P fontSize={3.3} color={AppColors.black}> 02 : 15am</P>
-                          </React.Fragment> : <React.Fragment>
-                          <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
-                          <P fontSize={3.3} color={AppColors.black}> -- : --</P>
+                           <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("hh : mma")}</P>
+                          </React.Fragment> : status?.is_clocked_out && status?.clock_out_time ? <React.Fragment>
+                            <P fontSize={3.3} color={AppColors.darkGray}>Clock Out time:</P>
+                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("hh : mma")}</P>
+                         </React.Fragment> : <React.Fragment>
+                            <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
+                            <P fontSize={3.3} color={AppColors.black}> -- : --</P>
                          </React.Fragment>
                          }
                       </Container>
                     </Container>
                 </Container>
-                <Button title="Clock In" 
+                <Button title={!status?.is_clocked_in ? "Clock In" : "Clock Out"} 
                   onPress={submitHandler}
                         containerStyle={{
                           borderRadius : 7,
-                          backgroundColor: (status?.is_clocked_in || !location || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+                          backgroundColor: (status?.is_clocked_out || !location || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
                           height : height(6),
                           marginTop : height(7)
                         }}
@@ -695,7 +713,7 @@ export const ClockINContainer = () => {
                           color : AppColors.white,
                           fontSize : width(4)
                         }}
-                        disabled={(status?.is_clocked_in || !location || fetchingStatus) ? true : false}
+                        disabled={(status?.is_clocked_out || !location || fetchingStatus) ? true : false}
                       />
                 </View>
   )

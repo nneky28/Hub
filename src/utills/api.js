@@ -129,7 +129,7 @@ export const APIFunction = {
   },
   employee_clock_out : async (fd) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`)
+    return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`,fd)
   },
 }
 
