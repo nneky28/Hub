@@ -565,7 +565,9 @@ export const ClockINContainer = () => {
 
   const submitHandler = async () => {
     try{
-      if(!location) return
+      if(!location){
+        return ToastError("Unavilable to fetch location")
+      }
       if(status?.is_clocked_in){
         let user = await getData("about_me")
         dispatch(setLoaderVisible(true))
@@ -680,17 +682,17 @@ export const ClockINContainer = () => {
                       <Container
                         marginTop={2}
                         direction="row"
-                        width={35}
+                        width={45}
                       >
                          {
                            fetchingStatus ? <ActivityIndicator size={width(2)} 
                               color={AppColors.green}
                            /> :
                            status?.is_clocked_in && status?.clock_in_time ? <React.Fragment>
-                           <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
+                           <P fontSize={3.3} color={AppColors.darkGray}>Clocked In time:</P>
                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("hh : mma")}</P>
-                          </React.Fragment> : status?.is_clocked_out && status?.clock_out_time ? <React.Fragment>
-                            <P fontSize={3.3} color={AppColors.darkGray}>Clock Out time:</P>
+                          </React.Fragment> : status?.has_clocked_out && status?.clock_out_time ? <React.Fragment>
+                            <P fontSize={3.3} color={AppColors.darkGray}>Clocked Out time:</P>
                             <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("hh : mma")}</P>
                          </React.Fragment> : <React.Fragment>
                             <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
@@ -704,7 +706,7 @@ export const ClockINContainer = () => {
                   onPress={submitHandler}
                         containerStyle={{
                           borderRadius : 7,
-                          backgroundColor: (status?.is_clocked_out || !location || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+                          backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
                           height : height(6),
                           marginTop : height(7)
                         }}
@@ -713,7 +715,7 @@ export const ClockINContainer = () => {
                           color : AppColors.white,
                           fontSize : width(4)
                         }}
-                        disabled={(status?.is_clocked_out || !location || fetchingStatus) ? true : false}
+                        disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
                       />
                 </View>
   )

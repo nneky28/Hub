@@ -43,6 +43,7 @@ import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible } from '../Redux/Actions/Config';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
+import Crashes from 'appcenter-crashes';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,6 +100,19 @@ const Routes = () => {
       getDeepLinkInfo()
       deepLinkListener()
     },[])
+
+  useEffect(()=>{
+   // throw new Error('This is a test javascript crash!');
+    Crashes.setListener({
+
+      shouldProcess: function (report) {
+          return true; // return true if the crash report should be processed, otherwise false.
+      },
+  
+      // Other callbacks must also be defined at the same time if used.
+      // Default values are used if a method with return parameter isn't defined.
+  });
+  },[])
   return (
     <QueryClientProvider client={queryClient}>
             <NavigationContainer>
