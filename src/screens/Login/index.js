@@ -80,6 +80,7 @@ export default function Dashboard(props) {
       ToastSuccess("Login was successful")
       return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : about_me.completed_user_onboarding ? "main" : "onboard",isLogin : true}));
     }catch(err){
+      console.log("ERR",err)
       dispatch(setLoaderVisible(false));
       let msg = "";
       if(err.msg && err.msg.code === "invalid_credentials"){
@@ -180,13 +181,12 @@ export default function Dashboard(props) {
                                 fit={"contain"}
                                 height={3}
                               /> */}
-                              <Feather 
+                              {/* <Feather 
                                 Icon 
                                 name={secure ? "eye" : "eye-off"}
                                 size={width(5)} 
                                 color={AppColors.green} 
-                              />
-                              
+                              /> */}
                             </Container>
                         </TouchWrap>
                       </Container>

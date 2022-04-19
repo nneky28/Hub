@@ -449,7 +449,12 @@ export const OnboardModal = (props) => {
         source={{ uri: `${BASE_URL}${props.url}`}}
         style={{ marginTop: 20}}
         onNavigationStateChange={(param)=>onNavigationStateChange(param,dispatch,auth)}
-
+        startInLoadingState={true}
+        renderLoading={()=><Container paddingVertical={4}> 
+            <ActivityIndicator size="large"
+              color={AppColors.green}
+            />
+          </Container>}
       />
     </Container>
     </Modal>
@@ -475,6 +480,12 @@ export const CustomWebView = (props) => (
           <WebView 
             source={{ uri: props.web_url }}
               style={{ marginTop: 20}}
+              startInLoadingState={true}
+              renderLoading={()=><Container paddingVertical={4}> 
+            <ActivityIndicator size="large"
+              color={AppColors.green}
+            />
+          </Container>}
           />
         </Container>
   </Modal>
