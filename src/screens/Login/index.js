@@ -24,7 +24,6 @@ import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
 import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
-import Feather from "react-native-vector-icons/Feather"
 
 
 export default function Dashboard(props) {
@@ -176,17 +175,11 @@ export default function Dashboard(props) {
                               }}
                               width={14}
                             >
-                              {/* <ImageWrap 
+                              <ImageWrap 
                                 url={secure ? Images.EyeIcon : Images.EyeOffIcon}
                                 fit={"contain"}
                                 height={3}
-                              /> */}
-                              {/* <Feather 
-                                Icon 
-                                name={secure ? "eye" : "eye-off"}
-                                size={width(5)} 
-                                color={AppColors.green} 
-                              /> */}
+                              />
                             </Container>
                         </TouchWrap>
                       </Container>

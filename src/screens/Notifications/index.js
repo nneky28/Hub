@@ -17,7 +17,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../Redux/Actions/Auth'
 import Swipeable from 'react-native-swipeable';
-import Feather from "react-native-vector-icons/Feather"
 import { showFlashMessage } from '../../components/SuccessFlash'
 import { Images } from '../../component2/image/Image'
 

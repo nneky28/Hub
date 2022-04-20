@@ -294,12 +294,12 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
                         size={10}
                       >
-                           <H1>
-                          {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
+                          <H1>
+                            {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
                             Capitalize([...item.employee.first_name][0]) : 
                             item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""
                             }
-                          {item && item.employee && item.employee.last_name && item.employee.last_name.length > 1 ? 
+                            {item && item.employee && item.employee.last_name && item.employee.last_name.length > 1 ? 
                           `${Capitalize([...item.employee.last_name][0])}` : item && item.last_name && item.last_name.length > 0 ? Capitalize([...item.last_name][0]) : ""}
                         </H1>
                       </Rounded>

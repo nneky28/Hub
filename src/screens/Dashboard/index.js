@@ -21,7 +21,6 @@ import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoade
 import tasksData from '../../utills/data/tasksData';
 import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
-import Feather from "react-native-vector-icons/Feather"
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';

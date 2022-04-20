@@ -20,7 +20,6 @@ import { ToastError, ToastSuccess,storeData, getData, Capitalize, getStoredBusin
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
 import { Container, EmptyStateWrapper, H1, ImageWrap, OnboardModal, P, PageLoader, SizedBox } from '../../utills/components';
-import Feather from "react-native-vector-icons/Feather"
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import { Images } from '../../component2/image/Image';
