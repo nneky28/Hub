@@ -87,7 +87,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
         res && res.results && Array.isArray(res.results) ? setWhosOut(res.results) : setWhosOut([])
       }
       if(param === "Training"){
-        res && res.results && Array.isArray(res.results) ? setTraining(res.results) : setTraining([])
+        setTraining([])
+        //res && res.results && Array.isArray(res.results) ? setTraining(res.results) : setTraining([])
       }
       setFetching(false)
     }catch(err){
