@@ -557,7 +557,7 @@ export const ClockINContainer = () => {
     data : config,
     isFetching : fetching
   } = useFetchAttendanceConfig()
-
+  console.log("ClockINContainer",config)
   const {
     data : status,
     isFetching : fetchingStatus
@@ -618,11 +618,13 @@ export const ClockINContainer = () => {
   },[])
 
   return(
-    <View
-                  style={{
-                    alignItems : "center"
-                  }}
-                >
+      <React.Fragment>
+              {
+                config?.data?.is_configured ? <View
+                style={{
+                  alignItems : "center"
+                }}
+              >
                 <Container
                   marginTop={3}
                   marginBottom={3}
@@ -719,7 +721,7 @@ export const ClockINContainer = () => {
                           borderRadius : 7,
                           backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
                           height : height(6),
-                          marginTop : height(7)
+                          marginTop : height(5)
                         }}
                         textStyle={{
                           fontFamily : FontFamily.BlackSansBold,
@@ -728,6 +730,8 @@ export const ClockINContainer = () => {
                         }}
                         disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
                       />
-                </View>
+                </View> : null
+              }
+      </React.Fragment>
   )
 }
