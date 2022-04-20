@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>myEdge</string>
+	<string>MyEdge</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -53,13 +53,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This lets you capture a profile image for your account.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) requires access to location</string>
+	<string>This app needs to get your location...</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to the phone microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string></string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs to get your location...</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This lets you upload a profile image to your account.</string>
 	<key>UIAppFonts</key>
