@@ -557,7 +557,6 @@ export const ClockINContainer = () => {
     data : config,
     isFetching : fetching
   } = useFetchAttendanceConfig()
-  console.log("ClockINContainer",config)
   const {
     data : status,
     isFetching : fetchingStatus

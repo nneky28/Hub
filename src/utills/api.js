@@ -159,7 +159,6 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
