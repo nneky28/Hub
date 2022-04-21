@@ -3,8 +3,8 @@ import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 import {useQuery} from "react-query"
 
-export const endPoint = 'https://coolowo.com';
-//export const endPoint = 'https://api.bizedgeapp.com';
+//export const endPoint = 'https://coolowo.com';
+export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -235,6 +235,7 @@ export const postAPIs = async (path, fd) => {
     };
   
 export const putAPIs = async (path,fd) => {
+  //console.log("putAPIs",path,fd)
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -250,6 +251,7 @@ export const putAPIs = async (path,fd) => {
           resolve(result.data);
         })
         .catch(error => {
+          //console.log("ERR",error)
           if (
             error.response && error.response.data && error.response.data.msg && 
             error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"
