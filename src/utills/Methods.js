@@ -34,6 +34,11 @@ export const ToastError  = (msg) => {
   )
 };
 
+export const validateEmail = (value) =>{
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) return true
+  return false
+}
+
 export const ToastSuccess = (msg) =>(
     showMessage({
         message: 'Success',

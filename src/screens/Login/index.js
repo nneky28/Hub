@@ -15,7 +15,7 @@ let deviceHeight = Dimensions.get('window').height;
 import { Field, Formik } from 'formik';
 import CustomInput from '../../components/CustomInput';
 import { employees_me, getAPIs, postNoToken } from '../../utills/api';
-import { ToastError, ToastSuccess,storeData } from '../../utills/Methods';
+import { ToastError, ToastSuccess,storeData, validateEmail } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
 import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchWrap } from '../../utills/components';
@@ -54,8 +54,9 @@ export default function Dashboard(props) {
       ){
         return ToastError("All fields are required")
       }
+      if(!validateEmail(data.email.toString().trim())) return ToastError("Please enter a valid email")
       let fd = {
-        email : data.email,
+        email : data.email.toString().trim(),
         password : data.password
       }
       dispatch(setLoaderVisible(true));
@@ -137,6 +138,7 @@ export default function Dashboard(props) {
                         onChangeData={(value)=>{
                           setData({...data,email : value})
                         }}
+                        keyboardType={"email"}
                         color={AppColors.black}
                       />
                      <Container
@@ -153,17 +155,17 @@ export default function Dashboard(props) {
                           paddingBottom : Platform.OS !== "android" ? height(0.8) : height(0)
                         }}
                       >
-                      <TextInput 
-                        style={{
-                          width : width(75),
-                          paddingLeft : width(4),
-                          color : AppColors.black
-                        }}
-                        placeholder='Password'
-                        placeholderTextColor={AppColors.black3}
-                        onChangeText={(value)=>setData({...data,password : value})}
-                        secureTextEntry={secure}
-                      />
+                        <TextInput 
+                          style={{
+                            width : width(75),
+                            paddingLeft : width(4),
+                            color : AppColors.black
+                          }}
+                          placeholder='Password'
+                          placeholderTextColor={AppColors.black3}
+                          onChangeText={(value)=>setData({...data,password : value})}
+                          secureTextEntry={secure}
+                        />
                         <TouchWrap
                           onPress={()=>setSecure(!secure)}
                         >

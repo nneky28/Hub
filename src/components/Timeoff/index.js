@@ -153,7 +153,7 @@ const RenderItem = ({item,tab,showModal}) => {
       </TouchableOpacity>
       {show ? (
         <>
-          <Text style={styles.text1}>{item && item.is_paid ? "Paid" : "Unpaid"}</Text>
+          <Text style={styles.text1}>{item?.is_paid ? "Paid" : item?.timeoff?.is_paid ? "Paid" : "Unpaid"}</Text>
           {/* {
                     item && item.is_paid ? (
                       <Button
