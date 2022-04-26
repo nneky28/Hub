@@ -137,7 +137,7 @@ export default function Dashboard(props) {
                         onChangeData={(value)=>{
                           setData({...data,email : value})
                         }}
-                        keyboardType={"email"}
+                        keyboardType={"email-address"}
                         color={AppColors.black}
                       />
                      <Container

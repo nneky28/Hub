@@ -83,6 +83,7 @@ const Routes = () => {
       let url = await Linking.getInitialURL()
       if(route === "main" || !url) return
       let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
+      if(split.length < 1) return
       let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
       await storeData("auth",load)
       dispatch(login(load))
@@ -91,6 +92,7 @@ const Routes = () => {
       Linking.addEventListener('url', async ({url}) => {
         if(route === "main" || !url) return
         let split = Platform.OS === "ios" ?  url.split("myedgeapp:///") : url.split("https://coolowo.com/")
+        if(split.length < 1) return
         let load = {...auth,onboard : true,url : split.length > 1 ? split[1] : null}
         await storeData("auth",load)
         dispatch(login(load))
