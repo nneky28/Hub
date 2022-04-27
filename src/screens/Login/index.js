@@ -214,7 +214,7 @@ export default function Dashboard(props) {
         </View>
     {/* </ScrollView> */}
         {
-          auth.onboard ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
+          auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
         }
         {show ? <CustomWebView web_url={`${BASE_URL}forgot-password`} setShow={setShow} show={show} /> : null } 
     </KeyboardAvoidingScrollView>

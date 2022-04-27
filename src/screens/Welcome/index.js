@@ -111,7 +111,7 @@ export default function Welcome(props) {
             </Container> 
         </View>
         {
-          auth.onboard ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
+          auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
         }
     </ScrollView>
   );
