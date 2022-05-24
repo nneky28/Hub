@@ -85,7 +85,7 @@ export default function Dashboard(props) {
       if(err.msg && err.msg.code === "invalid_credentials"){
         msg = "Unable to login with the provided credentials"
       }
-      msg = err.msg && err.msg.code && typeof(err.msg.code) == "string" ? "Unable to login with the provided credentials."  : "Something went wrong. Please retry"
+      msg = err.msg && err.msg.code && typeof(err.msg.code) == "string" ? "Unable to login with the provided credentials."  : err.msg ? err.msg : "Something went wrong. Please retry"
       ToastError(msg)
     }
   };
