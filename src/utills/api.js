@@ -188,7 +188,7 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("postAPIs ERR",error)
+          console.log("postAPIs ERR",error.response)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
