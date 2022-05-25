@@ -552,7 +552,6 @@ export const ClockINContainer = () => {
   const queryClient = useQueryClient()
   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
-  const [location,setLocation] = React.useState(null)
   const {
     data : config,
     isFetching : fetching
@@ -575,9 +574,10 @@ export const ClockINContainer = () => {
 
   const submitHandler = async () => {
     try{
-      if(!location){
-        return ToastError("Unavilable to fetch location")
-      }
+      let res = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 15000,
+      })
       if(status?.is_clocked_in){
         let user = await getData("about_me")
         dispatch(setLoaderVisible(true))
@@ -591,30 +591,17 @@ export const ClockINContainer = () => {
         return dispatch(setLoaderVisible(false))
       }
       dispatch(setLoaderVisible(true))
-      await clockEmployeeIn.mutateAsync(location)
+      await clockEmployeeIn.mutateAsync(res)
       queryClient.invalidateQueries("attendance_status")
       dispatch(setLoaderVisible(false))
     }catch(err){
+      if(err && err.toString().includes("Location not available")){
+        return ToastError("Unable to fetch location.")
+      }
       ToastError(err.msg)
       dispatch(setLoaderVisible(false))
     }
   }
-  const getLocation = async () => {
-    try{
-      let res = await GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 15000,
-     })
-     setLocation({
-       latitude : res.latitude,
-       longitude : res.longitude
-     })
-    }catch(err){
-    }
-  }
-  useEffect(()=>{
-    getLocation()
-  },[])
 
   return(
       <React.Fragment>

@@ -158,6 +158,13 @@ export default function EditPhoto({navigation}) {
 
     const updateImage = async () => {
       try{
+        if(!profilePicture && about?.photo && auth?.route !== "main"){
+            let info = {...about,completed_user_onboarding : true}
+            await storeData("about_me",info);
+            let profile = await getData("profile")
+            await storeData("profile",{...profile,about : info})
+            return dispatch(login({...auth,onboard : false, route : "main"}))
+        }
         if(!profilePicture){
           return ToastError("Please select an image to upload");
         }

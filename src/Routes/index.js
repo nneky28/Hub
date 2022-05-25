@@ -44,6 +44,11 @@ import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible } from '../Redux/Actions/Config';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 import Crashes from 'appcenter-crashes';
+import SpInAppUpdates, {
+  NeedsUpdateResponse,
+  IAUUpdateKind,
+  StartUpdateOptions,
+} from 'sp-react-native-in-app-updates';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +59,9 @@ const queryClient = new QueryClient({
     },
   },
 })
+const inAppUpdates = new SpInAppUpdates(
+  false // isDebug
+);
 const queryCache = new QueryCache()
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
@@ -101,18 +109,39 @@ const Routes = () => {
       deepLinkListener()
     },[])
 
-  useEffect(()=>{
-   // throw new Error('This is a test javascript crash!');
-    Crashes.setListener({
-
-      shouldProcess: function (report) {
-          return true; // return true if the crash report should be processed, otherwise false.
-      },
+    const inAppUpdatesCheck = async () => {
+      try{
+        let result = await inAppUpdates.checkNeedsUpdate()
+        if(!result.shouldUpdate) {
+          return
+        }
+        const updateOptions = Platform.select({
+          ios: {
+            title: 'Update available',
+            message: "There is a new version of BizEgde available on the App Store, do you want to update it?",
+            buttonUpgradeText: 'Update',
+            buttonCancelText: 'Cancel',
+            forceUpgrade : true
+          },
+          android: {
+            updateType: IAUUpdateKind.IMMEDIATE,
+          },
+        });
+        inAppUpdates.startUpdate(updateOptions);
+      }catch(err){
+      }
+    }
   
-      // Other callbacks must also be defined at the same time if used.
-      // Default values are used if a method with return parameter isn't defined.
-  });
-  },[])
+    useEffect(()=>{
+      inAppUpdatesCheck()
+      Crashes.setListener({
+        shouldProcess: function (report) {
+            return true; // return true if the crash report should be processed, otherwise false.
+        },
+         // Other callbacks must also be defined at the same time if used.
+         // Default values are used if a method with return parameter isn't defined.
+      });
+     },[])
   return (
     <QueryClientProvider client={queryClient}>
             <NavigationContainer>
