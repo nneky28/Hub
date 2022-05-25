@@ -360,7 +360,9 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                       <TouchableOpacity
                         onPress={() =>setButtons(i)}
                         style={styles.button}
-                        activeOpacity={0.8}>
+                        activeOpacity={0.8}
+                        key={i}
+                      >
                         <Text style={[styles.buttonText, index == i && styles.buttonText1]}>
                           {item}
                         </Text>

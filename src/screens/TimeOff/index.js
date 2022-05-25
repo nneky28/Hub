@@ -111,9 +111,10 @@ export default function TimeOff({navigation}) {
                             horizontal={true}>
                             {['Active', 'Available','Requests', 'History'].filter(tab=>{
                                 return tabs.includes(tab)
-                            }).map((item) => (
+                            }).map((item,index) => (
                             <TouchableOpacity 
                             onPress={() => setSelected(item)}
+                            key={index}
                             >
                                 <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
                                 {selected == item && <View style={styles.animated} />}

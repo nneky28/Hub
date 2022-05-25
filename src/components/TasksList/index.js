@@ -126,12 +126,12 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
         contentContainerStyle={{paddingTop: height(0.5),paddingHorizontal : width(1.3)}}
         showsHorizontalScrollIndicator={false}
         horizontal={true}>
-        {headings.map((item) => (
+        {headings.map((item,i) => (
           <TouchableOpacity onPress={(e) => {
             onSelection(item)
             if(!['Leave', 'Remote Work', 'Training'].includes(item)) return
             getWhosOut(item)
-          }}>
+          }} key={i}>
             <Text style={[
               styles.heading,selected === item ? 
               {color : AppColors.green,fontFamily : FontFamily.BlackSansSemiBold} : {color: AppColors.black3}

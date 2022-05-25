@@ -380,15 +380,16 @@ export default function People({route,navigation}) {
                     contentContainerStyle={styles.scrollViewContainer}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}>
-                    {['All', 'My Team', "Who's out", 'Celebrations'].map((item) => (
+                    {['All', 'My Team', "Who's out", 'Celebrations'].map((item,index) => (
                     <TouchableOpacity 
-                    onPress={async () => {
-                        await storeData("tab",item)
-                        await storeData("page",1)
-                        setEndReached(false)
-                        setPersonsList([])
-                        setSelected(item)
-                    }}
+                        key={index}
+                        onPress={async () => {
+                            await storeData("tab",item)
+                            await storeData("page",1)
+                            setEndReached(false)
+                            setPersonsList([])
+                            setSelected(item)
+                        }}
                     >
                         <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
                         {selected == item && <View style={[styles.animated,personsList && Array.isArray(personsList) && personsList.length >= 9 ? {height : height(1.5)} : null]} />}
@@ -433,7 +434,7 @@ export default function People({route,navigation}) {
                     selected === "Celebrations" && celebrations && !loading ? (
                         <SectionList
                         sections={celebrations}
-                        keyExtractor={(item) => item.key}
+                        keyExtractor={(item,index) => index.toString()}
                         renderItem={CelebrationItem}
                         ItemSeparatorComponent={() => <View style={{margin: totalSize(1)}} />}
                         showsVerticalScrollIndicator={false}
@@ -490,7 +491,7 @@ export default function People({route,navigation}) {
                     selected === "Who's out" && Array.isArray(whosOut) && whosOut.length > 0 && !loading ? (
                         <SectionList
                             sections={whosOut}
-                            keyExtractor={(item) => item.key}
+                            keyExtractor={(item,index) => index.toString()}
                             renderItem={WHosOutItem}
                             ItemSeparatorComponent={() => <View style={{margin: totalSize(1)}} />}
                             showsVerticalScrollIndicator={false}
@@ -515,7 +516,7 @@ export default function People({route,navigation}) {
                                     columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
                                     numColumns={2}
                                     data={personsList}
-                                    keyExtractor={(item) => `${Math.random()}`}
+                                    keyExtractor={(item,index) => index.toString()}
                                     renderItem={({item}) => <PersonCard item={item} onPressHandle={async () => {
                                         await storeData("tmember",item)
                                         navigation.navigate('MemberProfile')
@@ -555,7 +556,7 @@ export default function People({route,navigation}) {
                             <React.Fragment>
                                 <FlatList
                                     data={personsList}
-                                    keyExtractor={(item) => item.key}
+                                    keyExtractor={(item,index) => index.toString()}
                                     renderItem={({item}) => <PersonListComp item={item} fetch={fetch} onPressHandle={async () => {
                                         await storeData("tmember",item)
                                         navigation.navigate('MemberProfile')

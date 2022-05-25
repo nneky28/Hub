@@ -219,7 +219,7 @@ export default function MemberProfile({route,navigation}) {
                   <FlatList
                   data={members}
                   horizontal
-                  keyExtractor={(item) => item.key}
+                  keyExtractor={(item,index) => index.toString()}
                   renderItem={({item}) => (
                     <PersonCard 
                           item={item} 
