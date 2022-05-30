@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import {ImageBackground, Text} from  'react-native';
+import {ImageBackground, Text,StyleSheet} from  'react-native';
 import {Images} from "../component2/image/Image"
 import Svg, {
     Circle,
@@ -166,29 +166,31 @@ export const Reload = props => {
 
   export const Container = (props) => (
     <View 
-      style={{
-        position : props.position,
-        borderColor : props.borderColor,
-        flex : props.flex || 0,
-        flexDirection : props.direction,
-        width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
-        padding : props.padding ? width(props.padding) : width(0),
-        
-        paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
-        marginTop : props.marginTop ? height(props.marginTop) : 0,
-        marginBottom : props.marginBottom ? height(props.marginBottom) : 0,
-        marginLeft : props.marginLeft ? width(props.marginLeft) : 0,
-        paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
-        //paddingBottom : props.paddingBottom ? height(props.paddingBottom) : 0,
-        paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
-        paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
-        paddingLeft : props.paddingLeft ? width(props.paddingLeft) : 0,
-        marginRight : props.marginRight ? width(props.marginRight) : 0,
-        backgroundColor : props.backgroundColor || AppColors.white,
-        borderWidth : props.borderWidth,
-        borderBottomWidth : props.borderBottomWidth,
-        ...props.style
-      }}
+      style={[
+        {
+          position : props.position,
+          borderColor : props.borderColor,
+          flex : props.flex || 0,
+          flexDirection : props.direction,
+          width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
+          padding : props.padding ? width(props.padding) : width(0),
+          
+          paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
+          marginTop : props.marginTop ? height(props.marginTop) : 0,
+          marginBottom : props.marginBottom ? height(props.marginBottom) : 0,
+          marginLeft : props.marginLeft ? width(props.marginLeft) : 0,
+          paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
+          //paddingBottom : props.paddingBottom ? height(props.paddingBottom) : 0,
+          paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
+          paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
+          paddingLeft : props.paddingLeft ? width(props.paddingLeft) : 0,
+          marginRight : props.marginRight ? width(props.marginRight) : 0,
+          backgroundColor : props.backgroundColor || AppColors.white,
+          borderWidth : props.borderWidth,
+          borderBottomWidth : props.borderBottomWidth,
+          //...props.style
+        },props.style
+      ]}
     >
       {props.children}
     </View>
@@ -563,11 +565,191 @@ export const EmptyStateWrapper =  (props) => (
   </Container>
 )
 
+// export const ClockINContainer = () => {
+//   const [current,setCurrent] = React.useState("")
+//   const auth = useSelector(state=>state.Auth)
+//   const dispatch = useDispatch()
+//   const queryClient = useQueryClient()
+//   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
+//   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
+//   const {
+//     data : config,
+//     isFetching : fetching
+//   } = useFetchAttendanceConfig()
+//   const {
+//     data : status,
+//     isFetching : fetchingStatus
+//   } = useFetchAttendanceStatus()
+
+
+//   var interval
+//   useEffect(()=>{
+//     setInterval(() => {
+//       interval = setCurrent(moment().format("hh : mma"))
+//     }, 1000);
+//     return () => {
+//       clearInterval(interval)
+//     }
+//   },[])
+
+//   const submitHandler = async () => {
+//     try{
+//       let res = await GetLocation.getCurrentPosition({
+//         enableHighAccuracy: true,
+//         timeout: 15000,
+//       })
+//       if(status?.is_clocked_in){
+//         let user = await getData("about_me")
+//         dispatch(setLoaderVisible(true))
+//         let fd = {
+//           employee : user.id,
+//           clock_in_time : status?.clock_in_time,
+//           clock_out_time : moment().toISOString()
+//         }
+//         await clockEmployeeOut.mutateAsync(fd)
+//         queryClient.invalidateQueries("attendance_status")
+//         return dispatch(setLoaderVisible(false))
+//       }
+//       return showFlashMessage({title : "You resumed for work at 9:30am",type : "success"})
+//       // dispatch(setLoaderVisible(true))
+//       // await clockEmployeeIn.mutateAsync(res)
+//       // queryClient.invalidateQueries("attendance_status")
+//       // dispatch(setLoaderVisible(false))
+//     }catch(err){
+//       if(err && err.toString().includes("Location not available")){
+//         return ToastError("Unable to fetch location.")
+//       }
+//       ToastError(err.msg)
+//       dispatch(setLoaderVisible(false))
+//     }
+//   }
+
+//   return(
+//       <React.Fragment>
+//               {
+//                 config?.data?.is_configured ? <View
+//                 style={{
+//                   alignItems : "center"
+//                 }}
+//               >
+//                 <Container
+//                   marginTop={3}
+//                   marginBottom={3}
+//                   style={{
+//                     alignItems : "center",
+//                     height : height(28),
+//                     width : width(90),
+//                     borderRadius : width(8)
+//                   }}
+//                   backgroundColor={AppColors.lightOrange}
+//                   borderWidth={1.5}
+//                   borderColor={AppColors.yellow}
+//                 >
+//                   <Container marginTop={5} direction="row"
+//                     style={{
+//                       justifyContent : "center",
+//                       alignItems: "center"
+//                     }}
+//                     backgroundColor={AppColors.lightOrange}
+//                   >
+//                     <ImageWrap 
+//                       height={3}
+//                       width={5}
+//                       fit="contain"
+//                       url={getGreetingTime() === "Good morning" ? Images.Sunrise : Images.Sunset}
+//                     />
+//                     <Container width={1} backgroundColor="transparent" />
+//                     <P fontSize={4} color={AppColors.black1}>
+//                       {getGreetingTime()}
+//                     </P>
+//                   </Container>
+//                     <SizedBox height={1} />
+//                     <H1 fontSize={4} color={AppColors.black1}>
+//                       {moment().format("dddd, DD MMM YYYY")}
+//                     </H1>
+//                     <SizedBox height={1} />
+//                     {/* <P fontSize={3.3} color={AppColors.black1}>
+//                       Working Hours - 0 Hrs : 00Mins
+//                     </P> */}
+//                     <Container
+//                         style={{
+//                           alignItems : "center",
+//                           top : height(15),
+//                           width : width(80),
+//                           paddingTop : height(3),
+//                           paddingBottom : height(3),
+//                           zIndex: 1000,
+//                           borderRadius : width(5)
+//                         }}
+//                         position="absolute"
+//                         borderWidth={1.5}
+//                         borderColor={AppColors.yellow}
+//                     >
+//                       <Container
+//                         style={{
+//                           alignItems : "center",
+//                         }}
+//                         marginBottom={2}
+//                       >
+//                           <P fontSize={3.3} color={AppColors.darkGray}>Time</P>
+//                           <H1 fontSize={10} color={AppColors.black}>{current}</H1>
+//                       </Container>
+//                       <Container 
+//                         borderBottomWidth={1.5}
+//                         borderColor={AppColors.grayBorder}
+//                         width={60}
+//                       />
+//                       <Container
+//                         marginTop={2}
+//                         direction="row"
+//                         width={45}
+//                       >
+//                          {
+//                            fetchingStatus ? <ActivityIndicator size={width(2)} 
+//                               color={AppColors.green}
+//                            /> :
+//                            status?.is_clocked_in && status?.clock_in_time ? <React.Fragment>
+//                            <P fontSize={3.3} color={AppColors.darkGray}>Clocked In time:</P>
+//                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("hh : mma")}</P>
+//                           </React.Fragment> : status?.has_clocked_out && status?.clock_out_time ? <React.Fragment>
+//                             <P fontSize={3.3} color={AppColors.darkGray}>Clocked Out time:</P>
+//                             <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("hh : mma")}</P>
+//                          </React.Fragment> : <React.Fragment>
+//                             <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
+//                             <P fontSize={3.3} color={AppColors.black}> -- : --</P>
+//                          </React.Fragment>
+//                          }
+//                       </Container>
+//                     </Container>
+//                 </Container>
+//                 <Button title={!status?.is_clocked_in ? "Clock In" : "Clock Out"} 
+//                   onPress={submitHandler}
+//                         containerStyle={{
+//                           borderRadius : 7,
+//                           backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+//                           height : height(6),
+//                           marginTop : height(5)
+//                         }}
+//                         textStyle={{
+//                           fontFamily : FontFamily.BlackSansBold,
+//                           color : AppColors.white,
+//                           fontSize : width(4)
+//                         }}
+//                         disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
+//                       />
+//                 </View> : null
+//               }
+//       </React.Fragment>
+//   )
+// }
+
+
 export const ClockINContainer = () => {
   const [current,setCurrent] = React.useState("")
   const auth = useSelector(state=>state.Auth)
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
+  const [tab,setTab] = React.useState("Remote")
   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
   const {
@@ -583,7 +765,7 @@ export const ClockINContainer = () => {
   var interval
   useEffect(()=>{
     setInterval(() => {
-      interval = setCurrent(moment().format("hh : mma"))
+      interval = setCurrent(moment().format("HH : mm"))
     }, 1000);
     return () => {
       clearInterval(interval)
@@ -596,18 +778,18 @@ export const ClockINContainer = () => {
         enableHighAccuracy: true,
         timeout: 15000,
       })
-      // if(status?.is_clocked_in){
-      //   let user = await getData("about_me")
-      //   dispatch(setLoaderVisible(true))
-      //   let fd = {
-      //     employee : user.id,
-      //     clock_in_time : status?.clock_in_time,
-      //     clock_out_time : moment().toISOString()
-      //   }
-      //   await clockEmployeeOut.mutateAsync(fd)
-      //   queryClient.invalidateQueries("attendance_status")
-      //   return dispatch(setLoaderVisible(false))
-      // }
+      if(status?.is_clocked_in){
+        let user = await getData("about_me")
+        dispatch(setLoaderVisible(true))
+        let fd = {
+          employee : user.id,
+          clock_in_time : status?.clock_in_time,
+          clock_out_time : moment().toISOString()
+        }
+        await clockEmployeeOut.mutateAsync(fd)
+        queryClient.invalidateQueries("attendance_status")
+        return dispatch(setLoaderVisible(false))
+      }
       return showFlashMessage({title : "You resumed for work at 9:30am",type : "success"})
       // dispatch(setLoaderVisible(true))
       // await clockEmployeeIn.mutateAsync(res)
@@ -632,7 +814,7 @@ export const ClockINContainer = () => {
               >
                 <Container
                   marginTop={3}
-                  marginBottom={3}
+                  marginBottom={30}
                   style={{
                     alignItems : "center",
                     height : height(28),
@@ -640,47 +822,64 @@ export const ClockINContainer = () => {
                     borderRadius : width(8)
                   }}
                   backgroundColor={AppColors.lightOrange}
-                  borderWidth={1.5}
+                  borderWidth={1}
                   borderColor={AppColors.yellow}
                 >
-                  <Container marginTop={5} direction="row"
+                  <Container marginTop={3} direction="row"
                     style={{
                       justifyContent : "center",
                       alignItems: "center"
                     }}
                     backgroundColor={AppColors.lightOrange}
                   >
-                    <ImageWrap 
-                      height={3}
-                      width={5}
-                      fit="contain"
-                      url={getGreetingTime() === "Good morning" ? Images.Sunrise : Images.Sunset}
-                    />
                     <Container width={1} backgroundColor="transparent" />
-                    <P fontSize={4} color={AppColors.black1}>
-                      {getGreetingTime()}
-                    </P>
+                      <P fontSize={4} color={AppColors.black1}>
+                        Daily Attendance
+                      </P>
                   </Container>
                     <SizedBox height={1} />
                     <H1 fontSize={4} color={AppColors.black1}>
                       {moment().format("dddd, DD MMM YYYY")}
                     </H1>
                     <SizedBox height={1} />
-                    {/* <P fontSize={3.3} color={AppColors.black1}>
-                      Working Hours - 0 Hrs : 00Mins
-                    </P> */}
+                    <Container
+                      backgroundColor={"transparent"}
+                      marginTop={1.5}
+                      direction="row"
+                      width={80}
+                      borderColor={AppColors.yellow}
+                      borderWidth={1}
+                      style={{
+                        alignItems : "center",
+                        justifyContent : "space-around",
+                        borderRadius : width(3)
+                      }}
+                    >
+                        {
+                          ["Remote","On-Site"].map((item,i)=><TouchableOpacity key={i}
+                            onPress={()=>setTab(item)}
+                            style={[
+                              ComponentStyles.attendance_tab,
+                              tab === item ? {backgroundColor : AppColors.white} : {backgroundColor : AppColors.lightOrange}
+                            ]}
+                          >
+                              <P textAlign="center">{item}</P>
+                          </TouchableOpacity>)
+                        }
+                    </Container>
                     <Container
                         style={{
                           alignItems : "center",
-                          top : height(15),
-                          width : width(80),
+                          top : height(20),
+                          width : width(90),
                           paddingTop : height(3),
                           paddingBottom : height(3),
                           zIndex: 1000,
-                          borderRadius : width(5)
+                          borderRadius : width(5),
+                          borderWidth : width(0.3),
+                          borderTopWidth : 0,
                         }}
                         position="absolute"
-                        borderWidth={1.5}
                         borderColor={AppColors.yellow}
                     >
                       <Container
@@ -689,18 +888,42 @@ export const ClockINContainer = () => {
                         }}
                         marginBottom={2}
                       >
-                          <P fontSize={3.3} color={AppColors.darkGray}>Time</P>
-                          <H1 fontSize={10} color={AppColors.black}>{current}</H1>
+                          <P fontSize={3.3} color={AppColors.darkGray}>Good Morning</P>
+                          <Container 
+                            marginTop={2}
+                            direction="row"
+                            width={63}
+                            style={{
+                              alignSelf : "center",
+                              justifyContent : "space-around"
+                            }}
+                          >
+                          {
+                            current ? [...current.toString()].filter(num=>num.trim() !== "").map((num,i)=>(
+                              <Container key={i} 
+                                width={num !== ":" ? 14 : 2}
+                                style={num !== ":" ? {
+                                  backgroundColor : AppColors.gray1,
+                                  borderRadius : width(2),
+                                  justifyContent : "center",
+                                  height : height(6)
+                                } : {justifyContent : "center",
+                                height : height(6)}}
+                              >
+                                <H1 fontSize={8} color={AppColors.black}
+                                  textAlign="center"
+                                >{num}</H1>
+                              </Container>
+                            )) : null
+                          }
+                          </Container>
+                          
                       </Container>
-                      <Container 
-                        borderBottomWidth={1.5}
-                        borderColor={AppColors.grayBorder}
-                        width={60}
-                      />
                       <Container
+                        borderTopWidth={1.5}
                         marginTop={2}
                         direction="row"
-                        width={45}
+                        width={35}
                       >
                          {
                            fetchingStatus ? <ActivityIndicator size={width(2)} 
@@ -718,25 +941,38 @@ export const ClockINContainer = () => {
                          </React.Fragment>
                          }
                       </Container>
+                        <Button title={!status?.is_clocked_in ? "Clock In" : "Clock Out"} 
+                          onPress={submitHandler}
+                          containerStyle={{
+                            borderRadius : 7,
+                            backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+                            height : height(6),
+                            marginTop : height(2)
+                          }}
+                          textStyle={{
+                            fontFamily : FontFamily.BlackSansBold,
+                            color : AppColors.black,
+                            fontSize : width(4)
+                          }}
+                          disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
+                        />
+                        <P fontSize={3} color={AppColors.black3}>
+                          Working Hours - 0 Hrs : 00Mins
+                        </P>
                     </Container>
                 </Container>
-                <Button title={!status?.is_clocked_in ? "Clock In" : "Clock Out"} 
-                  onPress={submitHandler}
-                        containerStyle={{
-                          borderRadius : 7,
-                          backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
-                          height : height(6),
-                          marginTop : height(5)
-                        }}
-                        textStyle={{
-                          fontFamily : FontFamily.BlackSansBold,
-                          color : AppColors.white,
-                          fontSize : width(4)
-                        }}
-                        disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
-                      />
                 </View> : null
               }
       </React.Fragment>
   )
 }
+
+const ComponentStyles = StyleSheet.create({
+  attendance_tab : {
+    paddingVertical : height(1.3),
+    width : width(38),
+    borderRadius : width(2),
+    marginTop : height(0.5),
+    marginBottom : height(0.5)
+  }
+})

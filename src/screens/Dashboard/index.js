@@ -150,43 +150,43 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   }
   const getInfo = async () => {
     try{
-      dispatch(setLoaderVisible(true));
-      setProcess(true);
-      setFetching(true)
-      let token = await getData("token");
-      let user =  await getData("user");
-      let about_me = await getData("about_me");
-      let biz = await getStoredBusiness();
-      let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
-      let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
-      let whos_out_url = APIFunction.whos_out(biz.business_id)
-      let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
-      let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      let ann_url = APIFunction.job_anniversary("active",biz.business_id);
-      let asset_res = await getAPIs(assets_url,token);
-      let benefits_res = await getAPIs(benefits_url,token)
-      let whos_out_res = await getAPIs(whos_out_url,token)
-      let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
-      let active_res = await getAPIs(active_birthdays_url,token);
-      let active_ann = await getAPIs(ann_url,token);
-      let task_res = await APIFunction.employee_tasks(about_me.id);
-      task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
-      let res = await getTimeOffsFunction();
-      setAvailable(res.available)
-      setTabs(res.tabs);
-      setActive(res.active);
-      setRequests(res.requests);
-      setBusiness(biz);
-      setAbout(about_me);
-      setAssets(asset_res.results)
-      setBenefits(benefits_res.results);
-      setUpcomingBirthDay(upcoming_res.results);
-      setActiveBirthDay(active_res.results);
-      setWhosOut(whos_out_res.results)
-      setAnniversary(active_ann.results);
-      var margin = 30;
-      setMargin(width(margin));
-      setIndex(1)
+      // dispatch(setLoaderVisible(true));
+      // setProcess(true);
+      // setFetching(true)
+      // let token = await getData("token");
+      // let user =  await getData("user");
+      // let about_me = await getData("about_me");
+      // let biz = await getStoredBusiness();
+      // let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
+      // let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
+      // let whos_out_url = APIFunction.whos_out(biz.business_id)
+      // let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
+      // let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
+      // let ann_url = APIFunction.job_anniversary("active",biz.business_id);
+      // let asset_res = await getAPIs(assets_url,token);
+      // let benefits_res = await getAPIs(benefits_url,token)
+      // let whos_out_res = await getAPIs(whos_out_url,token)
+      // let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
+      // let active_res = await getAPIs(active_birthdays_url,token);
+      // let active_ann = await getAPIs(ann_url,token);
+      // let task_res = await APIFunction.employee_tasks(about_me.id);
+      // task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
+      // let res = await getTimeOffsFunction();
+      // setAvailable(res.available)
+      // setTabs(res.tabs);
+      // setActive(res.active);
+      // setRequests(res.requests);
+      // setBusiness(biz);
+      // setAbout(about_me);
+      // setAssets(asset_res.results)
+      // setBenefits(benefits_res.results);
+      // setUpcomingBirthDay(upcoming_res.results);
+      // setActiveBirthDay(active_res.results);
+      // setWhosOut(whos_out_res.results)
+      // setAnniversary(active_ann.results);
+      // var margin = 30;
+      // setMargin(width(margin));
+      // setIndex(1)
       // if(res.active.length === 0){
       //   var margin = 30;
       //   setMargin(width(margin));

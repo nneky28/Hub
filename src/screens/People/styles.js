@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start', 
     flexDirection: 'row', 
     alignItems: 'center',
-    marginBottom : height(3)
   },
   searchBoxStyle: {
     width: width(90), 
