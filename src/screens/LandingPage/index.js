@@ -3,26 +3,15 @@ import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Ima
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
-import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
-import {showMessage} from 'react-native-flash-message';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
-import CustomText from '../../component2/customText/CustomText';
-import CusInput from '../../component2/input/inputElement';
 import CustomButton from '../../component2/button/Button';
-//import Image from '../../component2/image/Image';
-let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
-import { Field, Formik } from 'formik';
-import CustomInput from '../../components/CustomInput';
 import { APIFunction, employees_me, getAPIs, postNoToken } from '../../utills/api';
-import { ToastError, ToastSuccess,storeData, getData, Capitalize, getStoredBusiness } from '../../utills/Methods';
-import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
-import moment from 'moment';
+import { ToastSuccess,storeData, getData, Capitalize, getStoredBusiness } from '../../utills/Methods';
 import { Container, EmptyStateWrapper, H1, ImageWrap, OnboardModal, P, PageLoader, SizedBox } from '../../utills/components';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { BASE_URL } from '../../utills/Constants';
 import { Images } from '../../component2/image/Image';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default function LandingPage(props) {
@@ -35,6 +24,18 @@ export default function LandingPage(props) {
     const [pension,setPension] = useState(null);
     const dispatch = useDispatch();
     const [emergency,setEmergency] = useState(null);
+
+    const logoutMethod = async () => {
+      try{
+        let keys = await AsyncStorage.getAllKeys()
+        AsyncStorage.multiRemove(keys);
+        dispatch(setLoaderVisible(false))
+        dispatch(login({...auth,route : "auth",isLogin : false}));
+        ToastSuccess("Successfully logged out")
+      }catch(err){
+      }
+    };
+
     const getRecord = async () => {
         try{
             setLoading(true)
@@ -53,7 +54,7 @@ export default function LandingPage(props) {
             setLoading(false)
             dispatch(setLoaderVisible(false))
         }catch(err){
-          console.log("ERR",err)
+          logoutMethod()
         }
     }
   useEffect(() => {

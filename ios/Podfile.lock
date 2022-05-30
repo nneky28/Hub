@@ -42,7 +42,6 @@ PODS:
   - lottie-react-native (4.0.3):
     - lottie-ios (~> 3.2.3)
     - React-Core
-  - QBImagePickerController (3.4.0)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -258,6 +257,8 @@ PODS:
   - react-native-photo-manipulator (1.2.7):
     - React
     - WCPhotoManipulator (~> 2.0.4)
+  - react-native-restart (0.0.24):
+    - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
   - react-native-webview (11.14.3):
@@ -336,12 +337,10 @@ PODS:
     - React
   - RNDateTimePicker (3.5.2):
     - React-Core
+  - RNDeviceInfo (8.7.1):
+    - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNImageCropPicker (0.20.1):
-    - QBImagePickerController
-    - React-Core
-    - RSKImageCropper
   - RNPDF (0.12.2):
     - React
   - RNReanimated (2.2.2):
@@ -378,7 +377,6 @@ PODS:
     - React-RCTImage
   - RNSVG (12.1.1):
     - React
-  - RSKImageCropper (3.0.2)
   - SSZipArchive (2.2.3)
   - WCPhotoManipulator (2.0.4)
   - Yoga (1.14.0)
@@ -413,6 +411,7 @@ DEPENDENCIES:
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-photo-manipulator (from `../node_modules/react-native-photo-manipulator`)
+  - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -432,8 +431,8 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPDF (from `../node_modules/react-native-view-pdf`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -449,8 +448,6 @@ SPEC REPOS:
     - hermes-engine
     - JWT
     - libevent
-    - QBImagePickerController
-    - RSKImageCropper
     - SSZipArchive
     - WCPhotoManipulator
 
@@ -503,6 +500,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-photo-manipulator:
     :path: "../node_modules/react-native-photo-manipulator"
+  react-native-restart:
+    :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -541,10 +540,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNImageCropPicker:
-    :path: "../node_modules/react-native-image-crop-picker"
   RNPDF:
     :path: "../node_modules/react-native-view-pdf"
   RNReanimated:
@@ -574,7 +573,6 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
   lottie-react-native: 96361a9891cf651534ea35c4f85f33d4cf14ed13
-  QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
@@ -589,6 +587,7 @@ SPEC CHECKSUMS:
   react-native-date-picker: 52937fb39322ee5f6c44a10117456b3fa4225d4c
   react-native-image-picker: f45729c43d4f854508ab25c0d0f0f711a2a8a267
   react-native-photo-manipulator: df1970c3c126b0a4cd137ea7ad71fbacb99cb377
+  react-native-restart: 8af4579c94638f38bd9074ec477ebf087de87dc5
   react-native-safe-area-context: 5cf05f49df9d17261e40e518481f2e334c6cd4b5
   react-native-webview: 1bd31adaa34e9c360271373ce66cc67a956c13ff
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
@@ -608,13 +607,12 @@ SPEC CHECKSUMS:
   RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3
   RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
   RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
+  RNDeviceInfo: af47a7d1a09d64c8cbb8b0c883db9bca422a9813
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNImageCropPicker: 7f5155afc74364b4c4cc378fd30aa0f493edd86d
   RNPDF: 3b28a8d26d98ba057dfbb0f49beedfc59a0572b6
   RNReanimated: 241c586663f44f19a53883c63375fdd041253960
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
-  RSKImageCropper: 1ac71e9a82e3f41eea3eedfff8eacb0d3821c9ec
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   WCPhotoManipulator: 45b7be19b75c9edf6d2b44f2f61dbc3673862a8f
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac

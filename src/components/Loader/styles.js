@@ -10,6 +10,10 @@ const styles = StyleSheet.create({
         alignItems:'center',
         alignSelf:'center',
         borderRadius: width(5)
+    },
+    image  : {
+        height : height(20),
+        width : width(20)
     }
 });
 export default styles;

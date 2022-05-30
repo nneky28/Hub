@@ -37,12 +37,13 @@ import NextKin from '../screens/NextKin';
 import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
 import { APIFunction } from '../utills/api';
-import { Container } from '../utills/components';
+import { Container, CustomFallBackScreen } from '../utills/components';
 import { Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible } from '../Redux/Actions/Config';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
+import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
   NeedsUpdateResponse,
@@ -143,7 +144,8 @@ const Routes = () => {
       });
      },[])
   return (
-    <QueryClientProvider client={queryClient}>
+    <ErrorBoundary FallbackComponent={CustomFallBackScreen}>
+                          <QueryClientProvider client={queryClient}>
             <NavigationContainer>
       <Loader />
       {
@@ -267,6 +269,7 @@ const Routes = () => {
       )}
     </NavigationContainer>
     </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};

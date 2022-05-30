@@ -6,6 +6,7 @@ import { FontFamily } from '../../utills/FontFamily';
 const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
+    flex : 1,
     alignItems: 'center',
   },
   mainViewContainer2: {
@@ -192,7 +193,8 @@ const styles = StyleSheet.create({
     width: width(90), 
     justifyContent: 'flex-start', 
     flexDirection: 'row', 
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom : height(3)
   },
   searchBoxStyle: {
     width: width(90), 

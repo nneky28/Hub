@@ -5,25 +5,7 @@ import {ImageBackground, Text} from  'react-native';
 import {Images} from "../component2/image/Image"
 import Svg, {
     Circle,
-    Ellipse,
-    G,
-    TSpan,
-    TextPath,
-    Path,
-    Polygon,
-    Polyline,
-    Line,
     Rect,
-    Use,
-    Symbol,
-    Defs,
-    LinearGradient,
-    RadialGradient,
-    Stop,
-    ClipPath,
-    Pattern,
-    Mask,
-    SvgUri,
   } from 'react-native-svg';
 import AppColors from './AppColors';
 import { View ,Dimensions,Modal} from 'react-native';
@@ -45,7 +27,10 @@ import { useNavigation } from '@react-navigation/native';
 import Button from '../components/Button';
 import { useMutation, useQueryClient } from 'react-query';
 import GetLocation from 'react-native-get-location'
-
+import CustomButton from '../component2/button/Button';
+import AsyncStorage from '@react-native-community/async-storage';
+import RNRestart from 'react-native-restart';
+import { showFlashMessage } from '../components/SuccessFlash';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -451,7 +436,7 @@ export const OnboardModal = (props) => {
         onNavigationStateChange={(param)=>onNavigationStateChange(param,dispatch,auth)}
         startInLoadingState={true}
         renderLoading={()=><Container paddingVertical={4}> 
-            <ActivityIndicator size="large"
+            <ActivityIndicator
               color={AppColors.green}
             />
           </Container>}
@@ -482,7 +467,7 @@ export const CustomWebView = (props) => (
               style={{ marginTop: 20}}
               startInLoadingState={true}
               renderLoading={()=><Container paddingVertical={4}> 
-            <ActivityIndicator size="large"
+            <ActivityIndicator
               color={AppColors.green}
             />
           </Container>}
@@ -507,6 +492,39 @@ export const BackHandler = () => {
           height={5}
         />
       </TouchableOpacity>
+    </Container>
+  ) 
+}
+
+export const CustomFallBackScreen = (props) => {
+  const logoutMethod = async () => {
+    try{
+      let keys = await AsyncStorage.getAllKeys()
+      AsyncStorage.multiRemove(keys);
+      RNRestart.Restart();
+    }catch(err){
+    }
+  };
+  return(
+    <Container flex={1} style={{
+        alignItems : "center",
+        justifyContent : "center"
+      }}
+    >
+      <Container width={90}>
+        <EmptyStateWrapper 
+          marginTop={5}
+          icon={Images.EmptyTimeoff}
+          header_1={"Oh no! Something went wrong :("}
+          sub_text={"This issue has been reported and our developers are working to resolve it.Please press refresh to login again."}
+        />
+       <Container marginTop={5}>
+        <CustomButton
+          btnText={'Refresh Now'}
+          handelButtonPress={logoutMethod}
+        />
+       </Container>
+      </Container> 
     </Container>
   ) 
 }
@@ -578,22 +596,23 @@ export const ClockINContainer = () => {
         enableHighAccuracy: true,
         timeout: 15000,
       })
-      if(status?.is_clocked_in){
-        let user = await getData("about_me")
-        dispatch(setLoaderVisible(true))
-        let fd = {
-          employee : user.id,
-          clock_in_time : status?.clock_in_time,
-          clock_out_time : moment().toISOString()
-        }
-        await clockEmployeeOut.mutateAsync(fd)
-        queryClient.invalidateQueries("attendance_status")
-        return dispatch(setLoaderVisible(false))
-      }
-      dispatch(setLoaderVisible(true))
-      await clockEmployeeIn.mutateAsync(res)
-      queryClient.invalidateQueries("attendance_status")
-      dispatch(setLoaderVisible(false))
+      // if(status?.is_clocked_in){
+      //   let user = await getData("about_me")
+      //   dispatch(setLoaderVisible(true))
+      //   let fd = {
+      //     employee : user.id,
+      //     clock_in_time : status?.clock_in_time,
+      //     clock_out_time : moment().toISOString()
+      //   }
+      //   await clockEmployeeOut.mutateAsync(fd)
+      //   queryClient.invalidateQueries("attendance_status")
+      //   return dispatch(setLoaderVisible(false))
+      // }
+      return showFlashMessage({title : "You resumed for work at 9:30am",type : "success"})
+      // dispatch(setLoaderVisible(true))
+      // await clockEmployeeIn.mutateAsync(res)
+      // queryClient.invalidateQueries("attendance_status")
+      // dispatch(setLoaderVisible(false))
     }catch(err){
       if(err && err.toString().includes("Location not available")){
         return ToastError("Unable to fetch location.")

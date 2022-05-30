@@ -23,11 +23,6 @@ import moment from 'moment'
 import { Images } from '../../component2/image/Image'
 import { ActivityIndicator } from 'react-native-paper'
 
-
-
-
-
-
 export default function People({route,navigation}) {
     
     var [selected, setSelected] = useState('All');
@@ -44,9 +39,7 @@ export default function People({route,navigation}) {
     const [searchTerm,setSearchTerm] = React.useState(null)
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-
-    
-
+   
     const fetchData = async () => {
         try{
             if(end_reached) return
@@ -103,7 +96,7 @@ export default function People({route,navigation}) {
                 let upcoming_birthdays = upcoming_res && upcoming_res.results && Array.isArray(upcoming_res.results) ? 
                 upcoming_res.results.map((item)=>(
                     {
-                        title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday is today`,
+                        title: `${item && item.first_name ? Capitalize(item.first_name)+"'s" : ""} birthday`,
                         avatar: item.photo,
                         subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : "",
                         icon: {uri : Images.CakeIcon},
@@ -204,8 +197,36 @@ export default function People({route,navigation}) {
     const handleSearch = (text) => {
         setSearchTerm(text)
     }
+     const ListHeaderComponent = () => {
+        return selected === "All" && Platform.OS === "android" ? (
+            <View style={styles.searchBoxContainer}>
+                <SearchBox 
+                    title="Search for Name " 
+                    containerStyle={styles.searchBoxStyle}
+                    onSubmitEditing={handleSearch}    
+                />
+                {/* <TouchableOpacity style={styles.filterIconContainer} onPress={() => setModal(!modal)}>
+                    <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
+                </TouchableOpacity> */}
+            </View>
+            ) : selected === "All" ? (
+                <View style={styles.searchBoxContainer}>
+                    <SearchBoxIOS 
+                        title="Search for Name " 
+                        containerStyle={styles.searchBoxStyle}
+                        onSubmitEditing={handleSearch}    
+                    />
+                    {/* <TouchableOpacity style={styles.filterIconContainerIOS} onPress={() => setModal(!modal)}>
+                        <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
+                    </TouchableOpacity> */}
+                </View>
+            ) : <React.Fragment></React.Fragment>
+            
+        
+    }
     const searchQueryHandler = async () => {
         try{
+            return
             setEndReached(false)
             if(!debouncedSearchTerm || debouncedSearchTerm.toString().trim() === ""){
                 return setPersonsList([...persons])
@@ -355,7 +376,8 @@ export default function People({route,navigation}) {
     return (
         <ScreenWrapper scrollEnabled={
             //!loading && data && Array.isArray(data) && data.length === 0 ? false : true
-            !["All","Team"].includes(selected)
+            //!["All","Team"].includes(selected)
+            false
         }>
             <Container flex={1}>
                 <View style={styles.header}>
@@ -375,55 +397,33 @@ export default function People({route,navigation}) {
                 <View style={styles.line} />
             <View style={styles.mainViewContainer}>
 
-                <ScrollView
+                {/* <ScrollView
                     nestedScrollEnabled={true}
                     contentContainerStyle={styles.scrollViewContainer}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}>
+                   
+                </ScrollView> */}
+                <Container style={styles.scrollViewContainer} direction="row" >
                     {['All', 'My Team', "Who's out", 'Celebrations'].map((item,index) => (
-                    <TouchableOpacity 
-                        key={index}
-                        onPress={async () => {
-                            await storeData("tab",item)
-                            await storeData("page",1)
-                            setEndReached(false)
-                            setPersonsList([])
-                            setSelected(item)
-                        }}
-                    >
-                        <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
-                        {selected == item && <View style={[styles.animated,personsList && Array.isArray(personsList) && personsList.length >= 9 ? {height : height(1.5)} : null]} />}
-                    </TouchableOpacity>
-                    ))}
-                </ScrollView>
+                        <TouchableOpacity 
+                            key={index}
+                            onPress={async () => {
+                                await storeData("tab",item)
+                                await storeData("page",1)
+                                setEndReached(false)
+                                setPersonsList([])
+                                setSelected(item)
+                            }}
+                        >
+                            <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
+                            {selected == item && <View style={[styles.animated,personsList && Array.isArray(personsList) && personsList.length >= 9 ? {height : height(1.5)} : null]} />}
+                        </TouchableOpacity>
+                        ))}
+                </Container>
                 {/* <View style={styles.line2} /> */}
                 {
                     selected === "All" ? <SizedBox size={2} /> : null
-                }
-                {selected === "All" && Platform.OS === "android" ? (
-                    <View style={styles.searchBoxContainer}>
-                        <SearchBox 
-                            title="Search for Name " 
-                            containerStyle={styles.searchBoxStyle}
-                            onSubmitEditing={handleSearch}    
-                        />
-                        {/* <TouchableOpacity style={styles.filterIconContainer} onPress={() => setModal(!modal)}>
-                            <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
-                        </TouchableOpacity> */}
-                    </View>
-                    ) : selected === "All" ? (
-                        <View style={styles.searchBoxContainer}>
-                            <SearchBoxIOS 
-                                title="Search for Name " 
-                                containerStyle={styles.searchBoxStyle}
-                                onSubmitEditing={handleSearch}    
-                            />
-                            {/* <TouchableOpacity style={styles.filterIconContainerIOS} onPress={() => setModal(!modal)}>
-                                <Image resizeMode="contain" source={filterIcon} style={styles.filterIcon} />
-                            </TouchableOpacity> */}
-                        </View>
-                    ) : null
-                    
                 }
 
                 {
@@ -470,7 +470,6 @@ export default function People({route,navigation}) {
                             header_1={"You have no team"} 
                             header_2={"member yet."}
                             sub_text={"When you do, they will show up here."}
-
                         />
                     ) : null
                 }
@@ -513,6 +512,7 @@ export default function People({route,navigation}) {
                         ? (
                             <React.Fragment>
                                 <FlatList
+                                    ListHeaderComponent={ListHeaderComponent}
                                     columnWrapperStyle={{justifyContent: 'space-between', width: width(90)}}
                                     numColumns={2}
                                     data={personsList}
@@ -521,6 +521,7 @@ export default function People({route,navigation}) {
                                         await storeData("tmember",item)
                                         navigation.navigate('MemberProfile')
                                     }} />}
+                                    stickyHeaderIndices={[0]}
                                     ItemSeparatorComponent={() => <View style={[CommonStyles.marginTop_2]}/>}
                                     showsVerticalScrollIndicator={false}
                                     nestedScrollEnabled={true}
@@ -533,18 +534,18 @@ export default function People({route,navigation}) {
                                     ListFooterComponent={()=>{
                                         if(fetch){
                                             return(
-                                                <Container marginTop={3} fontSize={10}>
+                                                <Container marginTop={3}>
                                                     <ActivityIndicator color={AppColors.green}/>
                                                 </Container> 
                                             )
                                         }  
                                         return <React.Fragment></React.Fragment> 
                                     }}
-                                    // //refreshing={fetch}
-                                    // onRefresh={async ()=> {
-                                    //     await storeData("page",1)
-                                    //     fetchData();
-                                    // }}
+                                    refreshing={fetch}
+                                    onRefresh={async ()=> {
+                                        await storeData("page",1)
+                                        fetchData();
+                                    }}
                                 /> 
                             </React.Fragment>
                         ) : null
@@ -555,6 +556,7 @@ export default function People({route,navigation}) {
                     ? (  
                             <React.Fragment>
                                 <FlatList
+                                    ListHeaderComponent={ListHeaderComponent}
                                     data={personsList}
                                     keyExtractor={(item,index) => index.toString()}
                                     renderItem={({item}) => <PersonListComp item={item} fetch={fetch} onPressHandle={async () => {
@@ -564,10 +566,12 @@ export default function People({route,navigation}) {
                                     ItemSeparatorComponent={() => <View style={styles.line}/>}
                                     showsVerticalScrollIndicator={false}
                                     nestedScrollEnabled={true}
-                                    contentContainerStyle={CommonStyles.marginTop_1}
+                                    contentContainerStyle={[CommonStyles.marginTop_1]}
+                                    style={[{flex : 1}]}
                                     onEndReachedThreshold={0.3}
                                     onEndReached={fetchData}
                                     refreshing={fetch}
+                                    stickyHeaderIndices={[0]}
                                     onRefresh={async ()=> {
                                         await storePage("page",1)
                                         fetchData();
