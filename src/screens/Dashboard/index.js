@@ -9,7 +9,7 @@ import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
-import { ReportModal, TimeoffModal, WarningModal } from '../../components/ContactModal';
+import { ReportModal, RestrictionModal, TimeoffModal, WarningModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
@@ -25,6 +25,8 @@ import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
+import GetLocation from 'react-native-get-location';
+import LocationEnabler from 'react-native-location-enabler';
 
 
 
@@ -67,6 +69,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [task,setTask]  = React.useState(null)
   const auth = useSelector(state=>state.Auth)
   const [processing,setProcessing] = React.useState(false)
+  const [visible,setVisible] = React.useState(false)
+
   const goToWeb = (url) => {
     setWebUrl(url)
     setWeb(true)
@@ -150,58 +154,58 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   }
   const getInfo = async () => {
     try{
-      // dispatch(setLoaderVisible(true));
-      // setProcess(true);
-      // setFetching(true)
-      // let token = await getData("token");
-      // let user =  await getData("user");
-      // let about_me = await getData("about_me");
-      // let biz = await getStoredBusiness();
-      // let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
-      // let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
-      // let whos_out_url = APIFunction.whos_out(biz.business_id)
-      // let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
-      // let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      // let ann_url = APIFunction.job_anniversary("active",biz.business_id);
-      // let asset_res = await getAPIs(assets_url,token);
-      // let benefits_res = await getAPIs(benefits_url,token)
-      // let whos_out_res = await getAPIs(whos_out_url,token)
-      // let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
-      // let active_res = await getAPIs(active_birthdays_url,token);
-      // let active_ann = await getAPIs(ann_url,token);
-      // let task_res = await APIFunction.employee_tasks(about_me.id);
-      // task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
-      // let res = await getTimeOffsFunction();
-      // setAvailable(res.available)
-      // setTabs(res.tabs);
-      // setActive(res.active);
-      // setRequests(res.requests);
-      // setBusiness(biz);
-      // setAbout(about_me);
-      // setAssets(asset_res.results)
-      // setBenefits(benefits_res.results);
-      // setUpcomingBirthDay(upcoming_res.results);
-      // setActiveBirthDay(active_res.results);
-      // setWhosOut(whos_out_res.results)
-      // setAnniversary(active_ann.results);
-      // var margin = 30;
-      // setMargin(width(margin));
-      // setIndex(1)
-      // if(res.active.length === 0){
-      //   var margin = 30;
-      //   setMargin(width(margin));
-      //   setIndex(1)
-      // }else{
-      //   setIndex(0)
-      //   setMargin(width(0.1))
-      // }
+      dispatch(setLoaderVisible(true));
+      setProcess(true);
+      setFetching(true)
+      let token = await getData("token");
+      let user =  await getData("user");
+      let about_me = await getData("about_me");
+      let biz = await getStoredBusiness();
+      let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
+      let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
+      let whos_out_url = APIFunction.whos_out(biz.business_id)
+      let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
+      let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
+      let ann_url = APIFunction.job_anniversary("active",biz.business_id);
+      let asset_res = await getAPIs(assets_url,token);
+      let benefits_res = await getAPIs(benefits_url,token)
+      let whos_out_res = await getAPIs(whos_out_url,token)
+      let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
+      let active_res = await getAPIs(active_birthdays_url,token);
+      let active_ann = await getAPIs(ann_url,token);
+      let task_res = await APIFunction.employee_tasks(about_me.id);
+      task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
+      let res = await getTimeOffsFunction();
+      setAvailable(res.available)
+      setTabs(res.tabs);
+      setActive(res.active);
+      setRequests(res.requests);
+      setBusiness(biz);
+      setAbout(about_me);
+      setAssets(asset_res.results)
+      setBenefits(benefits_res.results);
+      setUpcomingBirthDay(upcoming_res.results);
+      setActiveBirthDay(active_res.results);
+      setWhosOut(whos_out_res.results)
+      setAnniversary(active_ann.results);
+      var margin = 30;
+      setMargin(width(margin));
+      setIndex(1)
+      if(res.active.length === 0){
+        var margin = 30;
+        setMargin(width(margin));
+        setIndex(1)
+      }else{
+        setIndex(0)
+        setMargin(width(0.1))
+      }
       setFetching(false)
       setLoading(false);
       setProcess(false);
       dispatch(setLoaderVisible(false));
     }catch(err){
-      let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-      ToastError(msg)
+      // let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
+      // ToastError(msg)
     }
   }
   const openReport = (item) => {
@@ -212,14 +216,39 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       ToastError(err.msg)
     }
   }
-  // useFocusEffect(
-  //   React.useCallback(()=>{
-  //     getInfo()
-  //   },[])
-  // )
+
+  const {
+    PRIORITIES: { HIGH_ACCURACY },
+    addListener,
+    checkSettings,
+    requestResolutionSettings,
+    useLocationSettings
+  } = LocationEnabler
+  
+  const [enabled, requestResolution] = useLocationSettings({
+    priority: HIGH_ACCURACY, // optional: default BALANCED_POWER_ACCURACY
+    alwaysShow: true, // optional: default false
+    needBle: true, // optional: default false
+  });
+
+
+  // useEffect(()=>{
+  //   restrictionCheck()
+  // },[config,status])
+
+  // useEffect(()=>{
+  //   listener = addListener(({ locationEnabled }) => {
+  //     restrictionCheck()
+  //   })
+  //   return () => {
+  //     listener.remove();
+  //   }
+  // },[later])
+
   useEffect(()=>{
     getInfo()
   },[])
+
   return (
     <ScreenWrapper scrollEnabled={false}
       statusBarColor={AppColors.lightGreen}
@@ -318,7 +347,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                  >
                              <React.Fragment>
 
-                               <ClockINContainer />
+                               <ClockINContainer setVisible={setVisible} />
                 
                 {
                   tasks && Array.isArray(tasks) && tasks.length >  0 ? 
@@ -487,6 +516,8 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               asset={asset}
               btnText={"Submit Report"}
             />
+            
+            <RestrictionModal isVisible={visible} onHide={()=>setVisible()} onPressHandler={requestResolution}/>
                                         </React.Fragment>
                                 )
                               }

@@ -57,6 +57,7 @@
     "react-native-keyboard-avoiding-scroll-view": "^1.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-keyboard-aware-scrollview": "^2.1.0",
+    "react-native-location-enabler": "^4.1.1",
     "react-native-modal": "^12.1.0",
     "react-native-modal-dropdown": "^1.0.1",
     "react-native-paper": "^4.9.2",

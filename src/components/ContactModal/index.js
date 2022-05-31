@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View,ScrollView, Share, Linking, KeyboardAvoidingView
+  Text, View,ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
-import { contactData } from '../../utills/data/contactData';
 import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
-import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import { Field, Formik } from 'formik';
 import CustomText from '../../component2/customText/CustomText';
 import CustomButton from '../../component2/button/Button';
@@ -18,13 +16,13 @@ import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
 import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
-import { Container, CustomCalender, H1, LottieIcon, P, SizedBox, TouchWrap } from '../../utills/components';
+import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
 import { showFlashMessage } from '../SuccessFlash';
 import { Images } from '../../component2/image/Image';
+import { height, width } from 'react-native-dimension';
 
 
 const ContactModal = ({isVisible, onHide,data}) => {
@@ -125,6 +123,66 @@ const DocumentModal = ({isVisible, onHide,document}) => {
           onPressHandle={()=>onPressHandle("view")}
           url={true}
         /> */}
+      </View>
+    </Modal>
+  );
+};
+
+export const RestrictionModal = ({isVisible, onHide,onPressHandler}) => {
+  return (
+    <Modal
+      //onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      // onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{justifyContent: 'flex-end', margin: 0}}
+      isVisible={isVisible}>
+      <View style={styles.container}>
+          <EmptyStateWrapper 
+            marginTop={height(0.3)}
+            height={height(1.8)}
+            icon={Images.PINLocation}
+            header_1={"Where are you?"}
+            sub_text={"Please turn on your location so you can clock in."}
+          />
+          <Container width={80} marginTop={2}
+            // direction="row"
+            style={{
+              justifyContent : "space-between",
+              alignSelf : "center",
+              alignItems : "center"
+            }}
+          >
+            {/* <TouchableOpacity onPress={onHide}>
+              <H1>Cancel</H1>
+            </TouchableOpacity> */}
+            <CustomButton 
+              handelButtonPress={onPressHandler}
+              btnStyle={{
+                width : width(70),
+              }}
+              btnText={"Turn on"}
+            />
+            <CustomButton 
+              handelButtonPress={onHide}
+              btnStyle={{
+                width : width(70),
+                marginTop : height(2),
+                backgroundColor : AppColors.white
+              }}
+              btnText={"Cancel"}
+              textStyle={{
+                color: AppColors.black
+              }}
+            />
+          </Container>
       </View>
     </Modal>
   );

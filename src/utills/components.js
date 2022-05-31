@@ -174,7 +174,8 @@ export const Reload = props => {
           flexDirection : props.direction,
           width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
           padding : props.padding ? width(props.padding) : width(0),
-          
+          height : props.height ,
+          //? height(props.height) : null,
           paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
           marginTop : props.marginTop ? height(props.marginTop) : 0,
           marginBottom : props.marginBottom ? height(props.marginBottom) : 0,
@@ -187,7 +188,9 @@ export const Reload = props => {
           marginRight : props.marginRight ? width(props.marginRight) : 0,
           backgroundColor : props.backgroundColor || AppColors.white,
           borderWidth : props.borderWidth,
+          borderTopWidth : props.borderTopWidth,
           borderBottomWidth : props.borderBottomWidth,
+          borderRadius : props.borderRadius,
           //...props.style
         },props.style
       ]}
@@ -744,12 +747,12 @@ export const EmptyStateWrapper =  (props) => (
 // }
 
 
-export const ClockINContainer = () => {
+export const ClockINContainer = ({setVisible}) => {
   const [current,setCurrent] = React.useState("")
   const auth = useSelector(state=>state.Auth)
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
-  const [tab,setTab] = React.useState("Remote")
+  const [tab,setTab] = React.useState("On-Site")
   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
   const {
@@ -788,16 +791,22 @@ export const ClockINContainer = () => {
         }
         await clockEmployeeOut.mutateAsync(fd)
         queryClient.invalidateQueries("attendance_status")
-        return dispatch(setLoaderVisible(false))
+        dispatch(setLoaderVisible(false))
+        return showFlashMessage({title : `You clocked out from work at ${moment().format("hh:mm a")}`,type : "success"})
       }
-      return showFlashMessage({title : "You resumed for work at 9:30am",type : "success"})
-      // dispatch(setLoaderVisible(true))
-      // await clockEmployeeIn.mutateAsync(res)
-      // queryClient.invalidateQueries("attendance_status")
-      // dispatch(setLoaderVisible(false))
+      dispatch(setLoaderVisible(true))
+      let fd = {
+        ...res,
+        location_type : tab === "Remote" ? "remote" : ""
+      }
+      await clockEmployeeIn.mutateAsync(fd)
+      queryClient.invalidateQueries("attendance_status")
+      dispatch(setLoaderVisible(false))
+      showFlashMessage({title : `You resumed for work at ${moment().format("hh:mm a")}`,type : "success"})
     }catch(err){
+      console.log("submitHandler",err)
       if(err && err.toString().includes("Location not available")){
-        return ToastError("Unable to fetch location.")
+        return setVisible(true)
       }
       ToastError(err.msg)
       dispatch(setLoaderVisible(false))
@@ -843,7 +852,7 @@ export const ClockINContainer = () => {
                     </H1>
                     <SizedBox height={1} />
                     <Container
-                      backgroundColor={"transparent"}
+                      backgroundColor={AppColors.lightYellow}
                       marginTop={1.5}
                       direction="row"
                       width={80}
@@ -852,25 +861,25 @@ export const ClockINContainer = () => {
                       style={{
                         alignItems : "center",
                         justifyContent : "space-around",
-                        borderRadius : width(3)
+                        borderRadius : width(2)
                       }}
                     >
                         {
-                          ["Remote","On-Site"].map((item,i)=><TouchableOpacity key={i}
+                          ["On-Site","Remote"].map((item,i)=><TouchableOpacity key={i}
                             onPress={()=>setTab(item)}
                             style={[
                               ComponentStyles.attendance_tab,
-                              tab === item ? {backgroundColor : AppColors.white} : {backgroundColor : AppColors.lightOrange}
+                              tab === item ? {backgroundColor : AppColors.white} : {backgroundColor : AppColors.lightYellow}
                             ]}
                           >
-                              <P textAlign="center">{item}</P>
+                              <H1 textAlign="center" fontSize={3}>{item}</H1>
                           </TouchableOpacity>)
                         }
                     </Container>
                     <Container
                         style={{
                           alignItems : "center",
-                          top : height(20),
+                          top : height(17),
                           width : width(90),
                           paddingTop : height(3),
                           paddingBottom : height(3),
@@ -878,6 +887,7 @@ export const ClockINContainer = () => {
                           borderRadius : width(5),
                           borderWidth : width(0.3),
                           borderTopWidth : 0,
+                          borderTopColor : "transparent"
                         }}
                         position="absolute"
                         borderColor={AppColors.yellow}
@@ -888,7 +898,7 @@ export const ClockINContainer = () => {
                         }}
                         marginBottom={2}
                       >
-                          <P fontSize={3.3} color={AppColors.darkGray}>Good Morning</P>
+                          <P fontSize={3.3} color={AppColors.darkGray}>{getGreetingTime()}</P>
                           <Container 
                             marginTop={2}
                             direction="row"
@@ -906,11 +916,13 @@ export const ClockINContainer = () => {
                                   backgroundColor : AppColors.gray1,
                                   borderRadius : width(2),
                                   justifyContent : "center",
-                                  height : height(6)
+                                  height : height(6),
+                                  borderBottomWidth : width(0.5),
+                                  borderBottomColor : AppColors.lightYellow
                                 } : {justifyContent : "center",
                                 height : height(6)}}
                               >
-                                <H1 fontSize={8} color={AppColors.black}
+                                <H1 fontSize={9} color={AppColors.black}
                                   textAlign="center"
                                 >{num}</H1>
                               </Container>
@@ -920,10 +932,20 @@ export const ClockINContainer = () => {
                           
                       </Container>
                       <Container
-                        borderTopWidth={1.5}
-                        marginTop={2}
+                        marginTop={1}
+                        marginBottom={1}
                         direction="row"
-                        width={35}
+                        width={50}
+                        borderTopWidth={width(0.5)}
+                        borderBottomWidth={width(0.5)}
+                        borderColor={AppColors.lightYellow}
+                        backgroundColor={AppColors.gray}
+                        height={height(5)}
+                        borderRadius={width(2)}
+                        style={{
+                          alignItems : "center",
+                          justifyContent : "center"
+                        }}
                       >
                          {
                            fetchingStatus ? <ActivityIndicator size={width(2)} 
@@ -931,34 +953,38 @@ export const ClockINContainer = () => {
                            /> :
                            status?.is_clocked_in && status?.clock_in_time ? <React.Fragment>
                            <P fontSize={3.3} color={AppColors.darkGray}>Clocked In time:</P>
-                           <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("hh : mma")}</P>
+                           <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("HH : mm")}</P>
                           </React.Fragment> : status?.has_clocked_out && status?.clock_out_time ? <React.Fragment>
                             <P fontSize={3.3} color={AppColors.darkGray}>Clocked Out time:</P>
-                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("hh : mma")}</P>
+                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("HH : mm")}</P>
                          </React.Fragment> : <React.Fragment>
                             <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
                             <P fontSize={3.3} color={AppColors.black}> -- : --</P>
                          </React.Fragment>
                          }
                       </Container>
-                        <Button title={!status?.is_clocked_in ? "Clock In" : "Clock Out"} 
-                          onPress={submitHandler}
-                          containerStyle={{
-                            borderRadius : 7,
-                            backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
-                            height : height(6),
-                            marginTop : height(2)
-                          }}
-                          textStyle={{
-                            fontFamily : FontFamily.BlackSansBold,
-                            color : AppColors.black,
-                            fontSize : width(4)
-                          }}
-                          disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
-                        />
-                        <P fontSize={3} color={AppColors.black3}>
-                          Working Hours - 0 Hrs : 00Mins
-                        </P>
+                      <TouchableOpacity onPress={submitHandler}
+                        disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
+                        style={{
+                          borderRadius : 7,
+                          backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+                          height : height(5.8),
+                          marginTop : height(2),
+                          width : width(80),
+                          justifyContent : "center"
+                        }}
+                      >
+                        {
+                          tab === "Remote" ?  <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In Remotely" : "Clock Out"} </H1> :  <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In" : "Clock Out"} </H1>
+                        }
+                      </TouchableOpacity>
+                      <P fontSize={3} color={AppColors.black3}
+                        style={{
+                          marginTop : height(1.5)
+                        }}
+                      >
+                        Work Hours - {status?.is_clocked_in && status?.clock_in_time && !status?.has_clocked_out ? moment.utc(moment().diff(moment(status?.clock_in_time))).format("HH:mm:ss") : status?.has_clocked_out && status?.clock_out_time ? moment.utc(moment(status?.clock_out_time).diff(moment(status?.clock_in_time))).format("HH:mm:ss") : "00:00:00"}
+                      </P>
                     </Container>
                 </Container>
                 </View> : null
@@ -969,10 +995,10 @@ export const ClockINContainer = () => {
 
 const ComponentStyles = StyleSheet.create({
   attendance_tab : {
-    paddingVertical : height(1.3),
+    paddingVertical : height(1),
     width : width(38),
     borderRadius : width(2),
-    marginTop : height(0.5),
-    marginBottom : height(0.5)
+    marginTop : height(0.3),
+    marginBottom : height(0.3)
   }
 })
