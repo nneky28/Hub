@@ -20,7 +20,7 @@ import {WebView, WebViewNavigation} from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
 import { getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
-import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus } from './api';
+import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus, useFetchLocationType } from './api';
 import {setLoaderVisible} from '../Redux/Actions/Config';
 import { BASE_URL } from './Constants';
 import { useNavigation } from '@react-navigation/native';
@@ -758,6 +758,7 @@ export const ClockINContainer = ({setVisible}) => {
   const [tab,setTab] = React.useState("On-Site")
   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
+
   const {
     data : config,
     isFetching : fetching
@@ -767,6 +768,16 @@ export const ClockINContainer = ({setVisible}) => {
     isFetching : fetchingStatus
   } = useFetchAttendanceStatus()
 
+  const {
+    data : type,
+    isFetching : fetchingType
+  } = useFetchLocationType()
+
+  useEffect(()=>{
+    if(!type?.location_type) return
+    if(type?.location_type === "Onsite") return setTab("On-Site")
+    setTab("Remote")
+  },[type])
 
   var interval
   useEffect(()=>{
@@ -780,10 +791,6 @@ export const ClockINContainer = ({setVisible}) => {
 
   const submitHandler = async () => {
     try{
-      let res = await GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 15000,
-      })
       if(status?.is_clocked_in){
         let user = await getData("about_me")
         dispatch(setLoaderVisible(true))
@@ -797,6 +804,10 @@ export const ClockINContainer = ({setVisible}) => {
         dispatch(setLoaderVisible(false))
         return showFlashMessage({title : `You clocked out from work at ${moment().format("hh:mm a")}`,type : "success"})
       }
+      let res = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 15000,
+      })
       dispatch(setLoaderVisible(true))
       let fd = {
         ...res,
@@ -868,6 +879,7 @@ export const ClockINContainer = ({setVisible}) => {
                     >
                         {
                           ["On-Site","Remote"].map((item,i)=><TouchableOpacity key={i}
+                            disabled={type?.location_type ? true : false}
                             onPress={()=>setTab(item)}
                             style={[
                               ComponentStyles.attendance_tab,
@@ -953,12 +965,12 @@ export const ClockINContainer = ({setVisible}) => {
                            fetchingStatus ? <ActivityIndicator size={width(2)} 
                               color={AppColors.green}
                            /> :
-                           status?.is_clocked_in && status?.clock_in_time ? <React.Fragment>
+                           status?.is_clocked_in && status?.clock_in_time && !status?.has_clocked_out  ? <React.Fragment>
                            <P fontSize={3.3} color={AppColors.darkGray}>Clocked In time:</P>
                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("HH : mm")}</P>
-                          </React.Fragment> : status?.has_clocked_out && status?.clock_out_time ? <React.Fragment>
+                          </React.Fragment> : status?.has_clocked_out && status?.clocked_out_time ? <React.Fragment>
                             <P fontSize={3.3} color={AppColors.darkGray}>Clocked Out time:</P>
-                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("HH : mm")}</P>
+                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clocked_out_time).format("HH : mm")}</P>
                          </React.Fragment> : <React.Fragment>
                             <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
                             <P fontSize={3.3} color={AppColors.black}> -- : --</P>
@@ -985,7 +997,7 @@ export const ClockINContainer = ({setVisible}) => {
                           marginTop : height(1.5)
                         }}
                       >
-                        Work Hours - {status?.is_clocked_in && status?.clock_in_time && !status?.has_clocked_out ? moment.utc(moment().diff(moment(status?.clock_in_time))).format("HH:mm:ss") : status?.has_clocked_out && status?.clock_out_time ? moment.utc(moment(status?.clock_out_time).diff(moment(status?.clock_in_time))).format("HH:mm:ss") : "00:00:00"}
+                        Work Hours - {status?.is_clocked_in && status?.clock_in_time && !status?.has_clocked_out ? moment.utc(moment().diff(moment(status?.clock_in_time))).format("HH:mm:ss") : status?.has_clocked_out && status?.clocked_out_time ? moment.utc(moment(status?.clocked_out_time).diff(moment(status?.clock_in_time))).format("HH:mm:ss") : "00:00:00"}
                       </P>
                     </Container>
                 </Container>
