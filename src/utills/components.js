@@ -775,9 +775,15 @@ export const ClockINContainer = ({setVisible}) => {
 
   useEffect(()=>{
     if(!type?.location_type) return
+    if(status?.location_type === "Onsite"){
+      return setTab("On-Site")
+    }
+    if(status?.location_type && status?.location_type !== "Onsite"){
+      return setTab("Remote")
+    }
     if(type?.location_type === "Onsite") return setTab("On-Site")
     setTab("Remote")
-  },[type])
+  },[type,status])
 
   var interval
   useEffect(()=>{
@@ -879,7 +885,7 @@ export const ClockINContainer = ({setVisible}) => {
                     >
                         {
                           ["On-Site","Remote"].map((item,i)=><TouchableOpacity key={i}
-                            disabled={type?.location_type ? true : false}
+                            disabled={status?.location_type ? true : false}
                             onPress={()=>setTab(item)}
                             style={[
                               ComponentStyles.attendance_tab,
