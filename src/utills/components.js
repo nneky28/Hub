@@ -772,13 +772,13 @@ export const ClockINContainer = ({setVisible}) => {
     data : type,
     isFetching : fetchingType
   } = useFetchLocationType()
-
+  
   useEffect(()=>{
     if(!type?.location_type) return
-    if(status?.location_type === "Onsite"){
+    if(status?.location_type === "on_site"){
       return setTab("On-Site")
     }
-    if(status?.location_type && status?.location_type !== "Onsite"){
+    if(status?.location_type && status?.location_type !== "on_site"){
       return setTab("Remote")
     }
     if(type?.location_type === "Onsite") return setTab("On-Site")
@@ -817,7 +817,7 @@ export const ClockINContainer = ({setVisible}) => {
       dispatch(setLoaderVisible(true))
       let fd = {
         ...res,
-        location_type : tab === "Remote" ? "remote" : ""
+        location_type : tab === "Remote" ? "remote" : "on_site"
       }
       await clockEmployeeIn.mutateAsync(fd)
       queryClient.invalidateQueries("attendance_status")

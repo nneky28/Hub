@@ -231,7 +231,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     needBle: true, // optional: default false
   });
 
-
   // useEffect(()=>{
   //   restrictionCheck()
   // },[config,status])
