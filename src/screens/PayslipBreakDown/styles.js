@@ -130,9 +130,10 @@ const styles = StyleSheet.create({
     fontSize: width(4),
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold,
-    alignSelf: 'center',
-    marginLeft: width(30),
-    // width: width(60),
+    textAlign : 'center',
+    //backgroundColor : "red",
+    //marginLeft: width(30),
+    width: width(80),
   },
   header: {
     width: width(100),
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
     marginTop: height(2),
     marginBottom: height(1.5),
     flexDirection: 'row',
-    // justifyContent: 'space-evenly',
+   // justifyContent: 'space-evenly',
     alignItems: 'center',
   },
 

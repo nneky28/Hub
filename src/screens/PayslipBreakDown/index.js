@@ -32,9 +32,9 @@ export default function PayslipBreakDown({route,navigation}) {
       <View style={styles.container}>
       <View style={styles.header}>
           <BackHandler />
-          <Text numberOfLines={1} style={styles.screenTitle}>
-            Payslip Breakdown
-          </Text>
+           <Container>
+              <H1 textAlign="center">Payslip Breakdown</H1>
+           </Container>
       </View>
       <View style={styles.line} />
         <ScrollView>
@@ -80,7 +80,7 @@ export default function PayslipBreakDown({route,navigation}) {
             </Container>
             <Container marginTop={2.5} backgroundColor="transparent">
               <P style={{marginBottom : height(0.5)}}>Pay Period</P>
-              <H1 fontSize={3.5}>{payslip?.period_start_date ? moment(payslip?.period_start_date).format("DD MMMM, YYYY") : ""} -  {payslip?.period_end_date ? moment(payslip?.period_end_date).format("DD MMMM, YYYY") : ""}</H1>
+              <H1 fontSize={3.5}>{payslip?.period_start_date ? moment(payslip?.period_start_date).format("DD MMM, YYYY") : ""} -  {payslip?.period_end_date ? moment(payslip?.period_end_date).format("DD MMM, YYYY") : ""}</H1>
             </Container>
             {/* <Container marginTop={2.5}>
               <P>UAN Number</P>
