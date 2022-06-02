@@ -10,6 +10,7 @@ const AppColors = {
   black: 'black',
   black1: '#545454',
   black3: '#878787',
+  lightestBlue : "#EBEFFA",
   lightGreen: '#E0EEF0',
   grayBorder: '#E1E1E1',
   red: '#E70000',

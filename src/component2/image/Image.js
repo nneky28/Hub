@@ -74,7 +74,8 @@ export const Images = {
   EyeOffIcon : "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/icons8-eye-64_s2vfkl.png",
   Sunrise : "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/Sunrise.png",
   Sunset : "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/Sunset.png",
-  PINLocation : "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/wpf_worldwide-location.png"
+  PINLocation : "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/wpf_worldwide-location.png",
+  PayslipIcon2 : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/payslip_icon.png",
 }
 
 

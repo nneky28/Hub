@@ -504,7 +504,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               question={text}
               performAction={["Are you sure you want to end this leave?","Are you sure you want to cancel this request?"].includes(text) ? cancelRequest : markAsCompleted}
               loading={cancel || processing}
-              btnText={"Mark as Completed"}
+              btnText={["Are you sure you want to end this leave?","Are you sure you want to cancel this request?"].includes(text) ? "Cancel Request" : "Mark as Completed"}
             />
 
             <ReportModal

@@ -50,6 +50,8 @@ import SpInAppUpdates, {
   IAUUpdateKind,
   StartUpdateOptions,
 } from 'sp-react-native-in-app-updates';
+import PayslipHistory from '../screens/PayslipHistory';
+import PayslipBreakDown from '../screens/PayslipBreakDown';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -201,13 +203,15 @@ const Routes = () => {
                   <Tab.Screen name="Menu">
                   {() => (
                       <Stack.Navigator
-                        screenOptions={{headerMode: false}}>
+                        screenOptions={{headerMode: false}}
+                      >
                           <Stack.Screen name="Todos" component={Todos} />
                           <Stack.Screen name="Time off" component={TimeOff} />
-                        <Stack.Screen name="Payslip" component={Payslips} />
-                        <Stack.Screen name="Benefits" component={Benefits} />
-                        <Stack.Screen name="Documents" component={Documents} />
-                        <Stack.Screen name="Trainings" component={Training} />
+                          <Stack.Screen name="Payslip" component={PayslipHistory} />
+                          <Stack.Screen name="PayslipBreakDown" component={PayslipBreakDown} />
+                          <Stack.Screen name="Benefits" component={Benefits} />
+                          <Stack.Screen name="Documents" component={Documents} />
+                          <Stack.Screen name="Trainings" component={Training} />
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>

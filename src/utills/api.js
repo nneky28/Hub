@@ -131,6 +131,25 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`,fd)
   },
+  payslip_info : async (date) =>{
+    //http://127.0.0.1:8080/c/80389d3d-25fd-434f-8b09-a69dd650782e/employee_payroll_month_history/2022-04-26/
+
+    ///c/${biz.business_id}/payroll_month_history/${date}/payslip/?payroll=${payroll_id}
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/employee_payroll_month_history/${date}/`)
+  },
+  payroll_history : async (year) => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/?year=${year}`)
+  },
+  payroll_years : async () =>{
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/years`)
+  },
+}
+
+export const useFetchPayrollYears  = () => {
+  return useQuery(["payroll_years"],()=>APIFunction.payroll_years())
 }
 
 export const useFetchAttendanceConfig = () => {
@@ -139,6 +158,20 @@ export const useFetchAttendanceConfig = () => {
 export const useFetchAttendanceStatus = () => {
   return useQuery("attendance_status",APIFunction.attendance_status)
 }
+
+export const useFetchPayslipInfo  = (date) => {
+  return useQuery(["payslip_info",date],()=>APIFunction.payslip_info(date),{
+    enabled : date !== null && date !== undefined
+  })
+}
+
+export const useFetchPayrollHistory  = (year) => {
+  return useQuery(["payroll_history",year],()=>APIFunction.payroll_history(year),{
+    enabled : year !== null && year !== undefined
+  })
+}
+
+
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
@@ -159,6 +192,7 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
+          console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
