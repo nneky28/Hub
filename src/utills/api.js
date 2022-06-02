@@ -131,12 +131,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`,fd)
   },
-  payslip_info : async (date) =>{
-    //http://127.0.0.1:8080/c/80389d3d-25fd-434f-8b09-a69dd650782e/employee_payroll_month_history/2022-04-26/
-
-    ///c/${biz.business_id}/payroll_month_history/${date}/payslip/?payroll=${payroll_id}
+  payslip_info : async (date,payroll_id) =>{
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employee_payroll_month_history/${date}/`)
+    return getAPIs(`/c/${biz.business_id}/employee_payroll_month_history/${date}/payslip/?payroll=${payroll_id}`)
   },
   payroll_history : async (year) => {
     let biz = await getStoredBusiness()
@@ -159,9 +156,9 @@ export const useFetchAttendanceStatus = () => {
   return useQuery("attendance_status",APIFunction.attendance_status)
 }
 
-export const useFetchPayslipInfo  = (date) => {
-  return useQuery(["payslip_info",date],()=>APIFunction.payslip_info(date),{
-    enabled : date !== null && date !== undefined
+export const useFetchPayslipInfo  = (date,id) => {
+  return useQuery(["payslip_info",date,id],()=>APIFunction.payslip_info(date,id),{
+    enabled : date !== null && date !== undefined && id !== null && id !== undefined
   })
 }
 
@@ -175,7 +172,7 @@ export const useFetchPayrollHistory  = (year) => {
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
-    console.log("getAPIs",`${endPoint}${path}`,_token)
+   // console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
       axios
         .get(`${endPoint}${path}`, {
@@ -192,7 +189,7 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("ERROR",error)
+          //console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -207,7 +204,7 @@ export const getAPIs = async (path) => {
   
 export const postAPIs = async (path, fd) => {
     let _token = await getData("token");
-    console.log("postAPIs",path,fd)
+    //console.log("postAPIs",path,fd)
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,

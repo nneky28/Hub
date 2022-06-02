@@ -19,8 +19,7 @@ export default function PayslipBreakDown({route,navigation}) {
   const {
     data : payslip,
     isLoading : loading
-  } = useFetchPayslipInfo(payroll?.date,payroll?.id)
-
+  } = useFetchPayslipInfo(payroll?.period_start_date,payroll?.id)
   useEffect(()=>{
    dispatch(setLoaderVisible(loading))
   },[loading])
@@ -47,10 +46,9 @@ export default function PayslipBreakDown({route,navigation}) {
         >
             <Container backgroundColor="transparent">
               <P style={{marginBottom : height(0.5)}}>Designation</P>
-              <H1 fontSize={3.5}>{payroll?.job?.title ? Capitalize(payroll?.job?.title) : null}</H1>
+              <H1 fontSize={3.5}>{payslip?.data?.job?.title ? Capitalize(payslip?.data?.job?.title) : null}</H1>
             </Container>
             <Container direction='row'
-              width={100}
               backgroundColor="transparent"
               style={{
                 justifyContent :  'space-between'
@@ -61,18 +59,19 @@ export default function PayslipBreakDown({route,navigation}) {
                   [
                     {
                       title : "Date of Joining",
-                      value : payroll?.employee?.hire_date ? moment(payroll?.employee.hire_date).format("DD MMMM, YYYY") : null
+                      value : payslip?.data?.employee?.hire_date ? moment(payslip?.data?.employee.hire_date).format("DD MMMM, YYYY") : null
                     },
                     {
                       title : "Pay Date",
-                      value : payslip?.pay_date ? moment(payroll?.pay_date).format("DD MMMM, YYYY") : null
+                      value : payslip?.pay_date ? moment(payslip?.pay_date).format("DD MMMM, YYYY") : null
                     },
                     {
                       title : "A/C Number",
                       value : "N/A"
                     }
-                  ].map((item,i)=><Container key={i} backgroundColor="transparent"
-                    width={30}
+                  ].map((item,i)=><Container key={i} 
+                    backgroundColor="transparent"
+                    width={28}
                   >
                         <P style={{marginBottom : height(0.5)}}>{item.title}</P>
                         <H1 fontSize={3.5} marginTop={1}>{item.value}</H1>
@@ -81,7 +80,7 @@ export default function PayslipBreakDown({route,navigation}) {
             </Container>
             <Container marginTop={2.5} backgroundColor="transparent">
               <P style={{marginBottom : height(0.5)}}>Pay Period</P>
-              <H1 fontSize={3.5}>{payslip?.period_start_date ? moment(payslip?.period_start_date).format("DD MMM, YYYY") : ""} -  {payslip?.period_end_date ? moment(payslip?.period_end_date).format("DD MMM, YYYY") : ""}</H1>
+              <H1 fontSize={3.5}>{payslip?.period_start_date ? moment(payslip?.period_start_date).format("DD MMMM, YYYY") : ""} -  {payslip?.period_end_date ? moment(payslip?.period_end_date).format("DD MMMM, YYYY") : ""}</H1>
             </Container>
             {/* <Container marginTop={2.5}>
               <P>UAN Number</P>
@@ -123,10 +122,11 @@ export default function PayslipBreakDown({route,navigation}) {
                   {
                     item.menus.map((menu,i)=><Container key={i} direction="row"
                       style={{
-                        justifyContent : "space-between"
+                        justifyContent : "space-between",
+                        alignItems : "center"
                       }}
                       paddingHorizontal={3}
-                      paddingVertical={2}
+                      height={height(5)}
                       width={85}
                       borderBottomWidth={i < (item.menus.length - 1) ? 1 : 0}
                       borderColor={AppColors.grayBorder}
@@ -144,9 +144,10 @@ export default function PayslipBreakDown({route,navigation}) {
             borderColor={AppColors.grayBorder}
             horizontalAlignment='center'
             width={90}
-            paddingVertical={2}
+            height={height(10)}
             style={{
-              alignSelf : "center"
+              alignSelf : "center",
+              justifyContent : "center"
             }}
           >
               <P textAlign="center"

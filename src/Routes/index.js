@@ -124,7 +124,7 @@ const Routes = () => {
             message: "There is a new version of BizEgde available on the App Store, do you want to update it?",
             buttonUpgradeText: 'Update',
             buttonCancelText: 'Cancel',
-            forceUpgrade : true
+            forceUpgrade : false
           },
           android: {
             updateType: IAUUpdateKind.IMMEDIATE,

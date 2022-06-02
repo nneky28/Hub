@@ -181,7 +181,7 @@ export const Reload = props => {
           marginBottom : props.marginBottom ? height(props.marginBottom) : 0,
           marginLeft : props.marginLeft ? width(props.marginLeft) : 0,
           paddingTop : props.paddingTop ? height(props.paddingTop) : 0,
-          //paddingBottom : props.paddingBottom ? height(props.paddingBottom) : 0,
+          paddingBottom : props.paddingBottom ? height(props.paddingBottom) : null,
           paddingVertical : props.paddingVertical ? height(props.paddingVertical) : height(0),
           paddingRight : props.paddingRight ? width(props.paddingRight) : 0,
           paddingLeft : props.paddingLeft ? width(props.paddingLeft) : 0,
@@ -191,6 +191,7 @@ export const Reload = props => {
           borderTopWidth : props.borderTopWidth,
           borderBottomWidth : props.borderBottomWidth,
           borderRadius : props.borderRadius,
+          alignSelf : props.alignSelf
           //...props.style
         },props.style
       ]}
@@ -547,6 +548,7 @@ export const EmptyStateWrapper =  (props) => (
         height={props.height || 30}
         fit="contain"
       />
+      <SizedBox height={props?.spacing || 2} />
       {
         props.header_1 ? (
           <H1
@@ -555,11 +557,12 @@ export const EmptyStateWrapper =  (props) => (
           >{props.header_1}</H1>
         ) : null
       }
+     <SizedBox height={props?.spacing || 2} />
       {
         props.header_2 ? <React.Fragment>
           <H1 color={AppColors.black3}
             fontSize={5}>{props.header_2}</H1>
-        <SizedBox height={2} />
+          <SizedBox height={props?.spacing || 2} />
         </React.Fragment> : null
       }
      {
@@ -804,7 +807,6 @@ export const ClockINContainer = ({setVisible}) => {
       dispatch(setLoaderVisible(false))
       showFlashMessage({title : `You resumed for work at ${moment().format("hh:mm a")}`,type : "success"})
     }catch(err){
-      console.log("submitHandler",err)
       if(err && err.toString().includes("Location not available")){
         return setVisible(true)
       }
