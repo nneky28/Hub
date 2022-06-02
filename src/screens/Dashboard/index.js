@@ -220,8 +220,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const {
     PRIORITIES: { HIGH_ACCURACY },
     addListener,
-    checkSettings,
-    requestResolutionSettings,
     useLocationSettings
   } = LocationEnabler
   
@@ -231,18 +229,18 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     needBle: true, // optional: default false
   });
 
-  // useEffect(()=>{
-  //   restrictionCheck()
-  // },[config,status])
 
-  // useEffect(()=>{
-  //   listener = addListener(({ locationEnabled }) => {
-  //     restrictionCheck()
-  //   })
-  //   return () => {
-  //     listener.remove();
-  //   }
-  // },[later])
+  let listener = null
+  useEffect(()=>{
+    listener = addListener(({ locationEnabled }) => {
+      if(locationEnabled){
+        setVisible(false)
+      }
+    })
+    return () => {
+      listener.remove();
+    }
+  },[])
 
   useEffect(()=>{
     getInfo()
@@ -516,7 +514,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               btnText={"Submit Report"}
             />
             
-            <RestrictionModal isVisible={visible} onHide={()=>setVisible()} onPressHandler={requestResolution}/>
+            <RestrictionModal isVisible={visible} onHide={()=>setVisible()} 
+              onPressHandler={requestResolution}
+              
+              />
                                         </React.Fragment>
                                 )
                               }

@@ -20,6 +20,7 @@ export default function PayslipHistory({tab_name}) {
     data : history,
     isLoading : loading
   } = useFetchPayrollHistory(year)
+
   const {
     data : years,
     isLoading : loadingYears
@@ -29,9 +30,13 @@ export default function PayslipHistory({tab_name}) {
     if(!years || !Array.isArray(years)) return
     setYear(years?.[0])
   },[years])
+
+  console.log("useFetchPayrollHistory",years,history)
+
   useEffect(()=>{
     dispatch(setLoaderVisible(loading))
   },[loading])
+
   const renderItem = ({item}) => {
     return <ListPayroll item={item} screen={tab_name} />;
   };

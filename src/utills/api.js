@@ -171,7 +171,7 @@ export const useFetchPayslipInfo  = (date,id) => {
 
 export const useFetchPayrollHistory  = (year) => {
   return useQuery(["payroll_history",year],()=>APIFunction.payroll_history(year),{
-    enabled : year !== null && year !== undefined
+    enabled : year !== null && year !== undefined && year !== ""
   })
 }
 
@@ -179,7 +179,7 @@ export const useFetchPayrollHistory  = (year) => {
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
-   // console.log("getAPIs",`${endPoint}${path}`,_token)
+    console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
       axios
         .get(`${endPoint}${path}`, {
@@ -196,7 +196,7 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
-          //console.log("ERROR",error)
+          console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"

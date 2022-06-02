@@ -48,7 +48,6 @@
     "react-native-date-picker": "^4.1.0",
     "react-native-device-info": "^8.7.1",
     "react-native-dimension": "^1.0.6",
-    "react-native-error-boundary": "^1.1.13",
     "react-native-flash-message": "^0.1.23",
     "react-native-form-validator": "^0.5.1",
     "react-native-gesture-handler": "^1.10.3",
