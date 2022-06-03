@@ -60,7 +60,7 @@ export default function PayslipHistory({tab_name}) {
               style={styles.listContainer}
               dropdownStyle={styles.dropDownContainer1}
               defaultIndex={-1}
-              defaultValue={year.toString() || "Year"}
+              defaultValue={year ? year.toString() : "Year"}
               textStyle={[styles.text1, {marginLeft: width(3.5)}]}
               dropdownTextStyle={[styles.text1, {marginLeft: width(3.5)}]}
               renderRightComponent={() => <Image 
