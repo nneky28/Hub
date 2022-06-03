@@ -43,7 +43,7 @@ import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible } from '../Redux/Actions/Config';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
-//import ErrorBoundary from 'react-native-error-boundary'
+import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
   NeedsUpdateResponse,
@@ -146,7 +146,7 @@ const Routes = () => {
       });
      },[])
   return (
-    // <ErrorBoundary FallbackComponent={CustomFallBackScreen}>
+    <ErrorBoundary FallbackComponent={CustomFallBackScreen}>
                           <QueryClientProvider client={queryClient}>
             <NavigationContainer>
       <Loader />
@@ -273,7 +273,7 @@ const Routes = () => {
       )}
     </NavigationContainer>
     </QueryClientProvider>
-    // </ErrorBoundary>
+  </ErrorBoundary>
   );
 }
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};

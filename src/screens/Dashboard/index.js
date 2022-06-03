@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
+import { Image, RefreshControl, Text, TouchableOpacity, View,Platform, Linking } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ActivityIndicator, Modal } from 'react-native-paper';
@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import GetLocation from 'react-native-get-location';
-import LocationEnabler from 'react-native-location-enabler';
+const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
 
 
@@ -216,31 +216,40 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       ToastError(err.msg)
     }
   }
-
-  const {
-    PRIORITIES: { HIGH_ACCURACY },
-    addListener,
-    useLocationSettings
-  } = LocationEnabler
-  
-  const [enabled, requestResolution] = useLocationSettings({
-    priority: HIGH_ACCURACY, // optional: default BALANCED_POWER_ACCURACY
-    alwaysShow: true, // optional: default false
-    needBle: true, // optional: default false
-  });
-
-
-  let listener = null
-  useEffect(()=>{
-    listener = addListener(({ locationEnabled }) => {
-      if(locationEnabled){
-        setVisible(false)
+  let requestResolution = () => {
+      Linking.canOpenURL('app-settings:Settings:Privacy').then(supported => {
+      if (!supported) {
+      } else {
+        return Linking.openURL('app-settings:Settings:Privacy');
       }
-    })
-    return () => {
-      listener.remove();
-    }
-  },[])
+    }).catch(err => {});
+  }
+
+  if(Platform.OS === "android"){
+    const {
+      PRIORITIES: { HIGH_ACCURACY },
+      addListener,
+      useLocationSettings
+    } = LocationEnabler.default
+    let useLocationSettingsRes = useLocationSettings({
+      priority: HIGH_ACCURACY, // optional: default BALANCED_POWER_ACCURACY
+      alwaysShow: true, // optional: default false
+      needBle: true, // optional: default false
+    });
+    if(useLocationSettingsRes?.[1]) requestResolution = useLocationSettingsRes?.[1]
+  
+    let listener = null
+    useEffect(()=>{
+      listener = addListener(({ locationEnabled }) => {
+        if(locationEnabled){
+          setVisible(false)
+        }
+      })
+      return () => {
+        listener.remove();
+      }
+    },[])
+  }
 
   useEffect(()=>{
     getInfo()

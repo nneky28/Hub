@@ -31,8 +31,6 @@ export default function PayslipHistory({tab_name}) {
     setYear(years?.[0])
   },[years])
 
-  console.log("useFetchPayrollHistory",years,history)
-
   useEffect(()=>{
     dispatch(setLoaderVisible(loading))
   },[loading])
