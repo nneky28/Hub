@@ -69,7 +69,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [task,setTask]  = React.useState(null)
   const auth = useSelector(state=>state.Auth)
   const [processing,setProcessing] = React.useState(false)
-  const [visible,setVisible] = React.useState(false)
+  const [visible,setVisible] = React.useState(true)
 
   const goToWeb = (url) => {
     setWebUrl(url)
@@ -217,10 +217,10 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     }
   }
   let requestResolution = () => {
-      Linking.canOpenURL('app-settings:Settings:Privacy').then(supported => {
+      Linking.canOpenURL('App-Prefs:LOCATION_SERVICES').then(supported => {
       if (!supported) {
       } else {
-        return Linking.openURL('app-settings:Settings:Privacy');
+        return Linking.openURL('App-Prefs:LOCATION_SERVICES');
       }
     }).catch(err => {});
   }
@@ -523,7 +523,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
               btnText={"Submit Report"}
             />
             
-            <RestrictionModal isVisible={visible} onHide={()=>setVisible()} 
+            <RestrictionModal isVisible={visible} onHide={()=>setVisible(false)} 
               onPressHandler={requestResolution}
               
               />
