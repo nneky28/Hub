@@ -25,13 +25,11 @@ export function debounce(func, wait, immediate) {
 };
 
 export const ToastError  = (msg) => {
-  return msg === "Given token not valid for any token type" ? <LogUserOut /> : (
-    showMessage({
-        message: 'Error',
-        description: msg,
-        type: 'danger',
-    })
-  )
+  showMessage({
+    message: 'Error',
+    description: msg,
+    type: 'danger',
+  })
 };
 
 export const validateEmail = (value) =>{
@@ -64,15 +62,6 @@ export const storeData = async (key, value) => {
       return false;
     }
   };
-
-  const LogUserOut = () => {
-    alert("Out!")
-    const dispatch = useDispatch();
-    useEffect(()=>{
-      dispatch(logout())
-    },[])
-    return(<> </>)
-  }
   
   export const getData = async key => {
     try {
