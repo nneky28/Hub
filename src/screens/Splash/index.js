@@ -12,6 +12,7 @@ import { getData, storeData } from '../../utills/Methods';
 import CustomText from '../../component2/customText/CustomText';
 import { Container, H1 } from '../../utills/components';
 import { height, width } from 'react-native-dimension';
+import { Images } from '../../component2/image/Image';
 
 const Splash = (props) => {
   const auth = useSelector((state) => state.Auth);
@@ -27,7 +28,7 @@ const Splash = (props) => {
         }else if(user && about && !about.completed_user_onboarding){
           dispatch(login({...auth,user : user,isLogin : true,route : "onboard"}));
         }else{
-          //I have a feeling that is another case that needs to be captured here.
+          //I have a feeling there is another case that needs to be captured here.
           dispatch(login({...auth,route : "auth",isLogin : false}));
         }
       }catch(err){
@@ -54,7 +55,7 @@ const Splash = (props) => {
               marginTop: -3,
             }}
         /> */}
-         <Image source={require('../../assets/images/icons/loader.gif')} 
+         <Image source={{uri : Images.LogoGIF}} 
             style={style.resize}
           />
       </View>

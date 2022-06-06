@@ -871,11 +871,11 @@ export const ClockINContainer = ({setVisible}) => {
                     </H1>
                     <SizedBox height={1} />
                     <Container
-                      backgroundColor={AppColors.lightYellow}
+                      backgroundColor={AppColors.white}
                       marginTop={1.5}
                       direction="row"
                       width={80}
-                      borderColor={AppColors.yellow}
+                      borderColor={AppColors.white}
                       borderWidth={1}
                       style={{
                         alignItems : "center",
@@ -889,10 +889,13 @@ export const ClockINContainer = ({setVisible}) => {
                             onPress={()=>setTab(item)}
                             style={[
                               ComponentStyles.attendance_tab,
-                              tab === item ? {backgroundColor : AppColors.white} : {backgroundColor : AppColors.lightYellow}
+                              tab === item && status?.location_type ? {backgroundColor : AppColors.grayBorder} : tab === item ? {backgroundColor : AppColors.black} 
+                              : {backgroundColor : AppColors.white}
                             ]}
                           >
-                              <H1 textAlign="center" fontSize={3}>{item}</H1>
+                              <H1 textAlign="center" fontSize={3} color={
+                                tab === item && status?.location_type ? AppColors.darkGray : tab === item ? AppColors.white : AppColors.black
+                              }>{item}</H1>
                           </TouchableOpacity>)
                         }
                     </Container>
