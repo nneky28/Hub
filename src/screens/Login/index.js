@@ -74,13 +74,12 @@ export default function Dashboard(props) {
       await storeData("refresh",refresh);
       await storeData("about_me",about_me);
       await storeData("user",res.user);
-      await storeData("logout_time",moment(new Date()).add(2,'hours'));
+      await storeData("logout_time",moment(new Date()).add(3,'hours'));
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       queryClient.invalidateQueries()
       ToastSuccess("Login was successful")
       return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : about_me.completed_user_onboarding ? "main" : "onboard",isLogin : true}));
     }catch(err){
-      console.log("ERR",err)
       dispatch(setLoaderVisible(false));
       let msg = "";
       if(err.msg && err.msg.code === "invalid_credentials"){
