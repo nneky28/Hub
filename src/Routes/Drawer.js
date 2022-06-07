@@ -42,8 +42,8 @@ const Drawer = ({navigation, ...props}) => {
   const getUserDetails = async () => {
     let about_me = await getData("about_me");
     let user = await getData("user");
-    let biz = user.employee_user_memberships &&
-    Array.isArray(user.employee_user_memberships) ? user.employee_user_memberships : [];
+    let biz = user?.employee_user_memberships &&
+    Array.isArray(user?.employee_user_memberships) ? user.employee_user_memberships : [];
     setBiz(biz);
     setUser(user);
     setAbout(about_me);

@@ -69,7 +69,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [task,setTask]  = React.useState(null)
   const auth = useSelector(state=>state.Auth)
   const [processing,setProcessing] = React.useState(false)
-  const [visible,setVisible] = React.useState(true)
+  const [visible,setVisible] = React.useState(false)
 
   const goToWeb = (url) => {
     setWebUrl(url)
