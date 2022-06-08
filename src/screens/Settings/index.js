@@ -71,7 +71,9 @@ export default function Setting({navigation}) {
                 //paddingHorizontal={3}
                 marginLeft={3}
                 style={{
-                    flexDirection : "row"
+                    flexDirection : "row",
+                    alignItems : "center",
+                    justifyContent : "center"
                 }}
             >
                 <BackHandler />
