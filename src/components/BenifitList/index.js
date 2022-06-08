@@ -56,7 +56,7 @@ const BenifitList = ({data, horizontal,benefits,goToWeb}) => {
             
             <View>
               <Text style={styles.ttext1}>Type</Text>
-              <Text style={styles.ttext}>{item && item.category ? Capitalize(item.category) : ""}</Text>
+              <Text style={styles.ttext}>{item && item.category ? Capitalize(item.category.replaceAll("_"," ")) : ""}</Text>
             </View>
             {
               item && item.category !== "pension" ? <View style={styles.row}>

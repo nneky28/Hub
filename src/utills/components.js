@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import {ImageBackground, Text,StyleSheet} from  'react-native';
+import {ImageBackground, Text,StyleSheet,Image} from  'react-native';
 import {Images} from "../component2/image/Image"
 import Svg, {
     Circle,
@@ -173,9 +173,17 @@ export const Reload = props => {
           flex : props.flex || 0,
           flexDirection : props.direction,
           width : props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
-          padding : props.padding ? width(props.padding) : width(0),
+          padding : props.padding ? width(props.padding) : null,
           height : props.height ,
           //? height(props.height) : null,
+          justifyContent:
+            props.direction === "row"
+              ? props.horizontalAlignment
+              : props.verticalAlignment,
+          alignItems:
+            props.direction === "row"
+              ? props.verticalAlignment
+              : props.horizontalAlignment,
           paddingHorizontal : props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
           marginTop : props.marginTop ? height(props.marginTop) : 0,
           marginBottom : props.marginBottom ? height(props.marginBottom) : 0,
@@ -191,7 +199,7 @@ export const Reload = props => {
           borderTopWidth : props.borderTopWidth,
           borderBottomWidth : props.borderBottomWidth,
           borderRadius : props.borderRadius,
-          alignSelf : props.alignSelf
+          alignSelf : props.alignSelf,
           //...props.style
         },props.style
       ]}
@@ -458,7 +466,7 @@ export const CustomWebView = (props) => (
         flex={1}
       >
           <Container
-            marginTop={8}
+            marginTop={5}
             marginLeft={2}
             width={20}
           >
@@ -486,18 +494,27 @@ export const BackHandler = () => {
   const navigation = useNavigation()
   return(
     <Container
-      width={5}
+      width={8}
     >
-      <TouchableOpacity onPress={()=>{
+      <TouchableRipple onPress={()=>{
         if(!navigation.canGoBack()) return
         navigation.goBack()
-      }}>
-        <ImageWrap 
-          url={Images.BackArrow}
-          fit={"contain"}
-          height={5}
+      }}
+        rippleColor="rgba(0, 0, 0, .32)"
+        style={{
+          justifyContent : "center",
+          alignItems : "center"
+        }}
+      >
+        <Image 
+          source={{uri : Images.BackArrow}}
+          style={{
+            resizeMode : "contain",
+            height : height(5),
+            width : width(5)
+          }}
         />
-      </TouchableOpacity>
+      </TouchableRipple>
     </Container>
   ) 
 }
@@ -812,7 +829,7 @@ export const ClockINContainer = ({setVisible}) => {
       }
       let res = await GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 1500,
+        timeout: 3000,
       })
       dispatch(setLoaderVisible(true))
       let fd = {

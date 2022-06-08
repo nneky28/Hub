@@ -18,6 +18,7 @@ import styles from './styles';
 import Timeoffjson from '../../assets/lottie/timeoff.json'
 import { Images } from '../../component2/image/Image';
 import { FontFamily } from '../../utills/FontFamily';
+import { Avatar, TouchableRipple } from 'react-native-paper';
 
 if (
   Platform.OS === 'android' &&
@@ -255,23 +256,19 @@ const RenderItem = ({item,tab,showModal}) => {
             </>
           ) : null}
           <View style={[styles.line, {marginTop: height(2)}]} />
-          <TouchableOpacity activeOpacity={0.8}
+          <TouchableRipple
             onPress={()=>{
               if(tab === "available"){
                 return showModal(item.id,item)
               }
+              if(tab === "request") return showModal(item.id,item,"request")
             }}
           >
+            <React.Fragment>
             {tab == 'active' ? (
-              <TouchableOpacity
-                onPress={()=>{
-                  //return showModal(item.id,item,"active")
-                }}
-              >
-                <Text style={styles.endText}>
-                  {/* End Leave */}
-                  </Text>
-              </TouchableOpacity>
+              <Text style={styles.endText}>
+              {/* End Leave */}
+              </Text>
             ) : tab == 'available' && item && item.max_days_allowed && 
             item.total_days_taken !== undefined && item.max_days_allowed > item.total_days_taken ? (
               <Text style={[styles.endText, {color: AppColors.lightMediumGreen},{fontFamily : FontFamily.BlackSansSemiBold}]}>
@@ -286,14 +283,11 @@ const RenderItem = ({item,tab,showModal}) => {
             }
             {
               tab === "request" ? (
-                <TouchableOpacity onPress={()=>{
-                  return showModal(item.id,item,"request")
-                }}>
-                  <Text style={styles.endText}>Cancel Request</Text>
-                </TouchableOpacity>
+                <Text style={styles.endText}>Cancel Request</Text>
               ) : null
             }
-          </TouchableOpacity>
+            </React.Fragment>
+          </TouchableRipple>
         </>
       ) : null}
     </Animated.View>
@@ -493,7 +487,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
             </>
           )}
           <View style={[styles.line, {marginTop: height(2)}]} />
-          <TouchableOpacity activeOpacity={0.8}
+          <TouchableRipple
             onPress={()=>{
               if(status === "balance"){
                 return setModal(fData.id,fData)
@@ -504,27 +498,29 @@ const RenderItemVertical = ({item,fData,setModal}) => {
               }
             }}
           >
-            {status == 'active' ? (
-              <Text style={styles.endText}>
-                {/* End Leave */}
-              </Text>
-            ) : status == 'balance' && fData && fData.max_days_allowed && fData.total_days_taken !== undefined && fData.max_days_allowed > fData.total_days_taken  ? (
-              <Text style={[styles.endText, {color: AppColors.lightMediumGreen},{fontFamily : FontFamily.BlackSansSemiBold}]}>
-                Request
-              </Text>
-            ) : status == 'balance' ? <React.Fragment>
-                <Text style={{
-                  color : AppColors.gray1,
-                  fontFamily : FontFamily.BlackSansSemiBold
-                }}>Request</Text>
-              </React.Fragment> : null
-            }
-            {
-              status === "request" ? (
-                <Text style={styles.endText}>Cancel Request</Text>
-              ) : null
-            }
-          </TouchableOpacity>
+              <React.Fragment>
+                {status == 'active' ? (
+                  <Text style={styles.endText}>
+                    {/* End Leave */}
+                  </Text>
+                ) : status == 'balance' && fData && fData.max_days_allowed && fData.total_days_taken !== undefined && fData.max_days_allowed > fData.total_days_taken  ? (
+                  <Text style={[styles.endText, {color: AppColors.lightMediumGreen},{fontFamily : FontFamily.BlackSansSemiBold}]}>
+                    Request
+                  </Text>
+                ) : status == 'balance' ? <React.Fragment>
+                    <Text style={{
+                      color : AppColors.gray1,
+                      fontFamily : FontFamily.BlackSansSemiBold
+                    }}>Request</Text>
+                  </React.Fragment> : null
+                }
+                {
+                  status === "request" ? (
+                    <Text style={styles.endText}>Cancel Request</Text>
+                  ) : null
+                }
+              </React.Fragment>
+          </TouchableRipple>
         </>
       ) : null}
     </Animated.View>
