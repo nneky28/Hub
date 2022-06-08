@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import {ImageBackground, Text,StyleSheet} from  'react-native';
+import {ImageBackground, Text,StyleSheet,Image} from  'react-native';
 import {Images} from "../component2/image/Image"
 import Svg, {
     Circle,
@@ -494,18 +494,27 @@ export const BackHandler = () => {
   const navigation = useNavigation()
   return(
     <Container
-      width={5}
+      width={8}
     >
-      <TouchableOpacity onPress={()=>{
+      <TouchableRipple onPress={()=>{
         if(!navigation.canGoBack()) return
         navigation.goBack()
-      }}>
-        <ImageWrap 
-          url={Images.BackArrow}
-          fit={"contain"}
-          height={5}
+      }}
+        rippleColor="rgba(0, 0, 0, .32)"
+        style={{
+          justifyContent : "center",
+          alignItems : "center"
+        }}
+      >
+        <Image 
+          source={{uri : Images.BackArrow}}
+          style={{
+            resizeMode : "contain",
+            height : height(5),
+            width : width(5)
+          }}
         />
-      </TouchableOpacity>
+      </TouchableRipple>
     </Container>
   ) 
 }

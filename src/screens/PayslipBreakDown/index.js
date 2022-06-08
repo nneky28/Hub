@@ -143,8 +143,8 @@ export default function PayslipBreakDown({route,navigation}) {
               <Container alignSelf="center" width={90}
                   direction="row"
                   paddingTop={2}
-                  paddingLeft={2}
-                  paddingRight={2}
+                  paddingLeft={5}
+                  paddingRight={5}
                   paddingBottom={2}
                   horizontalAlignment="space-between"
                   marginTop={2}

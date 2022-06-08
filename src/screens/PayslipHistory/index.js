@@ -65,7 +65,7 @@ export default function PayslipHistory({tab_name}) {
               </ScrollView> : null
             }
 
-            <Container marginTop={2} width={90}>
+            <Container marginTop={3} width={90}>
               <FlatList
                 data={history?.data && Array.isArray(history?.data) ? history?.data : []}
                 keyExtractor={(item, index) => index.toString()}
