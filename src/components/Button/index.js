@@ -22,7 +22,7 @@ const Button = ({
       {isLoading ? (
         <ActivityIndicator color={loaderColor} size="large" />
       ) : (
-        <Text style={[styles.text, textStyle]}>{title}</Text>
+        <Text style={[styles.text, textStyle]} numberOfLines={1}>{title}</Text>
       )}
     </TouchableOpacity>
   );
