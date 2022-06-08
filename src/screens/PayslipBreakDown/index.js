@@ -94,16 +94,20 @@ export default function PayslipBreakDown({route,navigation}) {
               menus : [
                 {sub_title : "Basic",sub_value : numeral(basic_salary).format("0,0.00")},
                 {sub_title : "Commission",sub_value : payslip?.data?.commission ? numeral(payslip?.data?.commission).format("0,0.00") : "0.00"},
-                {sub_title : "Bonus",sub_value : payslip?.data?.bonus ? numeral(payslip?.data?.bonus).format("0,0.00") : "0.00"}
-              ]
-            },
-            {
-              title : "Allowances (N)",
-              menus : payslip?.data?.salary_breakdown && Array.isArray(payslip?.data?.salary_breakdown) ? 
+                {sub_title : "Bonus",sub_value : payslip?.data?.bonus ? numeral(payslip?.data?.bonus).format("0,0.00") : "0.00"},
+                ...payslip?.data?.salary_breakdown && Array.isArray(payslip?.data?.salary_breakdown) ? 
                 payslip?.data?.salary_breakdown.filter(item=>item.name !== "Basic salary").map(item=>{
                   return{sub_title : item.name ? Capitalize(item.name) : "",sub_value : numeral(item.value).format("0,0.00")}
                 }) : []
+              ]
             },
+            // {
+            //   title : "Allowances (N)",
+            //   menus : payslip?.data?.salary_breakdown && Array.isArray(payslip?.data?.salary_breakdown) ? 
+            //     payslip?.data?.salary_breakdown.filter(item=>item.name !== "Basic salary").map(item=>{
+            //       return{sub_title : item.name ? Capitalize(item.name) : "",sub_value : numeral(item.value).format("0,0.00")}
+            //     }) : []
+            // },
             {
               title : "Deductions (N)",
               menus : [
@@ -136,6 +140,22 @@ export default function PayslipBreakDown({route,navigation}) {
                     </Container>)
                   }
               </CustomCard>
+              <Container alignSelf="center" width={90}
+                  direction="row"
+                  paddingTop={2}
+                  paddingLeft={2}
+                  paddingRight={2}
+                  paddingBottom={2}
+                  horizontalAlignment="space-between"
+                  marginTop={2}
+                  backgroundColor={AppColors.gray1}
+                >
+                    <H1 fontSize={3.5}>{item.title === "Earnings (N)" ? "Gross" : "Total Deductions"}</H1>
+                    {
+                      item.title === "Earnings (N)" ? <H1 fontSize={3.5}>{payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"}</H1> : <H1 fontSize={3.5}>{payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"}</H1>
+                    }
+                </Container>
+              
         </Container>)
         }
         

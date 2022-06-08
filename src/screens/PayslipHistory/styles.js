@@ -5,9 +5,9 @@ import { FontFamily } from '../../utills/FontFamily';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     marginVertical: height(3),
-    alignItems : "center"
+    alignItems : "center",
   },
   downIcon: {
     width: width(4),
