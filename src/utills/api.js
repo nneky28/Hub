@@ -5,6 +5,7 @@ import {useQuery} from "react-query"
 
 //export const endPoint = 'https://coolowo.com';
 export const endPoint = 'https://api.bizedgeapp.com';
+//export const endPoint = 'https://9fe0-105-112-35-98.eu.ngrok.io';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -141,7 +142,7 @@ export const APIFunction = {
   },
   payroll_years : async () =>{
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/years`)
+    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/years/`)
   },
   location_type : async () =>{
     let biz = await getStoredBusiness()
@@ -150,7 +151,7 @@ export const APIFunction = {
 }
 
 export const useFetchPayrollYears  = () => {
-  return useQuery(["payroll_years"],()=>APIFunction.payroll_years())
+  return useQuery("payroll_years",APIFunction.payroll_years)
 }
 
 export const useFetchAttendanceConfig = () => {
@@ -179,7 +180,7 @@ export const useFetchPayrollHistory  = (year) => {
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
-    //console.log("getAPIs",`${endPoint}${path}`,_token)
+    console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
       axios
         .get(`${endPoint}${path}`, {
@@ -196,7 +197,7 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
-          //console.log("ERROR",error)
+          console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
