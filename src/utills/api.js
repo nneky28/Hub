@@ -179,7 +179,7 @@ export const useFetchPayrollHistory  = (year) => {
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
-   // console.log("getAPIs",`${endPoint}${path}`,_token)
+    //console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
       axios
         .get(`${endPoint}${path}`, {
@@ -211,7 +211,6 @@ export const getAPIs = async (path) => {
   
 export const postAPIs = async (path, fd) => {
     let _token = await getData("token");
-    //console.log("postAPIs",path,fd)
     return new Promise((resolve, reject) => {
       axios({
         url: `${endPoint}${path}`,
@@ -226,7 +225,6 @@ export const postAPIs = async (path, fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          //console.log("postAPIs ERR",error.response)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -273,7 +271,6 @@ export const postAPIs = async (path, fd) => {
     };
   
 export const putAPIs = async (path,fd) => {
-  //console.log("putAPIs",path,fd)
     let _token = await getData("token");
     return new Promise((resolve, reject) => {
       axios({
@@ -289,7 +286,6 @@ export const putAPIs = async (path,fd) => {
           resolve(result.data);
         })
         .catch(error => {
-          //console.log("ERR",error)
           if (
             error.response && error.response.data && error.response.data.msg && 
             error.response.data.msg.detail && typeof(error.response.data.msg.detail) === "string"
@@ -314,7 +310,6 @@ export const postNoToken = (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("ERROR",error)
         if (error.response) {
           reject({status: 400, msg: error.response.data});
         } else {

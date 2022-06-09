@@ -69,7 +69,6 @@ export default function Setting({navigation}) {
         <ScreenWrapper scrollEnabled={true}>
             <Container 
                 //paddingHorizontal={3}
-                marginLeft={3}
                 style={{
                     flexDirection : "row",
                     alignItems : "center",
