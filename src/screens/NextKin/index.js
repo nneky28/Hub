@@ -26,7 +26,6 @@ export default function NextKin({navigation,route}) {
     const auth = useSelector(state=>state.Auth)
     const [data,setData] = useState({
         first_name : "",
-        middle_name : "",
         last_name :"",
         phone_number : "",
         email : "",
