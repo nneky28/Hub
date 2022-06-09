@@ -29,8 +29,7 @@ export default function PersonalInfo({navigation}) {
     const updateProfile = async () => {
         try{
             let failed = false;
-            let required = ["first_name","last_name",
-                "middle_name","gender","birth_date","marital_status","email","address","phone_number","state","city"]
+            let required = ["first_name","last_name","gender","birth_date","marital_status","email","address","phone_number","state","city"]
             let msg = "";
             for(let req of required){
                if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")){

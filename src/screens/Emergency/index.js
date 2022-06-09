@@ -6,7 +6,7 @@ import ScreenWrapper from '../../components/ScreenWrapper'
 import { APIFunction} from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import { AppButton, BackHandler, Container, H1, P} from '../../utills/components'
-import {Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Methods'
+import {Capitalize, getData, ToastError, ToastSuccess, validateEmail } from '../../utills/Methods'
 import styles from './styles'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
@@ -25,11 +25,9 @@ export default function NextKin({navigation,route}) {
     const [loading,setLoading] = useState(false)
     const [data,setData] = useState({
         first_name : "",
-        middle_name : "",
         last_name :"",
         phone_number : "",
         email : "",
-        marital_status : "",
         gender : "",
         nationality : "NG",
         address1 :  "",
@@ -41,8 +39,8 @@ export default function NextKin({navigation,route}) {
     });
    const handleSubmit = async () => {
         try{
-            let required = ["first_name","middle_name","last_name","phone_number",
-            "email","marital_status","gender","nationality","address1","country","state","city"];
+            let required = ["first_name","last_name","phone_number",
+            "email","gender","nationality","address1","country","state","city"];
             let failed = false;
             let msg = ""
             for(let req of required){
@@ -54,6 +52,7 @@ export default function NextKin({navigation,route}) {
             if(failed){
                 return ToastError(msg);
             }
+            if(!validateEmail(data.email.toString().trim())) return ToastError("Please enter a valid email")
             let about = await getData("about_me")
             dispatch(setLoaderVisible(true));
             let res = await APIFunction.update_emergency({...data,country : "NG"},about.id)
@@ -129,17 +128,7 @@ export default function NextKin({navigation,route}) {
                         />
                         <Field
                             component={CustomInput}
-                            name="middle_name"
-                            placeholder="Middle Name"
-                            value={data.middle_name}
-                            onChangeData={(value)=>{
-                                setData({...data,middle_name : value})
-                            }}
-                            color={AppColors.black}
-                        />
-                        <Field
-                            component={CustomInput}
-                            name="middle_name"
+                            name="last_name"
                             placeholder="Last Name"
                             value={data.last_name}
                             onChangeData={(value)=>{
@@ -167,15 +156,6 @@ export default function NextKin({navigation,route}) {
                                 setData({...data,email : value})
                             }}
                             color={AppColors.black}
-                        />
-                        <Field
-                            name="marital_status" 
-                            placeholder="Marital Status"
-                            component={CustomModalDropdown}
-                            value={data.gender}
-                            onChangeData={(value)=>setData({...data,marital_status : value.toLowerCase()})}
-                            color={AppColors.black}
-                            options={["Married","Single","Divorced"]}
                         />
                         <Field
                             name="gender" 
