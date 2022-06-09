@@ -80,9 +80,10 @@ export default function Training({navigation}) {
                     paddingHorizontal={5}
                     width={90}
                 >
-                    {['Upcoming',"History"].map((item) => (
+                    {['Upcoming',"History"].map((item,index) => (
                         <TouchableOpacity 
-                        onPress={() => setSelected(item)}
+                            onPress={() => setSelected(item)}
+                            key={index}
                         >
                             <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
                             {selected == item && <View style={styles.animated} />}

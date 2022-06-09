@@ -41,8 +41,6 @@ export default function PayslipBreakDown({route,navigation}) {
         <Container backgroundColor={AppColors.lightestBlue}
             paddingTop={5}
             paddingBottom={5}
-            // paddingLeft={5}
-            // paddingRight={5}
         >
             <Container backgroundColor="transparent" width={94} alignSelf="center">
               <P style={{marginBottom : height(0.5)}}>Designation</P>

@@ -58,8 +58,7 @@ const styles = StyleSheet.create({
   }, 
   dotsIcon: {
     height: height(0.5),
-    width: width(3.5),
-    color: AppColors.black1
+    width: width(3.5)
   }, 
   subText: {
     fontSize: width(2.5),

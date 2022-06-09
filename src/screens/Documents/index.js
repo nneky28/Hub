@@ -107,7 +107,7 @@ export default function Documents({navigation}) {
                 !loading && documents && Array.isArray(documents) && documents.length > 0  ? (
                         <FlatList
                             data={documents}
-                            keyExtractor={(item) => item.key}
+                            keyExtractor={(item,i) => i.toString()}
                             renderItem={ListComponent}
                             ItemSeparatorComponent={() => <View />}
                             showsVerticalScrollIndicator={false}
