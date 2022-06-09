@@ -58,8 +58,6 @@ export default function Documents({navigation}) {
         },[])
     )
     const ListComponent = ({item}) => {
-        let split = item && item.file && item.file.split("/") ? item.file.split("/") : []
-        let title = split && split.length > 0 ? split[split.length - 1] : ""
         return(
             
             <>
@@ -73,8 +71,8 @@ export default function Documents({navigation}) {
                 <View style={[CommonStyles.rowJustifySpaceBtw,{width : width(80)}]}>
                     <Image source={{uri : Images.FileIcon}} style={styles.fileIcon} />
                     <View style={styles.textContainer}>
-                        <Text style={styles.titleText}>{title ? Capitalize(title) : null}</Text>
-                        <Text style={styles.subText}>{item && item.created_at ? moment(item.created_at).format("dd MMM YYYY") : null}</Text>
+                        <Text style={styles.titleText}>{item?.name ? Capitalize(item.name) : null}</Text>
+                        <Text style={styles.subText}>{item && item.created_at ? moment(item.created_at).format("DD MMM YYYY") : null}</Text>
                     </View>
                 </View>
                 <Image source={{uri : Images.DotsIcon}} style={styles.dotsIcon} />
@@ -109,7 +107,7 @@ export default function Documents({navigation}) {
                 !loading && documents && Array.isArray(documents) && documents.length > 0  ? (
                         <FlatList
                             data={documents}
-                            keyExtractor={(item) => item.key}
+                            keyExtractor={(item,i) => i.toString()}
                             renderItem={ListComponent}
                             ItemSeparatorComponent={() => <View />}
                             showsVerticalScrollIndicator={false}

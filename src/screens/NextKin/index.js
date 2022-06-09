@@ -26,11 +26,9 @@ export default function NextKin({navigation,route}) {
     const auth = useSelector(state=>state.Auth)
     const [data,setData] = useState({
         first_name : "",
-        middle_name : "",
         last_name :"",
         phone_number : "",
         email : "",
-        marital_status : "",
         gender : "",
         nationality : "NG",
         address1 :  "",
@@ -42,8 +40,8 @@ export default function NextKin({navigation,route}) {
     });
    const handleSubmit = async () => {
         try{
-            let required = ["first_name","middle_name","last_name","phone_number",
-            "email","marital_status","gender","nationality","address1","country","state","city"];
+            let required = ["first_name","last_name","phone_number",
+            "email","gender","nationality","address1","country","state","city"];
             let failed = false;
             let msg = ""
             for(let req of required){
@@ -131,17 +129,7 @@ export default function NextKin({navigation,route}) {
                             />
                             <Field
                                 component={CustomInput}
-                                name="middle_name"
-                                placeholder="Middle Name"
-                                value={data.middle_name}
-                                onChangeData={(value)=>{
-                                    setData({...data,middle_name : value})
-                                }}
-                                color={AppColors.black}
-                            />
-                            <Field
-                                component={CustomInput}
-                                name="middle_name"
+                                name="last_name"
                                 placeholder="Last Name"
                                 value={data.last_name}
                                 onChangeData={(value)=>{
@@ -170,15 +158,6 @@ export default function NextKin({navigation,route}) {
                                 }}
                                 color={AppColors.black}
                                 keyboardType={"email-address"}
-                            />
-                            <Field
-                                name="marital_status" 
-                                placeholder="Marital Status"
-                                component={CustomModalDropdown}
-                                value={data.gender}
-                                onChangeData={(value)=>setData({...data,marital_status : value.toLowerCase()})}
-                                color={AppColors.black}
-                                options={["Married","Single","Divorced"]}
                             />
                             <Field
                                 name="gender" 

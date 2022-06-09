@@ -141,7 +141,7 @@ export const APIFunction = {
   },
   payroll_years : async () =>{
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/years`)
+    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/years/`)
   },
   location_type : async () =>{
     let biz = await getStoredBusiness()
@@ -150,7 +150,7 @@ export const APIFunction = {
 }
 
 export const useFetchPayrollYears  = () => {
-  return useQuery(["payroll_years"],()=>APIFunction.payroll_years())
+  return useQuery("payroll_years",APIFunction.payroll_years)
 }
 
 export const useFetchAttendanceConfig = () => {

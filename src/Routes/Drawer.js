@@ -84,7 +84,7 @@ const Drawer = ({navigation, ...props}) => {
       <TouchableOpacity
         style={styles.row1}
         onPress={onPress}
-        activeOpacity={0.8}>
+      >
         <Image source={icon} resizeMode="contain" style={styles.icon1} />
         <Text style={styles.text3}>{text}</Text>
       </TouchableOpacity>

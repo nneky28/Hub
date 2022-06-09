@@ -54,13 +54,11 @@ const styles = StyleSheet.create({
 
   fileIcon: {
       height: height(4),
-      width: width(5),
-      color: AppColors.black1
+      width: width(5)
   }, 
   dotsIcon: {
     height: height(0.5),
-    width: width(3.5),
-    color: AppColors.black1
+    width: width(3.5)
   }, 
   subText: {
     fontSize: width(2.5),

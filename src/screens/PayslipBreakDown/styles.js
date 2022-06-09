@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: width(100),
-    paddingHorizontal: width(5),
+    paddingHorizontal: width(2),
     marginTop: height(2),
     marginBottom: height(1.5),
     flexDirection: 'row',

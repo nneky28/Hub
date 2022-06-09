@@ -198,7 +198,7 @@ export default function Dashboard(props) {
             <TouchableOpacity
               onPress={()=>setShow(true)}
             >
-              <H1 color={AppColors.green}>Forgot Password</H1>
+              <H1 color={AppColors.green}>Forgot Password?</H1>
             </TouchableOpacity>
             <SizedBox size={25} />
             <CustomText

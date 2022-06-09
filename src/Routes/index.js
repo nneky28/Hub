@@ -276,5 +276,5 @@ const Routes = () => {
   </ErrorBoundary>
   );
 }
-let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,installMode: codePush.InstallMode.ON_NEXT_RESUME};
 export default codePush(codePushOptions)(Routes);
