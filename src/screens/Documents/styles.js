@@ -54,8 +54,7 @@ const styles = StyleSheet.create({
 
   fileIcon: {
       height: height(4),
-      width: width(5),
-      color: AppColors.black1
+      width: width(5)
   }, 
   dotsIcon: {
     height: height(0.5),

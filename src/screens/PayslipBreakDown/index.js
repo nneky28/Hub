@@ -41,18 +41,19 @@ export default function PayslipBreakDown({route,navigation}) {
         <Container backgroundColor={AppColors.lightestBlue}
             paddingTop={5}
             paddingBottom={5}
-            paddingLeft={5}
-            paddingRight={5}
+            // paddingLeft={5}
+            // paddingRight={5}
         >
-            <Container backgroundColor="transparent">
+            <Container backgroundColor="transparent" width={94} alignSelf="center">
               <P style={{marginBottom : height(0.5)}}>Designation</P>
               <H1 fontSize={3.5}>{payslip?.data?.job?.title ? Capitalize(payslip?.data?.job?.title) : null}</H1>
             </Container>
-            <Container direction='row'
+            <Container 
+              direction='row'
               backgroundColor="transparent"
-              style={{
-                justifyContent :  'space-between'
-              }}
+              width={94}
+              alignSelf="center"
+              horizontalAlignment="space-between"
               marginTop={2.5}
             >
                 {
@@ -78,7 +79,7 @@ export default function PayslipBreakDown({route,navigation}) {
                   </Container>)
                 }
             </Container>
-            <Container marginTop={2.5} backgroundColor="transparent">
+            <Container marginTop={2.5} backgroundColor="transparent" width={94} alignSelf="center">
               <P style={{marginBottom : height(0.5)}}>Pay Period</P>
               <H1 fontSize={3.5}>{payslip?.period_start_date ? moment(payslip?.period_start_date).format("DD MMM, YYYY") : ""} -  {payslip?.period_end_date ? moment(payslip?.period_end_date).format("DD MMM, YYYY") : ""}</H1>
             </Container>
@@ -117,12 +118,12 @@ export default function PayslipBreakDown({route,navigation}) {
               ]
             }
           ].map((item,index)=><Container key={index} marginTop={2.5} horizontalAlignment="center">
-              <Container width={90} marginBottom={1.5} 
+              <Container width={94} marginBottom={1.5} 
                 style={{
                   alignSelf : "center"
                 }}
               ><H1>{item.title}</H1></Container>
-              <CustomCard Cardcontainer={{alignItems : "center"}}>
+              <CustomCard Cardcontainer={{alignItems : "center",width : width(94)}}>
                   {
                     item.menus.map((menu,i)=><Container key={i} direction="row"
                       style={{
@@ -140,7 +141,7 @@ export default function PayslipBreakDown({route,navigation}) {
                     </Container>)
                   }
               </CustomCard>
-              <Container alignSelf="center" width={90}
+              <Container alignSelf="center" width={94}
                   direction="row"
                   paddingTop={2}
                   paddingLeft={5}
@@ -163,7 +164,7 @@ export default function PayslipBreakDown({route,navigation}) {
             borderTopWidth={1} 
             borderColor={AppColors.grayBorder}
             horizontalAlignment='center'
-            width={90}
+            width={94}
             height={height(10)}
             style={{
               alignSelf : "center",
@@ -177,7 +178,7 @@ export default function PayslipBreakDown({route,navigation}) {
               >Net Pay (Gross Pay - Total Deductions)</P>
               <H1 marginTop={2} textAlign="center">{payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"} - {payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"}</H1>
           </Container>
-          <Container direction='row' horizontalAlignment='space-between' width={90} 
+          <Container direction='row' horizontalAlignment='space-between' width={94} 
             backgroundColor={AppColors.lightestBlue}
             style={{
               borderRadius : width(2),
@@ -214,7 +215,7 @@ export default function PayslipBreakDown({route,navigation}) {
                   alignSelf : "center",
                   marginBottom : height(2)
                 }}
-                width={90} 
+                width={94} 
               >
                 <H1 fontSize={3.5} color={tab.is_menu ? AppColors.black : AppColors.black3}>{tab.item1}</H1>
                 <H1 fontSize={3.5} color={tab.is_menu ? AppColors.black : AppColors.black3}>{tab.item2}</H1>
