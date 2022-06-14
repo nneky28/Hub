@@ -827,11 +827,11 @@ export const ClockINContainer = ({setVisible}) => {
         dispatch(setLoaderVisible(false))
         return showFlashMessage({title : `You clocked out from work at ${moment().format("hh:mm a")}`,type : "success"})
       }
+      dispatch(setLoaderVisible(true))
       let res = await GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
         timeout: 3000,
       })
-      dispatch(setLoaderVisible(true))
       let fd = {
         ...res,
         location_type : tab === "Remote" ? "remote" : "on_site"
@@ -841,11 +841,11 @@ export const ClockINContainer = ({setVisible}) => {
       dispatch(setLoaderVisible(false))
       showFlashMessage({title : `You resumed for work at ${moment().format("hh:mm a")}`,type : "success"})
     }catch(err){
+      dispatch(setLoaderVisible(false))
       if((err && err.toString().includes("Location not available")) || err?.name === "LocationError"){
         return setVisible(true)
       }
       ToastError(err.msg)
-      dispatch(setLoaderVisible(false))
     }
   }
 

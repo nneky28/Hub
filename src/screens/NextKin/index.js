@@ -36,7 +36,8 @@ export default function NextKin({navigation,route}) {
         country : "",
         state : "",
         city : "",
-        postal_code : ""
+        postal_code : "",
+        relationship : ""
     });
    const handleSubmit = async () => {
         try{
@@ -170,6 +171,16 @@ export default function NextKin({navigation,route}) {
                             })}
                                 color={AppColors.black}
                                 options={["Male","Female","Others"]}
+                            />
+                            <Field
+                                component={CustomInput}
+                                name="relationship"
+                                placeholder="Relationship"
+                                value={data.relationship}
+                                onChangeData={(value)=>{
+                                    setData({...data,relationship : value})
+                                }}
+                                color={AppColors.black}
                             />
                             <Field
                                 component={CustomInput}

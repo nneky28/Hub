@@ -281,12 +281,15 @@ export default function Profile({navigation}) {
                           <Text numberOfLines={1} style={[styles.designationText, CommonStyles.marginTop_05]}>
                           {`${about && about.title ? Capitalize(about.title):  ""}`}
                           </Text>
-                          <View style={[CommonStyles.rowAlignItemCenter, CommonStyles.marginTop_05]}>
-                              <Text numberOfLines={1} style={styles.designationText}>{`${about && about.title_display ? Capitalize(about.title_display):  ""}`} | </Text>
-                              <Text numberOfLines={1} style={[styles.designationText, {fontWeight: 'bold'}]}>
-                              {`${about && about.level ? about.level :  ""}`}
-                              </Text>
-                          </View>
+                          {
+                             about?.title_display && about?.level ? <View style={[CommonStyles.rowAlignItemCenter, CommonStyles.marginTop_05]}>
+                                <Text numberOfLines={1} style={styles.designationText}>{`${about && about.title_display ? Capitalize(about.title_display):  ""}`} | </Text>
+                                <Text numberOfLines={1} style={[styles.designationText, {fontWeight: 'bold'}]}>
+                                {`${about && about.level ? about.level :  ""}`}
+                                </Text>
+                            </View> : null
+                          }
+                          
                       </View>
                       <View style={[CommonStyles.rowJustifySpaceBtw, {width: width(90)}, CommonStyles.marginBottom_2]}>
                           <Button 
