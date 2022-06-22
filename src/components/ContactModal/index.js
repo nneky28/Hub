@@ -321,7 +321,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                           />
                           <Field
                               name="end_date"
-                              placeholder="End Date"
+                              placeholder="Resumption Date"
                               component={CustomDatePicker}
                               value={data.end_date}
                               onChangeData={(value)=>{
