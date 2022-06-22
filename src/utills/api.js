@@ -3,8 +3,8 @@ import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 import {useQuery} from "react-query"
 
-export const endPoint = 'https://coolowo.com';
-//export const endPoint = 'https://api.bizedgeapp.com';
+//export const endPoint = 'https://coolowo.com';
+export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
@@ -146,6 +146,9 @@ export const APIFunction = {
   location_type : async () =>{
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/attendance/location_type/`)
+  },
+  error_report : async (fd)=> {
+    return postNoToken('/mobile_error_report',fd)
   }
 }
 
@@ -307,9 +310,11 @@ export const postNoToken = (path, fd) => {
         },
       })
       .then(result => {
+        console.log("RESULT",result)
         resolve(result.data);
       })
       .catch(error => {
+        console.log("ERROR",error)
         if (error.response) {
           reject({status: 400, msg: error.response.data});
         } else {

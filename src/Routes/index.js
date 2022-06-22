@@ -146,8 +146,9 @@ const Routes = () => {
       });
      },[])
   return (
+    <QueryClientProvider client={queryClient}>
     <ErrorBoundary FallbackComponent={CustomFallBackScreen}>
-                          <QueryClientProvider client={queryClient}>
+                          
             <NavigationContainer>
       <Loader />
       {
@@ -272,8 +273,8 @@ const Routes = () => {
         </Stack.Navigator>
       )}
     </NavigationContainer>
-    </QueryClientProvider>
-  </ErrorBoundary>
+    </ErrorBoundary>
+  </QueryClientProvider>
   );
 }
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,installMode: codePush.InstallMode.ON_NEXT_RESUME};

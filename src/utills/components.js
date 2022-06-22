@@ -261,6 +261,15 @@ export const Reload = props => {
     <TouchableRipple
       onPress={props.onPress}
       rippleColor="rgba(0, 0, 0, .32)"
+      style={[
+        {
+          alignItems : "center",
+          justifyContent : "center",
+          width : props.width ? width(props.width) : null,
+          height : props.height ? height(props.height) : height(6)
+        },
+        props.style
+      ]}
     >
       {props.children}
     </TouchableRipple>
@@ -520,8 +529,13 @@ export const BackHandler = () => {
 }
 
 export const CustomFallBackScreen = (props) => {
+  const reportError = useMutation((load)=>APIFunction.error_report(load))
   const logoutMethod = async () => {
     try{
+      let fd = {
+        report : JSON.stringify(props?.error)
+      }
+      reportError.mutateAsync(fd)
       let keys = await AsyncStorage.getAllKeys()
       AsyncStorage.multiRemove(keys);
       RNRestart.Restart();

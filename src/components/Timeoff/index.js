@@ -11,7 +11,7 @@ import { Circle } from 'react-native-progress';
 import { rightIcon, upIcon } from '../../assets/images';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P } from '../../utills/components';
+import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, TouchWrap } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
@@ -174,8 +174,8 @@ const RenderItem = ({item,tab,showModal}) => {
               unfilledColor={AppColors.lightMediumGreen}
               progress={
                 tab == 'active' && item && item.days_taken && item.days_requested ? 
-                numeral(item.days_taken/item.days_requested).format("0.00") : tab === "available" && item.total_days_taken ?  
-                numeral(item.total_days_taken/item.max_days_allowed).format("0.00") : 0
+                Number(numeral(item.days_taken/item.days_requested).format("0.00")) : tab === "available" && item.total_days_taken ?  
+                Number(numeral(item.total_days_taken/item.max_days_allowed).format("0.00")) : 0
               }
             />
             <View style={styles.absolute}>
@@ -184,17 +184,17 @@ const RenderItem = ({item,tab,showModal}) => {
                   <Text style={styles.count}>{item && item.days_taken ? item.days_taken : 0}</Text>
                   <View style={styles.line1} />
                   <Text style={styles.count1}>{item && item.days_requested ? item.days_requested : 0}</Text>
-                  <Text style={styles.count2}>Days</Text>
+                  <Text style={styles.count2}>{item?.days_requested > 1 ? 'Days' : 'Day'}</Text>
                 </>
               ) : tab == 'available' ? (
                 <>
                 {
                   item && item.max_days_allowed && item.total_days_taken > 0 ? (
                     <>
-                      <Text style={styles.count1}>{item && item.total_days_taken ?  item.total_days_taken : 0} Days</Text>
+                      <Text style={styles.count1}>{item && item.total_days_taken ?  item.total_days_taken : 0} {item.total_days_taken > 1 ? 'Days' : 'Day' }</Text>
                       <P color={AppColors.grayBorder} fontSize={3.1}>Taken</P>
                       <View style={styles.line1} />
-                      <Text style={[styles.count,{color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{item.max_days_allowed - item.total_days_taken} Days</Text>
+                      <Text style={[styles.count,{color :  (Number(item.max_days_allowed) - Number(item.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{item.max_days_allowed - item.total_days_taken} {(item.max_days_allowed - item.total_days_taken) > 1 ? 'Days' : 'Day'}</Text>
                       <Text style={
                         [styles.count,
                           {fontSize : width(3)},
@@ -226,7 +226,7 @@ const RenderItem = ({item,tab,showModal}) => {
               ) : (
                 <>
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    {item && item.days_requested ? item.days_requested : 0} {item && item.max_days_allowed && item.max_days_allowed > 1 ? `Days` : "Day"}
+                    {item && item.days_requested ? item.days_requested : 0} {item?.days_requested > 1 ? `Days` : "Day"}
                   </Text>
                   {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
                     Days
@@ -256,13 +256,15 @@ const RenderItem = ({item,tab,showModal}) => {
             </>
           ) : null}
           <View style={[styles.line, {marginTop: height(2)}]} />
-          <TouchableRipple
+          <TouchWrap
             onPress={()=>{
               if(tab === "available"){
                 return showModal(item.id,item)
               }
               if(tab === "request") return showModal(item.id,item,"request")
             }}
+            width={30}
+            height={3}
           >
             <React.Fragment>
             {tab == 'active' ? (
@@ -287,7 +289,7 @@ const RenderItem = ({item,tab,showModal}) => {
               ) : null
             }
             </React.Fragment>
-          </TouchableRipple>
+          </TouchWrap>
         </>
       ) : null}
     </Animated.View>
@@ -355,7 +357,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 fData && fData.category ? Capitalize(fData.category) : "" 
             }
           </Text> */}
-           <Text style={styles.text1}>{fData && fData.is_paid ? "Paid" : "Unpaid"}</Text>
+           <Text style={styles.text1}>{fData?.is_paid || fData?.timeoff?.is_paid ? "Paid" : "Unpaid"}</Text>
           <View style={{width: width(35), height: width(35)}}>
             <Circle
               borderWidth={0}
@@ -366,8 +368,8 @@ const RenderItemVertical = ({item,fData,setModal}) => {
               unfilledColor={AppColors.lightMediumGreen}
               progress={
                 fData && fData.days_taken &&
-                fData.days_requested ? numeral(fData.days_taken/fData.days_requested).format("0.00") : fData.total_days_taken > 0 ?
-                numeral(fData.total_days_taken/fData.max_days_allowed).format("0.00") : 0
+                fData.days_requested ? Number(numeral(fData.days_taken/fData.days_requested).format("0.00")) : fData.total_days_taken > 0 ?
+                Number(numeral(fData.total_days_taken/fData.max_days_allowed).format("0.00")) : 0
               }
               //direction='counter-clockwise'
             />
@@ -377,7 +379,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                   <Text style={styles.count}>{fData && fData.days_taken ? fData.days_taken : "0"}</Text>
                   <View style={styles.line1} />
                   <Text style={styles.count1}>{fData && fData.days_requested ? fData.days_requested : "0"}</Text>
-                  <Text style={styles.count2}>Days</Text>
+                  <Text style={styles.count2}>{fData?.days_requested > 1 ? 'Days' : 'Day'}</Text>
                 </>
               ) : status == 'balance' ? (
                 <>
@@ -391,10 +393,10 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                     // </>
                     <React.Fragment>
                     <>
-                      <Text style={styles.count1}>{fData && fData.total_days_taken ?  fData.total_days_taken : 0} Days</Text>
+                      <Text style={styles.count1}>{fData && fData.total_days_taken ?  fData.total_days_taken : 0} {fData?.total_days_taken > 1 ? 'Days' : 'Day'}</Text>
                       <P color={AppColors.grayBorder} fontSize={3.1}>Taken</P>
                       <View style={styles.line1} />
-                      <Text style={[styles.count,{color :  (Number(fData.max_days_allowed) - Number(fData.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{fData.max_days_allowed - fData.total_days_taken} Days</Text>
+                      <Text style={[styles.count,{color :  (Number(fData.max_days_allowed) - Number(fData.total_days_taken)) == 0 ? AppColors.grayBorder : AppColors.lightMediumGreen}]}>{fData.max_days_allowed - fData.total_days_taken} {(fData.max_days_allowed - fData.total_days_taken) > 1 ? 'Days' : 'Day'}</Text>
                       <Text style={
                         [styles.count,
                           {fontSize : width(3)},
@@ -447,7 +449,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                   </Text> */}
 
                   <Text style={[styles.count, {color: AppColors.black1}]}>
-                    {fData && fData.days_requested ? fData.days_requested : 0} {fData && fData.max_days_allowed && fData.max_days_allowed > 1 ? `Days` : "Day"}
+                    {fData && fData.days_requested ? fData.days_requested : 0} {fData?.days_requested > 1 ? `Days` : "Day"}
                   </Text>
 
                   {/* <Text style={[styles.count2, {color: AppColors.black1}]}>
@@ -487,7 +489,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
             </>
           )}
           <View style={[styles.line, {marginTop: height(2)}]} />
-          <TouchableRipple
+          <TouchWrap
             onPress={()=>{
               if(status === "balance"){
                 return setModal(fData.id,fData)
@@ -497,6 +499,8 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                 return 
               }
             }}
+            width={30}
+            height={3}
           >
               <React.Fragment>
                 {status == 'active' ? (
@@ -520,7 +524,7 @@ const RenderItemVertical = ({item,fData,setModal}) => {
                   ) : null
                 }
               </React.Fragment>
-          </TouchableRipple>
+          </TouchWrap>
         </>
       ) : null}
     </Animated.View>
