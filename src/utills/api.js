@@ -182,7 +182,7 @@ export const useFetchPayrollHistory  = (year) => {
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
-    console.log("getAPIs",`${endPoint}${path}`,_token)
+    //console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
       axios
         .get(`${endPoint}${path}`, {
@@ -199,7 +199,7 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
-          console.log("ERROR",error)
+          //console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -310,11 +310,11 @@ export const postNoToken = (path, fd) => {
         },
       })
       .then(result => {
-        console.log("RESULT",result)
+        //console.log("RESULT",result)
         resolve(result.data);
       })
       .catch(error => {
-        console.log("ERROR",error)
+        //console.log("ERROR",error)
         if (error.response) {
           reject({status: 400, msg: error.response.data});
         } else {
