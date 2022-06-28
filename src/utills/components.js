@@ -532,16 +532,21 @@ export const CustomFallBackScreen = (props) => {
   const reportError = useMutation((load)=>APIFunction.error_report(load))
   const logoutMethod = async () => {
     try{
-      let fd = {
-        report : JSON.stringify(props?.error)
-      }
-      reportError.mutateAsync(fd)
       let keys = await AsyncStorage.getAllKeys()
       AsyncStorage.multiRemove(keys);
       RNRestart.Restart();
     }catch(err){
     }
-  };
+  }
+  const reportMainError = () => {
+    let fd = {
+      report : JSON.stringify(`${props?.error}${props?.error?.toString()}`)
+    }
+    reportError.mutateAsync(fd)
+  }
+  useEffect(()=>{
+    reportMainError()
+  },[])
   return(
     <Container flex={1} style={{
         alignItems : "center",
