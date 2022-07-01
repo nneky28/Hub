@@ -3,14 +3,11 @@ import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Ima
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
-import {TextInput} from "react-native"
+import {TextInput} from "react-native-paper"
 import AppColors from '../../utills/AppColors';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
 import CustomText from '../../component2/customText/CustomText';
-import CusInput from '../../component2/input/inputElement';
 import CustomButton from '../../component2/button/Button';
-//import Image from '../../component2/image/Image';
-let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 import { Field, Formik } from 'formik';
 import CustomInput from '../../components/CustomInput';
@@ -22,8 +19,8 @@ import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchW
 import {TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
-import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
+import CommonStyles from '../../utills/CommonStyles';
 
 
 export default function Dashboard(props) {
@@ -95,7 +92,6 @@ export default function Dashboard(props) {
       showsVerticalScrollIndicator={false}
       backgroundColor={AppColors.white}
     >
-      {/* <ScrollView contentContainerStyle={styles.inner}> */}
         <View
           style={{
             flex : 1,
@@ -141,7 +137,20 @@ export default function Dashboard(props) {
                         keyboardType={"email-address"}
                         color={AppColors.black}
                       />
-                     <Container
+                      <Field
+                        placeholder="Password"
+                        component={CustomInput}
+                        name="Password"
+                        secureTextEntry={secure}
+                        onChangeText={(value)=>setData({...data,password : value})}
+                        value={data?.password}
+                        keyboardType={'default'}
+                        right={<TextInput.Icon name="eye" style={CommonStyles.marginTop_2} 
+                          // color={AppColors.black1}
+                          // onPress={()=>setSecure(!secure)}
+                        />}
+                      />
+                     {/* <Container
                         paddingHorizontal={2}
                         paddingTop={Platform.OS !== "android" ? 0.8 : 0}
                         width={90}
@@ -184,14 +193,13 @@ export default function Dashboard(props) {
                               />
                             </Container>
                         </TouchWrap>
-                      </Container>
+                      </Container> */}
                     </>
               </Formik>
             <Container marginTop={3} width={90}>
               <CustomButton
                 btnText={'Sign In'}
                 handelButtonPress={loginMethod}
-                //isloading={isprocessing}
               />
             </Container> 
             <SizedBox height={1} />
@@ -213,7 +221,6 @@ export default function Dashboard(props) {
                   }}
               />
         </View>
-    {/* </ScrollView> */}
         {
           auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
         }
