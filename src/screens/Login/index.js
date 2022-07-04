@@ -145,55 +145,11 @@ export default function Dashboard(props) {
                         onChangeText={(value)=>setData({...data,password : value})}
                         value={data?.password}
                         keyboardType={'default'}
-                        right={<TextInput.Icon name="eye" style={CommonStyles.marginTop_2} 
-                          // color={AppColors.black1}
-                          // onPress={()=>setSecure(!secure)}
+                        right={<TextInput.Icon name={secure ? "eye" : "eye-off"} style={CommonStyles.marginTop_2} 
+                          color={AppColors.black1}
+                          onPress={()=>setSecure(!secure)}
                         />}
                       />
-                     {/* <Container
-                        paddingHorizontal={2}
-                        paddingTop={Platform.OS !== "android" ? 0.8 : 0}
-                        width={90}
-                        borderRadius={1.5}
-                        direction={"row"}
-                        borderWidth={1}
-                        marginTop={1}
-                        borderColor={AppColors.grayBorder}
-                        style={{
-                          borderRadius: width(1.5),
-                          paddingBottom : Platform.OS !== "android" ? height(0.8) : height(0)
-                        }}
-                      >
-                        <TextInput 
-                          style={{
-                            width : width(75),
-                            paddingLeft : width(4),
-                            color : AppColors.black
-                          }}
-                          placeholder='Password'
-                          placeholderTextColor={AppColors.black3}
-                          onChangeText={(value)=>setData({...data,password : value})}
-                          secureTextEntry={secure}
-                        />
-                        <TouchWrap
-                          onPress={()=>setSecure(!secure)}
-                        >
-                            <Container 
-                              flex={1}
-                              style={{
-                                alignItems : "center",
-                                justifyContent : "center"
-                              }}
-                              width={14}
-                            >
-                              <ImageWrap 
-                                url={secure ? Images.EyeIcon : Images.EyeOffIcon}
-                                fit={"contain"}
-                                height={3}
-                              />
-                            </Container>
-                        </TouchWrap>
-                      </Container> */}
                     </>
               </Formik>
             <Container marginTop={3} width={90}>
@@ -221,9 +177,7 @@ export default function Dashboard(props) {
                   }}
               />
         </View>
-        {
-          auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null
-        }
+        {auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url}/> : null}
         {show ? <CustomWebView web_url={`${BASE_URL}forgot-password`} setShow={setShow} show={show} /> : null } 
     </KeyboardAvoidingScrollView>
   );
