@@ -142,7 +142,7 @@ const Routes = () => {
         const updateOptions = Platform.select({
           ios: {
             title: 'Update available',
-            message: "There is a new version of BizEgde available on the App Store, do you want to update it?",
+            message: "There is a new version of MyEdge available on the App Store, do you want to update it?",
             buttonUpgradeText: 'Update',
             buttonCancelText: 'Cancel',
             forceUpgrade : false
@@ -196,7 +196,7 @@ const Routes = () => {
               let timeout = await getData("logout_time")
               let check = timeout ? moment(new Date()).isAfter(timeout) : true;
               if(check){
-                return logoutMethod()
+                //return logoutMethod()
               }
               storeData("lastActiveMoment",moment().toISOString())
               let res = await APIFunction.unseen_count()

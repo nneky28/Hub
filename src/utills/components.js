@@ -19,7 +19,7 @@ import DatePicker from 'react-native-date-picker';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
-import { getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
+import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
 import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus, useFetchLocationType } from './api';
 import {setLoaderVisible} from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
@@ -654,7 +654,7 @@ export const UserPINComponent = (props) => {
               {
                 props?.hasPIN ? <React.Fragment>
                   <P color={AppColors.black1}>Welcome back</P>
-                  <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.user?.firstName ? Capitalize(props?.auth?.user?.firstName) : null} {props?.auth?.user?.lastName ? `${Capitalize(props?.auth?.user?.lastName[0])}.` : null}</H1>
+                  <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.user?.first_name ? Capitalize(props?.auth?.user?.first_name) : null} {props?.auth?.user?.last_name ? `${Capitalize(props?.auth?.user?.last_name[0])}.` : null}</H1>
                 </React.Fragment> : null
               }
               <Container marginTop={3} horizontalAlignment="center">

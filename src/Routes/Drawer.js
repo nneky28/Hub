@@ -34,6 +34,8 @@ const Drawer = ({navigation, ...props}) => {
   const [bizs,setBiz] = React.useState(null);
   const logoutMethod = async () => {
     let keys = await AsyncStorage.getAllKeys()
+    keys.splice(keys.indexOf(`@${user?.email}`),1)
+    console.log("KEYS",keys)
     await AsyncStorage.multiRemove(keys);
     navigation.closeDrawer();
     dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));

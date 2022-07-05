@@ -41,6 +41,7 @@ export default function Dashboard(props) {
     }
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       props.navigation.navigate("Welcome")
+      return true
     })
     return () => backHandler.remove()
   }, [])
@@ -75,7 +76,7 @@ export default function Dashboard(props) {
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       queryClient.invalidateQueries()
       ToastSuccess("Login was successful")
-      return dispatch(login({...auth,user : {userName: "Joe",...res.user}, route : about_me.completed_user_onboarding ? "main" : "onboard",isLogin : true}));
+      return dispatch(login({...auth,user : {userName: "Joe",...about_me}, route : about_me.completed_user_onboarding ? "main" : "onboard",isLogin : true}));
     }catch(err){
       dispatch(setLoaderVisible(false));
       let msg = "";

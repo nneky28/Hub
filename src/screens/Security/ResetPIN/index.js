@@ -35,11 +35,11 @@ const ResetPIN = (props) => {
       if(!password || password.trim() === "") return showFlashMessage({type : "error",title : "Please enter a password"})
       dispatch(setLoaderVisible(true))
       const fd = {
-        email : auth.business_email,
+        email : auth?.user?.email,
         password
       }
       await loginFunction.mutateAsync(fd)
-      storeData(auth.business_email.toLowerCase().replaceAll("_",""),null)
+      storeData(auth.user.email.toLowerCase().replaceAll("_",""),null)
       dispatch(setLoaderVisible(false))
       setAction("create")
     }catch(err){
@@ -62,12 +62,13 @@ const ResetPIN = (props) => {
         return showFlashMessage({title : "Please confirm that your PIN matches",type : "error"})
       }
       if(!hasPIN && action === "confirm"){
-        let userInfo = await getData("userInfo");
+        let userInfo = await getData("user");
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
         storeData(userInfo.email.replaceAll("_",""),ciphertext)
       }
       dispatch(login({...auth,route : "main"}))
     }catch(err){
+      console.log("EROR",err)
     }
   }
 
@@ -91,6 +92,8 @@ const ResetPIN = (props) => {
         <Container flex={1}>
           <Container direction='row' 
             verticalAlignment='center'
+            width={90}
+            alignSelf="center"
           >
               <TouchableWrapper 
                 onPress={()=>{

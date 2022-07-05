@@ -25,8 +25,8 @@ const CreatePIN = (props) => {
 
   const getOLDPIN = async () => {
     try{
-      let userInfo = await getData("user");
-      console.log("USER INFO",userInfo)
+      let userInfo = await getData("about_me");
+      console.log("getOLDPIN",userInfo)
       let userPIN = await getData(userInfo.email.replaceAll("_",""))
       if(!userPIN){
         setAction("NoMobilePIN")
@@ -61,7 +61,7 @@ const CreatePIN = (props) => {
       if(!hasPIN && action === "confirm"){
         let userInfo = await getData("user");
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
-        PersistData(userInfo.email.replaceAll("_",""),ciphertext)
+        storeData(userInfo.email.replaceAll("_",""),ciphertext)
       }
       dispatch(login({...auth,route : "main"}))
     }catch(err){
@@ -88,13 +88,17 @@ const CreatePIN = (props) => {
   return (
     <ScreenWrapper>
         {
-          action === "NoMobilePIN" && !props?.route?.rest_pin ? <MobilePIN setAction={setAction} /> : (
+          action === "NoMobilePIN" && !props?.route?.rest_pin ? <MobilePIN setAction={setAction} /> : 
+          action === "confirm" || action === "create" || action === "HasMobilePIN" ? (
 
-            <Container flex={1}>
+            <Container 
+              flex={1}>
               {
                 !hasPIN ? <Container direction='row' 
                 horizontalAlignment={!hasPIN ? "space-between" : 'flex-end'}
                 verticalAlignment='center'
+                width={90}
+                alignSelf="center"
               >
                 <TouchableWrapper 
                     onPress={()=>{
@@ -133,7 +137,7 @@ const CreatePIN = (props) => {
           </Container>
 
 
-          )
+          ) : null
         }
     </ScreenWrapper>
   )

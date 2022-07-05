@@ -18,11 +18,10 @@ const Splash = (props) => {
     setTimeout(async () => {
       try{
         if(user && about && about.completed_user_onboarding){
-          dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
+          //dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
+          dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
         }else if(user && about && !about.completed_user_onboarding){
-          dispatch(login({...auth,user : user,isLogin : true,route : "onboard"}));
-        }else if(user && moment().isAfter(moment(lastActiveMoment).add(1,"minute"))){
-          dispatch(login({...auth,user : user,isLogin : true,route : "security"}));
+          dispatch(login({...auth,user : about,isLogin : true,route : "onboard"}));
         }else{
           //I have a feeling there is another case that needs to be captured here.
           dispatch(login({...auth,route : "auth",isLogin : false}));

@@ -10,6 +10,7 @@ import { ICON_BUTTON_SIZE } from '../../../utills/Constants';
 import CommonStyles from '../../../utills/CommonStyles';
 import { Field, Formik } from 'formik';
 import CustomInput from '../../../components/CustomInput';
+import { Capitalize } from '../../../utills/Methods';
 
 const UsePassword = (props) => {
 

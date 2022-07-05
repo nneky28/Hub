@@ -15,6 +15,9 @@ export const APIFunction = {
   employees : (business_id,page=1,search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
   team_members : (business_id,id,page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
   basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
+  login : async (fd) => {
+    return postNoToken(`/accounts/auth/login/`,fd)
+  },
   next_of_kins : async (id) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz.business_id}/employees/${id}/next-of-kin/`)
@@ -182,7 +185,6 @@ export const useFetchPayrollHistory  = (year) => {
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
-    //console.log("getAPIs",`${endPoint}${path}`,_token)
     return new Promise((resolve, reject) => {
       axios
         .get(`${endPoint}${path}`, {
@@ -199,7 +201,6 @@ export const getAPIs = async (path) => {
           resolve(result.data);
         })
         .catch(error => {
-          //console.log("ERROR",error)
           if (
             error.response && error.response.data && 
             error.response.data.detail && typeof(error.response.data.detail) === "string"
@@ -310,15 +311,15 @@ export const postNoToken = (path, fd) => {
         },
       })
       .then(result => {
-        //console.log("RESULT",result)
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("ERROR",error)
-        if (error.response) {
-          reject({status: 400, msg: error.response.data});
-        } else {
-          reject({status: 400, msg: 'Something went wrong. Please retry.'});
+        if (typeof(error?.response?.data?.msg?.detail) === "string") {
+          reject({status: 400, msg: error?.response?.data?.msg?.detail});
+        } else if (error?.response?.data?.code === "invalid_credentials") {
+          reject({status: 400, msg: "Unable to login with the provided credentials"});
+        }else {
+          reject({status: 400, msg: 'Something went wrong. Please try again later'});
         }
       });
   });
