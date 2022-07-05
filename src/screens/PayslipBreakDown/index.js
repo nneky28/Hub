@@ -32,12 +32,10 @@ export default function PayslipBreakDown({route,navigation}) {
       <View style={styles.container}>
       <View style={styles.header}>
           <BackHandler />
-           <Container>
-              <H1 textAlign="center">Payslip Breakdown</H1>
-           </Container>
+          <H1 textAlign="center" marginLeft={20}>Payslip Breakdown</H1>
       </View>
       <View style={styles.line} />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
         <Container backgroundColor={AppColors.lightestBlue}
             paddingTop={5}
             paddingBottom={5}

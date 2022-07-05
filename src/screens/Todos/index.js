@@ -18,7 +18,7 @@ import Todo from '../../components/Todo';
 import {completedTodo, unCompleteTodo} from '../../utills/data/todoData';
 import { getData, ToastError } from '../../utills/Methods';
 import { APIFunction } from '../../utills/api';
-import { BackHandler, PageLoader } from '../../utills/components';
+import { BackHandler, Container, PageLoader, SizedBox } from '../../utills/components';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { useFocusEffect } from '@react-navigation/native';
 import { WarningModal } from '../../components/ContactModal';
@@ -142,13 +142,9 @@ export default function Dashboard({navigation: {goBack}}) {
     <ScreenWrapper scrollEnabled={true}>
       {
         loading ? <PageLoader /> : <View style={styles.container}>
-        <View style={styles.row}>
+        <View style={styles.header}>
           <BackHandler />
-          {/* <TouchableOpacity onPress={goBack}>
-            <Image resizeMode="contain" source={leftIcon} style={styles.icon} />
-          </TouchableOpacity> */}
           <Text style={styles.text}>Tasks</Text>
-          <View style={{width: width(5)}} />
         </View>
         <RenderList title="To do" data={todoList} />
         <RenderList title="Completed" data={completeList} />

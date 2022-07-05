@@ -22,15 +22,16 @@ import { login } from '../Redux/Actions/Auth';
 import { getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
 import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus, useFetchLocationType } from './api';
 import {setLoaderVisible} from '../Redux/Actions/Config';
-import { BASE_URL } from './Constants';
+import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
-import Button from '../components/Button';
 import { useMutation, useQueryClient } from 'react-query';
 import GetLocation from 'react-native-get-location'
 import CustomButton from '../component2/button/Button';
 import AsyncStorage from '@react-native-community/async-storage';
 import RNRestart from 'react-native-restart';
 import { showFlashMessage } from '../components/SuccessFlash';
+import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import CommonStyles from './CommonStyles';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -104,14 +105,16 @@ export const Reload = props => {
 
   export const P = (props) => (
     <Text
-      style={{
-        fontSize : props.fontSize ? width(props.fontSize) : width(3.5),
-        fontFamily : FontFamily.BlackSansRegular,
-        textAlign : props.textAlign,
-        color : props.color || AppColors.black,
-        //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
-        ...props.style
-      }}
+      style={[
+        {
+          fontSize : props.fontSize ? width(props.fontSize) : width(3.5),
+          fontFamily : FontFamily.BlackSansRegular,
+          textAlign : props.textAlign,
+          color : props.color || AppColors.black,
+          //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
+        },
+        props.style
+      ]}
     >
      {props.children}
     </Text>
@@ -119,16 +122,19 @@ export const Reload = props => {
 
   export const H1 = (props) => (
     <Text
-      style={{
-        fontSize : width(props.fontSize) || width(4),
-        fontFamily : FontFamily.BlackSansBold,
-        color : props.color || 'black',
-        textAlign: props.textAlign,
-        textDecorationLine: props.underline || "none",
-        textDecorationColor : props.lineColor,
-        textDecorationStyle: "solid",
-        ...props.style
-      }}
+      style={[
+        {
+          fontSize : width(props.fontSize) || width(4),
+          fontFamily : FontFamily.BlackSansBold,
+          color : props.color || 'black',
+          textAlign: props.textAlign,
+          textDecorationLine: props.underline || "none",
+          textDecorationColor : props.lineColor,
+          textDecorationStyle: "solid",
+          marginLeft : props?.marginLeft ? width(props?.marginLeft) : null
+        },
+        props.style
+      ]}
     >
       {props.children}
     </Text>
@@ -138,7 +144,8 @@ export const Reload = props => {
     <View 
       style={{
         height : height(props.size || 1),
-        backgroundColor : props.backgroundColor || AppColors.white
+        backgroundColor : props.backgroundColor || AppColors.white,
+        width : props?.width ? width(props.width) : null
       }}
     />
   )
@@ -499,32 +506,28 @@ export const CustomWebView = (props) => (
   </Modal>
 )
 
-export const BackHandler = () => {
+export const BackHandler = ({onPress}) => {
   const navigation = useNavigation()
   return(
-    <Container
-      width={8}
-    >
-      <TouchableRipple onPress={()=>{
-        if(!navigation.canGoBack()) return
-        navigation.goBack()
-      }}
-        rippleColor="rgba(0, 0, 0, .32)"
+      <TouchableWrapper 
+        size={ICON_BUTTON_SIZE}
+        onPress={()=>{
+          if(onPress) return onPress()
+          if(!navigation.canGoBack()) return
+          navigation.goBack()
+        }}
         style={{
-          justifyContent : "center",
-          alignItems : "center"
+          alignItems : "center",
+          //backgroundColor : AppColors.yellow
         }}
       >
-        <Image 
-          source={{uri : Images.BackArrow}}
-          style={{
-            resizeMode : "contain",
-            height : height(5),
-            width : width(5)
-          }}
+        <ImageWrap 
+          url={Images.BackArrow}
+          fit={"contain"}
+          height={5}
+          width={5}
         />
-      </TouchableRipple>
-    </Container>
+    </TouchableWrapper>
   ) 
 }
 
@@ -607,183 +610,74 @@ export const EmptyStateWrapper =  (props) => (
   </Container>
 )
 
-// export const ClockINContainer = () => {
-//   const [current,setCurrent] = React.useState("")
-//   const auth = useSelector(state=>state.Auth)
-//   const dispatch = useDispatch()
-//   const queryClient = useQueryClient()
-//   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
-//   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
-//   const {
-//     data : config,
-//     isFetching : fetching
-//   } = useFetchAttendanceConfig()
-//   const {
-//     data : status,
-//     isFetching : fetchingStatus
-//   } = useFetchAttendanceStatus()
+export const TouchableWrapper = (props) => (
+  <TouchableRipple onPress={props.onPress}
+    style={[
+      props?.isText ? {
+        height : props?.height ? height(props?.height) : height(5),
+        width : props?.width ? width(props?.width) : width(25),
+        justifyContent : "center",
+        alignItems : "center"
+      } : props?.size ? {
+        borderRadius : 50,
+        height : height(props.size),
+        width : height(props.size),
+        justifyContent : "center",
+        alignItems : "center"
+      } : {},props.style
+    ]}
+  >
+    {props.children}
+  </TouchableRipple>
+)
 
+export const UserPINComponent = (props) => {
+  return(
+    <React.Fragment>
+              <Container
+              horizontalAlignment='center'
+              marginTop={4}
+            >
+              {
+                !props?.hasPIN && props?.action === "create" ? <React.Fragment>
+                  <H1 fontSize={6} color={AppColors.black1}>Create New Pin</H1>
+                  <P color={AppColors.black1} style={CommonStyles.marginTop_1}>Stay sharp & secure with your pin</P>
+                </React.Fragment> : null
+              }
 
-//   var interval
-//   useEffect(()=>{
-//     setInterval(() => {
-//       interval = setCurrent(moment().format("hh : mma"))
-//     }, 1000);
-//     return () => {
-//       clearInterval(interval)
-//     }
-//   },[])
-
-//   const submitHandler = async () => {
-//     try{
-//       let res = await GetLocation.getCurrentPosition({
-//         enableHighAccuracy: true,
-//         timeout: 15000,
-//       })
-//       if(status?.is_clocked_in){
-//         let user = await getData("about_me")
-//         dispatch(setLoaderVisible(true))
-//         let fd = {
-//           employee : user.id,
-//           clock_in_time : status?.clock_in_time,
-//           clock_out_time : moment().toISOString()
-//         }
-//         await clockEmployeeOut.mutateAsync(fd)
-//         queryClient.invalidateQueries("attendance_status")
-//         return dispatch(setLoaderVisible(false))
-//       }
-//       return showFlashMessage({title : "You resumed for work at 9:30am",type : "success"})
-//       // dispatch(setLoaderVisible(true))
-//       // await clockEmployeeIn.mutateAsync(res)
-//       // queryClient.invalidateQueries("attendance_status")
-//       // dispatch(setLoaderVisible(false))
-//     }catch(err){
-//       if(err && err.toString().includes("Location not available")){
-//         return ToastError("Unable to fetch location.")
-//       }
-//       ToastError(err.msg)
-//       dispatch(setLoaderVisible(false))
-//     }
-//   }
-
-//   return(
-//       <React.Fragment>
-//               {
-//                 config?.data?.is_configured ? <View
-//                 style={{
-//                   alignItems : "center"
-//                 }}
-//               >
-//                 <Container
-//                   marginTop={3}
-//                   marginBottom={3}
-//                   style={{
-//                     alignItems : "center",
-//                     height : height(28),
-//                     width : width(90),
-//                     borderRadius : width(8)
-//                   }}
-//                   backgroundColor={AppColors.lightOrange}
-//                   borderWidth={1.5}
-//                   borderColor={AppColors.yellow}
-//                 >
-//                   <Container marginTop={5} direction="row"
-//                     style={{
-//                       justifyContent : "center",
-//                       alignItems: "center"
-//                     }}
-//                     backgroundColor={AppColors.lightOrange}
-//                   >
-//                     <ImageWrap 
-//                       height={3}
-//                       width={5}
-//                       fit="contain"
-//                       url={getGreetingTime() === "Good morning" ? Images.Sunrise : Images.Sunset}
-//                     />
-//                     <Container width={1} backgroundColor="transparent" />
-//                     <P fontSize={4} color={AppColors.black1}>
-//                       {getGreetingTime()}
-//                     </P>
-//                   </Container>
-//                     <SizedBox height={1} />
-//                     <H1 fontSize={4} color={AppColors.black1}>
-//                       {moment().format("dddd, DD MMM YYYY")}
-//                     </H1>
-//                     <SizedBox height={1} />
-//                     {/* <P fontSize={3.3} color={AppColors.black1}>
-//                       Working Hours - 0 Hrs : 00Mins
-//                     </P> */}
-//                     <Container
-//                         style={{
-//                           alignItems : "center",
-//                           top : height(15),
-//                           width : width(80),
-//                           paddingTop : height(3),
-//                           paddingBottom : height(3),
-//                           zIndex: 1000,
-//                           borderRadius : width(5)
-//                         }}
-//                         position="absolute"
-//                         borderWidth={1.5}
-//                         borderColor={AppColors.yellow}
-//                     >
-//                       <Container
-//                         style={{
-//                           alignItems : "center",
-//                         }}
-//                         marginBottom={2}
-//                       >
-//                           <P fontSize={3.3} color={AppColors.darkGray}>Time</P>
-//                           <H1 fontSize={10} color={AppColors.black}>{current}</H1>
-//                       </Container>
-//                       <Container 
-//                         borderBottomWidth={1.5}
-//                         borderColor={AppColors.grayBorder}
-//                         width={60}
-//                       />
-//                       <Container
-//                         marginTop={2}
-//                         direction="row"
-//                         width={45}
-//                       >
-//                          {
-//                            fetchingStatus ? <ActivityIndicator size={width(2)} 
-//                               color={AppColors.green}
-//                            /> :
-//                            status?.is_clocked_in && status?.clock_in_time ? <React.Fragment>
-//                            <P fontSize={3.3} color={AppColors.darkGray}>Clocked In time:</P>
-//                            <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_in_time).format("hh : mma")}</P>
-//                           </React.Fragment> : status?.has_clocked_out && status?.clock_out_time ? <React.Fragment>
-//                             <P fontSize={3.3} color={AppColors.darkGray}>Clocked Out time:</P>
-//                             <P fontSize={3.3} color={AppColors.black}> {moment(status?.clock_out_time).format("hh : mma")}</P>
-//                          </React.Fragment> : <React.Fragment>
-//                             <P fontSize={3.3} color={AppColors.darkGray}>Clock In time:</P>
-//                             <P fontSize={3.3} color={AppColors.black}> -- : --</P>
-//                          </React.Fragment>
-//                          }
-//                       </Container>
-//                     </Container>
-//                 </Container>
-//                 <Button title={!status?.is_clocked_in ? "Clock In" : "Clock Out"} 
-//                   onPress={submitHandler}
-//                         containerStyle={{
-//                           borderRadius : 7,
-//                           backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
-//                           height : height(6),
-//                           marginTop : height(5)
-//                         }}
-//                         textStyle={{
-//                           fontFamily : FontFamily.BlackSansBold,
-//                           color : AppColors.white,
-//                           fontSize : width(4)
-//                         }}
-//                         disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
-//                       />
-//                 </View> : null
-//               }
-//       </React.Fragment>
-//   )
-// }
+              {
+                !props?.hasPIN && props?.action === "confirm" ? <React.Fragment>
+                  <H1 fontSize={6} color={AppColors.black1}>Confirm New Pin</H1>
+                  <P color={AppColors.black1} style={CommonStyles.marginTop_1}>Enter your pin again for confirmation</P>
+                </React.Fragment> : null
+              }
+              {
+                props?.hasPIN ? <React.Fragment>
+                  <P color={AppColors.black1}>Welcome back</P>
+                  <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.user?.firstName ? Capitalize(props?.auth?.user?.firstName) : null} {props?.auth?.user?.lastName ? `${Capitalize(props?.auth?.user?.lastName[0])}.` : null}</H1>
+                </React.Fragment> : null
+              }
+              <Container marginTop={3} horizontalAlignment="center">
+                <SmoothPinCodeInput password mask="﹡"
+                  cellSpacing={width(5)}
+                  codeLength={4}
+                  value={props.holder}
+                  onTextChange={value => props?.setHolder(value)}
+                  onFulfill={props.validatePIN}
+                  restrictToNumbers={true}
+                  cellStyle={{
+                    borderWidth: 2,
+                    borderColor: AppColors.grayBorder
+                  }}
+                  cellStyleFocused={{
+                    borderColor: AppColors.green,
+                  }}
+                />
+              </Container>
+            </Container>
+    </React.Fragment>
+  )
+}
 
 
 export const ClockINContainer = ({setVisible}) => {

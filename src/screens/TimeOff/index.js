@@ -91,11 +91,9 @@ export default function TimeOff({navigation}) {
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
                 <BackHandler />
-                <View style={styles.titleContainer}>
-                  <Text numberOfLines={1} style={styles.screenTitle}>
+                <Text numberOfLines={1} style={styles.screenTitle}>
                     Time Off
-                  </Text>
-                </View>
+                </Text>
             </View>
             <View style={styles.line} />
             {

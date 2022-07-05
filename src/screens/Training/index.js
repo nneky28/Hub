@@ -64,11 +64,9 @@ export default function Training({navigation}) {
         Array.isArray(trainings) && trainings.length === 0 ? false : true}>
             <View style={styles.header}>
                 <BackHandler />
-                <View style={styles.titleContainer}>
-                  <Text numberOfLines={1} style={styles.screenTitle}>
+                <Text numberOfLines={1} style={styles.screenTitle}>
                     Training
                   </Text>
-                </View>
             </View>
             <View style={styles.line} />
             <View style={styles.mainViewContainer}>

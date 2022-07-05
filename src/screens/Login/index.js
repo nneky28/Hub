@@ -15,7 +15,7 @@ import { employees_me, getAPIs, postNoToken } from '../../utills/api';
 import { ToastError, ToastSuccess,storeData, validateEmail } from '../../utills/Methods';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import moment from 'moment';
-import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchWrap } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, OnboardModal, SizedBox, TouchableWrapper } from '../../utills/components';
 import {TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
 import {Images} from "../../component2/image/Image"
@@ -71,7 +71,7 @@ export default function Dashboard(props) {
       await storeData("refresh",refresh);
       await storeData("about_me",about_me);
       await storeData("user",res.user);
-      await storeData("logout_time",moment(new Date()).add(2,'hours'));
+      await storeData("logout_time",moment(new Date()).add(11520,'hours'));
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       queryClient.invalidateQueries()
       ToastSuccess("Login was successful")
@@ -159,11 +159,13 @@ export default function Dashboard(props) {
               />
             </Container> 
             <SizedBox height={1} />
-            <TouchableOpacity
+            <TouchableWrapper
+              isText
               onPress={()=>setShow(true)}
+              width={90}
             >
               <H1 color={AppColors.green}>Forgot Password?</H1>
-            </TouchableOpacity>
+            </TouchableWrapper>
             <SizedBox size={25} />
             <CustomText
                 textSize={12}

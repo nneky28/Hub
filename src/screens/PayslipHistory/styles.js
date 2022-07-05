@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold,
     alignSelf: 'center',
-    marginLeft: width(30),
+    marginLeft: width(20),
     // width: width(60),
   },
   listContainer:{

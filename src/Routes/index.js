@@ -38,7 +38,7 @@ import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
 import { APIFunction } from '../utills/api';
 import { Container, CustomFallBackScreen } from '../utills/components';
-import { Linking, Platform } from 'react-native';
+import { AppState, Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible } from '../Redux/Actions/Config';
@@ -52,6 +52,9 @@ import SpInAppUpdates, {
 } from 'sp-react-native-in-app-updates';
 import PayslipHistory from '../screens/PayslipHistory';
 import PayslipBreakDown from '../screens/PayslipBreakDown';
+import CreatePIN from '../screens/Security/CreatePIN';
+import ResetPIN from '../screens/Security/ResetPIN';
+import UsePassword from '../screens/Security/UsePassword';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -107,9 +110,27 @@ const Routes = () => {
         dispatch(login(load))
       })
     }
+
+    let subscription;
+    const AppStateListener = () => {
+      subscription = AppState.addEventListener("change", async nextAppState => {
+        if (nextAppState === "active") {
+          let token = await getData("token")
+          let res = await getData("lastActiveMoment")
+          if(!token || !moment().isAfter(moment(res).add(1,"minute"))) return
+          let userInfo = await getData("user")
+          dispatch(login({...auth,user : userInfo,route : "security"}))
+        }
+      })
+    }
+
     useEffect(()=>{
+      AppStateListener()
       getDeepLinkInfo()
       deepLinkListener()
+      return () => {
+        subscription.remove()
+      };
     },[])
 
     const inAppUpdatesCheck = async () => {
@@ -159,8 +180,15 @@ const Routes = () => {
               <Stack.Screen name="Splash" component={Splash}/>
               <Stack.Screen name="Onboard" component={Onboard}/>
           </Stack.Navigator>
-        ) : 
-      route === "main" ? 
+        ) : route === "security" ?  (
+          <Stack.Navigator
+            screenOptions={{headerShown: false}}
+          >
+            <Stack.Screen name="CreatePIN" component={CreatePIN} />
+            <Stack.Screen name="ResetPIN" component={ResetPIN} />
+            <Stack.Screen name="UsePassword" component={UsePassword} />
+          </Stack.Navigator>
+        ) : route === "main" ? 
       (
         <DrawerStack.Navigator
           screenListeners={{
@@ -170,6 +198,7 @@ const Routes = () => {
               if(check){
                 return logoutMethod()
               }
+              storeData("lastActiveMoment",moment().toISOString())
               let res = await APIFunction.unseen_count()
               dispatch(login({...auth,notifications : res.count}));
             },
