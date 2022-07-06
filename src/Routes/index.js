@@ -82,6 +82,7 @@ const Routes = () => {
   const logoutMethod = async () => {
     try{
       let keys = await AsyncStorage.getAllKeys()
+      keys.splice(keys.indexOf(`@${auth?.user?.email}`),1)
       AsyncStorage.multiRemove(keys);
       dispatch(setLoaderVisible(false))
       queryCache.clear()
@@ -118,7 +119,7 @@ const Routes = () => {
           let token = await getData("token")
           let res = await getData("lastActiveMoment")
           if(!token || !moment().isAfter(moment(res).add(1,"minute"))) return
-          let userInfo = await getData("user")
+          let userInfo = await getData("about_me")
           dispatch(login({...auth,user : userInfo,route : "security"}))
         }
       })
@@ -196,7 +197,7 @@ const Routes = () => {
               let timeout = await getData("logout_time")
               let check = timeout ? moment(new Date()).isAfter(timeout) : true;
               if(check){
-                //return logoutMethod()
+                return logoutMethod()
               }
               storeData("lastActiveMoment",moment().toISOString())
               let res = await APIFunction.unseen_count()

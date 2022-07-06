@@ -149,6 +149,9 @@ const CommonStyles = StyleSheet.create({
     justifyCenter: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    alignLeft : {
+        alignItems : "flex-start"
     }
 });
 export default CommonStyles;

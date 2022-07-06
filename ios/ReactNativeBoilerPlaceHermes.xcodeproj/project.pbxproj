@@ -612,7 +612,7 @@
 				CODE_SIGN_ENTITLEMENTS = ReactNativeBoilerPlaceHermes/ReactNativeBoilerPlaceHermes.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.5;
+				CURRENT_PROJECT_VERSION = 1.6;
 				DEVELOPMENT_TEAM = Z3JFU96DKX;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReactNativeBoilerPlaceHermes/Info.plist;
@@ -621,7 +621,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.5;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -647,7 +647,7 @@
 				CODE_SIGN_ENTITLEMENTS = ReactNativeBoilerPlaceHermes/ReactNativeBoilerPlaceHermes.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.5;
+				CURRENT_PROJECT_VERSION = 1.6;
 				DEVELOPMENT_TEAM = Z3JFU96DKX;
 				INFOPLIST_FILE = ReactNativeBoilerPlaceHermes/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -655,7 +655,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.5;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -26,7 +26,6 @@ const CreatePIN = (props) => {
   const getOLDPIN = async () => {
     try{
       let userInfo = await getData("about_me");
-      console.log("getOLDPIN",userInfo)
       let userPIN = await getData(userInfo.email.replaceAll("_",""))
       if(!userPIN){
         setAction("NoMobilePIN")

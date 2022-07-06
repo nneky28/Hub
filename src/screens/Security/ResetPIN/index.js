@@ -102,6 +102,7 @@ const ResetPIN = (props) => {
                   if(action === "confirm") return setAction("create")
                 }} 
                 size={ICON_BUTTON_SIZE}
+                style={CommonStyles.alignLeft}
               >
                 <Image 
                   source={{uri : Images.BackArrow}}
