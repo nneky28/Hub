@@ -8,12 +8,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     alignItems: 'center',
   },
-  titleContainer: {
-    alignSelf: 'center', 
-    justifyContent: 'center', 
-    width: width(80), 
-    alignItems: 'center'
-  },
   header: {
     width: width(100),
     paddingHorizontal: width(5),
@@ -29,7 +23,8 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: width(4),
     color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold
+    fontFamily: FontFamily.BlackSansBold,
+    marginLeft : width(24)
   },
   selectedHeading: {
     fontSize: width(3.4),

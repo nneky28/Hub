@@ -32,12 +32,10 @@ export default function PayslipBreakDown({route,navigation}) {
       <View style={styles.container}>
       <View style={styles.header}>
           <BackHandler />
-           <Container>
-              <H1 textAlign="center">Payslip Breakdown</H1>
-           </Container>
+          <H1 textAlign="center" marginLeft={20}>Payslip Breakdown</H1>
       </View>
       <View style={styles.line} />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
         <Container backgroundColor={AppColors.lightestBlue}
             paddingTop={5}
             paddingBottom={5}
@@ -140,22 +138,21 @@ export default function PayslipBreakDown({route,navigation}) {
                   }
               </CustomCard>
               <Container alignSelf="center" width={94}
-                  direction="row"
-                  paddingTop={2}
-                  paddingLeft={5}
-                  paddingRight={5}
-                  paddingBottom={2}
-                  horizontalAlignment="space-between"
-                  marginTop={2}
-                  backgroundColor={AppColors.gray1}
-                >
-                    <H1 fontSize={3.5}>{item.title === "Earnings (N)" ? "Gross" : "Total Deductions"}</H1>
-                    {
-                      item.title === "Earnings (N)" ? <H1 fontSize={3.5}>{payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"}</H1> : <H1 fontSize={3.5}>{payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"}</H1>
-                    }
-                </Container>
-              
-        </Container>)
+                direction="row"
+                paddingTop={2}
+                paddingLeft={5}
+                paddingRight={5}
+                paddingBottom={2}
+                horizontalAlignment="space-between"
+                marginTop={2}
+                backgroundColor={AppColors.gray1}
+              >
+                <H1 fontSize={3.5}>{item.title === "Earnings (N)" ? "Gross" : "Total Deductions"}</H1>
+                {
+                  item.title === "Earnings (N)" ? <H1 fontSize={3.5}>{payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"}</H1> : <H1 fontSize={3.5}>{payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"}</H1>
+                }
+              </Container>
+            </Container>)
         }
         
           <Container  marginTop={2.5} 

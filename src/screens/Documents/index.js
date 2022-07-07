@@ -89,7 +89,7 @@ export default function Documents({navigation}) {
             <View style={styles.header}>
                 <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
-                Documents
+                    Documents
                 </Text>
             </View>
             <View style={styles.line} />

@@ -1,17 +1,10 @@
 import React, { useEffect } from 'react';
 import {View, Text,Image,StyleSheet} from 'react-native';
-import styles from './styles';
-import Button from '../../components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
-import {showMessage} from 'react-native-flash-message';
-import {setLoaderVisible} from '../../Redux/Actions/Config';
 import { getData, storeData } from '../../utills/Methods';
-import CustomText from '../../component2/customText/CustomText';
-import { Container, H1 } from '../../utills/components';
-import { height, width } from 'react-native-dimension';
 import { Images } from '../../component2/image/Image';
 
 const Splash = (props) => {
@@ -24,9 +17,10 @@ const Splash = (props) => {
     setTimeout(async () => {
       try{
         if(user && about && about.completed_user_onboarding){
-          dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
+          //dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
+          dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
         }else if(user && about && !about.completed_user_onboarding){
-          dispatch(login({...auth,user : user,isLogin : true,route : "onboard"}));
+          dispatch(login({...auth,user : about,isLogin : true,route : "onboard"}));
         }else{
           //I have a feeling there is another case that needs to be captured here.
           dispatch(login({...auth,route : "auth",isLogin : false}));

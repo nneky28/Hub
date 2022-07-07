@@ -121,7 +121,12 @@ const styles = StyleSheet.create({
     height: height(5.5),
     alignItems: 'center',
   },
-  button: {width: '33%', alignItems: 'center'},
+  button: {
+    width: '33%',
+    height : height(3),
+    alignItems : "center",
+    justifyContent : "center"
+  },
   animatedView: {
     position: 'absolute',
     width: '33%',

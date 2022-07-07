@@ -11,7 +11,7 @@ import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config'
 import AppColors, { ColorList, ColorList2 } from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox,BackHandler, useDebounce } from '../../utills/components'
+import { Container, EmptyStateWrapper, H1, ImageWrap, LottieIcon, P, PageLoader, Reload, Rounded, SizedBox,BackHandler, useDebounce, TouchableWrapper } from '../../utills/components'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import Outjson from '../../assets/lottie/out.json'
@@ -22,6 +22,7 @@ import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
 import { Images } from '../../component2/image/Image'
 import { ActivityIndicator } from 'react-native-paper'
+import { ICON_BUTTON_SIZE } from '../../utills/Constants'
 
 export default function People({route,navigation}) {
     
@@ -355,17 +356,21 @@ export default function People({route,navigation}) {
             <Container flex={1}>
                 <View style={styles.header}>
                     <BackHandler />
-                    <Text numberOfLines={1} style={styles.screenTitle}>
-                        People
-                    </Text>
-                    <TouchableOpacity 
-                    onPress={() => setIsListView(!isListView)}
+                    <Container width={50} horizontalAlignment="center">
+                        <Text numberOfLines={1} style={styles.screenTitle}>
+                            People
+                        </Text>
+                    </Container>
+
+                    <TouchableWrapper 
+                        onPress={() => setIsListView(!isListView)}
+                        size={ICON_BUTTON_SIZE}
                     >
                     {isListView ? <Image resizeMode="contain" source={{uri : Images.MenuFillIcon}} style={styles.rightIcon} /> :
                         <Image resizeMode="contain" source={{uri : Images.Listing}} style={styles.rightIcon} />
                     }
                         
-                    </TouchableOpacity>
+                    </TouchableWrapper>
                 </View>
                 <View style={styles.line} />
             <View style={styles.mainViewContainer}>

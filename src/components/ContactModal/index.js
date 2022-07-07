@@ -18,7 +18,7 @@ import { APIFunction, postAPIs } from '../../utills/api';
 import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
 import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
 import { showFlashMessage } from '../SuccessFlash';
 import { Images } from '../../component2/image/Image';
@@ -190,7 +190,7 @@ export const RestrictionModal = ({isVisible, onHide,onPressHandler}) => {
 
 const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
   const dispatch = useDispatch();
-  const defaultColor = "";
+  const defaultColor = AppColors.black;
   const blackColor = "";
   const [action,setAction] = React.useState(null)
   const [data,setData] = React.useState({
@@ -279,12 +279,13 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                           }} 
                         /> : <Formik>
                         <React.Fragment>
-                          <Container marginLeft={4}
-                            width={10}
-                          >
-                            <TouchWrap onPress={onHide}>
-                              <P>Close</P>
-                            </TouchWrap>
+                          <Container marginLeft={2}>
+                            <TouchWrap onPress={onHide}
+                                width={15}
+                                height={6}
+                              >
+                                <P>Close</P>
+                              </TouchWrap>
                           </Container>
                           <View
                             style={{
@@ -320,7 +321,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                           />
                           <Field
                               name="end_date"
-                              placeholder="End Date"
+                              placeholder="Resumption Date"
                               component={CustomDatePicker}
                               value={data.end_date}
                               onChangeData={(value)=>{
@@ -342,7 +343,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                               onChangeData={(value)=>{
                                 setData({...data,reason : value})
                               }}
-                              height={100}
+                              height={10}
                               multiline={true}
                               color={AppColors.black}
                             />

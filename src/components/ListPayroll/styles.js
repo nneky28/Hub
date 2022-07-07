@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     borderRadius: width(2.5),
     marginVertical: height(0.5),
     width: width(90),
-    elevation: width(0.1),
+    //elevation: width(0.1),
   },
   titleWrapper: {
     flexDirection: 'column',
