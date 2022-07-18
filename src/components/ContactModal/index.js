@@ -448,7 +448,7 @@ const __ReportModal = ({isVisible, onHide,asset}) => {
                           onChangeData={(value)=>{
                             setMessage(value)
                           }}
-                          height={100}
+                          height={10}
                           multiline={true}
                           color={AppColors.black}
                         />
