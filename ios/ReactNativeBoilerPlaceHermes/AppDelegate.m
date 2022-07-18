@@ -34,7 +34,7 @@ static void InitializeFlipper(UIApplication *application) {
 {
   [AppCenterReactNative register];
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
-  [AppCenterReactNativeCrashes register];
+  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ReactNativeBoilerPlaceHermesTests.m */; };
+		045A3CBF288592A90085CD4B /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 045A3CBE288592A90085CD4B /* AppCenter-Config.plist */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -58,6 +59,7 @@
 		0453498C287316D400988EAC /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		0453498D287316D500988EAC /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		0453498E287316D500988EAC /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		045A3CBE288592A90085CD4B /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "ReactNativeBoilerPlaceHermes/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		04EC82262769E130006165B1 /* ReactNativeBoilerPlaceHermes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ReactNativeBoilerPlaceHermes.entitlements; path = ReactNativeBoilerPlaceHermes/ReactNativeBoilerPlaceHermes.entitlements; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativeBoilerPlaceHermes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeBoilerPlaceHermes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReactNativeBoilerPlaceHermes/AppDelegate.h; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		13B07FAE1A68108700A75B9A /* ReactNativeBoilerPlaceHermes */ = {
 			isa = PBXGroup;
 			children = (
+				045A3CBE288592A90085CD4B /* AppCenter-Config.plist */,
 				04EC82262769E130006165B1 /* ReactNativeBoilerPlaceHermes.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -353,6 +356,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				63059F065B71401AB0DC0F63 /* black-sans-black.otf in Resources */,
+				045A3CBF288592A90085CD4B /* AppCenter-Config.plist in Resources */,
 				462A606F1ED2450186F4E55F /* black-sans-bold.otf in Resources */,
 				D2F7F5BB3AB342D1A56E7761 /* black-sans-condensed-bold.otf in Resources */,
 				BE81FB0381C143B7A46B7477 /* black-sans-condensed-book.otf in Resources */,
