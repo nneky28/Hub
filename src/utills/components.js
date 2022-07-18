@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ContentLoader, {BulletList,Facebook} from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
 import {ImageBackground, Text,StyleSheet,Image} from  'react-native';
+import Feather from 'react-native-vector-icons/Feather'
 import {Images} from "../component2/image/Image"
 import Svg, {
     Circle,
@@ -327,6 +328,14 @@ export const Reload = props => {
             // Collection of dates that have to be marked. Default = {}
             markedDates={{
               [props.date] : {selected: true, selectedColor: AppColors.green}
+            }}
+            renderArrow={direction=>{
+              if(direction === "left") return <Feather name="arrow-left" size={width(6)}
+                color={AppColors.green}
+              />
+              if(direction === "right") return <Feather name="arrow-right" size={width(6)}
+                color={AppColors.green}
+              />
             }}
             current={moment().format("YYYY-MM-DD")}
             minDate={moment().format("YYYY-MM-DD")}
