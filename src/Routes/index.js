@@ -31,7 +31,7 @@ import TabBar from './TabBar';
 import { getData, ToastSuccess,storeData } from '../utills/Methods';
 import codePush from 'react-native-code-push';
 import moment from 'moment';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from '../Redux/Actions/Auth';
 import NextKin from '../screens/NextKin';
 import Emergency from '../screens/Emergency';

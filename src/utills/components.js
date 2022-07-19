@@ -28,7 +28,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
 import GetLocation from 'react-native-get-location'
 import CustomButton from '../component2/button/Button';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';

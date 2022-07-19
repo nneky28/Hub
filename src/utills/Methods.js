@@ -1,6 +1,6 @@
 
 import React from "react"
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { showMessage } from 'react-native-flash-message';

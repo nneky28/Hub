@@ -22,7 +22,7 @@ import {
 } from '../assets/images';
 import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { Container, H1, ImageWrap, Rounded, TouchWrap } from '../utills/components';
 const Drawer = ({navigation, ...props}) => {

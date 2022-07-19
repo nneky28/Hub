@@ -329,7 +329,7 @@ PODS:
     - React-perflogger (= 0.64.2)
   - ReactNativeGetLocation (2.2.1):
     - React-Core
-  - RNCAsyncStorage (1.12.1):
+  - RNCAsyncStorage (1.17.7):
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
@@ -429,7 +429,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeGetLocation (from `../node_modules/react-native-get-location`)
-  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
@@ -536,7 +536,7 @@ EXTERNAL SOURCES:
   ReactNativeGetLocation:
     :path: "../node_modules/react-native-get-location"
   RNCAsyncStorage:
-    :path: "../node_modules/@react-native-community/async-storage"
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-community/clipboard"
   RNCMaskedView:
@@ -608,7 +608,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   ReactNativeGetLocation: 8517f44ae7364ac45fa3946f8bffeaa73594ff0d
-  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
+  RNCAsyncStorage: 19af8f3e136504e0450e7f85cfb46fc38da87ec9
   RNCClipboard: 5e299c6df8e0c98f3d7416b86ae563d3a9f768a3
   RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
   RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
@@ -623,6 +623,6 @@ SPEC CHECKSUMS:
   WCPhotoManipulator: 45b7be19b75c9edf6d2b44f2f61dbc3673862a8f
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
-PODFILE CHECKSUM: 9742ef786a95a217208a9f948e071b09cfd3fb29
+PODFILE CHECKSUM: f71d93a6609797a1c43c011f3debe2922b48567d
 
 COCOAPODS: 1.11.2

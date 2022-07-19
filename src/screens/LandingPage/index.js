@@ -11,7 +11,7 @@ import { APIFunction, employees_me, getAPIs, postNoToken } from '../../utills/ap
 import { ToastSuccess,storeData, getData, Capitalize, getStoredBusiness } from '../../utills/Methods';
 import { Container, EmptyStateWrapper, H1, ImageWrap, OnboardModal, P, PageLoader, SizedBox } from '../../utills/components';
 import { Images } from '../../component2/image/Image';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function LandingPage(props) {
