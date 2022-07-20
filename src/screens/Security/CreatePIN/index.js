@@ -13,6 +13,7 @@ import CryptoJS from 'crypto-js';
 import { login } from '../../../Redux/Actions/Auth';
 import { showFlashMessage } from '../../../components/SuccessFlash';
 import MobilePIN from '../MobilePIN';
+import { setLoaderVisible } from '../../../Redux/Actions/Config';
 
 const CreatePIN = (props) => {
   const auth = useSelector(state=>state.Auth)
@@ -25,6 +26,7 @@ const CreatePIN = (props) => {
 
   const getOLDPIN = async () => {
     try{
+      dispatch(setLoaderVisible(false))
       let userInfo = await getData("about_me");
       let userPIN = await getData(userInfo.email.replaceAll("_",""))
       if(!userPIN){
