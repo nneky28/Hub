@@ -195,9 +195,14 @@ const Routes = () => {
           screenListeners={{
             state: async (e) => {
               let timeout = await getData("logout_time")
+<<<<<<< HEAD
               if(timeout && (moment(timeout).diff(moment(),"days") > 15)){
                 return logoutMethod()
               }
+=======
+              //It takes about 15 days before token expires.
+              if(timeout && (moment(timeout).diff(moment(),"days") > 15)) return logoutMethod() 
+>>>>>>> 56a735cb8e8967f16abeb18343a1b04177e7c9f6
               let check = timeout ? moment(new Date()).isAfter(timeout) : true;
               if(check){
                 return logoutMethod()

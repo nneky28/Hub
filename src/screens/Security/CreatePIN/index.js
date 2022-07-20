@@ -26,7 +26,11 @@ const CreatePIN = (props) => {
 
   const getOLDPIN = async () => {
     try{
+<<<<<<< HEAD
       dispatch(setLoaderVisible(false));
+=======
+      dispatch(setLoaderVisible(false))
+>>>>>>> 56a735cb8e8967f16abeb18343a1b04177e7c9f6
       let userInfo = await getData("about_me");
       let userPIN = await getData(userInfo.email.replaceAll("_",""))
       if(!userPIN){

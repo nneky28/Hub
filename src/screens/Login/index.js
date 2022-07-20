@@ -72,7 +72,7 @@ export default function Dashboard(props) {
       await storeData("refresh",refresh);
       await storeData("about_me",about_me);
       await storeData("user",res.user);
-      await storeData("logout_time",moment(new Date()).add(11520,'hours'));
+      await storeData("logout_time",moment(new Date()).add(360,'hours'));
       await storeData('token_expiry',moment(new Date()).add(60,'minutes'))
       queryClient.invalidateQueries()
       ToastSuccess("Login was successful")
