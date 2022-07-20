@@ -195,6 +195,9 @@ const Routes = () => {
           screenListeners={{
             state: async (e) => {
               let timeout = await getData("logout_time")
+              if(timeout && (moment(timeout).diff(moment(),"days") > 15)){
+                return logoutMethod()
+              }
               let check = timeout ? moment(new Date()).isAfter(timeout) : true;
               if(check){
                 return logoutMethod()
