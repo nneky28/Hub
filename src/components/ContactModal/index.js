@@ -432,7 +432,6 @@ const __ReportModal = ({isVisible, onHide,asset}) => {
                           <CustomText
                             textSize={20}
                             textWeight={'bold'}
-                            textcolor={defaultColor}
                             displayText={'Report Issue'}
                             textStyle={{
                               marginTop: -3,

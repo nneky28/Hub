@@ -149,7 +149,7 @@ export default function PayslipBreakDown({route,navigation}) {
               >
                 <H1 fontSize={3.5}>{item.title === "Earnings (N)" ? "Gross" : "Total Deductions"}</H1>
                 {
-                  item.title === "Earnings (N)" ? <H1 fontSize={3.5}>{payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"}</H1> : <H1 fontSize={3.5}>{payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"}</H1>
+                  item.title === "Earnings (N)" ? <H1 fontSize={3.5}>{payslip?.data?.gross_salary ? numeral(payslip?.data?.gross_salary).format("0,0.00") : "0.00"}</H1> : <H1 fontSize={3.5}>{payslip?.data?.total_deductions ? numeral(payslip?.data?.total_deductions).format("0,0.00") : "0.00"}</H1>
                 }
               </Container>
             </Container>)
@@ -171,7 +171,7 @@ export default function PayslipBreakDown({route,navigation}) {
                   marginBottom : height(2)
                 }}
               >Net Pay (Gross Pay - Total Deductions)</P>
-              <H1 marginTop={2} textAlign="center">{payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"} - {payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"}</H1>
+              <H1 marginTop={2} textAlign="center">{payslip?.data?.gross_salary ? numeral(payslip?.data?.gross_salary).format("0,0.00") : "0.00"} - {payslip?.data?.total_deductions ? numeral(payslip?.data?.total_deductions).format("0,0.00") : "0.00"}</H1>
           </Container>
           <Container direction='row' horizontalAlignment='space-between' width={94} 
             backgroundColor={AppColors.lightestBlue}
@@ -186,7 +186,7 @@ export default function PayslipBreakDown({route,navigation}) {
             }}
           >
               <H1 fontSize={3.5} color={AppColors.black1}>Total Net Payable</H1>
-              <H1>N{payslip?.year_aggregate?.total_net_salary ? numeral(payslip?.year_aggregate?.total_net_salary).format("0,0.00") : "0.00"}</H1>
+              <H1>N{payslip?.data?.net_salary ? numeral(payslip?.data?.net_salary).format("0,0.00") : "0.00"}</H1>
           </Container>
           <Container marginTop={2.5}>
             {
@@ -198,11 +198,11 @@ export default function PayslipBreakDown({route,navigation}) {
                 },
                 {
                   item1 : "Total Deduction",
-                  item2 : payslip?.year_aggregate?.sum_total_deductions ? numeral(payslip?.year_aggregate?.sum_total_deductions).format("0,0.00") : "0.00"
+                  item2 : payslip?.data?.total_deductions ? numeral(payslip?.data?.total_deductions).format("0,0.00") : "0.00"
                 },
                 {
                   item1 : "Total Gross Pay",
-                  item2 : payslip?.year_aggregate?.total_gross_salary ? numeral(payslip?.year_aggregate?.total_gross_salary).format("0,0.00") : "0.00"
+                  item2 : payslip?.data?.gross_salary ? numeral(payslip?.data?.gross_salary).format("0,0.00") : "0.00"
                 }
               ].map((tab,i)=><Container key={i} direction='row' 
                 style={{
