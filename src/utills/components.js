@@ -670,6 +670,7 @@ export const UserPINComponent = (props) => {
                 <SmoothPinCodeInput password mask="﹡"
                   cellSpacing={width(5)}
                   codeLength={4}
+                  autoFocus={true}
                   value={props.holder}
                   onTextChange={value => props?.setHolder(value)}
                   onFulfill={props.validatePIN}

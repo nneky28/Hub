@@ -201,8 +201,8 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                             fit={"contain"}
                           />
                           <SizedBox height={1}/>
-                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No upcoming`}</P>
-                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`birthdays`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No birthday`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`today`}</P>
                         </Container>
                     </Container>
                   )

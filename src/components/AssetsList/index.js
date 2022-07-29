@@ -34,14 +34,16 @@ const AssetsList = ({data,onPressHandler}) => {
             }
             
             <View style={styles.details}>
-              <Text style={styles.text}>{item && item.name ? item.name: ""}</Text>
-              {item && item.brand ? <Text style={styles.text1}>{item.brand}</Text> : null}
-              <Button
+              {
+                item?.name ? <Text style={styles.text}>{item.name}</Text> : null
+              }
+              {item?.brand ? <Text style={styles.text1}>{item.brand}</Text> : null}
+              {/* <Button
                 title="Report"
                 textStyle={styles.buttonText}
                 containerStyle={styles.button}
                 onPress={()=>onPressHandler(item)}
-              />
+              /> */}
             </View>
           </View>
         );
