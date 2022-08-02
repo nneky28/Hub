@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
         borderRadius: width(1.5),
         borderColor: AppColors.grayBorder,
         borderWidth: 1,
-        marginTop: height(1.5)
+        marginTop: height(1.5),
+        height : height(5),
     },
     inputStyle: {
         width: width(90),
     },
     inputStyleIOS: {
         width: width(90),
-        height : height(4),
         textAlignVertical : "center",
         marginLeft : 5
     },

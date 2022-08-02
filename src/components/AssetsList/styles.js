@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
   },
   details: {
     width: '60%',
-    marginLeft : width(5)
+    marginLeft : width(5),
+    alignSelf : "center"
   },
   button: {
     marginLeft: 0,

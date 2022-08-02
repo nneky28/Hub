@@ -16,8 +16,8 @@ export default function SearchBox({title, containerStyle, onSubmitEditing}) {
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+    
     return (
         <View style={[styles.container, containerStyle]}>
             <Image source={{uri:Images.SearchIcon}} style={styles.searchIcon}/>

@@ -248,6 +248,18 @@ export default function People({route,navigation}) {
         }
     },[])
     
+
+    const CelebrationListEmptyComponent = () => {
+        return(
+            <EmptyStateWrapper 
+                icon={Images.EmptyCelebration}
+                header_1={"No record of upcoming"} 
+                header_2={"celebration."}
+                sub_text={"When there is, it will show up here."}
+            />
+        )
+    }
+
     const CelebrationItem = ({item, section}) => {
         let bgColor, borderColor;
         const {date} = section;
@@ -440,6 +452,7 @@ export default function People({route,navigation}) {
                         renderItem={CelebrationItem}
                         ItemSeparatorComponent={() => <View style={{margin: totalSize(1)}} />}
                         showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={CelebrationListEmptyComponent}
                         contentContainerStyle={CommonStyles.paddingTop_1}
                         renderSectionHeader={({ section }) => {
                             return (
@@ -451,16 +464,11 @@ export default function People({route,navigation}) {
                         />
                      ) : null
                 }
-                {
+                {/* {
                     !loading && celebrations && selected === "Celebrations" && Array.isArray(celebrations) && celebrations.length === 0 ? (
-                        <EmptyStateWrapper 
-                            icon={Images.EmptyCelebration}
-                            header_1={"No record of upcoming"} 
-                            header_2={"celebration."}
-                            sub_text={"When there is, it will show up here."}
-                        />
+                        
                     ) : null
-                }
+                } */}
                 
                 {
                     (
