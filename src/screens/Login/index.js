@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image, Linking, Platform} from 'react-native';
+import {View, KeyboardAvoiText,StyleSheet,Dimensions,ScrollView, BackHandler,Image, Linking, Platform, Keyboard} from 'react-native';
 //import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
@@ -47,6 +47,7 @@ export default function Dashboard(props) {
   }, [])
   const loginMethod = async () => {
     try{
+      Keyboard.dismiss()
       if(!data.email || data.email.trim() === "" || !data.password
         || data.password.trim() === ""
       ){
