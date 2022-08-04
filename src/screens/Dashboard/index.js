@@ -4,8 +4,7 @@ import { Image, RefreshControl, Text, TouchableOpacity, View,Platform, Linking }
 import { height, width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ActivityIndicator, Modal } from 'react-native-paper';
-import WebView from 'react-native-webview';
-import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
+import { rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
@@ -151,6 +150,12 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   };
   const closeWeb = () => {
     setWeb(false)
+  }
+  const closeAndRefresh = (res) => {
+    setAvailable(res.available)
+    setTabs(res.tabs);
+    setActive(res.active);
+    setRequests(res.requests);
   }
   const getInfo = async () => {
     try{
@@ -493,11 +498,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             <TimeoffModal 
               isVisible={modal} 
               onHide={()=>setModal(false)}
-              closeAndRefresh={() => {
-                  setModal(false)
-                  ToastSuccess("Request has been submitted for processing")
-                getInfo();
-              }} 
+              closeAndRefresh={closeAndRefresh} 
               timeoff_id={current} active={active}
             />  
             <WarningModal 

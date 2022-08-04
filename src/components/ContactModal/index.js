@@ -15,7 +15,7 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
-import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
+import { getData, ToastError,storeData, getStoredBusiness, getTimeOffsFunction } from '../../utills/Methods';
 import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
 import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
@@ -188,11 +188,11 @@ export const RestrictionModal = ({isVisible, onHide,onPressHandler}) => {
   );
 };
 
-const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
+const __TimeoffModal = ({isVisible, onHide,timeoff_id,closeAndRefresh}) => {
   const dispatch = useDispatch();
   const defaultColor = AppColors.black;
-  const blackColor = "";
   const [action,setAction] = React.useState(null)
+  const [loading,setLoading] = React.useState(false)
   const [data,setData] = React.useState({
     "timeoff": timeoff_id,
     "start_date": "",
@@ -209,37 +209,36 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
     })
     setShow(false)
   },[isVisible])
+
   const handleSubmit = async () => {
     try{
       let failed = false;
-      required = ["start_date","end_date",
-          "reason"]
+      required = ["start_date","end_date","reason"]
       for(let req of required){
           if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
       }
       if(failed) {
         return showFlashMessage({type : "error",title : "All fields are required"})
       };
-      // if(!moment(data.start_date).isBefore(moment(data.end_date))){
-      //   return showFlashMessage({type : "error",title : "Start date must be before end date"})
-      // }
-      // if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
-      //   return showFlashMessage({type : "error",title : "Date must be in the future"})
-      // }
       let about_me = await getData("about_me")
       let biz = await getStoredBusiness();
       dispatch(setLoaderVisible(true));
+      setLoading(true)
       let timeoff_url = APIFunction.timeoff_reqs(biz.business_id,about_me.id)
       let fd = {
         ...data,timeoff : timeoff_id
       }
-       await postAPIs(timeoff_url,fd);
+      await postAPIs(timeoff_url,fd);
+      let res = await getTimeOffsFunction();
       storeData("curr_timeoff",null)
+      closeAndRefresh(res)
       dispatch(setLoaderVisible(false));
-      closeAndRefresh()
+      showFlashMessage({title : "Request has been submitted for processing"})
+      onHide()
     }catch(err){
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : err.msg
       dispatch(setLoaderVisible(false));
+      setLoading(false)
       return showFlashMessage({type : "error",title : msg})
     }
   }
@@ -309,9 +308,6 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                               placeholder="Start Date"
                               component={CustomDatePicker}
                               value={data.start_date}
-                              onChangeData={(value)=>{
-                                setData({...data,start_date : value})
-                              }}
                               setShow={()=>{
                                 setAction("start_date")
                                 setShow(true)
@@ -324,9 +320,6 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                               placeholder="Resumption Date"
                               component={CustomDatePicker}
                               value={data.end_date}
-                              onChangeData={(value)=>{
-                                setData({...data,end_date : value})
-                              }}
                               setShow={()=>{
                                 setAction("end_date")
                                 setShow(true)
@@ -339,7 +332,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                               name="reason"
                               placeholder="Reason"
                               keyboardType="default"
-                              value={data.email}
+                              value={data.reason}
                               onChangeData={(value)=>{
                                 setData({...data,reason : value})
                               }}
@@ -348,10 +341,14 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAn
                               color={AppColors.black}
                             />
                             <View style={{width: '100%', padding : '5%'}}>
-                              <CustomButton
-                                btnText={'Submit'}
-                                handelButtonPress={handleSubmit}
-                              />
+                              {
+                                loading ? <ActivityIndicator 
+                                  color={AppColors.pink}
+                                /> : <CustomButton
+                                  btnText={'Submit'}
+                                  handelButtonPress={handleSubmit}
+                                />
+                              }
                             </View> 
                           </React.Fragment>
                       </Formik>

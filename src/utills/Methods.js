@@ -47,9 +47,7 @@ export const ToastSuccess = (msg) =>(
 
 export const getStoredBusiness = async () => {
   let user = await getData("user");
-  let biz = user.employee_user_memberships &&
-      Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-      && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
+  let biz = user?.employee_user_memberships?.[0]?.business_id ? user.employee_user_memberships[0] : null;
   return biz;
 }
 

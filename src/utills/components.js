@@ -307,23 +307,12 @@ export const Reload = props => {
       <Container
         paddingVertical={5}
       >
-          <Container
-            direction="row"
-            marginTop={1}
-            marginBottom={1}
-            style={{
-              justifyContent : "space-between",
-              alignItems : "center"
-            }}
-            paddingRight={5}
-            paddingLeft={5}
+          <TouchableWrapper 
+            isText
+            onPress={()=>props.setShow(false)}
           >
-            <TouchWrap
-              onPress={()=>props.setShow(false)}
-            >
-                <P>Cancel</P>
-            </TouchWrap>
-          </Container>
+            <P>Cancel</P>
+          </TouchableWrapper>
           <Calendar
             // Collection of dates that have to be marked. Default = {}
             markedDates={{
