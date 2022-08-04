@@ -9,10 +9,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleContainer: {
-    alignSelf: 'center', 
     justifyContent: 'center', 
-    width: width(75), 
-    alignItems: 'center'
+    width: width(60), 
+    alignItems: 'center',
   },
   header: {
     width: width(80),
