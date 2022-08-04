@@ -515,8 +515,7 @@ export const BackHandler = ({onPress}) => {
           navigation.goBack()
         }}
         style={{
-          alignItems : "center",
-          //backgroundColor : AppColors.yellow
+          alignItems : "flex-start"
         }}
       >
         <ImageWrap 

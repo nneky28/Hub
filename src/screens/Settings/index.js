@@ -71,7 +71,7 @@ export default function Setting({navigation}) {
                 direction="row"
                 horizontalAlignment="space-between"
                 verticalAlignment="center"
-                width={100}
+                width={90}
                 alignSelf={"center"}
             >
                 <BackHandler />

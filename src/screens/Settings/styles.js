@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     justifyContent: 'center', 
     width: width(60), 
-    alignItems: 'center',
+    alignItems: 'center'
   },
   header: {
     width: width(80),
