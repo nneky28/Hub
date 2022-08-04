@@ -71,7 +71,8 @@ const CustomInput = (props) => {
         <TextInput
           label={props.placeholder}
           mode={props?.mode || "outlined"}
-          style={{
+          style={[
+            {
               backgroundColor: AppColors.white,
               width: props?.inputWidth ? width(props.inputWidth) : width(90),
               justifyContent:'center',
@@ -80,7 +81,12 @@ const CustomInput = (props) => {
               marginTop: props?.inputMarginTop ? height(props.inputMarginTop) : height(2),
               height : height(props.height || 5.5),
               fontSize : width(4)
-          }}
+            },
+            props?.minHeight ? {
+              minHeight : height(props.minHeight),
+              height : null
+            } : {}
+          ]}
           theme={
             {
               colors: {primary: '#2898A4', underlineColor: 'transparent',

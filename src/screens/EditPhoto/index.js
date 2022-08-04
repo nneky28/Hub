@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
 import { ActivityIndicator } from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { H1, Rounded } from '../../utills/components';
+import { BackHandler, H1, Rounded } from '../../utills/components';
 import { PermissionsAndroid } from 'react-native';
 import { WarningModal } from '../../components/ContactModal';
 import { login } from '../../Redux/Actions/Auth';
@@ -221,9 +221,7 @@ export default function EditPhoto({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
                   Edit Photo
                 </Text>

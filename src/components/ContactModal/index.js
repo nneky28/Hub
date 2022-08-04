@@ -337,7 +337,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,closeAndRefresh}) => {
                               onChangeData={(value)=>{
                                 setData({...data,reason : value})
                               }}
-                              height={10}
+                              minHeight={10}
                               multiline={true}
                               color={AppColors.black}
                             />
