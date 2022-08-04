@@ -232,6 +232,7 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,closeAndRefresh}) => {
       let res = await getTimeOffsFunction();
       storeData("curr_timeoff",null)
       closeAndRefresh(res)
+      setLoading(false)
       dispatch(setLoaderVisible(false));
       showFlashMessage({title : "Request has been submitted for processing"})
       onHide()
@@ -249,8 +250,8 @@ const __TimeoffModal = ({isVisible, onHide,timeoff_id,closeAndRefresh}) => {
       animationInTiming={500}
       animationOutTiming={10}
       backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
+      //swipeDirection={'down'}
+     // onSwipeComplete={onHide}
       onBackdropPress={onHide}
       animationIn="fadeInUp"
       animationOut="fadeInDown"
