@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Image, RefreshControl, Text, TouchableOpacity, View,Platform, Linking } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ActivityIndicator, Modal } from 'react-native-paper';
 import { rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
@@ -14,17 +13,16 @@ import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
-import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
+import { APIFunction, getAPIs,deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
-import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
-import GetLocation from 'react-native-get-location';
+import { useQueryClient } from 'react-query';
 const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
 
@@ -32,21 +30,12 @@ const LocationEnabler = Platform.OS === "android" ? require('react-native-locati
 export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const queryClient = useQueryClient()
   const [margin, setMargin] = useState(0.1);
   const [index, setIndex] = useState(0);
-  const [user,setUser] = React.useState(null);
-  const [bizs,setBiz] = React.useState(null);
-  const [about,setAbout] = React.useState(null);
   const [business,setBusiness] = React.useState(null);
   const [loading,setLoading] = React.useState(true);
-  const [assets,setAssets] = React.useState(null)
-  const [benefits,setBenefits] = React.useState(null)
-  const [whos_out,setWhosOut] = React.useState(null)
-  const [active_birthdays,setActiveBirthDay] = React.useState(null)
-  const [upcoming_birthdays,setUpcomingBirthDay] = React.useState(null)
-  const [process,setProcess] = React.useState(true)
   const [available,setAvailable] = React.useState([]);
-  const [tabs,setTabs] = React.useState([]);
   const [active,setActive] = React.useState([]);
   const [requests,setRequests] = React.useState([]);
   const [modal,setModal] = React.useState(false);
@@ -55,11 +44,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const [del,setDelete] = useState(null);
   const [cancel,setCancel] =  useState(false);
   const [text,setText] = useState("");
-  const [anniversary,setAnniversary] = React.useState(null);
-  const [remote,setRemote] = React.useState(null)
-  const [training,setTraining] = React.useState(null)
   const [tab,setTab] = React.useState("Leave")
-  const [fetching,setFetching] = React.useState(false)
   const [web,setWeb] = React.useState(false)
   const [web_url,setWebUrl] = React.useState(null)
   const [report,setReport] = React.useState(false)
@@ -69,31 +54,82 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   const auth = useSelector(state=>state.Auth)
   const [processing,setProcessing] = React.useState(false)
   const [visible,setVisible] = React.useState(false)
+  const [employee_pk,setEmployeePK] = React.useState(null)
+  const [category,setCategory] = React.useState("timeoff")
+
+  const {
+    data : assets,
+    isLoading : assetLoading
+  } = useFetchAssets(employee_pk)
+
+  const {
+    data : benefits,
+    isLoading : benefitLoading
+  } = useFetchBenefits(employee_pk)
+
+  const {
+    data : outData,
+    isLoading : whosoutLoading
+  } = useFetchWhosOut(category)
+
+  const {
+    data : upcomingBD,
+    isLoading : upcomingBDLoading
+  } = useFetchBirthdays("upcoming")
+
+  const {
+    data : activeBD,
+    isLoading : activeBDLoading
+  } = useFetchBirthdays("active")
+
+  const {
+    data : activeANN,
+    isLoading : activeANNLoading
+  } = useFetchAnniversary("active")
+
+  const {
+    data : taskData,
+    isLoading : taskLoading
+  } = useFetchTasks(employee_pk)
+
+  const mapDataToState = () => {
+    if(taskLoading && taskData?.results && Array.isArray(taskData?.results)){
+      setTasks([])
+    }
+  }
+
+  useEffect(()=>{
+    mapDataToState()
+  },[taskData])
+
+  useEffect(()=>{
+    if(assetLoading || benefitLoading || activeBDLoading || 
+        upcomingBDLoading || activeANNLoading){
+        dispatch(setLoaderVisible(true))
+      return setLoading(true)
+    }
+    dispatch(setLoaderVisible(false))
+    setLoading(false)
+  },[assetLoading,benefitLoading,activeBDLoading,
+    upcomingBDLoading,
+    activeANNLoading,loading
+  ])
+
+
 
   const goToWeb = (url) => {
     setWebUrl(url)
     setWeb(true)
   }
 
-  const getWhosOut = async (param) => {
+  const getWhosOut = (param) => {
     try{
-      let about = await getStoredBusiness();
-      let category = param == "Remote Work" ? "work_from_home" : "timeoff";
-      setTab(param)
-      setFetching(true)
-      let whos_url = APIFunction.whos_out(about.business_id,category)
-      let res = await getAPIs(whos_url)
-      if(param === "Remote Work"){
-        res && res.results && Array.isArray(res.results) ? setRemote(res.results) : setRemote([])
-      }
-      if(param === "Leave"){
-        res && res.results && Array.isArray(res.results) ? setWhosOut(res.results) : setWhosOut([])
-      }
       if(param === "Training"){
-        setTraining([])
-        //res && res.results && Array.isArray(res.results) ? setTraining(res.results) : setTraining([])
-      }
-      setFetching(false)
+        return setTab(param)
+      } 
+      let categ = param == "Remote Work" ? "work_from_home" : "timeoff";
+      setCategory(categ)
+      setTab(param)
     }catch(err){
       ToastError(err.msg)
     }
@@ -153,46 +189,17 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
   }
   const closeAndRefresh = (res) => {
     setAvailable(res.available)
-    setTabs(res.tabs);
     setActive(res.active);
     setRequests(res.requests);
   }
+
   const getInfo = async () => {
     try{
-      dispatch(setLoaderVisible(true));
-      setProcess(true);
-      setFetching(true)
-      let token = await getData("token");
-      let user =  await getData("user");
+      setLoading(true)
       let about_me = await getData("about_me");
+      setEmployeePK(about_me?.id)
       let biz = await getStoredBusiness();
-      let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
-      let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
-      let whos_out_url = APIFunction.whos_out(biz.business_id)
-      let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
-      let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      let ann_url = APIFunction.job_anniversary("active",biz.business_id);
-      let asset_res = await getAPIs(assets_url,token);
-      let benefits_res = await getAPIs(benefits_url,token)
-      let whos_out_res = await getAPIs(whos_out_url,token)
-      let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
-      let active_res = await getAPIs(active_birthdays_url,token);
-      let active_ann = await getAPIs(ann_url,token);
-      let task_res = await APIFunction.employee_tasks(about_me.id);
-      task_res && task_res.results && Array.isArray(task_res.results) ? setTasks(task_res.results) : setTasks([])
       let res = await getTimeOffsFunction();
-      setAvailable(res.available)
-      setTabs(res.tabs);
-      setActive(res.active);
-      setRequests(res.requests);
-      setBusiness(biz);
-      setAbout(about_me);
-      setAssets(asset_res.results)
-      setBenefits(benefits_res.results);
-      setUpcomingBirthDay(upcoming_res.results);
-      setActiveBirthDay(active_res.results);
-      setWhosOut(whos_out_res.results)
-      setAnniversary(active_ann.results);
       var margin = 30;
       setMargin(width(margin));
       setIndex(1)
@@ -200,19 +207,26 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
         var margin = 30;
         setMargin(width(margin));
         setIndex(1)
-      }else{
+      }
+      if(res.active.length !== 0){
         setIndex(0)
         setMargin(width(0.1))
       }
-      setFetching(false)
-      setLoading(false);
-      setProcess(false);
-      dispatch(setLoaderVisible(false));
+      setAvailable(res.available)
+      setActive(res.active);
+      setRequests(res.requests);
+      setBusiness(biz);
+      setLoading(false)
     }catch(err){
-      // let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-      // ToastError(msg)
+      
     }
   }
+
+  const refreshDashboard = () => {
+    getInfo()
+    queryClient.invalidateQueries("")
+  }
+
   const openReport = (item) => {
     try{
       setReport(true)
@@ -289,21 +303,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
             {business && business.business_name ? business.business_name : ""}
           </Text>
         </View>
-        {/* <TouchableOpacity>
-          <Image
-            resizeMode="contain"
-            source={questionMarkIcon}
-            style={styles.logo1}
-          />
-        </TouchableOpacity> */}
-        {
-          process ? (
-          <ActivityIndicator 
-            size={10}
-            color={AppColors.green}
-          />
-          ) : null
-        }
         <TouchableOpacity
           onPress={()=>{
             navigate("Notifications")
@@ -337,12 +336,6 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
       </View>
       <View style={styles.line} />
       </Container>
-      {/*<View style={styles.nameContainer}>
-         <Text style={styles.text2}>{getGreetingTime()}</Text> 
-        <Text numberOfLines={1} style={styles.text3}>
-        {about && about.first_name ? Capitalize(about.first_name) : ""}
-        </Text>
-      </View>*/}
           {
             loading ? (
               <PageLoader />
@@ -352,7 +345,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   refreshControl={
                     <RefreshControl
                       refreshing={false}
-                      onRefresh={getInfo}
+                      onRefresh={refreshDashboard}
                     />
                   }
                  >
@@ -443,23 +436,15 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                     }}
                   />
                 </View>
-                {/* <TouchableOpacity
-                  onPress={()=>navigate("Time off")}
-                >
-                  <View style={[styles.row, styles.center]}>
-                    <Text style={styles.text4}>See all time off</Text>
-                    <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
-                  </View>
-                </TouchableOpacity> */}
                 {
-                  assets && Array.isArray(assets) && assets.length > 0 ? (
+                  assets?.results && Array.isArray(assets?.results) && assets?.results.length > 0 ? (
                       <React.Fragment>
                         <Text style={styles.heading}>
                           Asset
-                            {assets && Array.isArray(assets) && assets.length > 1 ? `(${assets.length})` : "" }
+                            {assets?.results && Array.isArray(assets?.results) && assets?.results.length > 1 ? `(${assets?.results.length})` : "" }
                         </Text>
                         <View>
-                          <AssetsList data={assets} 
+                          <AssetsList data={assets?.results} 
                             onPressHandler={openReport}
                           />
                         </View>
@@ -467,29 +452,27 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
                   ) : null
                 }
                 {
-                  benefits && Array.isArray(benefits) && benefits.length > 0 ? (
+                  benefits?.results && Array.isArray(benefits?.results) && benefits?.results.length > 0 ? (
                     <React.Fragment>
                       <Text style={styles.heading}>Benefit</Text>
                       <BenifitList 
                         data={['#C2D4FF', '#99E6FF']} 
-                        horizontal={benefits.length === 1 ? false : true}
-                        benefits={benefits}
+                        horizontal={benefits?.results.length === 1 ? false : true}
+                        benefits={benefits?.results}
                         goToWeb={goToWeb}
                       />
                     </React.Fragment>
                   ) : null
                 }
-
-                {/* <Text style={[styles.heading, {marginTop: 0}]}>Who's Out</Text> */}
                 <TasksList data={tasksData} 
-                  whos_out={tab === "Leave" ? whos_out : tab === "Remote Work" ? remote  : tab === "Training"  ? training : []}
-                  birthdays={active_birthdays}
-                  upcoming_birthdays={upcoming_birthdays}
-                  anniversary={anniversary}
+                  whos_out={tab !== "Training" && outData?.results && Array.isArray(outData?.results) ? outData?.results : []}
+                  birthdays={activeBD?.results && Array.isArray(activeBD?.results) ? activeBD?.results : []}
+                  upcoming_birthdays={upcomingBD?.results && Array.isArray(upcomingBD?.results) ? upcomingBD?.results : []}
+                  anniversary={activeANN?.results && Array.isArray(activeANN?.results) ? activeANN?.results : []}
                   tab={tab}
                   navigate={navigate}
                   getWhosOut={getWhosOut}
-                  fetch={fetching}
+                  fetch={whosoutLoading}
                 />
               </React.Fragment>
                  </ScrollView>

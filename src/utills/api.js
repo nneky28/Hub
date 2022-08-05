@@ -8,10 +8,6 @@ export const endPoint = 'https://coolowo.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
-  my_business_assests : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/asset_vehicles/`,
-  benefits : (business_id,employee_pk) => `/c/${business_id}/employees/${employee_pk}/benefits/`,
-  whos_out : (business_id,category="timeoff") => `/c/${business_id}/timeoff_taken/widgets/whos_out/?category=${category}`,
-  birthdays : (business_id,status) => `/c/${business_id}/employees/dashboard/birthdays/?status=${status}`,
   employees : (business_id,page=1,search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
   team_members : (business_id,id,page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
   basic_details : (business_id,id) => `/c/${business_id}/employees/${id}/basic_detail/`,
@@ -21,6 +17,23 @@ export const APIFunction = {
   next_of_kins : async (id) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz.business_id}/employees/${id}/next-of-kin/`)
+  },
+  whos_out : async (category) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/timeoff_taken/widgets/whos_out/?category=${category}`)
+  },
+  birthdays : async (status) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/dashboard/birthdays/?status=${status}`)
+  },
+  my_business_assests : async (employee_pk) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_pk}/asset_vehicles/`)
+  },
+  benefits : async (employee_pk) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_pk}/benefits/`)
+    
   },
   emergency  : async (id) => {
     let biz = await getStoredBusiness();
@@ -41,7 +54,10 @@ export const APIFunction = {
   timeoff_reqs : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
-  job_anniversary : (status,business_id,page=1) =>`/c/${business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`,
+  job_anniversary : async (status,page) =>{
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
+  },
   notifications : async (page=1) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz.business_id}/employees/notifications/?page=${page}`)
@@ -181,6 +197,45 @@ export const useFetchPayrollHistory  = (year) => {
   })
 }
 
+export const useFetchAssets  = (employee_pk) => {
+  return useQuery(["my_business_assests",employee_pk],()=>APIFunction.my_business_assests(employee_pk),{
+    enabled : employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
+  })
+}
+
+export const useFetchBenefits  = (employee_pk) => {
+  return useQuery(["benefits",employee_pk],()=>APIFunction.benefits(employee_pk),{
+    enabled : employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
+  })
+}
+
+export const useFetchWhosOut  = (category = "timeoff") => {
+  return useQuery(["whos_out",category],()=>APIFunction.whos_out(category),{
+    enabled : category !== null && category !== undefined && category !== ""
+  })
+}
+
+
+export const useFetchBirthdays  = (status) => {
+  return useQuery(["birthdays",status],()=>APIFunction.birthdays(status),{
+    enabled : status !== null && status !== undefined && status !== ""
+  })
+}
+
+export const useFetchAnniversary  = (status,page = 1) => {
+  return useQuery(["job_anniversary",status,page],()=>APIFunction.job_anniversary(status,page),{
+    enabled : status !== null && status !== undefined && status !== ""
+  })
+}
+
+export const useFetchTasks  = (employee_id,completed) => {
+  return useQuery(["employee_tasks",employee_id,completed],()=>APIFunction.employee_tasks(employee_id,completed),{
+    enabled : (
+      employee_id !== null && employee_id !== undefined && employee_id !== "" && 
+      completed !== null && completed !== undefined && completed !== ""
+    )
+  })
+}
 
 
 export const getAPIs = async (path) => {

@@ -13,21 +13,15 @@ import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import {login, logout} from '../Redux/Actions/Auth';
 import {Images} from "../component2/image/Image"
-import {
-  rightIcon,
-  logoIcon,
-  plusIcon,
-  settingIcon,
-  logoutIcon,
-} from '../assets/images';
 import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment';
 import { Container, H1, ImageWrap, Rounded, TouchWrap } from '../utills/components';
+import { useQueryClient } from 'react-query';
 const Drawer = ({navigation, ...props}) => {
 
   const dispatch = useDispatch();
+  const queryClient = useQueryClient()
   const auth = useSelector((state)=>state.Auth);
   const [about,setAbout] =  React.useState(null);
   const [user,setUser] = React.useState(null);
@@ -37,6 +31,7 @@ const Drawer = ({navigation, ...props}) => {
     keys.splice(keys.indexOf(`@${user?.email}`),1)
     await AsyncStorage.multiRemove(keys);
     navigation.closeDrawer();
+    queryClient.invalidateQueries("")
     dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
     ToastSuccess("Successfully logged out")
   };

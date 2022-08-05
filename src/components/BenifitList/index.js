@@ -3,14 +3,26 @@ import { FlatList, Image, Linking, Text, View } from 'react-native';
 import { width } from 'react-native-dimension';
 import { Modal } from 'react-native-paper';
 import { rightIcon, twoMenIcon } from '../../assets/images';
+import { Images } from '../../component2/image/Image';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container } from '../../utills/components';
+import { Container, EmptyStateWrapper } from '../../utills/components';
 import { Capitalize, getData } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
 const BenifitList = ({data, horizontal,benefits,goToWeb}) => {
   let color = "";
+
+  ListEmptyComponent = () => {
+    return(
+      <EmptyStateWrapper 
+        icon={Images.EmptyBenefits}
+        header_1={"You have no active"} 
+        header_2={"benefits yet."}
+        sub_text={"When you do, they will show up here."}
+      />
+    )
+  }
   return (
     <FlatList
     data={benefits}
@@ -20,6 +32,7 @@ const BenifitList = ({data, horizontal,benefits,goToWeb}) => {
     showsHorizontalScrollIndicator={false}
     nestedScrollEnabled={true}
     horizontal={horizontal}
+    ListEmptyComponent={ListEmptyComponent}
     renderItem={({item}) => {
       color = color === data[0] ? data[1] : data[0];
       return (

@@ -86,6 +86,7 @@ const Routes = () => {
       AsyncStorage.multiRemove(keys);
       dispatch(setLoaderVisible(false))
       queryCache.clear()
+      queryClient.invalidateQueries("")
       dispatch(login({...auth,route : "auth",isLogin : false}));
       ToastSuccess("Successfully logged out")
     }catch(err){

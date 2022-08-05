@@ -73,9 +73,9 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
   const showMore = (title,selected) => {
     let tab = title == "Celebrations" ? title : "Who's out"
     return navigate("People",{tab})
-    setArr((a) => [...a, '', '', '', '']);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setHasMore(false);
+    // setArr((a) => [...a, '', '', '', '']);
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    // setHasMore(false);
   };
 
   const showLess = () => {

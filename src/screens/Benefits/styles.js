@@ -4,6 +4,7 @@ import {height, width} from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
+    flex : 1,
     backgroundColor: AppColors.white,
     alignItems: 'center',
   },
