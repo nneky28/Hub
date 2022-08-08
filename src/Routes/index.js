@@ -216,8 +216,8 @@ const Routes = () => {
                 <Tab.Navigator
                   tabBar={(props) => <TabBar {...props} />}
                   screenOptions={{
-                    headerShown: false, 
-                    tabBarHideOnKeyboard:true
+                      headerShown: false, 
+                      tabBarHideOnKeyboard:true
                     }}
                   >
                   <Tab.Screen name="Home">

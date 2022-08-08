@@ -73,14 +73,11 @@ export default function People({route,navigation}) {
                 setData([...arr])
             }
             if(selected === "Celebrations"){
-                let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
-                let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-                let active_ann_url = APIFunction.job_anniversary("active",biz.business_id);
-                let up_ann_url = APIFunction.job_anniversary("upcoming",biz.business_id);
-                let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
-                let active_res = await getAPIs(active_birthdays_url,token);
-                let active_ann_res = await getAPIs(active_ann_url,token);
-                let up_ann_res = await getAPIs(up_ann_url,token);
+                let upcoming_res = await APIFunction.birthdays("upcoming");
+                let active_res = await APIFunction.birthdays("active");
+                let active_ann_res = await APIFunction.job_anniversary("active");
+                let up_ann_res = await APIFunction.job_anniversary("upcoming");
+
 
                 let active_birthdays = active_res && active_res.results && Array.isArray(active_res.results) ? 
                 active_res.results.map((item)=>(
@@ -157,8 +154,7 @@ export default function People({route,navigation}) {
             }
 
             if(selected === "Who's out"){
-                let whos_out_url = APIFunction.whos_out(biz.business_id);
-                let whos_out_res = await getAPIs(whos_out_url,token);
+                let whos_out_res = await APIFunction.whos_out("");
                 let data = whos_out_res && whos_out_res.results && Array.isArray(whos_out_res.results) ?
                  whos_out_res.results.map((item,index)=>(
                     {
@@ -464,11 +460,6 @@ export default function People({route,navigation}) {
                         />
                      ) : null
                 }
-                {/* {
-                    !loading && celebrations && selected === "Celebrations" && Array.isArray(celebrations) && celebrations.length === 0 ? (
-                        
-                    ) : null
-                } */}
                 
                 {
                     (

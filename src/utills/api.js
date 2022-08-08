@@ -54,7 +54,7 @@ export const APIFunction = {
   timeoff_reqs : (business_id,id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken : (business_id,id,status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff : (business_id,id,timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
-  job_anniversary : async (status,page) =>{
+  job_anniversary : async (status,page = 1) =>{
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
   },
