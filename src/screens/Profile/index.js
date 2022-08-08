@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core';
 import moment from 'moment';
 import numeral from 'numeral';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, LayoutAnimation, Platform, Text, TouchableOpacity, UIManager, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { useDispatch } from 'react-redux';
@@ -11,10 +11,10 @@ import Button from '../../components/Button';
 import ContactModal from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { scrollToPosition } from '../../Redux/Actions/Config';
-import { APIFunction, getAPIs } from '../../utills/api';
+import { APIFunction, getAPIs, useFetchBanking, useFetchEmergency, useFetchKin } from '../../utills/api';
 import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, H1, ProfileLoader, Rounded } from '../../utills/components';
+import { BackHandler, Container, H1, ProfileLoader, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
@@ -31,11 +31,8 @@ export default function Profile({navigation}) {
     const [modal, setModal] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [about,setAbout] = useState(null)
-    const [kin,setKin] = useState(null)
-    const [loading,setLoading] = useState(false);
     const [banking,setBanking] = useState(null);
-    const [pension,setPension] = useState(null);
-    const [emergency,setEmergency] = useState(null);
+
     useEffect(() => {
       return dispatch(scrollToPosition({x: 0, y: 0}))
     }, []);
@@ -47,32 +44,52 @@ export default function Profile({navigation}) {
       </View>
       )
     }
+    const {
+      data : kinsData,
+      isLoading : loadingKin
+    } = useFetchKin(about?.id)
 
-    const getProfile = async () => {
+    const {
+      data : emergData,
+      isLoading : loadingEmergency
+    } = useFetchEmergency(about?.id)
+
+    const {
+      data : bankData,
+      isLoading : loadingBank
+    } = useFetchBanking(about?.id)
+
+
+    useFocusEffect(useCallback(()=>{
+      getUserData()
+    },[]))
+
+    useEffect(()=>{
+      getProfile("kin")
+    },[loadingKin])
+
+    useEffect(()=>{
+      getProfile("emergency")
+    },[loadingEmergency])
+
+    useEffect(()=>{
+      getProfile("banking")
+    },[loadingBank])
+
+    const getUserData = async () => {
+      let about = await getData("about_me")
+      setAbout(about)
+    }
+
+    const getProfile = async (type) => {
       try{
-         
-         setLoading(true);
-         let about = await getData("about_me")
-        let res = await APIFunction.next_of_kins(about.id);
-        setKin(res);
-        let emg_res = await APIFunction.emergency(about.id);
-        let bank_res = await APIFunction.banks(about.id);
-        let pen_res = await APIFunction.pension_providers(about.id);
-        setEmergency(emg_res);
-        setAbout(about);
-        setPension(pen_res);
-        setBanking(bank_res);
-        setLoading(false);
+        if(type === "banking" && bankData) setBanking(bankData);
       }catch(err){
        let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
        ToastError(msg)
       }
     }
-     useFocusEffect(
-       React.useCallback(()=>{
-        getProfile();
-       },[])
-     )
+
     const RenderList = ({item, index,about}) => {
         const handleClick = (index) => {
           if (selectedIndex == index) {
@@ -145,19 +162,19 @@ export default function Profile({navigation}) {
                   <View style={CommonStyles.marginBottom_3}>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
                       <TopBottomText topText={data[0]} 
-                      bottomText={kin && kin.first_name ? Capitalize(kin.first_name) : null} 
+                      bottomText={kinsData && kinsData.first_name ? Capitalize(kinsData.first_name) : null} 
                       containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[2]} bottomText={kin && kin.last_name ? Capitalize(kin.last_name) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[2]} bottomText={kinsData && kinsData.last_name ? Capitalize(kinsData.last_name) : null} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[4]} bottomText={kin && kin.relationship ? Capitalize(kin.relationship) : null} containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[6]} bottomText={kin && kin.phone_number ? kin.phone_number : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[4]} bottomText={kinsData && kinsData.relationship ? Capitalize(kinsData.relationship) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[6]} bottomText={kinsData && kinsData.phone_number ? kinsData.phone_number : null} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[8]} bottomText={kin && kin.address1 ? kin.address1 : null}/>
+                      <TopBottomText topText={data[8]} bottomText={kinsData && kinsData.address1 ? kinsData.address1 : null}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[10]} bottomText={kin && kin.email ? kin.email : null}/>
+                      <TopBottomText topText={data[10]} bottomText={kinsData && kinsData.email ? kinsData.email : null}/>
                     </View>
                   
                   </View> : null
@@ -167,19 +184,19 @@ export default function Profile({navigation}) {
                   <View style={CommonStyles.marginBottom_3}>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
                       <TopBottomText topText={data[0]} 
-                      bottomText={emergency && emergency.first_name ? Capitalize(emergency.first_name) : null} 
+                      bottomText={emergData && emergData.first_name ? Capitalize(emergData.first_name) : null} 
                       containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[2]} bottomText={emergency && emergency.last_name ? Capitalize(emergency.last_name) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[2]} bottomText={emergData && emergData.last_name ? Capitalize(emergData.last_name) : null} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[4]} bottomText={emergency && emergency.relationship ? Capitalize(emergency.relationship) : null} containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[6]} bottomText={emergency && emergency.phone_number ? emergency.phone_number : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[4]} bottomText={emergData && emergData.relationship ? Capitalize(emergData.relationship) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[6]} bottomText={emergData && emergData.phone_number ? emergData.phone_number : null} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[8]} bottomText={emergency && emergency.address1 ? emergency.address1 : null}/>
+                      <TopBottomText topText={data[8]} bottomText={emergData && emergData.address1 ? emergData.address1 : null}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[10]} bottomText={emergency && emergency.email ? kin.email : null}/>
+                      <TopBottomText topText={data[10]} bottomText={emergData && emergData.email ? emergData.email : null}/>
                     </View>
                   
                   </View> : null
@@ -245,13 +262,12 @@ export default function Profile({navigation}) {
             </View>
 
             {
-              loading ? (
-                <View style={{alignItems : "center", 
-                    justifyContent : "center",flex : 1,
-                    marginTop : "20%"  
-                  }}>
+              loadingBank || loadingKin || loadingEmergency ? (
+                <Container flex={1} horizontalAlignment="center" verticalAlignment="center"
+                  marginTop={10}
+                >
                   <ProfileLoader />
-                </View>
+                </Container>
               ) : (
                 <React.Fragment>
                   <View style={styles.line} />
@@ -300,8 +316,8 @@ export default function Profile({navigation}) {
                             await storeData("profile",{
                               banking,
                               about,
-                              kin,
-                              emergency,
+                              kin : kinsData,
+                              emergency : emergData,
                             });
                             navigation.navigate('EditProfile')
                           }}

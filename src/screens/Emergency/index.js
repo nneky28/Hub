@@ -17,11 +17,13 @@ import Button from '../../components/Button';
 import { ActivityIndicator } from 'react-native-paper'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useQueryClient } from 'react-query'
 
 
 export default function NextKin({navigation,route}) {
     const dispatch = useDispatch()
     const auth = useSelector(state=>state.Auth)
+    const queryClient = useQueryClient()
     const [loading,setLoading] = useState(false)
     const [data,setData] = useState({
         first_name : "",
@@ -63,6 +65,7 @@ export default function NextKin({navigation,route}) {
                 let profile = await getData("profile") 
                 return navigation.navigate("PensionInfo",{pension : profile.pension})
             }
+            queryClient.invalidateQueries("emergency")
         }catch(err){
             dispatch(setLoaderVisible(false));
             let msg = err.msg && Object.values(err.msg) && Object.values(err.msg).length > 0 ? Object.values(err.msg)[0][0] : 

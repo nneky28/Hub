@@ -13,17 +13,16 @@ import CustomInput from '../../components/CustomInput'
 import { setLoaderVisible } from '../../Redux/Actions/Config'
 import { useDispatch, useSelector } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
-import Button from '../../components/Button';
 import { ActivityIndicator } from 'react-native-paper'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view'
-import { ScrollView } from 'react-native-gesture-handler'
-import { height } from 'react-native-dimension'
+import { useQueryClient } from 'react-query'
 
 
 export default function NextKin({navigation,route}) {
     const dispatch = useDispatch()
     const [loading,setLoading] = useState(false)
     const auth = useSelector(state=>state.Auth)
+    const queryClient = useQueryClient()
     const [data,setData] = useState({
         first_name : "",
         last_name :"",
@@ -63,6 +62,7 @@ export default function NextKin({navigation,route}) {
                 let profile = await getData("profile") 
                 return navigation.navigate("Emergency",{emergency : profile.emergency})
             }
+            queryClient.invalidateQueries("next_of_kins")
         }catch(err){
             dispatch(setLoaderVisible(false));
             let msg = err.msg && Object.values(err.msg) && Object.values(err.msg).length > 0 ? Object.values(err.msg)[0][0] : 

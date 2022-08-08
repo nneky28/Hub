@@ -94,7 +94,7 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
 
   const mapDataToState = () => {
     if(taskLoading && taskData?.results && Array.isArray(taskData?.results)){
-      setTasks([])
+      setTasks(taskData?.results)
     }
   }
 

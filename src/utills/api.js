@@ -237,6 +237,30 @@ export const useFetchTasks  = (employee_id,completed) => {
   })
 }
 
+export const useFetchKin  = (employee_id) => {
+  return useQuery(["next_of_kins",employee_id],()=>APIFunction.next_of_kins(employee_id),{
+    enabled : (
+      employee_id !== null && employee_id !== undefined && employee_id !== ""
+    )
+  })
+}
+
+export const useFetchEmergency  = (employee_id) => {
+  return useQuery(["emergency",employee_id],()=>APIFunction.emergency(employee_id),{
+    enabled : (
+      employee_id !== null && employee_id !== undefined && employee_id !== ""
+    )
+  })
+}
+
+export const useFetchBanking  = (employee_id) => {
+  return useQuery(["banks",employee_id],()=>APIFunction.banks(employee_id),{
+    enabled : (
+      employee_id !== null && employee_id !== undefined && employee_id !== ""
+    )
+  })
+}
+
 
 export const getAPIs = async (path) => {
     let _token = await getData("token");
