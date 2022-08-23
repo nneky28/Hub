@@ -138,6 +138,7 @@ export default function Dashboard(props) {
                         }}
                         keyboardType={"email-address"}
                         color={AppColors.black}
+                        autoCapitalize={false}
                       />
                       <Field
                         placeholder="Password"
