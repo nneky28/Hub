@@ -310,5 +310,10 @@ const Routes = () => {
   </QueryClientProvider>
   );
 }
-let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,installMode: codePush.InstallMode.ON_NEXT_RESUME};
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,installMode: codePush.InstallMode.ON_NEXT_RESUME,
+  rollbackRetryOptions: {
+    delayInHours: (1/60),
+    maxRetryAttempts: 2
+  }
+};
 export default codePush(codePushOptions)(Routes);
