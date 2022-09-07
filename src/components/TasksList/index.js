@@ -384,6 +384,6 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
   );
 };
 const areEqual = (prevProps,nextProps)=>{
-  return prevProps.fetch === nextProps.fetch
+  return prevProps.fetch === nextProps.fetch && prevProps?.tab === nextProps?.tab
 }
 export default React.memo(TasksList,areEqual);
