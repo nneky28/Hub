@@ -3,8 +3,8 @@ import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 import {useQuery} from "react-query"
 
-//export const endPoint = 'https://coolowo.com';
-export const endPoint = 'https://api.bizedgeapp.com';
+export const endPoint = 'https://coolowo.com';
+//export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
