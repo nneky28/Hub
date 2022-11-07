@@ -686,6 +686,7 @@ export const ClockINContainer = ({setVisible}) => {
   const [tab,setTab] = React.useState("On-Site")
   const clockEmployeeIn = useMutation((load)=>APIFunction.employee_clock_in(load))
   const clockEmployeeOut = useMutation((load)=>APIFunction.employee_clock_out(load))
+  const [loading,setLoading] = React.useState(false)
 
   const {
     data : config,
@@ -727,7 +728,8 @@ export const ClockINContainer = ({setVisible}) => {
     try{
       if(status?.is_clocked_in){
         let user = await getData("about_me")
-        dispatch(setLoaderVisible(true))
+        //dispatch(setLoaderVisible(true))
+        setLoading(true)
         let fd = {
           employee : user.id,
           clock_in_time : status?.clock_in_time,
@@ -735,10 +737,12 @@ export const ClockINContainer = ({setVisible}) => {
         }
         await clockEmployeeOut.mutateAsync(fd)
         queryClient.invalidateQueries("attendance_status")
-        dispatch(setLoaderVisible(false))
+        //dispatch(setLoaderVisible(false))
+        setLoading(false)
         return showFlashMessage({title : `You clocked out from work at ${moment().format("hh:mm a")}`,type : "success"})
       }
-      dispatch(setLoaderVisible(true))
+      //dispatch(setLoaderVisible(true))
+      setLoading(true)
       let res = await GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
         timeout: 3000,
@@ -749,10 +753,12 @@ export const ClockINContainer = ({setVisible}) => {
       }
       await clockEmployeeIn.mutateAsync(fd)
       queryClient.invalidateQueries("attendance_status")
-      dispatch(setLoaderVisible(false))
+      //dispatch(setLoaderVisible(false))
+      setLoading(false)
       showFlashMessage({title : `You resumed for work at ${moment().format("hh:mm a")}`,type : "success"})
     }catch(err){
-      dispatch(setLoaderVisible(false))
+     // dispatch(setLoaderVisible(false))
+     setLoading(false)
       if((err && err.toString().includes("Location not available")) || err?.name === "LocationError"){
         return setVisible(true)
       }
@@ -915,10 +921,10 @@ export const ClockINContainer = ({setVisible}) => {
                          }
                       </Container>
                       <TouchableOpacity onPress={submitHandler}
-                        disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
+                        disabled={(status?.has_clocked_out || fetchingStatus || loading) ? true : false}
                         style={{
                           borderRadius : 7,
-                          backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
+                          backgroundColor: (status?.has_clocked_out || fetchingStatus || loading) ? AppColors.lightOrange : AppColors.yellow,
                           height : height(5.8),
                           marginTop : height(2),
                           width : width(80),
@@ -926,7 +932,12 @@ export const ClockINContainer = ({setVisible}) => {
                         }}
                       >
                         {
-                          tab === "Remote" ?  <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In Remotely" : "Clock Out"} </H1> :  <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In" : "Clock Out"} </H1>
+                          loading ? <ActivityIndicator size={width(5)} 
+                          color={AppColors.green} /> : <React.Fragment>
+                            {
+                              tab === "Remote" ?  <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In Remotely" : "Clock Out"} </H1> :  <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In" : "Clock Out"} </H1>
+                            }
+                          </React.Fragment>
                         }
                       </TouchableOpacity>
                       <P fontSize={3} color={AppColors.black3}
