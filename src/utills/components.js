@@ -26,7 +26,7 @@ import {setLoaderVisible} from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
-import GetLocation from 'react-native-get-location'
+import GetLocation from 'react-native-geolocation-service'
 import CustomButton from '../component2/button/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
@@ -539,6 +539,7 @@ export const CustomFallBackScreen = (props) => {
     }
   }
   const reportMainError = () => {
+    if(__DEV__) return
     let fd = {
       report : JSON.stringify(`${props?.error}${props?.error?.toString()}`)
     }
@@ -743,22 +744,31 @@ export const ClockINContainer = ({setVisible}) => {
       }
       //dispatch(setLoaderVisible(true))
       setLoading(true)
-      let res = await GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 3000,
-      })
+      let res = await new Promise((resolve,reject)=>GetLocation.getCurrentPosition(
+        res=>resolve(res),
+        err=>reject(err),
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          accuracy: {
+            ios: 'best',
+            android: 'high',
+          },
+        }
+      ))
       let fd = {
-        ...res,
+        latitude : res?.coords?.latitude,
+        longitude : res?.coords?.longitude,
         location_type : tab === "Remote" ? "remote" : "on_site"
       }
       await clockEmployeeIn.mutateAsync(fd)
       queryClient.invalidateQueries("attendance_status")
-      //dispatch(setLoaderVisible(false))
+      dispatch(setLoaderVisible(false))
       setLoading(false)
       showFlashMessage({title : `You resumed for work at ${moment().format("hh:mm a")}`,type : "success"})
     }catch(err){
-     // dispatch(setLoaderVisible(false))
-     setLoading(false)
+      // dispatch(setLoaderVisible(false))
+      setLoading(false)
       if((err && err.toString().includes("Location not available")) || err?.name === "LocationError"){
         return setVisible(true)
       }
@@ -769,7 +779,7 @@ export const ClockINContainer = ({setVisible}) => {
   return(
       <React.Fragment>
               {
-                config?.data?.is_configured ? <View
+                !!config?.results?.[0] ? <View
                 style={{
                   alignItems : "center"
                 }}

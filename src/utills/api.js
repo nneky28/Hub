@@ -134,13 +134,13 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz.business_id}/employees/${employee_id}/complete_user_onboarding/`)
   },
-  attendance_config : async () => {
+  attendance_config : async (limit) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/attendance_config/`)
+    return getAPIs(`/c/${biz.business_id}/v2/attendance/config/?page_size=${limit}`)
   },
   attendance_status : async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/attendance/status/`)
+    return getAPIs(`/c/${biz.business_id}/v2/attendance/status/`)
   },
   employee_clock_in : async (fd) => {
     let biz = await getStoredBusiness()
@@ -164,7 +164,7 @@ export const APIFunction = {
   },
   location_type : async () =>{
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/attendance/location_type/`)
+    return getAPIs(`/c/${biz.business_id}/v2/attendance/location_type/`)
   },
   error_report : async (fd)=> {
     return postNoToken('/mobile_error_report',fd)
@@ -175,8 +175,8 @@ export const useFetchPayrollYears  = () => {
   return useQuery("payroll_years",APIFunction.payroll_years)
 }
 
-export const useFetchAttendanceConfig = () => {
-  return useQuery("attendance_config",APIFunction.attendance_config)
+export const useFetchAttendanceConfig = (limit = 1) => {
+  return useQuery(["attendance_config",limit],()=>APIFunction.attendance_config(limit))
 }
 export const useFetchAttendanceStatus = () => {
   return useQuery("attendance_status",APIFunction.attendance_status)
