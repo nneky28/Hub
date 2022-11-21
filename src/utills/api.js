@@ -144,11 +144,11 @@ export const APIFunction = {
   },
   employee_clock_in : async (fd) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/attendance/clock_in/`,fd)
+    return postAPIs(`/c/${biz.business_id}/v2/attendance/clock_in/`,fd)
   },
   employee_clock_out : async (fd) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`,fd)
+    return postAPIs(`/c/${biz.business_id}/v2/attendance/clock_out/`,fd)
   },
   payslip_info : async (date,payroll_id) =>{
     let biz = await getStoredBusiness()
