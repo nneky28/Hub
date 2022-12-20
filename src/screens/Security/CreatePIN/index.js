@@ -44,7 +44,6 @@ const CreatePIN = (props) => {
 
   const validatePIN = async (text) => {
     try{
-      Keyboard.dismiss()
       if(hasPIN && (original !== text)){
         setHolder("")
         return showFlashMessage({title : "Wrong PIN :(",type : "error"})
@@ -59,6 +58,7 @@ const CreatePIN = (props) => {
         setHolder("")
         return showFlashMessage({title : "Please confirm that your PIN matches",type : "error"})
       }
+      Keyboard.dismiss()
       if(!hasPIN && action === "confirm"){
         let userInfo = await getData("user");
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();

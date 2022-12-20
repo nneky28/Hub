@@ -779,7 +779,7 @@ export const ClockINContainer = ({setVisible}) => {
   return(
       <React.Fragment>
               {
-                !!config?.results?.[0] ? <View
+                !!config?.data ? <View
                 style={{
                   alignItems : "center"
                 }}

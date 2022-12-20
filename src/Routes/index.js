@@ -157,7 +157,7 @@ const Routes = () => {
       }catch(err){
       }
     }
-  
+    
     useEffect(()=>{
       inAppUpdatesCheck()
       Crashes.setListener({
