@@ -104,7 +104,7 @@ export default function People({route,navigation}) {
 
                 let upcoming_ann = up_ann_res && up_ann_res.results && Array.isArray(up_ann_res.results) ? 
                 up_ann_res.results.map((item)=>({
-                    title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
+                    title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} year anniversary` : null,
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
                     icon: {uri : Images.DocumentIcon},
@@ -113,7 +113,7 @@ export default function People({route,navigation}) {
 
                 let active_ann = active_ann_res && active_ann_res.results && Array.isArray(active_ann_res.results) ? 
                 active_ann_res.results.map((item)=>({
-                    title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} ${item && item.num_years_spent && item && item.num_years_spent > 1 ? 'years' : 'year'} anniversary` : null,
+                    title: item && item.first_name ? `${Capitalize(item.first_name)}’s ${item && item.num_years_spent ? item.num_years_spent : 0} year anniversary` : null,
                     avatar: item && item.photo ? item.photo : null,
                     subtitle: item && item.job && item.job.title ? Capitalize(item.job.title) : null,
                     icon: {uri : Images.DocumentIcon},
