@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import { StyleSheet } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
 
@@ -89,8 +89,61 @@ const styles = StyleSheet.create({
     height: width(5),
   },
   filterContainer: {
-    width: width(100), 
+    width: width(100),
     paddingHorizontal: 0
   },
+  container1: {
+    backgroundColor: AppColors.white,
+    paddingVertical: height(2),
+    borderRadius: 5,
+    paddingHorizontal: width(2),
+    alignSelf: 'flex-end',
+    marginRight: width(7),
+    marginTop: height(10),
+  },
+
+  textCon: {
+    paddingHorizontal: width(2),
+
+  },
+  textContainer1: {
+    width: width(90),
+    marginLeft: width(8),
+    marginTop: height(2),
+    marginBottom: height(4)
+  },
+  progress: {
+    color: AppColors.black1,
+    fontSize: width(3.75),
+    fontFamily: FontFamily.BlackSansBold
+  },
+  lineMark: {
+    width: '100%',
+    height: 1,
+    backgroundColor: AppColors.gray1,
+    elevation: 0,
+    marginTop: height(2),
+    marginBottom: height(2)
+  },
+  contactComponentContainer: {
+    justifyContent: 'center',
+    paddingVertical: height(2),
+    backgroundColor: AppColors.white,
+    width: width(90),
+    paddingHorizontal: width(2),
+    alignSelf: 'center',
+  },
+  textBox: {
+    paddingHorizontal: width(4),
+    paddingVertical: height(2)
+  },
+  con: {
+    width: width(80),
+    paddingVertical: height(2),
+    backgroundColor: AppColors.white,
+    alignSelf: 'center',
+    top: width(65)
+  },
+
 });
 export default styles;

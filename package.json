@@ -72,6 +72,7 @@
     "react-native-svg": "^12.1.1",
     "react-native-svg-uri": "^1.2.3",
     "react-native-swipeable": "^0.6.0",
+    "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-view-pdf": "^0.12.2",
     "react-native-webview": "^11.14.3",
