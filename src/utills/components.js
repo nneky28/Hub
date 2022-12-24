@@ -26,13 +26,14 @@ import { setLoaderVisible } from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
-import GetLocation from 'react-native-geolocation-service'
+import GetLocation from 'react-native-get-location'
 import CustomButton from '../component2/button/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -132,7 +133,8 @@ export const H1 = (props) => (
         textDecorationLine: props.underline || "none",
         textDecorationColor: props.lineColor,
         textDecorationStyle: "solid",
-        marginLeft: props?.marginLeft ? width(props?.marginLeft) : null
+        marginLeft: props?.marginLeft ? width(props?.marginLeft) : null,
+        marginTop: props?.marginTop ? height(props?.marginTop) : null
       },
       props.style
     ]}
@@ -227,6 +229,7 @@ export const ImageWrap = (props) => (
       width: width(props.width) || props.widthPercent || "100%",
       height: height(props.height) || height(3),
       backgroundColor: props.backgroundColor,
+      color: props.color,
       borderRadius: props.borderRadius,
       borderTopLeftRadius: props.borderTopLeftRadius,
       borderBottomLeftRadius: props.borderBottomLeftRadius,
@@ -287,7 +290,7 @@ export const Width = (val) => {
   val === undefined || null ? (res = null) : (res = (val / 100) * winWidth);
   return res;
 };
-export const Rounded = (props) => (
+export const _Rounded = (props) => (
   <Container
     style={{
       width: Width(props.size || 15),
@@ -314,7 +317,6 @@ export const CustomCalender = (props) => {
         <P>Cancel</P>
       </TouchableWrapper>
       <Calendar
-        // Collection of dates that have to be marked. Default = {}
         markedDates={{
           [props.date]: { selected: true, selectedColor: AppColors.green }
         }}
@@ -504,7 +506,7 @@ export const CustomWebView = (props) => (
   </Modal>
 )
 
-export const BackHandler = ({ onPress }) => {
+export const BackHandler = ({ onPress, position }) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -515,7 +517,7 @@ export const BackHandler = ({ onPress }) => {
         navigation.goBack()
       }}
       style={{
-        alignItems: "flex-start"
+        alignItems: position || "flex-start",
       }}
     >
       <ImageWrap
@@ -539,7 +541,14 @@ export const CloseHandler = ({ onPress }) => {
       }}
       style={{
         alignItems: "center",
+        //backgroundColor : AppColors.yellow
       }}>
+      {/* <ImageWrap
+        url={Images.Close}
+        fit={"contain"}
+        height={4}
+        width={4}
+      /> */}
       <Ionicons name="close-outline" size={25} />
     </TouchableWrapper>
   )
@@ -559,6 +568,7 @@ export const NotifyHandler = ({ onPress }) => {
       }}
       style={{
         alignItems: "center",
+        //backgroundColor : AppColors.yellow
       }}
     >
       <ImageWrap
@@ -582,14 +592,13 @@ export const CustomFallBackScreen = (props) => {
     }
   }
   const reportMainError = () => {
-    if (__DEV__) return
     let fd = {
       report: JSON.stringify(`${props?.error}${props?.error?.toString()}`)
     }
     reportError.mutateAsync(fd)
   }
   useEffect(() => {
-    reportMainError()
+    // reportMainError()
   }, [])
   return (
     <Container flex={1} style={{
@@ -653,6 +662,8 @@ export const EmptyStateWrapper = (props) => (
 
 export const TouchableWrapper = (props) => (
   <TouchableRipple onPress={props.onPress}
+    rippleColor={AppColors.whiteBase}
+
     style={[
       props?.isText ? {
         height: props?.height ? height(props?.height) : height(5),
@@ -730,7 +741,6 @@ export const ClockINContainer = ({ setVisible }) => {
   const [tab, setTab] = React.useState("On-Site")
   const clockEmployeeIn = useMutation((load) => APIFunction.employee_clock_in(load))
   const clockEmployeeOut = useMutation((load) => APIFunction.employee_clock_out(load))
-  const [loading, setLoading] = React.useState(false)
 
   const {
     data: config,
@@ -772,8 +782,7 @@ export const ClockINContainer = ({ setVisible }) => {
     try {
       if (status?.is_clocked_in) {
         let user = await getData("about_me")
-        //dispatch(setLoaderVisible(true))
-        setLoading(true)
+        dispatch(setLoaderVisible(true))
         let fd = {
           employee: user.id,
           clock_in_time: status?.clock_in_time,
@@ -781,37 +790,24 @@ export const ClockINContainer = ({ setVisible }) => {
         }
         await clockEmployeeOut.mutateAsync(fd)
         queryClient.invalidateQueries("attendance_status")
-        //dispatch(setLoaderVisible(false))
-        setLoading(false)
+        dispatch(setLoaderVisible(false))
         return showFlashMessage({ title: `You clocked out from work at ${moment().format("hh:mm a")}`, type: "success" })
       }
-      //dispatch(setLoaderVisible(true))
-      setLoading(true)
-      let res = await new Promise((resolve, reject) => GetLocation.getCurrentPosition(
-        res => resolve(res),
-        err => reject(err),
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          accuracy: {
-            ios: 'best',
-            android: 'high',
-          },
-        }
-      ))
+      dispatch(setLoaderVisible(true))
+      let res = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 3000,
+      })
       let fd = {
-        latitude: res?.coords?.latitude,
-        longitude: res?.coords?.longitude,
+        ...res,
         location_type: tab === "Remote" ? "remote" : "on_site"
       }
       await clockEmployeeIn.mutateAsync(fd)
       queryClient.invalidateQueries("attendance_status")
       dispatch(setLoaderVisible(false))
-      setLoading(false)
       showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
     } catch (err) {
-      // dispatch(setLoaderVisible(false))
-      setLoading(false)
+      dispatch(setLoaderVisible(false))
       if ((err && err.toString().includes("Location not available")) || err?.name === "LocationError") {
         return setVisible(true)
       }
@@ -822,7 +818,7 @@ export const ClockINContainer = ({ setVisible }) => {
   return (
     <React.Fragment>
       {
-        !!config?.data ? <View
+        config?.data?.is_configured ? <View
           style={{
             alignItems: "center"
           }}
@@ -976,10 +972,10 @@ export const ClockINContainer = ({ setVisible }) => {
                 }
               </Container>
               <TouchableOpacity onPress={submitHandler}
-                disabled={(status?.has_clocked_out || fetchingStatus || loading) ? true : false}
+                disabled={(status?.has_clocked_out || fetchingStatus) ? true : false}
                 style={{
                   borderRadius: 7,
-                  backgroundColor: (status?.has_clocked_out || fetchingStatus || loading) ? AppColors.lightOrange : AppColors.yellow,
+                  backgroundColor: (status?.has_clocked_out || fetchingStatus) ? AppColors.lightOrange : AppColors.yellow,
                   height: height(5.8),
                   marginTop: height(2),
                   width: width(80),
@@ -987,12 +983,7 @@ export const ClockINContainer = ({ setVisible }) => {
                 }}
               >
                 {
-                  loading ? <ActivityIndicator size={width(5)}
-                    color={AppColors.green} /> : <React.Fragment>
-                    {
-                      tab === "Remote" ? <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In Remotely" : "Clock Out"} </H1> : <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In" : "Clock Out"} </H1>
-                    }
-                  </React.Fragment>
+                  tab === "Remote" ? <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In Remotely" : "Clock Out"} </H1> : <H1 textAlign="center">{!status?.is_clocked_in ? "Clock In" : "Clock Out"} </H1>
                 }
               </TouchableOpacity>
               <P fontSize={3} color={AppColors.black3}
@@ -1010,6 +1001,14 @@ export const ClockINContainer = ({ setVisible }) => {
   )
 }
 
+const areEqual = (prevProps, nextProps) => {
+  return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
+}
+
+
+export const Rounded = React.memo(_Rounded, areEqual);
+
+
 const ComponentStyles = StyleSheet.create({
   attendance_tab: {
     paddingVertical: height(1),
@@ -1019,3 +1018,4 @@ const ComponentStyles = StyleSheet.create({
     marginBottom: height(0.3)
   }
 })
+

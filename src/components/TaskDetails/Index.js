@@ -25,7 +25,7 @@ import { showFlashMessage } from '../SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { downIcon, } from '../../assets/images';
 import { height } from 'react-native-dimension';
-import CommentTask from '../CommentTask/Index'
+// import CommentTask from '../CommentTask/Index'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 

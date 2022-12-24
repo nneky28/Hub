@@ -137,11 +137,10 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllTeamTask,
     } = useFetchTeamTask(tab, index)
 
-    // const {
-    //     data: allTeamDue,
-    //     isLoading: loadingAllTeamDue,
-    // } = useFetchTeamDuetoday(tab, index)
-
+    const {
+        data: allTeamDue,
+        isLoading: loadingAllTeamDue,
+    } = useFetchTeamDuetoday(tab, index)
 
     const {
         data: allTeamUpcoming,
@@ -185,9 +184,9 @@ const Index = ({ navigation }) => {
         if (index === 2 && actionTitle === "To-Do" && tab === "All" && allTeamData && allTeamData?.pages && Array.isArray(allTeamData?.pages)) {
             flattenedArr = allTeamData?.pages
         }
-        // if (index === 2 && actionTitle === "To-Do" && tab === "Due Today" && allTeamDue && allTeamDue?.pages && Array.isArray(allTeamDue?.pages)) {
-        //     flattenedArr = allTeamDue?.pages
-        // }
+        if (index === 2 && actionTitle === "To-Do" && tab === "Due Today" && allTeamDue && allTeamDue?.pages && Array.isArray(allTeamDue?.pages)) {
+            flattenedArr = allTeamDue?.pages
+        }
         if (index === 2 && actionTitle === "To-Do" && tab === "Upcoming" && allTeamUpcoming && allTeamUpcoming?.pages && Array.isArray(allTeamUpcoming?.pages)) {
             flattenedArr = allTeamUpcoming?.pages
         }
@@ -268,17 +267,17 @@ const Index = ({ navigation }) => {
     const alphabet = alpha.map((x) => String.fromCharCode(x));
 
 
-    // useEffect(() => {
-    //     __flattenArr()
-    // }, [allTasks, upcomingTasks, dueTasks, overdueTasks]);
+    useEffect(() => {
+        __flattenArr()
+    }, [allTasks, upcomingTasks, dueTasks, overdueTasks]);
 
-    // useEffect(() => {
-    //     __flattenArr()
-    // }, [allTeamData, allTeamDue, allTeamUpcoming, allTeamOverdue]);
+    useEffect(() => {
+        __flattenArr()
+    }, [allTeamData, allTeamDue, allTeamUpcoming, allTeamOverdue]);
 
-    // useEffect(() => {
-    //     __flattenArr()
-    // }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
+    useEffect(() => {
+        __flattenArr()
+    }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
 
 
     return (

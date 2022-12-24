@@ -16,13 +16,16 @@ import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
 import { getData, ToastError, storeData, getStoredBusiness, getTimeOffsFunction } from '../../utills/Methods';
-import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap } from '../../utills/components';
+import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap, TouchableWrapper } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
 import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
 import { showFlashMessage } from '../SuccessFlash';
 import { Images } from '../../component2/image/Image';
 import { height, width } from 'react-native-dimension';
+import { useQueryClient } from 'react-query';
+import TaskDetails from '../TaskDetails/Index'
+import CreateTask from '../../screens/CreateTask/Index'
 
 
 const ContactModal = ({ isVisible, onHide, data }) => {
