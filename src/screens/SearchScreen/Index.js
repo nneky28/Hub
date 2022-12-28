@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Modal, Platform, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
+import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
 import { CloseHandler, Container, P, Rounded, H1, BackHandler, } from '../../utills/components';
@@ -7,11 +7,11 @@ import CommonStyles from '../../utills/CommonStyles';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import PersonListComp from '../../components/PersonListComp/index';
 import { useFetchEmployees, useFetchTeams } from '../../utills/api';
-import ScreenWrapper from '../../components/ScreenWrapper/index';
 import { arrowIcon } from '../../assets/images'
 import Button from '../../components/Button';
 import { Capitalize } from '../../utills/Methods';
 import { height, width } from 'react-native-dimension';
+import ScreenWrapper from '../../components/ScreenWrapper/index';
 
 
 
@@ -121,6 +121,7 @@ const PeopleList = ({ navigation, route }) => {
         if (param === "team")
             teampage > 1 ? setTeamItem([...teamData, ...arr]) : setTeamItem(arr)
     }
+    console.log({ data })
 
     const handleSearch = (item) => {
         setSearch(item)
@@ -154,7 +155,7 @@ const PeopleList = ({ navigation, route }) => {
     }
 
     return (
-        <View >
+        <Container backgroundColor='#F5F5F5'>
 
             {
                 team &&
@@ -292,7 +293,7 @@ const PeopleList = ({ navigation, route }) => {
                     ItemSeparatorComponent={() => <View style={styles.line} />}
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}
-                    contentContainerStyle={[CommonStyles.marginTop_1, CommonStyles.marginLeft_5, { paddingBottom: height(100) }]}
+                    contentContainerStyle={[CommonStyles.marginTop_1, { paddingBottom: height(100) }]}
                     onEndReachedThreshold={0.1}
                     onEndReached={loadMore}
                     refreshing={false}
@@ -305,7 +306,7 @@ const PeopleList = ({ navigation, route }) => {
             </View>
             }
 
-        </View>
+        </Container>
 
 
     )

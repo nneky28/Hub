@@ -160,8 +160,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: width(4),
-        borderBottomWidth: width(0.5),
-        borderBottomColor: AppColors.grayBorder
+        borderWidth: width(0.5),
+        borderColor: AppColors.white,
+        shadowColor: AppColors.white,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        elevation: width(1),
     },
     rowPart: {
         flexDirection: 'row',

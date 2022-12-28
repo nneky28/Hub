@@ -1,16 +1,17 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
 
 const styles = StyleSheet.create({
   listItemContainer: {
-    width: width(90),
+    // width: width(90),
     backgroundColor: AppColors.white,
     paddingVertical: height(1),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingHorizontal: width(5)
   },
   avatarStyle: {
     height: height(5),

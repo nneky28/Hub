@@ -304,6 +304,19 @@ export const APIFunction = {
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}`)
   },
+  get_users: async (page = 1, search) => {
+    let user = await getData("user");
+    const business_id = user?.employee_user_memberships?.[0]?.business_id
+    return getAPIs(`/c/${business_id}/employees/?page=${page}&search=${search}`)
+  },
+  get_teams: async (page) => {
+    const user = await getData('user')
+    const business_id = user?.employee_user_memberships?.[0]?.business_id
+    const about_me = await getData("about_me")
+    const id = about_me?.id
+    return getAPIs(`/c/${business_id}/employees/${id}/team_members/?page=${page}`)
+  },
+
 }
 
 export const useFetchPayrollYears = () => {
