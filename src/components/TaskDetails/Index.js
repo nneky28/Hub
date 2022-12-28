@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
 import Button from '../Button/index';
-import { P, H1, ImageWrap, TouchableWrapper, CloseHandler, Rounded } from '../../utills/components';
+import { P, H1, Container, Rounded } from '../../utills/components';
 import { Images } from '../../component2/image/Image';
 import { CompletedModal, SubTaskActionModal } from '../ContactModal';
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
@@ -121,6 +121,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
             easing: Easing.linear, // Easing is an additional import from react-native
             useNativeDriver: true, // To make use of native drimport AppColors from '../../utills/AppColors';
         }).start();
+
 
 
         setSpin(
@@ -275,7 +276,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     return (
-        <SafeAreaView>
+        <Container>
             <Modal
                 onBackButtonPress={onHide}
                 onModalHide={onHide}
@@ -527,7 +528,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         loading={loadingSubTask} /> */}
             </Modal>
 
-        </SafeAreaView>
+        </Container>
 
     )
 }

@@ -20,6 +20,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { Images } from '../../component2/image/Image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CommonStyles from '../../utills/CommonStyles';
+import { UnCompletedModal } from '../ContactModal';
 
 
 const Index = ({ __flattenArr, item, title, team }) => {
@@ -41,19 +42,21 @@ const Index = ({ __flattenArr, item, title, team }) => {
         isLoading,
     } = useMutation(APIFunction.update_status)
 
-    const onPressHandler = async () => {
+    const onPressHandler = async (action) => {
         let employee = await getData("about_me")
         let fd = {
             assigned_to: employee?.id,
             id: item.id,
-            due_date: moment().toISOString(true)
+            due_date: moment().toISOString(true),
+            status: action,
         }
-        console.log('data', fd)
+
         let res = await mutateAsync(fd)
         await storeData('task claim', res)
         queryClient.invalidateQueries()
-        showFlashMessage({ title: `task claimed` })
+        showFlashMessage({ title: `task updated` })
         setWatch(!watch)
+        setCompleted(false)
     }
 
 
@@ -64,7 +67,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
         __flattenArr()
     }, [watch]);
 
-    console.log('teamscreen', title)
+
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
@@ -116,7 +119,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
 
                 <View>
                     {
-                        title === "Completed" ? <TouchableOpacity style={CommonStyles.marginTop_2} onPress={() => setCompleted(true)}>
+                        title === "Completed" ? <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => setCompleted(true)}>
                             <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
                         </TouchableOpacity> : title === "In Progress"
                             ? <View style={styles.btn}>
@@ -170,6 +173,8 @@ const Index = ({ __flattenArr, item, title, team }) => {
             </View>
 
             <View style={styles.line1} />
+
+            <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
         </View>
 
 

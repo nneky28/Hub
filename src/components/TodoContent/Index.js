@@ -57,13 +57,7 @@ const Index = ({ item, index, title, __flattenArr, }) => {
         setWatch(!watch)
     }
 
-    const handleShow = () => {
-        setModal(false)
-        setHasDetails(true)
-        if (hasDetails) {
-            return setSubTask(true)
-        }
-    }
+
 
 
 
