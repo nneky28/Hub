@@ -274,7 +274,10 @@ const PeopleList = ({ navigation, route }) => {
                 <View>
                     <View style={styles.container}>
                         <P color={AppColors.black1}>Recent Searches</P>
-                        <TouchableOpacity onPress={() => setSearch('')}>
+                        <TouchableOpacity onPress={() => {
+                            setSearch(" ")
+                            setPage(1)
+                        }}>
                             <P style={styles.btnText}>Clear</P>
                         </TouchableOpacity>
                     </View>

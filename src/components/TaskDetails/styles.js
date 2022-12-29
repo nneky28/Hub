@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         marginBottom: height(2),
     },
     subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4) },
-    descriptionCon: { marginTop: height(3) },
+    descriptionCon: { marginTop: height(2) },
     con: {
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
@@ -112,9 +112,9 @@ const styles = StyleSheet.create({
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(2),
-        minHeight: height(10),
+        minHeight: height(8),
         paddingHorizontal: width(4),
-        paddingVertical: height(2)
+        paddingVertical: height(1.8)
     },
     name: {
         color: AppColors.black1,

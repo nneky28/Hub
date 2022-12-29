@@ -181,7 +181,7 @@ const Index = ({ visible, onHide, item }) => {
                                             placeholder="Enter Task description here"
                                             keyboardType={'default'}
                                             style={styles.input}
-                                            minHeight={100}
+                                            minHeight={80}
                                             multiline={true}
                                             value={data.description}
                                             onChangeData={(value) => {

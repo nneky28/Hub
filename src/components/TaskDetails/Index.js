@@ -32,7 +32,7 @@ import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scrol
 const Index = ({ isVisible, onHide, item, title }) => {
     const navigation = useNavigation()
     const spinValue = new Animated.Value(0);
-    // const [show, setShow] = useState(false);
+    const [selectedIDs, setSelectedIDs] = useState([])
     const [addBtn, setAddBtn] = useState(true)
     const [log, setLog] = useState([])
     const [page, setPage] = useState(1)
@@ -254,8 +254,15 @@ const Index = ({ isVisible, onHide, item, title }) => {
         </View>
 
     }
-    const handleChecked = (id) => {
-        setChecked(!checked);
+    // const handleChecked = (id) => {
+    //     setChecked(!checked);
+    // }
+
+    const handleChecked = (item) => {
+        if (selectedIDs.includes(item.id)) {
+            return setChecked(!checked)
+        }
+
     }
 
 
@@ -263,7 +270,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
         let text = "task" + count
         setSubtask([...subTask, text])
         setCount(count + 1)
-
     }
     const handleDelete = (index) => {
         let arr = [...subTask]
@@ -346,7 +352,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
                             {item?.sub_tasks_tasksapp.length !== 0 ?
                                 <>
-                                    <View style={[CommonStyles.rowJustifySpaceBtw, { paddingVertical: height(2.5) }]}>
+                                    <View style={[CommonStyles.rowJustifySpaceBtw, { paddingVertical: height(2) }]}>
                                         <H1 color={AppColors.black1}>Subtasks</H1>
                                         <TouchableOpacity
                                             onPress={_subTask}
@@ -363,9 +369,9 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                                 renderItem={({ item, index }) =>
                                                     <>
                                                         <View style={CommonStyles.row}>
-                                                            {checked ? <Ionicons name="checkbox-outline" size={18} color={AppColors.black1} /> :
-                                                                <TouchableOpacity onPress={() => handleChecked(item.id)}>
-                                                                    <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black1} /></TouchableOpacity>}
+                                                            {checked ? <Ionicons name="checkbox-outline" size={18} color={AppColors.black} /> :
+                                                                <TouchableOpacity onPress={() => handleChecked(item)}>
+                                                                    <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /></TouchableOpacity>}
                                                             <Text
                                                                 numberOfLines={1}
 
@@ -379,50 +385,47 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                             />
                                         </View>
 
-
                                         {
+                                            subTask &&
+                                            <KeyboardAvoidingScrollView>
+                                                <Formik>
+                                                    {({ submitHandler }) => (
 
+                                                        <FlatList
+                                                            data={subTask}
+                                                            keyExtractor={(item, index) => index.toString()}
+                                                            renderItem={({ item }) =>
+                                                                <View style={styles.subRow}>
+                                                                    <Image
+                                                                        resizeMode={'contain'}
+                                                                        source={{ uri: Images.subTaskIcon }}
+                                                                        style={styles.downIcon2} />
 
-                                            subTask ?
-                                                <KeyboardAvoidingScrollView>
-                                                    <Formik>
-                                                        {({ submitHandler }) => (
+                                                                    <Field
+                                                                        component={CustomInput}
+                                                                        placeholder="Add subtasks here"
+                                                                        keyboardType={'default'}
+                                                                        style={styles.input}
+                                                                        multiline={true}
+                                                                        value={subData?.[item]}
+                                                                        onChangeData={(value) => {
+                                                                            setSubdata({ ...subData, [item]: value })
+                                                                        }}
+                                                                        right={<TextInput.Icon name={"close"}
+                                                                            style={CommonStyles.marginTop_2}
+                                                                            color={AppColors.darkGray}
+                                                                            onPress={() => handleDelete(item.index)}
+                                                                        />}
+                                                                    />
+                                                                </View>
+                                                            }
+                                                            showsVerticalScrollIndicator={false}
+                                                            showsHorizontalScrollIndicator={false}
+                                                        />
+                                                    )}
+                                                </Formik>
+                                            </KeyboardAvoidingScrollView>
 
-                                                            <FlatList
-                                                                data={subTask}
-                                                                keyExtractor={(item, index) => index.toString()}
-                                                                renderItem={({ item }) =>
-                                                                    <View style={styles.subRow}>
-                                                                        <Image
-                                                                            resizeMode={'contain'}
-                                                                            source={{ uri: Images.subTaskIcon }}
-                                                                            style={styles.downIcon2} />
-
-                                                                        <Field
-                                                                            component={CustomInput}
-                                                                            placeholder="Add subtasks"
-                                                                            keyboardType={'default'}
-                                                                            style={styles.input}
-                                                                            multiline={true}
-                                                                            value={subData?.[item]}
-                                                                            onChangeData={(value) => {
-                                                                                setSubdata({ ...subData, [item]: value })
-                                                                            }}
-                                                                            right={<TextInput.Icon name={"close"}
-                                                                                style={CommonStyles.marginTop_2}
-                                                                                color={AppColors.darkGray}
-                                                                                onPress={() => handleDelete(item.index)}
-                                                                            />}
-                                                                        />
-                                                                    </View>
-                                                                }
-                                                                showsVerticalScrollIndicator={false}
-                                                                showsHorizontalScrollIndicator={false}
-                                                            />
-                                                        )}
-                                                    </Formik>
-                                                </KeyboardAvoidingScrollView>
-                                                : null
                                         }
 
                                     </View>
