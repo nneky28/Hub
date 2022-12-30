@@ -1,4 +1,4 @@
-import { View, Text, Image, SectionList, FlatList, ScrollView, SafeAreaView, TouchableOpacity, Keyboard, Animated } from 'react-native'
+import { View, Text, Image, SectionList, FlatList, ScrollView, CheckBox, TouchableOpacity, Keyboard, Animated } from 'react-native'
 import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
@@ -25,6 +25,7 @@ import { showFlashMessage } from '../SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { downIcon, } from '../../assets/images';
 import { height } from 'react-native-dimension';
+import ScreenWrapper from '../ScreenWrapper/index';
 // import CommentTask from '../CommentTask/Index'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
@@ -124,6 +125,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
 
 
+
         setSpin(
             spinValue.interpolate({
                 inputRange: [0, 1],
@@ -183,7 +185,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
         console.log('sub', fd)
         let res = mutateUpdate(fd)
         queryClient.invalidateQueries()
-        // console.log('---', res)
         setAction(false)
         showFlashMessage({ title: `Sub task marked as completed` })
     }
@@ -215,8 +216,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
     useEffect(() => {
         toFlat()
     }, [comments]);
-    // console.log("subtask", item?.sub_tasks_tasksapp)
-
 
     const RenderItem = ({ item }) => {
         return (
@@ -225,7 +224,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
             </View>
         )
     }
-    // console.log('arrray', comment?.[0])
+
     const renderItem = ({ item }) => {
 
         <View
@@ -254,17 +253,15 @@ const Index = ({ isVisible, onHide, item, title }) => {
         </View>
 
     }
-    // const handleChecked = (id) => {
-    //     setChecked(!checked);
-    // }
 
     const handleChecked = (item) => {
-        if (selectedIDs.includes(item.id)) {
-            return setChecked(!checked)
-        }
-
+        setSelectedIDs((prev) => [...prev, item.id])
     }
 
+    const handleUncomplete = (item) => {
+        const filtered = selectedIDs.filter((id) => id !== item.id)
+        setSelectedIDs(filtered)
+    }
 
     const _subTask = () => {
         let text = "task" + count
@@ -276,25 +273,25 @@ const Index = ({ isVisible, onHide, item, title }) => {
         arr.splice(index, 1)
         setSubtask(arr)
     }
-    console.log('subtask', subTask)
-    console.log('count', count)
+
 
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     return (
-        <Container>
-            <Modal
-                onBackButtonPress={onHide}
-                onModalHide={onHide}
-                animationInTiming={500}
-                animationOutTiming={10}
-                backdropOpacity={0.2}
-                onBackdropPress={onHide}
-                animationIn="fadeInUp"
-                animationOut="fadeInDown"
-                swipeThreshold={0.3}
-                style={styles.genContainer}
-                isVisible={isVisible}>
+
+        <Modal
+            onBackButtonPress={onHide}
+            onModalHide={onHide}
+            animationInTiming={500}
+            animationOutTiming={10}
+            backdropOpacity={0.2}
+            onBackdropPress={onHide}
+            animationIn="fadeInUp"
+            animationOut="fadeInDown"
+            swipeThreshold={0.3}
+            style={styles.genContainer}
+            isVisible={isVisible}>
+            <ScreenWrapper scrollEnabled={true}>
                 <View style={styles.mainContainer}>
                     <View style={styles.container}>
                         <View style={styles.row}>
@@ -369,14 +366,16 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                                 renderItem={({ item, index }) =>
                                                     <>
                                                         <View style={CommonStyles.row}>
-                                                            {checked ? <Ionicons name="checkbox-outline" size={18} color={AppColors.black} /> :
+                                                            {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
+                                                                <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
+                                                            </TouchableOpacity> :
                                                                 <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                                    <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /></TouchableOpacity>}
+                                                                    <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} />
+                                                                </TouchableOpacity>}
+
                                                             <Text
                                                                 numberOfLines={1}
-
-                                                                style={[styles.subTitle, { textDecorationLine: checked ? "line-through" : null }]}>{item.title}</Text>
-
+                                                                style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
                                                         </View>
                                                         {index <= 1 ? <View style={styles.line1} /> : null}
                                                     </>
@@ -529,9 +528,9 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         loading={loadEdit} />
                     <SubTaskActionModal isVisible={action} onHide={() => setAction(false)} item={item} onPressHandle={onPress}
                         loading={loadingSubTask} /> */}
-            </Modal>
+            </ScreenWrapper>
+        </Modal>
 
-        </Container>
 
     )
 }
