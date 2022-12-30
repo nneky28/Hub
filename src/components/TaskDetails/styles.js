@@ -18,8 +18,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: width(5),
         borderTopLeftRadius: width(5),
         backgroundColor: 'transparent',
-        paddingVertical: height(3),
-
     },
     container: {
         paddingHorizontal: width(5),
@@ -155,7 +153,6 @@ const styles = StyleSheet.create({
     },
     logText: {
         fontFamily: FontFamily.BlackSansBlack,
-        // paddingHorizontal: width(5),
         fontSize: width(3.5)
     },
     leftIcon: {

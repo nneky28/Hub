@@ -1,4 +1,9 @@
-import { View, Text, Image, SectionList, FlatList, ScrollView, CheckBox, TouchableOpacity, Keyboard, Animated } from 'react-native'
+import {
+    View, Text, Image, SectionList, FlatList, TouchableOpacity, Keyboard,
+    Animated,
+    Easing,
+    LayoutAnimation,
+} from 'react-native'
 import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
@@ -41,7 +46,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const [subData, setSubdata] = useState({})
     const [count, setCount] = useState(0)
     const [modal, setModal] = useState(false)
-    const [display, setDisplay] = useState(false)
+    const [show, setShow] = useState(false);
     const [action, setAction] = useState(false)
     const queryClient = useQueryClient()
     const [pag, setPag] = useState(1)
@@ -394,7 +399,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                                             data={subTask}
                                                             keyExtractor={(item, index) => index.toString()}
                                                             renderItem={({ item }) =>
-                                                                <View style={styles.subRow}>
+                                                                <View style={CommonStyles.marginTop_05}>
                                                                     <Image
                                                                         resizeMode={'contain'}
                                                                         source={{ uri: Images.subTaskIcon }}
@@ -450,33 +455,11 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         </View>
 
                     </View>
-                    <TouchableOpacity onPress={hide} style={styles.sections}>
-                        <H1 style={styles.logText}>Activity log</H1>
-                        <Animated.Image
-                            resizeMode="contain"
-                            source={downIcon}
-                            style={[styles.leftIcon, { transform: [{ rotate: spin }] }]}
-                        />
-                    </TouchableOpacity>
+
                 </View>
 
                 {/* 
-                            <View style={styles.row2}>
-                                {person ? <Image
-                                    resizeMode={'contain'}
-                                    source={{ uri: Images.subTaskIcon }}
-                                    style={styles.downIcon2} /> : null}
-
-                                <View style={styles.btnRow}>
-                                    <Button
-                                        title="Add Subtasks"
-                                        textStyle={styles.buttonText2}
-                                        containerStyle={styles.button2}
-                                        onPress={() => {
-                                            _subTask()
-                                            setDisplay(true)
-                                        }}
-                                    />
+                          
                                     {
                                         display &&
                                         <TouchableOpacity
@@ -491,21 +474,21 @@ const Index = ({ isVisible, onHide, item, title }) => {
                             </View>
                         </View>
                     </View>   */}
-
-                {/* <View style={{ flex: 1 }}>
+                <TouchableOpacity onPress={hide} style={styles.sections}>
+                    <H1 style={styles.logText}>Activity log</H1>
+                    <Animated.Image
+                        resizeMode="contain"
+                        source={downIcon}
+                        style={[styles.leftIcon, { transform: [{ rotate: spin }] }]}
+                    />
+                </TouchableOpacity>
+                {
+                    show &&
+                    <View>
                         <SectionList
-                            ListHeaderComponent={() => {
-                                return (
-
-                                    <View style={styles.sections}>
-                                        <H1 style={styles.logs}>Activity log</H1>
-                                    </View>
-                                )
-                            }}
                             sections={log}
                             renderItem={RenderItem}
                             keyExtractor={item => item.id}
-                            // stickyHeaderIndices={[0]}
                             renderSectionHeader={({ section: { title } }) => {
                                 return (
                                     <H1 style={styles.stickyDate}>
@@ -515,9 +498,9 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                         <P style={styles.day}>{(moment(title).format("MMMM Do"))}</P>
                                     </H1>
                                 )
-                            }} /> */}
-
-                {/* </View> */}
+                            }} />
+                    </View>
+                }
 
                 {/* <FlatList
                         data={comment}
