@@ -121,7 +121,7 @@ const PeopleList = ({ navigation, route }) => {
         if (param === "team")
             teampage > 1 ? setTeamItem([...teamData, ...arr]) : setTeamItem(arr)
     }
-    console.log({ data })
+
 
     const handleSearch = (item) => {
         setSearch(item)

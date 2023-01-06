@@ -620,8 +620,6 @@ const SentActionModal = ({ isVisible, onHide, onPressHandle, loading, handleDele
       )
 
   }
-  console.log("Edit modal-->", item?.title)
-
   return (
     <Modal
       onBackButtonPress={onHide}

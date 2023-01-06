@@ -230,6 +230,9 @@ const Index = ({ navigation }) => {
     const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
 
+    console.log('All', data)
+    console.log('Todo', only_Todos)
+    console.log('overdue', only_overdue)
     // sent tasks 
     const sent_Todos = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const sent_inProgress = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "To-do")
@@ -386,6 +389,7 @@ const Index = ({ navigation }) => {
                             </React.Fragment>
                             : null
                     }
+                    {/* empty state for other boxes  */}
                     {
                         (
                             (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
@@ -966,7 +970,7 @@ const Index = ({ navigation }) => {
                     }
                     {
                         (
-                            (index === 0 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
+                            (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
                             team_overdue.length === 0 && !loadingOverdue
                         ) ? (
                             <EmptyStateWrapper
