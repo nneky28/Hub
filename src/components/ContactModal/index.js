@@ -596,7 +596,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item }) => {
           <P>View Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle('Completed')}>
+        <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
           <P>Mark task as complete</P>
         </TouchableOpacity>
       </View>
@@ -645,7 +645,7 @@ const SentActionModal = ({ isVisible, onHide, onPressHandle, loading, handleDele
             <P style={styles.text1}>Mark task as in progress</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle('Completed')}>
+          <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
             <P style={styles.text1}>Mark task as complete</P>
           </TouchableOpacity>
           <View style={styles.line} />
@@ -683,7 +683,7 @@ const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
       style={{ margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container1}>
-        <TouchableWrapper style={styles.textCon} onPress={() => onPressHandle('To-do')}>
+        <TouchableWrapper style={styles.textCon} onPress={() => onPressHandle('In-progress')}>
           <Text style={styles.progress}>Undo completed</Text>
         </TouchableWrapper>
       </View>

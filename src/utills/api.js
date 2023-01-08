@@ -586,11 +586,10 @@ export const useUpdate = () => {
   )
 }
 
-
-
-
 export const getAPIs = async (path) => {
+  console.log('path', path)
   let _token = await getData("token");
+  console.log('token', _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -607,6 +606,7 @@ export const getAPIs = async (path) => {
         resolve(result.data);
       })
       .catch(error => {
+        console.log('get Error', error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -618,6 +618,7 @@ export const getAPIs = async (path) => {
       });
   });
 };
+
 
 export const postAPIs = async (path, fd) => {
   let _token = await getData("token");
