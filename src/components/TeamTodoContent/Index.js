@@ -42,26 +42,24 @@ const Index = ({ __flattenArr, item, title, team }) => {
         isLoading,
     } = useMutation(APIFunction.update_status)
 
-    const onPressHandler = async (action) => {
-        try {
-            let employee = await getData("about_me")
-            let fd = {
-                assigned_to: employee?.id,
-                id: item.id,
-                due_date: moment().toISOString(true),
-                status: action,
-            }
+    const onPressHandler = async () => {
 
-            let res = await mutateAsync(fd)
-            console.log('res', res)
-            await storeData('task claim', res)
-            queryClient.invalidateQueries()
-            showFlashMessage({ title: `task updated` })
-            setWatch(!watch)
-            setCompleted(false)
-        } catch (error) {
-            console.log('err', error)
+        let employee = await getData("about_me")
+        let fd = {
+            assigned_to: employee?.id,
+            id: item.id,
+            due_date: moment().toISOString(true),
+            // status: action,
         }
+
+        let res = await mutateAsync(fd)
+        console.log('res', res)
+        await storeData('task claim', res)
+        queryClient.invalidateQueries()
+        showFlashMessage({ title: `task updated` })
+        setWatch(!watch)
+        setCompleted(false)
+
     }
 
 
@@ -72,7 +70,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
         __flattenArr()
     }, [watch]);
 
-
+    console.log('who', item?.assigned_to?.id)
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
@@ -149,7 +147,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
                             </View> :
                             item?.department === item?.assigned_to?.id ?
                                 <Button
-                                    title="claim task"
+                                    title="Claim task"
                                     textStyle={styles.buttonText}
                                     containerStyle={styles.button}
                                     onPress={() => onPressHandler('assign_to')}
