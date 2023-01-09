@@ -240,7 +240,7 @@ const Index = ({ navigation }) => {
     const team_inProgress = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const team_completed = Object.values(teamData).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
 
-
+    console.log('team', team_inProgress)
     const AddButton = ({ onPress, style }) => (
         <TouchableOpacity
             style={style}
@@ -465,6 +465,7 @@ const Index = ({ navigation }) => {
                                                 item={item}
                                                 title={actionTitle}
                                                 __flattenArr={__flattenArr}
+                                                allTasks
                                             />
                                         )) : null
                                     }
@@ -479,6 +480,7 @@ const Index = ({ navigation }) => {
                                                 item={item}
                                                 title={actionTitle}
                                                 __flattenArr={__flattenArr}
+                                                allTasks
                                             />
                                         )) : null
                                     }
@@ -493,6 +495,7 @@ const Index = ({ navigation }) => {
                                                 item={item}
                                                 title={actionTitle}
                                                 __flattenArr={__flattenArr}
+                                                allTasks
                                             />
                                         )) : null
                                     }
@@ -567,6 +570,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     __flattenArr={__flattenArr}
+                                    allTasks
                                 />
                             )) : null
                         }
@@ -581,6 +585,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     __flattenArr={__flattenArr}
+                                    allTasks
                                 />
                             )) : null
                         }
