@@ -10,41 +10,41 @@ import { TouchableWrapper, UserPINComponent } from '../../../utills/components';
 import { Images } from '../../../component2/image/Image';
 import { ICON_BUTTON_SIZE } from '../../../utills/Constants';
 import CommonStyles from '../../../utills/CommonStyles';
-import { showFlashMessage } from '../../../components/SuccessFlash';
 import { Field, Formik } from 'formik';
 import CustomInput from '../../../components/CustomInput';
 import { useMutation } from 'react-query';
 import { APIFunction } from '../../../utills/api';
-import { setLoaderVisible } from '../../../Redux/Actions/Config';
-import { getData, storeData } from '../../../utills/Methods';
+import { getData, storeData, ToastError } from '../../../utills/Methods';
 import CryptoJS from 'crypto-js';
 import { login } from '../../../Redux/Actions/Auth';
+import { setSecurityVisible } from '../../../Redux/Actions/Config';
 
-const ResetPIN = (props) => {
+const ResetPIN = ({onModeChangeHandler}) => {
   const auth = useSelector((state)=>state.Auth)
   const [password,setPassword] = React.useState("")
-  const loginFunction = useMutation((load)=>APIFunction.login(load))
+  const {
+    mutateAsync,
+    isLoading
+  } = useMutation(APIFunction.login)
   const dispatch = useDispatch()
   const [PIN,setPIN] = React.useState("")
   const [hasPIN,setHasPIN] = React.useState(false)
   const [holder,setHolder] = React.useState("")
   const [action,setAction] = React.useState("reset")
+  const [error,setError] = React.useState("")
 
   const handleSubmit = async () => {
     try{
-      if(!password || password.trim() === "") return showFlashMessage({type : "error",title : "Please enter a password"})
-      dispatch(setLoaderVisible(true))
+      if(!password || password.trim() === "") return setError("Please enter a password")
       const fd = {
         email : auth?.user?.email,
         password
       }
-      await loginFunction.mutateAsync(fd)
+      await mutateAsync(fd)
       storeData(auth.user.email.toLowerCase().replaceAll("_",""),null)
-      dispatch(setLoaderVisible(false))
       setAction("create")
     }catch(err){
-      dispatch(setLoaderVisible(false))
-      showFlashMessage({type : "error",title : err.msg})
+      setError(err.msg)
     }
   }
 
@@ -59,24 +59,29 @@ const ResetPIN = (props) => {
       }
       if(!hasPIN && action === "confirm" && (text !== PIN)){
         setHolder("")
-        return showFlashMessage({title : "Please confirm that your PIN matches",type : "error"})
+        return setError("Please confirm that your PIN matches")
       }
       if(!hasPIN && action === "confirm"){
         let userInfo = await getData("user");
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
         storeData(userInfo.email.replaceAll("_",""),ciphertext)
       }
-      dispatch(login({...auth,route : "main"}))
+      dispatch(setSecurityVisible(false))
+      onModeChangeHandler("CREATE_PIN")
     }catch(err){
-      console.log("EROR",err)
     }
+  }
+
+  const onChangeText = (text) => {
+    if(error) setError("")
+    setPassword(text)
   }
 
   useEffect(()=>{
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       ()=>{
-        if(action === "reset")  props.navigation.goBack()
+        if(action === "reset")  onModeChangeHandler("CREATE_PIN")
         if(action === "create") setAction("reset")
         if(action === "confirm") setAction("create")
         return true
@@ -97,7 +102,7 @@ const ResetPIN = (props) => {
           >
               <TouchableWrapper 
                 onPress={()=>{
-                  if(action === "reset") return props.navigation.goBack()
+                  if(action === "reset") return onModeChangeHandler("CREATE_PIN")
                   if(action === "create") return setAction("reset")
                   if(action === "confirm") return setAction("create")
                 }} 
@@ -111,10 +116,13 @@ const ResetPIN = (props) => {
               </TouchableWrapper>
             </Container>
             {
-              action !== "reset" ? <UserPINComponent hasPIN={hasPIN} validatePIN={validatePIN} action={action}
+              action !== "reset" ? <UserPINComponent hasPIN={hasPIN} validatePIN={validatePIN} 
+                  action={action}
                   setHolder={setHolder}
                   auth={auth}
+                  error={error}
                   holder={holder}
+                  setError={setError}
                 /> : <Container
                 marginTop={4}
                 width={90}
@@ -125,13 +133,14 @@ const ResetPIN = (props) => {
   
                 <Formik>
                   <React.Fragment>
+                    {error ? <P color={AppColors.red} style={CommonStyles.marginTop_2}>{error}</P> : null}
                     <Field 
                       placeholder="Password"
                       name="password"
                       value={password}
                       component={CustomInput}
                       secureTextEntry={true}
-                      onChangeData={(text)=>setPassword(text)}
+                      onChangeData={onChangeText}
                     />
                   </React.Fragment>
                 </Formik>
@@ -140,6 +149,7 @@ const ResetPIN = (props) => {
                     containerStyle={styles.btnContainer}
                     textStyle={styles.greenButtonText}
                     onPress={handleSubmit}
+                    isLoading={isLoading}
                   />
               </Container>
             }

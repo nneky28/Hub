@@ -700,6 +700,7 @@ export const UserPINComponent = (props) => {
         {
           !props?.hasPIN && props?.action === "confirm" ? <React.Fragment>
             <H1 fontSize={6} color={AppColors.black1}>Confirm New Pin</H1>
+            {props?.error ? <P color={AppColors.red} style={CommonStyles.marginTop_1}>{props?.error}</P> : null}
             <P color={AppColors.black1} style={CommonStyles.marginTop_1}>Enter your pin again for confirmation</P>
           </React.Fragment> : null
         }
@@ -707,6 +708,7 @@ export const UserPINComponent = (props) => {
           props?.hasPIN ? <React.Fragment>
             <P color={AppColors.black1}>Welcome back</P>
             <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.user?.first_name ? Capitalize(props?.auth?.user?.first_name) : null} {props?.auth?.user?.last_name ? `${Capitalize(props?.auth?.user?.last_name[0])}.` : null}</H1>
+            {props?.error ? <P color={AppColors.red} style={CommonStyles.marginTop_1}>{props?.error}</P> : null}
           </React.Fragment> : null
         }
         <Container marginTop={3} horizontalAlignment="center">
@@ -715,7 +717,10 @@ export const UserPINComponent = (props) => {
             codeLength={4}
             autoFocus={true}
             value={props.holder}
-            onTextChange={value => props?.setHolder(value)}
+            onTextChange={value => {
+              props.setError("")
+              props?.setHolder(value)
+            }}
             onFulfill={props.validatePIN}
             restrictToNumbers={true}
             cellStyle={{

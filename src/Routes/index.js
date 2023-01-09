@@ -47,7 +47,7 @@ import { Container, CustomFallBackScreen } from '../utills/components';
 import { AppState, Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
-import { setLoaderVisible } from '../Redux/Actions/Config';
+import { setLoaderVisible, setSecurityVisible } from '../Redux/Actions/Config';
 import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
@@ -61,6 +61,7 @@ import PayslipBreakDown from '../screens/PayslipBreakDown';
 import CreatePIN from '../screens/Security/CreatePIN';
 import ResetPIN from '../screens/Security/ResetPIN';
 import UsePassword from '../screens/Security/UsePassword';
+import SecurityModal from '../components/SecurityModal';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -125,9 +126,10 @@ const Routes = () => {
       if (nextAppState === "active") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
-        if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
+        if (!token || !moment().isAfter(moment(res).add(30, "seconds"))) return
         let userInfo = await getData("about_me")
-        dispatch(login({ ...auth, user: userInfo, route: "security" }))
+        dispatch(setSecurityVisible(true))
+        //dispatch(login({ ...auth, user: userInfo, route: "security" }))
       }
     })
   }
@@ -180,6 +182,7 @@ const Routes = () => {
 
         <NavigationContainer>
           <Loader />
+          <SecurityModal />
           {
             route === "splash" ? (
               <Stack.Navigator

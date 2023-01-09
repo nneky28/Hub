@@ -9,10 +9,15 @@ import { TouchableWrapper,Container } from '../../../utills/components';
 import { Images } from '../../../component2/image/Image';
 import CommonStyles from '../../../utills/CommonStyles';
 import { login } from '../../../Redux/Actions/Auth';
+import { setSecurityVisible } from '../../../Redux/Actions/Config';
 
 const MobilePIN = (props) => {
   const auth = useSelector(state=>state.Auth)
   const dispatch = useDispatch()
+
+  const onSkipHandler = () => {
+    dispatch(setSecurityVisible(false))
+  }
 
   return (
         <Container flex={1}>
@@ -21,7 +26,7 @@ const MobilePIN = (props) => {
             verticalAlignment='center'
           >
             <TouchableWrapper 
-                onPress={()=>{dispatch(login({...auth, route : "main"}))}} 
+                onPress={onSkipHandler} 
                 isText
                 width={25}
               >

@@ -6,6 +6,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import { getData, storeData } from '../../utills/Methods';
 import { Images } from '../../component2/image/Image';
+import { setSecurityVisible } from '../../Redux/Actions/Config';
 
 const Splash = (props) => {
   const auth = useSelector((state) => state.Auth);
@@ -17,8 +18,9 @@ const Splash = (props) => {
     setTimeout(async () => {
       try{
         if(user && about && about.completed_user_onboarding){
-          //dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
-          dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
+          dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
+          dispatch(setSecurityVisible(true))
+          //dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
         }else if(user && about && !about.completed_user_onboarding){
           dispatch(login({...auth,user : about,isLogin : true,route : "onboard"}));
         }else{

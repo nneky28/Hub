@@ -146,7 +146,8 @@ export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
       animationOut="fadeInDown"
       swipeThreshold={0.3}
       style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
+      isVisible={isVisible}
+    >
       <View style={styles.container}>
         <EmptyStateWrapper
           marginTop={height(0.3)}
