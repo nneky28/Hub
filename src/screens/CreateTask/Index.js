@@ -105,6 +105,7 @@ const Index = ({ visible, onHide, item }) => {
             navigation.navigate("Task")
             showFlashMessage({ title: `Task created successfully` })
         } catch (err) {
+            console.log('err', err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'

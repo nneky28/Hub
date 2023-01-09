@@ -444,7 +444,7 @@ const Index = ({ navigation }) => {
                                 }
                                 {
                                     (
-                                        (actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
+                                        (index === 0 && actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
                                         data.length === 0 && !loadingAllTask
                                     ) ? (
                                         <EmptyStateWrapper
@@ -698,6 +698,21 @@ const Index = ({ navigation }) => {
                     }
                     {/* empty state  for all tabs */}
                     {
+                        (
+                            (index === 1 && actionTitle === "To-Do" && tab === "All") && sentItems && Array.isArray(sentItems) &&
+                            sentItems.length === 0 && !loadingAllSentTask
+                        ) ? (
+                            <EmptyStateWrapper
+                                icon={Images.EmptyTeams}
+                                header_1={"No task here"}
+                                sub_text={"When you have, they will show up here."}
+                                marginTop={1}
+                                backgroundColor={'#F5F5F5'}
+                            />
+                        ) : null
+                    }
+                    {
+
                         (
                             (index === 1 && tab === "Due Today") && sentDueItem && Array.isArray(sentDueItem) &&
                             sentDueItem.length === 0 && !loadingAllSentDues
@@ -966,6 +981,20 @@ const Index = ({ navigation }) => {
                     }
 
                     {/* empty state  for all team tabs */}
+                    {
+                        (
+                            (index === 2 && actionTitle === "To-Do" && tab === "All") && teamData && Array.isArray(teamData) &&
+                            teamData.length === 0 && !loadingAllTeamTask
+                        ) ? (
+                            <EmptyStateWrapper
+                                icon={Images.EmptyTeams}
+                                header_1={"No task here"}
+                                sub_text={"When you have, they will show up here."}
+                                marginTop={1}
+                                backgroundColor={'#F5F5F5'}
+                            />
+                        ) : null
+                    }
                     {
                         (
                             (index === 2 && tab === "Due Today") && teamDueData && Array.isArray(teamDueData) &&

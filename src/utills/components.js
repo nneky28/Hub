@@ -329,7 +329,7 @@ export const CustomCalender = (props) => {
           />
         }}
         current={moment().format("YYYY-MM-DD")}
-        minDate={moment().format("YYYY-MM-DD")}
+        // minDate={moment().format("YYYY-MM-DD")}
         onDayPress={(day) => {
           props.setShow(day)
         }}
