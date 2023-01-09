@@ -159,7 +159,10 @@ const styles = StyleSheet.create({
         width: width(3.5),
         height: width(3.5),
     },
-
+    newBtn: {
+        alignSelf: 'flex-end',
+        paddingVertical: height(1)
+    }
 
 });
 export default styles;

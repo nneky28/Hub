@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import React, { useState } from 'react'
 import styles from './style'
-import { Container, P, H1, CustomCalender } from '../../utills/components'
+import { Container, P, CustomCalender } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button'
 import { Field, Formik } from 'formik';
@@ -17,7 +17,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useMutation, useQueryClient } from 'react-query';
 import { Images } from '../../component2/image/Image';
 import CommonStyles from '../../utills/CommonStyles';
-import { height, width } from 'react-native-dimension';
+import { height } from 'react-native-dimension';
 import { TextInput } from "react-native-paper"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
@@ -105,6 +105,7 @@ const Index = ({ visible, onHide, item }) => {
             navigation.navigate("Task")
             showFlashMessage({ title: `Task created successfully` })
         } catch (err) {
+            console.log('err', err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'

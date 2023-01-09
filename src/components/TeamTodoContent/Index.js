@@ -43,20 +43,25 @@ const Index = ({ __flattenArr, item, title, team }) => {
     } = useMutation(APIFunction.update_status)
 
     const onPressHandler = async (action) => {
-        let employee = await getData("about_me")
-        let fd = {
-            assigned_to: employee?.id,
-            id: item.id,
-            due_date: moment().toISOString(true),
-            status: action,
-        }
+        try {
+            let employee = await getData("about_me")
+            let fd = {
+                assigned_to: employee?.id,
+                id: item.id,
+                due_date: moment().toISOString(true),
+                status: action,
+            }
 
-        let res = await mutateAsync(fd)
-        await storeData('task claim', res)
-        queryClient.invalidateQueries()
-        showFlashMessage({ title: `task updated` })
-        setWatch(!watch)
-        setCompleted(false)
+            let res = await mutateAsync(fd)
+            console.log('res', res)
+            await storeData('task claim', res)
+            queryClient.invalidateQueries()
+            showFlashMessage({ title: `task updated` })
+            setWatch(!watch)
+            setCompleted(false)
+        } catch (error) {
+            console.log('err', error)
+        }
     }
 
 
@@ -90,7 +95,11 @@ const Index = ({ __flattenArr, item, title, team }) => {
 
                     <View style={{ marginLeft: width(3), marginTop: height(0.5) }}>
                         <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
-                        <P fontSize={3} style={styles.author}>By: {`${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`}</P>
+                        <P fontSize={3} style={styles.author}>
+                            {item?.department === item?.assigned_to?.id ? `To: ${item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} `
+                                : `Claimed by: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
+                            }
+                        </P>
                         <View>
 
                             {

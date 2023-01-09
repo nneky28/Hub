@@ -187,7 +187,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
             id: item?.sub_tasks_tasksapp[0]?.id,
             due_date: moment().toISOString(true)
         }
-        console.log('sub', fd)
         let res = mutateUpdate(fd)
         queryClient.invalidateQueries()
         setAction(false)
@@ -204,7 +203,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
             id: item?.id,
             due_date: moment().toISOString(true)
         }
-        console.log('data', fd)
         let res = mutatePut(fd)
         await storeData('task update', res)
         queryClient.invalidateQueries()
@@ -390,47 +388,57 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                         </View>
 
                                         {
-                                            subTask &&
-                                            <KeyboardAvoidingScrollView>
-                                                <Formik>
-                                                    {({ submitHandler }) => (
+                                            subTask ?
+                                                <View>
+                                                    <KeyboardAvoidingScrollView>
+                                                        <Formik>
+                                                            {({ submitHandler }) => (
 
-                                                        <FlatList
-                                                            data={subTask}
-                                                            keyExtractor={(item, index) => index.toString()}
-                                                            renderItem={({ item }) =>
-                                                                <View style={CommonStyles.marginTop_05}>
-                                                                    <Image
-                                                                        resizeMode={'contain'}
-                                                                        source={{ uri: Images.subTaskIcon }}
-                                                                        style={styles.downIcon2} />
+                                                                <FlatList
+                                                                    data={subTask}
+                                                                    keyExtractor={(item, index) => index.toString()}
+                                                                    renderItem={({ item }) =>
+                                                                        <View>
+                                                                            <Image
+                                                                                resizeMode={'contain'}
+                                                                                source={{ uri: Images.subTaskIcon }}
+                                                                                style={styles.downIcon2} />
 
-                                                                    <Field
-                                                                        component={CustomInput}
-                                                                        placeholder="Add subtasks here"
-                                                                        keyboardType={'default'}
-                                                                        style={styles.input}
-                                                                        multiline={true}
-                                                                        value={subData?.[item]}
-                                                                        onChangeData={(value) => {
-                                                                            setSubdata({ ...subData, [item]: value })
-                                                                        }}
-                                                                        right={<TextInput.Icon name={"close"}
-                                                                            style={CommonStyles.marginTop_2}
-                                                                            color={AppColors.darkGray}
-                                                                            onPress={() => handleDelete(item.index)}
-                                                                        />}
-                                                                    />
-                                                                </View>
-                                                            }
-                                                            showsVerticalScrollIndicator={false}
-                                                            showsHorizontalScrollIndicator={false}
-                                                        />
-                                                    )}
-                                                </Formik>
-                                            </KeyboardAvoidingScrollView>
+                                                                            <Field
+                                                                                component={CustomInput}
+                                                                                placeholder="Add subtasks here"
+                                                                                keyboardType={'default'}
+                                                                                style={styles.input}
+                                                                                multiline={true}
+                                                                                value={subData?.[item]}
+                                                                                onChangeData={(value) => {
+                                                                                    setSubdata({ ...subData, [item]: value })
+                                                                                }}
+                                                                                right={<TextInput.Icon name={"close"}
+                                                                                    style={CommonStyles.marginTop_2}
+                                                                                    color={AppColors.darkGray}
+                                                                                    onPress={() => handleDelete(item.index)}
+                                                                                />}
+                                                                            />
+                                                                        </View>
+                                                                    }
+                                                                    showsVerticalScrollIndicator={false}
+                                                                    showsHorizontalScrollIndicator={false}
+                                                                />
+                                                            )}
+                                                        </Formik>
+                                                        {/* <TouchableOpacity
+                                                        onPress={() => submitHandler(item.id)}
+                                                        style={styles.newBtn}>
+                                                        <Ionicons name='send' size={15} color={AppColors.green} />
+                                                    </TouchableOpacity> */}
 
+                                                    </KeyboardAvoidingScrollView>
+                                                </View> : null
                                         }
+
+
+
 
                                     </View>
                                 </> :
@@ -458,22 +466,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
                 </View>
 
-                {/* 
-                          
-                                    {
-                                        display &&
-                                        <TouchableOpacity
-                                            onPress={() => submitHandler(item.id)}
-                                            style={styles.newBtn}>
-                                            <Ionicons name='send' size={15} color={AppColors.white} />
-                                        </TouchableOpacity>
-                                    }
-
-                                </View>
-
-                            </View>
-                        </View>
-                    </View>   */}
                 <TouchableOpacity onPress={hide} style={styles.sections}>
                     <H1 style={styles.logText}>Activity log</H1>
                     <Animated.Image

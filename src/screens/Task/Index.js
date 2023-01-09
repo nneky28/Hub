@@ -221,8 +221,6 @@ const Index = ({ navigation }) => {
             return teamUpcomingPage > 1 ? setTeamUpcomingData([...teamUpcomingData, ...arr]) : setTeamUpcomingData(arr)
         if (index === 2 && actionTitle === "To-Do" && tab === "Overdue")
             return teamOverduePage > 1 ? setTeamOverdueData([...teamOverdueData, ...arr]) : setTeamOverdueData(arr)
-
-
     }
 
     const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
@@ -327,6 +325,7 @@ const Index = ({ navigation }) => {
                         <AnimatedView marginLeft={margin} styles={styles.animatedView} />
                     </View>
 
+
                     {
                         index === 0 ?
                             <React.Fragment>
@@ -386,6 +385,8 @@ const Index = ({ navigation }) => {
                             </React.Fragment>
                             : null
                     }
+                    {/* empty state for other boxes  */}
+
                     {
                         (
                             (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
@@ -441,6 +442,20 @@ const Index = ({ navigation }) => {
                                 {
                                     loadingAllTask || loadingDueTask || loadingUpcoming || loadingOverdue || loadingAllTeamTask || loadingAllTeamDue || loadingAllTeamUpcoming || loadingAllTeamOverdue || loadingAllSentDues || loadingAllSentOverdue || loadingAllSentUpcoming || loadingAllSentTask ? <PageLoader /> : null
                                 }
+                                {
+                                    (
+                                        (index === 0 && actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
+                                        data.length === 0 && !loadingAllTask
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            marginTop={1}
+                                            backgroundColor={'#F5F5F5'}
+                                        />
+                                    ) : null
+                                }
                                 <View>
                                     {
                                         index === 0 && actionTitle === 'To-Do' && tab === "All" && !loadingAllTask ? only_Todos.map((item, i) => (
@@ -449,7 +464,6 @@ const Index = ({ navigation }) => {
                                                 count={count}
                                                 item={item}
                                                 title={actionTitle}
-                                                isSent
                                                 __flattenArr={__flattenArr}
                                             />
                                         )) : null
@@ -464,7 +478,6 @@ const Index = ({ navigation }) => {
                                                 count={count}
                                                 item={item}
                                                 title={actionTitle}
-                                                isSent
                                                 __flattenArr={__flattenArr}
                                             />
                                         )) : null
@@ -479,7 +492,6 @@ const Index = ({ navigation }) => {
                                                 count={count}
                                                 item={item}
                                                 title={actionTitle}
-                                                isSent
                                                 __flattenArr={__flattenArr}
                                             />
                                         )) : null
@@ -494,7 +506,6 @@ const Index = ({ navigation }) => {
                                                 count={count}
                                                 item={item}
                                                 title={actionTitle}
-                                                isSent
                                                 __flattenArr={__flattenArr}
                                             />
                                         )) : null
@@ -555,7 +566,6 @@ const Index = ({ navigation }) => {
                                     count={count}
                                     item={item}
                                     title={actionTitle}
-                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -570,7 +580,6 @@ const Index = ({ navigation }) => {
                                     count={count}
                                     item={item}
                                     title={actionTitle}
-                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -653,7 +662,7 @@ const Index = ({ navigation }) => {
                     {
                         (
                             (index === 1 && actionTitle === "Completed") && sent_completed && Array.isArray(sent_completed) &&
-                            sent_completed.length === 0 && !loadingAllSentTask
+                            sent_completed.length === 0 && !loadingAllTeamTask
                         ) ? (
                             <EmptyStateWrapper
                                 icon={Images.EmptyTeams}
@@ -689,6 +698,21 @@ const Index = ({ navigation }) => {
                     }
                     {/* empty state  for all tabs */}
                     {
+                        (
+                            (index === 1 && actionTitle === "To-Do" && tab === "All") && sentItems && Array.isArray(sentItems) &&
+                            sentItems.length === 0 && !loadingAllSentTask
+                        ) ? (
+                            <EmptyStateWrapper
+                                icon={Images.EmptyTeams}
+                                header_1={"No task here"}
+                                sub_text={"When you have, they will show up here."}
+                                marginTop={1}
+                                backgroundColor={'#F5F5F5'}
+                            />
+                        ) : null
+                    }
+                    {
+
                         (
                             (index === 1 && tab === "Due Today") && sentDueItem && Array.isArray(sentDueItem) &&
                             sentDueItem.length === 0 && !loadingAllSentDues
@@ -740,6 +764,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     index={index}
+                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -754,6 +779,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     index={index}
+                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -768,6 +794,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     index={index}
+                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -782,6 +809,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     index={index}
+                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -796,6 +824,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     index={index}
+                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -810,6 +839,7 @@ const Index = ({ navigation }) => {
                                     item={item}
                                     title={actionTitle}
                                     index={index}
+                                    isSent
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -912,6 +942,20 @@ const Index = ({ navigation }) => {
                         </React.Fragment>
 
                     }
+                    {
+                        (
+                            (index === 2 && actionTitle === "Completed") && team_completed && Array.isArray(team_completed) &&
+                            team_completed.length === 0 && !loadingAllSentDues
+                        ) ? (
+                            <EmptyStateWrapper
+                                icon={Images.EmptyTeams}
+                                header_1={"No task here"}
+                                sub_text={"When you have, they will show up here."}
+                                backgroundColor={'#F5F5F5'}
+
+                            />
+                        ) : null
+                    }
 
                     {
                         index === 2 && actionTitle === "To-Do" ?
@@ -937,6 +981,20 @@ const Index = ({ navigation }) => {
                     }
 
                     {/* empty state  for all team tabs */}
+                    {
+                        (
+                            (index === 2 && actionTitle === "To-Do" && tab === "All") && teamData && Array.isArray(teamData) &&
+                            teamData.length === 0 && !loadingAllTeamTask
+                        ) ? (
+                            <EmptyStateWrapper
+                                icon={Images.EmptyTeams}
+                                header_1={"No task here"}
+                                sub_text={"When you have, they will show up here."}
+                                marginTop={1}
+                                backgroundColor={'#F5F5F5'}
+                            />
+                        ) : null
+                    }
                     {
                         (
                             (index === 2 && tab === "Due Today") && teamDueData && Array.isArray(teamDueData) &&
@@ -966,7 +1024,7 @@ const Index = ({ navigation }) => {
                     }
                     {
                         (
-                            (index === 0 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
+                            (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
                             team_overdue.length === 0 && !loadingOverdue
                         ) ? (
                             <EmptyStateWrapper
@@ -1001,7 +1059,6 @@ const Index = ({ navigation }) => {
                                         count={count}
                                         item={item}
                                         title={actionTitle}
-                                        isSent
                                         __flattenArr={__flattenArr}
                                     />
                                 )) : null
@@ -1016,7 +1073,6 @@ const Index = ({ navigation }) => {
                                         count={count}
                                         item={item}
                                         title={actionTitle}
-                                        isSent
                                         __flattenArr={__flattenArr}
                                     />
                                 )) : null
@@ -1031,7 +1087,6 @@ const Index = ({ navigation }) => {
                                         count={count}
                                         item={item}
                                         title={actionTitle}
-                                        isSent
                                         __flattenArr={__flattenArr}
                                     />
                                 )) : null

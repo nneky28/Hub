@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import AppColors, { ColorList } from '../../utills/AppColors';
-import { CloseHandler, Container, H1, P, Rounded, TouchableWrapper } from '../../utills/components'
+import { ColorList } from '../../utills/AppColors';
+import { CloseHandler, Container, H1, P, Rounded } from '../../utills/components'
 import { FlatList, Modal, View, Image, Text } from 'react-native';
 import PersonListComp, { DeptListComp } from '../PersonListComp/index';
-import SearchBox, { SearchBoxIOS } from '../SearchBox/index';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 import { width, height } from 'react-native-dimension';
 import styles from './styles'
@@ -48,15 +47,11 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         )
     }
 
-
-
     const handleSearch = (text) => {
         setSearchEmp(text)
         setEmpPage(1)
 
     }
-
-
     const {
         data: employeeData,
         hasNextPage: hasNextEmployees,
@@ -64,15 +59,11 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         loading: empLoading
     } = useFetchEmployees(empPage, searchEmp)
 
-
-
     const {
         data: departmentData,
         isFetching: fetchingDepartments,
         isFetchingNextPage: fetchingNextDepartments,
     } = useFetchDepartments(deptPage, searchDeptTerm)
-
-    // console.log('department', departmentData?.pages)
 
     const __flattenArr = (param) => {
         let flattenedArr = []
@@ -90,7 +81,6 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
         if (param === "employee")
             empPage > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
-
 
         if (param === "departments")
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
@@ -131,8 +121,6 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
 
-
-    console.log('dept', departments)
     return (
         <Modal
             visible={open}>
@@ -251,13 +239,6 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                                     nestedScrollEnabled={true}
                                     contentContainerStyle={[styles.flatlist, { paddingBottom: height(40), paddingHorizontal: width(5) }]}
                                     onEndReachedThreshold={0.1}
-                                // onEndReached={loadMore}
-                                // refreshing={false}
-                                // onRefresh={async () => {
-                                //     await storePage("page", 1)
-
-                                // }}
-                                // ListFooterComponent={fetchingNextEmployees || hasNextEmployees ? footerLoader : null}
                                 />
                             </React.Fragment>
 

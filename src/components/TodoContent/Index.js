@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
 
 
-const Index = ({ item, index, title, __flattenArr, }) => {
+const Index = ({ item, index, title, __flattenArr, isSent }) => {
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -57,10 +57,6 @@ const Index = ({ item, index, title, __flattenArr, }) => {
         setWatch(!watch)
     }
 
-
-
-
-
     useEffect(() => {
         __flattenArr()
     }, [watch]);
@@ -85,7 +81,13 @@ const Index = ({ item, index, title, __flattenArr, }) => {
 
                         <View style={styles.btn}>
                             <TouchableOpacity
-                                onPress={() => onPressHandler('In-progress')}
+                                onPress={() => {
+                                    if (title === "In Progress") {
+                                        onPressHandler('Completed')
+                                    }
+                                    onPressHandler('In-progress')
+                                }
+                                }
                                 style={styles.button}>
                                 <Text numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</Text>
                             </TouchableOpacity>
@@ -103,7 +105,13 @@ const Index = ({ item, index, title, __flattenArr, }) => {
             </View>
 
             <View style={styles.by}>
-                <P color={AppColors.black3}>By: {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''} </P>
+                <P color={AppColors.black3}>
+                    {
+                        isSent ? 'To:' : 'By:'
+                    }
+                    {" "}
+                    {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}
+                </P>
             </View>
 
             {
