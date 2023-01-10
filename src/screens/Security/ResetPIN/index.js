@@ -18,6 +18,7 @@ import { getData, storeData, ToastError } from '../../../utills/Methods';
 import CryptoJS from 'crypto-js';
 import { login } from '../../../Redux/Actions/Auth';
 import { setSecurityVisible } from '../../../Redux/Actions/Config';
+import moment from "moment"
 
 const ResetPIN = ({onModeChangeHandler}) => {
   const auth = useSelector((state)=>state.Auth)
@@ -66,6 +67,7 @@ const ResetPIN = ({onModeChangeHandler}) => {
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
         storeData(userInfo.email.replaceAll("_",""),ciphertext)
       }
+      storeData("lastActiveMoment", moment().toISOString())
       dispatch(setSecurityVisible(false))
       onModeChangeHandler("CREATE_PIN")
     }catch(err){

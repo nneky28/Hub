@@ -8,7 +8,6 @@ import ResetPIN from "../../screens/Security/ResetPIN";
 const SecurityModal = () => {
     const [mode,setMode] = React.useState("CREATE_PIN")
     const isSecurityVisible = useSelector(state=>state.Config.isSecurityVisible)
-    console.log("isSecurityVisible---",isSecurityVisible)
     const onHide = () => {
         
     }

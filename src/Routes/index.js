@@ -191,14 +191,6 @@ const Routes = () => {
                 <Stack.Screen name="Splash" component={Splash} />
                 <Stack.Screen name="Onboard" component={Onboard} />
               </Stack.Navigator>
-            ) : route === "security" ? (
-              <Stack.Navigator
-                screenOptions={{ headerShown: false }}
-              >
-                <Stack.Screen name="CreatePIN" component={CreatePIN} />
-                <Stack.Screen name="ResetPIN" component={ResetPIN} />
-                <Stack.Screen name="UsePassword" component={UsePassword} />
-              </Stack.Navigator>
             ) : route === "main" ?
               (
                 <DrawerStack.Navigator

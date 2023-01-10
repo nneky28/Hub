@@ -14,6 +14,7 @@ import { login } from '../../../Redux/Actions/Auth';
 import { showFlashMessage } from '../../../components/SuccessFlash';
 import MobilePIN from '../MobilePIN';
 import { setLoaderVisible, setSecurityVisible } from '../../../Redux/Actions/Config';
+import moment from "moment"
 
 const CreatePIN = ({onModeChangeHandler}) => {
   const auth = useSelector(state=>state.Auth)
@@ -44,6 +45,7 @@ const CreatePIN = ({onModeChangeHandler}) => {
   }
 
   const onSkipHandler = () => {
+    storeData("lastActiveMoment", moment().toISOString())
     dispatch(setSecurityVisible(false))
   }
 
@@ -69,7 +71,7 @@ const CreatePIN = ({onModeChangeHandler}) => {
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
         storeData(userInfo.email.replaceAll("_",""),ciphertext)
       }
-      console.log("HERE--")
+      storeData("lastActiveMoment", moment().toISOString())
       dispatch(setSecurityVisible(false))
     }catch(err){
     }
