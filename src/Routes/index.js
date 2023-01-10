@@ -126,7 +126,7 @@ const Routes = () => {
       if (nextAppState === "active") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
-        if (!token || !moment().isAfter(moment(res).add(15, "seconds"))) return
+        if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
         let userInfo = await getData("about_me")
         dispatch(setSecurityVisible(true))
         //dispatch(login({ ...auth, user: userInfo, route: "security" }))
