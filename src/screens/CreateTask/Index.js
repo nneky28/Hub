@@ -149,8 +149,11 @@ const Index = ({ visible, onHide, item }) => {
                     />
                 </View> :
                     <View style={styles.mainViewContainer}>
+
+
                         <KeyboardAwareScrollView
-                            style={{ marginBottom: height(2) }}
+
+                            style={{ marginBottom: height(10) }}
                             behavior={Platform.OS === "ios" ? "padding" : "height"} >
                             <Formik
                                 initialValues={{
@@ -181,8 +184,6 @@ const Index = ({ visible, onHide, item }) => {
                                             component={CustomInput}
                                             placeholder="Enter Task description here"
                                             keyboardType={'default'}
-                                            style={styles.input}
-                                            minHeight={80}
                                             multiline={true}
                                             value={data.description}
                                             onChangeData={(value) => {
