@@ -22,12 +22,13 @@ import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
 
 
-const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
+const Index = ({ item, index, title, __flattenArr, isSent }) => {
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
     const [display, setDisplay] = useState(false)
     const [subTask, setSubTask] = useState(false)
     const [completed, setCompleted] = useState(false)
+    const [watch, setWatch] = useState(false)
     const [sentModal, setSent] = useState(false)
     const [visible, setVisible] = useState(false)
     const navigation = useNavigation()
@@ -50,12 +51,12 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
         setCompleted(false)
         setSent(false)
         showFlashMessage({ title: `status changed` })
-
+        setWatch(!watch)
     }
 
     useEffect(() => {
         __flattenArr()
-    }, []);
+    }, [watch]);
 
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');

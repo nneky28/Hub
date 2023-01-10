@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     mainViewContainer: {
         backgroundColor: AppColors.white,
         paddingHorizontal: width(5),
-        marginTop: height(30),
+        marginTop: height(10),
         flex: 1,
         borderTopRightRadius: width(5),
         borderTopLeftRadius: width(5)
