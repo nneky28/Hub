@@ -559,8 +559,9 @@ const FilterModal = ({ isVisible, onHide, onPressHandle }) => {
     </Modal>
   );
 };
-const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item }) => {
+const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler }) => {
   const [showDetails, setShowDetails] = useState(false)
+  const [showForm, setShowForm] = useState(false)
 
   const Loader = () => {
     if (loading)
@@ -600,15 +601,28 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item }) => {
         <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
           <P>Mark task as complete</P>
         </TouchableOpacity>
+        <View style={styles.line} />
+        <TouchableOpacity style={styles.textCon} onPress={() => { setShowForm(true), item }}>
+          <P>Edit Task</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
+        <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
+          <P>Delete Task</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
       </View>
 
       <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
-
+      <CreateTask
+        visible={showForm}
+        onHide={() => setShowForm(false)}
+        item={item}
+      />
     </Modal>
   );
 };
 
-const SentActionModal = ({ isVisible, onHide, onPressHandle, loading, handleDelete, item, }) => {
+const SentActionModal = ({ isVisible, onHide, loading, item, deleteHandler }) => {
 
   const [showForm, setShowForm] = useState(false)
 
@@ -642,15 +656,7 @@ const SentActionModal = ({ isVisible, onHide, onPressHandle, loading, handleDele
             <P style={styles.text1}>Edit Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle('In-progress')}>
-            <P style={styles.text1}>Mark task as in progress</P>
-          </TouchableOpacity>
-          <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
-            <P style={styles.text1}>Mark task as complete</P>
-          </TouchableOpacity>
-          <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon} onPress={handleDelete}>
+          <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
             <P style={styles.text1}>Delete task</P>
           </TouchableOpacity>
         </React.Fragment>

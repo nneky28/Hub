@@ -20,7 +20,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
-
+import TaskDetails from '../TaskDetails/Index'
 
 const Index = ({ item, index, title, __flattenArr, isSent }) => {
     const queryClient = useQueryClient()
@@ -30,13 +30,17 @@ const Index = ({ item, index, title, __flattenArr, isSent }) => {
     const [completed, setCompleted] = useState(false)
     const [watch, setWatch] = useState(false)
     const [sentModal, setSent] = useState(false)
-    const [visible, setVisible] = useState(false)
     const navigation = useNavigation()
 
     const {
         mutateAsync,
         isLoading,
     } = useMutation(APIFunction.update_status)
+
+    const deleteTask = useMutation(() => APIFunction.delete_task(id))
+
+
+
 
     const onPressHandler = async (action) => {
         let fd = {
@@ -45,13 +49,28 @@ const Index = ({ item, index, title, __flattenArr, isSent }) => {
             due_date: moment().toISOString(true)
         }
         let res = await mutateAsync(fd)
-        await storeData('task update', res)
-        queryClient.invalidateQueries()
-        setModal(false)
-        setCompleted(false)
-        setSent(false)
-        showFlashMessage({ title: `status changed` })
-        setWatch(!watch)
+        if (res) {
+            await storeData('task update', res)
+            queryClient.invalidateQueries()
+            // queryClient.invalidateQueries('todos')
+            setModal(false)
+            setCompleted(false)
+            setSent(false)
+            showFlashMessage({ title: `status changed` })
+            setWatch(!watch)
+        }
+
+    }
+
+    const handleDelete = async () => {
+        try {
+            let res = await deleteTask.mutateAsync()
+            console.log('deleted', res)
+            queryClient.invalidateQueries('todos')
+        } catch (error) {
+            console.log('err', error)
+        }
+
     }
 
     useEffect(() => {
@@ -62,43 +81,45 @@ const Index = ({ item, index, title, __flattenArr, isSent }) => {
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
 
     return (
-        <View style={styles.wrapper}>
+        <TouchableOpacity style={styles.wrapper} onPress={() => setDisplay(true)}>
             <View style={styles.row}>
                 <View>
                     <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
                 </View>
-
                 {
-                    title === "Completed" || index === 1 ? <TouchableOpacity style={CommonStyles.marginTop_2} onPress={() => {
-                        title === "Completed" && setCompleted(true)
-                        index === 1 && setSent(true)
-                    }}>
-                        <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
-                    </TouchableOpacity> :
+                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" ? null :
+                        index === 1 && title === "To-Do" || title === "Completed" ?
+                            <TouchableOpacity style={CommonStyles.marginTop_2} onPress={() => {
+                                title === "Completed" && setCompleted(true)
+                                index === 1 && setSent(true)
+                            }}>
+                                <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
+                            </TouchableOpacity> :
+                            <View style={styles.btn}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        if (title === 'In Progress') {
+                                            onPressHandler("Completed")
+                                        }
+                                        onPressHandler('In-progress')
+                                    }}
+                                    style={styles.button}>
+                                    <Text numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</Text>
+                                </TouchableOpacity>
 
-                        <View style={styles.btn}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    if (title === "In Progress") {
-                                        onPressHandler('Completed')
-                                    }
-                                    onPressHandler('In-progress')
-                                }
-                                }
-                                style={styles.button}>
-                                <Text numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</Text>
-                            </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setModal(true)
+                                        item.id
+                                    }}
+                                    style={styles.btnPart}>
+                                    <Ionicons name="chevron-down-outline" size={15} color={AppColors.black3} />
+                                </TouchableOpacity>
+                            </View>
 
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setModal(true)
-                                    item.id
-                                }}
-                                style={styles.btnPart}>
-                                <Ionicons name="chevron-down-outline" size={15} color={AppColors.black3} />
-                            </TouchableOpacity>
-                        </View>
                 }
+
+
             </View>
 
             <View style={styles.by}>
@@ -149,21 +170,19 @@ const Index = ({ item, index, title, __flattenArr, isSent }) => {
                         : null
                 }
             </View>
-
             <View style={styles.line1} />
-
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
+                deleteHandler={handleDelete}
                 loading={isLoading} />
-
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
             <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item}
                 onPressHandle={onPressHandler}
-                loading={isLoading}
-            />
+                deleteHandler={handleDelete}
+                loading={isLoading} />
+            <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
 
-
-        </View>
+        </TouchableOpacity>
     )
 }
 

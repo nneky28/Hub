@@ -8,7 +8,7 @@ import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
 import Button from '../Button/index';
-import { P, H1, Container, Rounded } from '../../utills/components';
+import { P, H1, Container, Rounded, CloseHandler } from '../../utills/components';
 import { Images } from '../../component2/image/Image';
 import { CompletedModal, SubTaskActionModal } from '../ContactModal';
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
@@ -35,8 +35,7 @@ import ScreenWrapper from '../ScreenWrapper/index';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 
-const Index = ({ isVisible, onHide, item, title }) => {
-    const navigation = useNavigation()
+const Index = ({ isVisible, onHide, item, title, navigation }) => {
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
     const [addBtn, setAddBtn] = useState(true)
@@ -299,9 +298,10 @@ const Index = ({ isVisible, onHide, item, title }) => {
                     <View style={styles.container}>
                         <View style={styles.row}>
                             <View>
-                                <H1 >{Capitalize(item?.title)}</H1>
+                                <H1>{Capitalize(item?.title)}</H1>
                             </View>
-                            <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
+                            {/* <Ionicons name="close-outline" size={15} color={AppColors.black3} /> */}
+                            <CloseHandler position={'center'} onPress={onHide} />
                         </View>
 
                         <View style={styles.row1}>

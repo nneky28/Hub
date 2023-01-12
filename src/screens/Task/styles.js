@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: height(75),
+        top: height(82),
         left: width(80),
         borderWidth: 0.1,
         borderColor: '#ADE5EB'
@@ -248,8 +248,9 @@ const styles = StyleSheet.create({
         paddingVertical: height(2),
     },
     scroll: {
-        backgroundColor: '#F5F5F5'
+        backgroundColor: '#F5F5F5',
         // marginBottom: height(10)
+
     },
     emptyCon: {
         paddingHorizontal: width(18),

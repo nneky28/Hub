@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
 const styles = StyleSheet.create({
-    wrapper: { backgroundColor: '#F5F5F5', marginTop: height(2) },
+    wrapper: { backgroundColor: '#F5F5F5', paddingVertical: height(1) },
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',

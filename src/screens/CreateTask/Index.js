@@ -152,7 +152,7 @@ const Index = ({ visible, onHide, item }) => {
 
 
                         <KeyboardAwareScrollView
-
+                            showsVerticalScrollIndicator={false}
                             style={{ marginBottom: height(10) }}
                             behavior={Platform.OS === "ios" ? "padding" : "height"} >
                             <Formik
@@ -276,7 +276,7 @@ const Index = ({ visible, onHide, item }) => {
 
                                     <TouchableOpacity
                                         onPress={submitHandler}>
-                                        <Ionicons name='send' size={20} color={AppColors.black2} />
+                                        <Ionicons name='send' size={22} color={AppColors.black2} />
                                     </TouchableOpacity>
                                 </View>
                             </Container>

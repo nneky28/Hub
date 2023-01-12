@@ -49,7 +49,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
             assigned_to: employee?.id,
             id: item.id,
             due_date: moment().toISOString(true),
-            // status: action,
+            status: "In-progress",
         }
 
         let res = await mutateAsync(fd)
@@ -70,7 +70,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
         __flattenArr()
     }, [watch]);
 
-    console.log('who', item?.assigned_to?.id)
+
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>

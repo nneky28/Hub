@@ -42,12 +42,11 @@ const styles = StyleSheet.create({
     marginRight: width(8)
   },
   line: {
-    width: '100%',
+    width: width(50),
     height: 1,
     backgroundColor: AppColors.gray1,
-    // marginVertical: height(1),
     elevation: 0,
-    marginTop: height(2)
+    marginTop: height(0.7)
   },
   line1: {
     width: '15%',
@@ -94,17 +93,17 @@ const styles = StyleSheet.create({
   },
   container1: {
     backgroundColor: AppColors.white,
-    paddingVertical: height(2),
+    paddingVertical: height(1.5),
     borderRadius: 5,
-    paddingHorizontal: width(2),
+    paddingHorizontal: width(3),
     alignSelf: 'flex-end',
     marginRight: width(7),
-    marginTop: height(10),
+    marginTop: height(20),
   },
 
   textCon: {
-    paddingHorizontal: width(2),
-
+    paddingHorizontal: width(3),
+    marginTop: height(1),
   },
   textContainer1: {
     width: width(90),
