@@ -18,8 +18,8 @@ const Splash = (props) => {
     setTimeout(async () => {
       try{
         if(user && about && about.completed_user_onboarding){
-          dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
           dispatch(setSecurityVisible(true))
+          dispatch(login({...auth,user : user,isLogin : true,route : "main"}));
           //dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
         }else if(user && about && !about.completed_user_onboarding){
           dispatch(login({...auth,user : about,isLogin : true,route : "onboard"}));

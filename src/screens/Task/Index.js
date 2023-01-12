@@ -96,7 +96,6 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllTask,
     } = useFetchTodos(tab)
 
-
     const {
         data: dueTasks,
         isLoading: loadingDueTask
@@ -222,11 +221,13 @@ const Index = ({ navigation }) => {
         if (index === 2 && actionTitle === "To-Do" && tab === "Overdue")
             return teamOverduePage > 1 ? setTeamOverdueData([...teamOverdueData, ...arr]) : setTeamOverdueData(arr)
     }
+    console.log('dues', dueItems)
 
     const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const only_inProgress = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
+    const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
 
     // sent tasks 
     const sent_Todos = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
@@ -240,7 +241,6 @@ const Index = ({ navigation }) => {
     const team_inProgress = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const team_completed = Object.values(teamData).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
 
-    console.log('team', team_inProgress)
     const AddButton = ({ onPress, style }) => (
         <TouchableOpacity
             style={style}
@@ -278,9 +278,15 @@ const Index = ({ navigation }) => {
     }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
 
 
+
+    // useEffect(() => {
+    //     setTab(tab)
+    // }, [])
+
+
+
     return (
         <React.Fragment>
-
             <ScreenWrapper scrollEnabled={false}
                 footerUnScrollable={() => {
                     return (
@@ -305,18 +311,22 @@ const Index = ({ navigation }) => {
                     <View style={styles.line} />
                 </View>
                 <ScrollView
-                    style={styles.scroll}
+                    style={[styles.scroll, CommonStyles.paddingBottom_5]}
                     showsVerticalScrollIndicator={false}>
 
                     <View style={styles.threeButtonCont}>
                         {
                             ['My Tasks', 'Sent Tasks', 'My Team'].map((item, i) => (
                                 <TouchableOpacity
-                                    onPress={() => setButtons(i)}
+                                    onPress={() => {
+                                        setButtons(i)
+                                        setActionTitle("To-Do")
+                                        setTab("All")
+                                    }}
                                     style={styles.button}
                                     activeOpacity={0.8}
                                     key={i}>
-                                    <Text style={[styles.buttonText, index == i && styles.buttonText1]}>
+                                    <Text style={[styles.buttonText, index === i && styles.buttonText1]}>
                                         {item}
                                     </Text>
                                 </TouchableOpacity>
@@ -382,83 +392,190 @@ const Index = ({ navigation }) => {
                                     })
                                     </H1>
                                 </View>
-                            </React.Fragment>
-                            : null
-                    }
-                    {/* empty state for other boxes  */}
 
-                    {
-                        (
-                            (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
-                            only_inProgress.length === 0 && !loadingAllTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (actionTitle === "Completed") && only_completed && Array.isArray(only_completed) &&
-                            only_completed.length === 0 && !loadingAllTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-
-
-                    {
-                        index === 0 && actionTitle === 'To-Do' ?
-
-                            <React.Fragment>
-
-                                <View style={styles.scrollViewContainer}>
-                                    <ScrollView
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}>
-                                        {
-                                            ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                                <TouchableWrapper
-                                                    onPress={() => setTab(item)}
-                                                    isText
-                                                    width={25}
-                                                    style={tab === item ? styles.currentTab : styles.defaultTab}
-                                                    key={i}>
-                                                    <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                                </TouchableWrapper>
-                                            ))
-                                        }
-                                    </ScrollView>
-                                </View>
-                                {/* loading state  for all tabs */}
-                                {
-                                    loadingAllTask || loadingDueTask || loadingUpcoming || loadingOverdue || loadingAllTeamTask || loadingAllTeamDue || loadingAllTeamUpcoming || loadingAllTeamOverdue || loadingAllSentDues || loadingAllSentOverdue || loadingAllSentUpcoming || loadingAllSentTask ? <PageLoader /> : null
-                                }
                                 {
                                     (
-                                        (index === 0 && actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
-                                        data.length === 0 && !loadingAllTask
+                                        (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
+                                        only_inProgress.length === 0 && !loadingAllTask
                                     ) ? (
                                         <EmptyStateWrapper
                                             icon={Images.EmptyTeams}
                                             header_1={"No task here"}
                                             sub_text={"When you have, they will show up here."}
-                                            marginTop={1}
                                             backgroundColor={'#F5F5F5'}
                                         />
                                     ) : null
                                 }
+                                {
+                                    (
+                                        (actionTitle === "Completed") && only_completed && Array.isArray(only_completed) &&
+                                        only_completed.length === 0 && !loadingAllTask
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            backgroundColor={'#F5F5F5'}
+                                        />
+                                    ) : null
+                                }
+
+
+                                {
+                                    index === 0 && actionTitle === 'To-Do' ?
+
+                                        <React.Fragment>
+
+                                            <View style={styles.scrollViewContainer}>
+                                                <ScrollView
+                                                    horizontal
+                                                    showsHorizontalScrollIndicator={false}>
+                                                    {
+                                                        ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
+                                                            <TouchableWrapper
+                                                                onPress={() => setTab(item)}
+                                                                isText
+                                                                width={25}
+                                                                style={tab === item ? styles.currentTab : styles.defaultTab}
+                                                                key={i}>
+                                                                <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
+                                                            </TouchableWrapper>
+                                                        ))
+                                                    }
+                                                </ScrollView>
+                                            </View>
+                                            {/* loading state  for all tabs */}
+                                            {
+                                                loadingAllTask || loadingDueTask || loadingUpcoming || loadingOverdue || loadingAllTeamTask || loadingAllTeamDue || loadingAllTeamUpcoming || loadingAllTeamOverdue || loadingAllSentDues || loadingAllSentOverdue || loadingAllSentUpcoming || loadingAllSentTask ? <PageLoader /> : null
+                                            }
+                                            {
+                                                (
+                                                    (index === 0 && actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
+                                                    data.length === 0 && !loadingAllTask
+                                                ) ? (
+                                                    <EmptyStateWrapper
+                                                        icon={Images.EmptyTeams}
+                                                        header_1={"No task here"}
+                                                        sub_text={"When you have, they will show up here."}
+                                                        marginTop={1}
+                                                        backgroundColor={'#F5F5F5'}
+                                                    />
+                                                ) : null
+                                            }
+                                            <View>
+                                                {
+                                                    index === 0 && actionTitle === 'To-Do' && tab === "All" && !loadingAllTask ? only_Todos.map((item, i) => (
+                                                        <TodoContent
+                                                            key={i}
+                                                            count={count}
+                                                            item={item}
+                                                            title={actionTitle}
+                                                            __flattenArr={__flattenArr}
+                                                            allTasks
+                                                        />
+                                                    )) : null
+                                                }
+                                            </View>
+
+                                            <View>
+                                                {
+                                                    index === 0 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingDueTask ? only_duetoday.map((item, i) => (
+                                                        <TodoContent
+                                                            key={i}
+                                                            count={count}
+                                                            item={item}
+                                                            title={actionTitle}
+                                                            __flattenArr={__flattenArr}
+                                                            allTasks
+                                                        />
+                                                    )) : null
+                                                }
+                                            </View>
+
+                                            <View>
+                                                {
+                                                    index === 0 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingUpcoming ? upcomingItems.map((item, i) => (
+                                                        <TodoContent
+                                                            key={i}
+                                                            count={count}
+                                                            item={item}
+                                                            title={actionTitle}
+                                                            __flattenArr={__flattenArr}
+                                                            allTasks
+                                                        />
+                                                    )) : null
+                                                }
+                                            </View>
+
+                                            <View>
+                                                {
+                                                    index === 0 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingOverdue ? only_overdue.map((item, i) => (
+                                                        <TodoContent
+                                                            key={i}
+                                                            count={count}
+                                                            item={item}
+                                                            title={actionTitle}
+                                                            __flattenArr={__flattenArr}
+                                                        />
+                                                    )) : null
+                                                }
+                                            </View>
+                                        </React.Fragment>
+                                        : null
+                                }
+
+                                {/* empty state for other boxes  */}
+
+
+
+
+                                {/* empty state  for all tabs */}
+                                {
+                                    (
+                                        (index === 0 && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
+                                        dueItems.length === 0 && !loadingDueTask
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            backgroundColor={'#F5F5F5'}
+
+                                        />
+                                    ) : null
+                                }
+                                {
+                                    (
+                                        (index === 0 && tab === "Upcoming") && upcomingItems && Array.isArray(upcomingItems) &&
+                                        upcomingItems.length === 0 && !loadingUpcoming
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            backgroundColor={'#F5F5F5'}
+
+                                        />
+                                    ) : null
+                                }
+                                {
+                                    (
+                                        (index === 0 && tab === "Overdue") && overdueItems && Array.isArray(overdueItems) &&
+                                        overdueItems.length === 0 && !loadingOverdue
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            backgroundColor={'#F5F5F5'}
+                                        />
+                                    ) : null
+                                }
+
+
                                 <View>
                                     {
-                                        index === 0 && actionTitle === 'To-Do' && tab === "All" && !loadingAllTask ? only_Todos.map((item, i) => (
+                                        index === 0 && actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
                                             <TodoContent
                                                 key={i}
                                                 count={count}
@@ -473,7 +590,7 @@ const Index = ({ navigation }) => {
 
                                 <View>
                                     {
-                                        index === 0 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingDueTask ? dueItems.map((item, i) => (
+                                        index === 0 && actionTitle === "Completed" ? only_completed.map((item, i) => (
                                             <TodoContent
                                                 key={i}
                                                 count={count}
@@ -486,370 +603,275 @@ const Index = ({ navigation }) => {
                                     }
                                 </View>
 
-                                <View>
-                                    {
-                                        index === 0 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingUpcoming ? upcomingItems.map((item, i) => (
-                                            <TodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                                allTasks
-                                            />
-                                        )) : null
-                                    }
-                                </View>
 
-                                <View>
-                                    {
-                                        index === 0 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingOverdue ? only_overdue.map((item, i) => (
-                                            <TodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                            />
-                                        )) : null
-                                    }
-                                </View>
                             </React.Fragment>
+
                             : null
                     }
-                    {/* empty state  for all tabs */}
-                    {
-                        (
-                            (index === 0 && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
-                            dueItems.length === 0 && !loadingDueTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
 
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 0 && tab === "Upcoming") && upcomingItems && Array.isArray(upcomingItems) &&
-                            upcomingItems.length === 0 && !loadingUpcoming
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 0 && tab === "Overdue") && overdueItems && Array.isArray(overdueItems) &&
-                            overdueItems.length === 0 && !loadingOverdue
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-
-
-                    <View>
-                        {
-                            index === 0 && actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    __flattenArr={__flattenArr}
-                                    allTasks
-                                />
-                            )) : null
-                        }
-                    </View>
-
-                    <View>
-                        {
-                            index === 0 && actionTitle === "Completed" ? only_completed.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    __flattenArr={__flattenArr}
-                                    allTasks
-                                />
-                            )) : null
-                        }
-                    </View>
 
                     {/* sent task starts here  */}
                     {
-                        index === 1 ?
-                            <React.Fragment>
-                                <View style={styles.boxContainer}>
-                                    {
-                                        [
-                                            {
-                                                selected: "To-Do",
-                                                colorUp: AppColors.newBlue,
-                                                image: Images.clippedPart,
-                                                count: sentStatistics ? numeral(sentStatistics?.todo_count).format("0,0") : 0,
-                                            },
+                        index === 1 &&
+                        <React.Fragment>
+                            <View style={styles.boxContainer}>
+                                {
+                                    [
+                                        {
+                                            selected: "To-Do",
+                                            colorUp: AppColors.newBlue,
+                                            image: Images.clippedPart,
+                                            count: sentStatistics ? numeral(sentStatistics?.todo_count).format("0,0") : 0,
+                                        },
 
-                                            {
-                                                selected: "In Progress",
-                                                colorUp: AppColors.yellow,
-                                                image: Images.clippedPart,
-                                                count: sentStatistics ? numeral(sentStatistics?.inprogress_count).format("0,0") : 0,
+                                        {
+                                            selected: "In Progress",
+                                            colorUp: AppColors.yellow,
+                                            image: Images.clippedPart,
+                                            count: sentStatistics ? numeral(sentStatistics?.inprogress_count).format("0,0") : 0,
 
-                                            },
-                                            {
-                                                selected: "Completed",
-                                                colorUp: AppColors.green,
-                                                image: Images.clippedPart,
-                                                count: sentStatistics ? numeral(sentStatistics?.completed_count).format("0,0") : 0,
+                                        },
+                                        {
+                                            selected: "Completed",
+                                            colorUp: AppColors.green,
+                                            image: Images.clippedPart,
+                                            count: sentStatistics ? numeral(sentStatistics?.completed_count).format("0,0") : 0,
 
-                                            }
-                                        ].map((item, i) => <TouchableOpacity key={i} onPress={() => {
-                                            setActionTitle(item.selected)
-                                            setCount(item.count)
-                                            setTab(tab)
+                                        }
+                                    ].map((item, i) => <TouchableOpacity key={i} onPress={() => {
+                                        setActionTitle(item.selected)
+                                        setCount(item.count)
+                                        setTab(tab)
 
-                                        }}>
-                                            <Container
-                                                backgroundColor={item.colorUp}
-                                                style={styles.mainContainer}>
-                                                <View>
-                                                    <View style={styles.titleCon}>
-                                                        <H1 style={styles.title}>{item.selected}</H1>
-                                                        {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
-                                                    </View>
-                                                    <View>
-                                                        <Image source={{ uri: Images.clippedPart }} style={styles.clipped} />
-                                                        <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
-                                                    </View>
+                                    }}>
+                                        <Container
+                                            backgroundColor={item.colorUp}
+                                            style={styles.mainContainer}>
+                                            <View>
+                                                <View style={styles.titleCon}>
+                                                    <H1 style={styles.title}>{item.selected}</H1>
+                                                    {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
                                                 </View>
-                                            </Container>
-                                        </TouchableOpacity>)
-                                    }
-                                </View>
-                                <View style={styles.container}>
-                                    <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                                        actionTitle === 'To-Do' ? sentStatistics?.todo_count : actionTitle === 'In Progress' ? sentStatistics?.inprogress_count : actionTitle === 'Completed' ? sentStatistics?.completed_count : null
-                                    })
-                                    </H1>
-                                </View>
-                            </React.Fragment>
-                            : null
-                    }
-                    {
-                        (
-                            (index === 1 && actionTitle === "In Progress") && sent_inProgress && Array.isArray(sent_inProgress) &&
-                            sent_inProgress.length === 0 && !loadingAllSentTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 1 && actionTitle === "Completed") && sent_completed && Array.isArray(sent_completed) &&
-                            sent_completed.length === 0 && !loadingAllTeamTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
+                                                <View>
+                                                    <Image source={{ uri: Images.clippedPart }} style={styles.clipped} />
+                                                    <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
+                                                </View>
+                                            </View>
+                                        </Container>
+                                    </TouchableOpacity>)
+                                }
+                            </View>
+                            <View style={styles.container}>
+                                <H1 color={AppColors.black1}>{actionTitle}{' '}({
+                                    actionTitle === 'To-Do' ? sentStatistics?.todo_count : actionTitle === 'In Progress' ? sentStatistics?.inprogress_count : actionTitle === 'Completed' ? sentStatistics?.completed_count : null
+                                })
+                                </H1>
+                            </View>
+
+                            {
+                                (
+                                    (index === 1 && actionTitle === "In Progress") && sent_inProgress && Array.isArray(sent_inProgress) &&
+                                    sent_inProgress.length === 0 && !loadingAllSentTask
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 1 && actionTitle === "Completed") && sent_completed && Array.isArray(sent_completed) &&
+                                    sent_completed.length === 0 && !loadingAllTeamTask
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+
+                            {
+                                index == 1 && actionTitle == "To-Do" ?
+                                    <View style={styles.scrollViewContainer}>
+                                        <ScrollView
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}>
+                                            {
+                                                ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
+                                                    <TouchableWrapper
+                                                        onPress={() => setTab(item)}
+                                                        isText
+                                                        width={25}
+                                                        style={tab === item ? styles.currentTab : styles.defaultTab}
+                                                        key={i}>
+                                                        <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
+                                                    </TouchableWrapper>
+                                                ))
+                                            }
+                                        </ScrollView>
+                                    </View> : null
+                            }
+                            {/* empty state  for all tabs */}
+                            {
+                                (
+                                    (index === 1 && actionTitle === "To-Do" && tab === "All") && sentItems && Array.isArray(sentItems) &&
+                                    sentItems.length === 0 && !loadingAllSentTask
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        marginTop={1}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            {
+
+                                (
+                                    (index === 1 && tab === "Due Today") && sentDueItem && Array.isArray(sentDueItem) &&
+                                    sentDueItem.length === 0 && !loadingAllSentDues
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 1 && tab === "Upcoming") && sentUpcomingItem && Array.isArray(sentUpcomingItem) &&
+                                    sentUpcomingItem.length === 0 && !loadingAllSentUpcoming
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 1 && tab === "Overdue") && sentOverdueItem && Array.isArray(sentOverdueItem) &&
+                                    sentOverdueItem.length === 0 && !loadingAllSentOverdue
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+
+
+                            <View>
+                                {
+                                    index === 1 && actionTitle === 'To-Do' && tab === "All" && !loadingAllSentTask ? sent_Todos.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            index={index}
+                                            isSent
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                            <View>
+                                {
+                                    index === 1 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllSentDues ? sentDueItem.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            index={index}
+                                            isSent
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                            <View>
+                                {
+                                    index === 1 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingAllSentUpcoming ? sentUpcomingItem.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            index={index}
+                                            isSent
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+
+                            <View>
+                                {
+                                    index === 1 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingAllSentOverdue ? sent_overdue.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            index={index}
+                                            isSent
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                            <View>
+                                {
+                                    index === 1 && actionTitle === 'In Progress' && !loadingAllSentTask ? sent_inProgress.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            index={index}
+                                            isSent
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                            <View>
+                                {
+                                    index === 1 && actionTitle === 'Completed' && !loadingAllSentTask ? sent_completed.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            index={index}
+                                            isSent
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                        </React.Fragment>
+
                     }
 
 
 
-                    {
-                        index == 1 && actionTitle == "To-Do" ?
-                            <View style={styles.scrollViewContainer}>
-                                <ScrollView
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}>
-                                    {
-                                        ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                            <TouchableWrapper
-                                                onPress={() => setTab(item)}
-                                                isText
-                                                width={25}
-                                                style={tab === item ? styles.currentTab : styles.defaultTab}
-                                                key={i}>
-                                                <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                            </TouchableWrapper>
-                                        ))
-                                    }
-                                </ScrollView>
-                            </View> : null
-                    }
-                    {/* empty state  for all tabs */}
-                    {
-                        (
-                            (index === 1 && actionTitle === "To-Do" && tab === "All") && sentItems && Array.isArray(sentItems) &&
-                            sentItems.length === 0 && !loadingAllSentTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                marginTop={1}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-                    {
-
-                        (
-                            (index === 1 && tab === "Due Today") && sentDueItem && Array.isArray(sentDueItem) &&
-                            sentDueItem.length === 0 && !loadingAllSentDues
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 1 && tab === "Upcoming") && sentUpcomingItem && Array.isArray(sentUpcomingItem) &&
-                            sentUpcomingItem.length === 0 && !loadingAllSentUpcoming
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 1 && tab === "Overdue") && sentOverdueItem && Array.isArray(sentOverdueItem) &&
-                            sentOverdueItem.length === 0 && !loadingAllSentOverdue
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-
-
-                    <View>
-                        {
-                            index === 1 && actionTitle === 'To-Do' && tab === "All" && !loadingAllSentTask ? sent_Todos.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    index={index}
-                                    isSent
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View>
-                        {
-                            index === 1 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllSentDues ? sentDueItem.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    index={index}
-                                    isSent
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View>
-                        {
-                            index === 1 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingAllSentUpcoming ? sentUpcomingItem.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    index={index}
-                                    isSent
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View>
-                        {
-                            index === 1 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingAllSentOverdue ? sentOverdueItem.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    index={index}
-                                    isSent
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View>
-                        {
-                            index === 1 && actionTitle === 'In Progress' && !loadingAllSentTask ? sent_inProgress.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    index={index}
-                                    isSent
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View>
-                        {
-                            index === 1 && actionTitle === 'Completed' && !loadingAllSentTask ? sent_completed.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    index={index}
-                                    isSent
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
 
 
 
@@ -944,189 +966,185 @@ const Index = ({ navigation }) => {
                                         </H1>
                                     </View>
                             }
+                            {
+                                (
+                                    (index === 2 && actionTitle === "Completed") && team_completed && Array.isArray(team_completed) &&
+                                    team_completed.length === 0 && !loadingAllSentDues
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+
+                                    />
+                                ) : null
+                            }
+                            {
+                                index === 2 && actionTitle === "To-Do" ?
+                                    <View style={styles.scrollViewContainer}>
+                                        <ScrollView
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}>
+                                            {
+                                                ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
+                                                    <TouchableWrapper
+                                                        onPress={() => setTab(item)}
+                                                        isText
+                                                        width={25}
+                                                        style={tab === item ? styles.currentTab : styles.defaultTab}
+                                                        key={i}>
+                                                        <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
+                                                    </TouchableWrapper>
+                                                ))
+                                            }
+                                        </ScrollView>
+                                    </View> : null
+
+                            }
+                            {/* empty state  for all team tabs */}
+                            {
+                                (
+                                    (index === 2 && actionTitle === "To-Do" && tab === "All") && teamData && Array.isArray(teamData) &&
+                                    teamData.length === 0 && !loadingAllTeamTask
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        marginTop={1}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 2 && tab === "Due Today") && teamDueData && Array.isArray(teamDueData) &&
+                                    teamDueData.length === 0 && !loadingAllTeamDue
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 2 && tab === "Upcoming") && teamUpcomingData && Array.isArray(teamUpcomingData) &&
+                                    teamUpcomingData.length === 0 && !loadingAllTeamUpcoming
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
+                                    team_overdue.length === 0 && !loadingOverdue
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            <View style={CommonStyles.marginTop_1}>
+                                {
+                                    index === 2 && actionTitle === 'To-Do' && tab === "All" ? team_todos.map((item, i) => (
+                                        <TeamTodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+
+                                <View>
+                                    {
+                                        index === 2 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllTeamDue ? teamDueData.map((item, i) => (
+                                            <TeamTodoContent
+                                                key={i}
+                                                count={count}
+                                                item={item}
+                                                title={actionTitle}
+                                                __flattenArr={__flattenArr}
+                                            />
+                                        )) : null
+                                    }
+                                </View>
+
+                                <View>
+                                    {
+                                        index === 2 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingAllTeamUpcoming ? teamUpcomingData.map((item, i) => (
+                                            <TeamTodoContent
+                                                key={i}
+                                                count={count}
+                                                item={item}
+                                                title={actionTitle}
+                                                __flattenArr={__flattenArr}
+                                            />
+                                        )) : null
+                                    }
+                                </View>
+
+                                <View>
+                                    {
+                                        index === 2 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingAllTeamOverdue ? team_overdue.map((item, i) => (
+                                            <TeamTodoContent
+                                                key={i}
+                                                count={count}
+                                                item={item}
+                                                title={actionTitle}
+                                                __flattenArr={__flattenArr}
+                                            />
+                                        )) : null
+                                    }
+                                </View>
+
+
+                            </View>
+                            <View style={CommonStyles.marginTop_1}>
+                                {
+                                    index === 2 && actionTitle === "In Progress" ? team_inProgress.map((item, i) => (
+                                        <TeamTodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                            <View style={CommonStyles.marginTop_1}>
+                                {
+                                    index === 2 && actionTitle === "Completed" ? team_completed.map((item, i) => (
+                                        <TeamTodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            __flattenArr={__flattenArr}
+                                        />
+                                    )) : null
+                                }
+                            </View>
+
+
                         </React.Fragment>
 
                     }
-                    {
-                        (
-                            (index === 2 && actionTitle === "Completed") && team_completed && Array.isArray(team_completed) &&
-                            team_completed.length === 0 && !loadingAllSentDues
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-
-                            />
-                        ) : null
-                    }
-
-                    {
-                        index === 2 && actionTitle === "To-Do" ?
-                            <View style={styles.scrollViewContainer}>
-                                <ScrollView
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}>
-                                    {
-                                        ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                            <TouchableWrapper
-                                                onPress={() => setTab(item)}
-                                                isText
-                                                width={25}
-                                                style={tab === item ? styles.currentTab : styles.defaultTab}
-                                                key={i}>
-                                                <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                            </TouchableWrapper>
-                                        ))
-                                    }
-                                </ScrollView>
-                            </View> : null
-
-                    }
-
-                    {/* empty state  for all team tabs */}
-                    {
-                        (
-                            (index === 2 && actionTitle === "To-Do" && tab === "All") && teamData && Array.isArray(teamData) &&
-                            teamData.length === 0 && !loadingAllTeamTask
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                marginTop={1}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 2 && tab === "Due Today") && teamDueData && Array.isArray(teamDueData) &&
-                            teamDueData.length === 0 && !loadingAllTeamDue
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 2 && tab === "Upcoming") && teamUpcomingData && Array.isArray(teamUpcomingData) &&
-                            teamUpcomingData.length === 0 && !loadingAllTeamUpcoming
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-                    {
-                        (
-                            (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
-                            team_overdue.length === 0 && !loadingOverdue
-                        ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
-                            />
-                        ) : null
-                    }
-
-
-
-                    <View style={CommonStyles.marginTop_1}>
-                        {
-                            index === 2 && actionTitle === 'To-Do' && tab === "All" ? team_todos.map((item, i) => (
-                                <TeamTodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-
-                        <View>
-                            {
-                                index === 2 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllTeamDue ? teamDueData.map((item, i) => (
-                                    <TeamTodoContent
-                                        key={i}
-                                        count={count}
-                                        item={item}
-                                        title={actionTitle}
-                                        __flattenArr={__flattenArr}
-                                    />
-                                )) : null
-                            }
-                        </View>
-
-                        <View>
-                            {
-                                index === 2 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingAllTeamUpcoming ? teamUpcomingData.map((item, i) => (
-                                    <TeamTodoContent
-                                        key={i}
-                                        count={count}
-                                        item={item}
-                                        title={actionTitle}
-                                        __flattenArr={__flattenArr}
-                                    />
-                                )) : null
-                            }
-                        </View>
-
-                        <View>
-                            {
-                                index === 2 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingAllTeamOverdue ? team_overdue.map((item, i) => (
-                                    <TeamTodoContent
-                                        key={i}
-                                        count={count}
-                                        item={item}
-                                        title={actionTitle}
-                                        __flattenArr={__flattenArr}
-                                    />
-                                )) : null
-                            }
-                        </View>
-
-
-                    </View>
-                    <View style={CommonStyles.marginTop_1}>
-                        {
-                            index === 2 && actionTitle === "In Progress" ? team_inProgress.map((item, i) => (
-                                <TeamTodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View style={CommonStyles.marginTop_1}>
-                        {
-                            index === 2 && actionTitle === "Completed" ? team_completed.map((item, i) => (
-                                <TeamTodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-
 
 
                 </ScrollView>

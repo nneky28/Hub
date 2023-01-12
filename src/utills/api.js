@@ -196,6 +196,10 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
+  delete_task: async (id) => {
+    let biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz.business_id}/tasks_app/${id}/`)
+  },
   update_sub_task: async (fd) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz.business_id}/sub_tasks_app/${fd.id}/`, fd)
@@ -445,38 +449,38 @@ export const useFetchTodos = (tab) => {
   })
 }
 export const useFetchDueToday = (tab) => {
-  return useInfiniteQuery(['duetoday', tab], () => APIFunction.get_duetoday(), {
+  return useInfiniteQuery(['duetoday', tab], () => APIFunction.get_duetoday(tab), {
     enabled: tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
 export const useFetchUpcoming = (tab) => {
-  return useInfiniteQuery(['upcoming', tab], () => APIFunction.get_upcoming(), {
+  return useInfiniteQuery(['upcoming', tab], () => APIFunction.get_upcoming(tab), {
     enabled: tab === "Upcoming" && tab !== null && tab !== undefined
   })
 }
 export const useFetchOverDue = (tab) => {
-  return useInfiniteQuery(['overdue', tab], () => APIFunction.get_overdue(), {
+  return useInfiniteQuery(['overdue', tab], () => APIFunction.get_overdue(tab), {
     enabled: tab === "Overdue" && tab !== null && tab !== undefined
   })
 }
 export const useFetchAllSent = (tab, index) => {
   return useInfiniteQuery(['sent todos', tab], () => APIFunction.get_all_sent(tab), {
-    enabled: index === 1 && tab === "All" && tab !== null && tab !== undefined
+    enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentDue = (tab, index) => {
   return useInfiniteQuery(['sent due', tab], () => APIFunction.get_sent_duetoday(tab), {
-    enabled: index === 1 && tab === "Due Today" && tab !== null && tab !== undefined
+    enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentUpcoming = (tab, index) => {
   return useInfiniteQuery(['sent upcoming', tab], () => APIFunction.get_sent_upcoming(tab), {
-    enabled: index === 1 && tab === "Upcoming" && tab !== null && tab !== undefined
+    enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentOverdue = (tab, index) => {
   return useInfiniteQuery(['sent overdue', tab], () => APIFunction.get_sent_overdue(tab), {
-    enabled: index === 1 && tab === "Overdue" && tab !== null && tab !== undefined
+    enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchPersonalTask = (tab, id) => {

@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     row1: {
         alignItems: 'center',
         flexDirection: 'row',
-        marginTop: height(1),
     },
     line: {
         width: width(100),
