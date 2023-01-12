@@ -61,10 +61,13 @@ const Index = ({ visible, onHide, item }) => {
         setSubtask(arr)
     }
 
+    if (item) {
+
+    }
+
     const submitHandler = async () => {
         try {
             Keyboard.dismiss()
-
             let required = ["title"]
             let msg = ""
             for (let req of required) {
@@ -149,8 +152,6 @@ const Index = ({ visible, onHide, item }) => {
                     />
                 </View> :
                     <View style={styles.mainViewContainer}>
-
-
                         <KeyboardAwareScrollView
                             showsVerticalScrollIndicator={false}
                             style={{ marginBottom: height(10) }}
@@ -193,9 +194,9 @@ const Index = ({ visible, onHide, item }) => {
                                     </>
                                 )}
                             </Formik>
-                            <Container
+                            <View
                                 style={styles.container}>
-                                <Container style={styles.assign}>
+                                <View style={styles.assign}>
                                     <P color={AppColors.black3}>Assign To</P>
                                     <TouchableOpacity
                                         onPress={() => setOpen(true)}
@@ -203,17 +204,24 @@ const Index = ({ visible, onHide, item }) => {
                                         {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
                                         <P style={styles.btnIcon}>{!item?.assigned_to && !assignTo?.name ? "You" : item?.assigned_to ? item?.assigned_to?.first_name : assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"}</P>
                                     </TouchableOpacity>
-                                </Container>
-                                <Container style={styles.dueDate}>
+                                </View>
+                                <View style={styles.dueDate}>
                                     <P color={AppColors.black3}>Due Date</P>
-                                    <TouchableOpacity
-                                        onPress={() => setShow(true)}
-                                        style={styles.button}>
-                                        <Text numberOfLines={1} style={styles.date}>
-                                            {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("dddd D, MMM YYYY")}</Text>
-                                    </TouchableOpacity>
-                                </Container>
-                            </Container>
+                                    <View style={CommonStyles.row}>
+                                        <TouchableOpacity
+                                            onPress={() => setShow(true)}
+                                            style={styles.button1}>
+                                            <Text numberOfLines={1} style={styles.date}>
+                                                {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("dddd D, MMM YYYY")}</Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity onPress={() => null}>
+                                            <Ionicons name='close-outline' size={18} color={AppColors.black1} style={styles.close} />
+                                        </TouchableOpacity>
+                                    </View>
+
+                                </View>
+                            </View>
 
 
                             {
@@ -265,7 +273,7 @@ const Index = ({ visible, onHide, item }) => {
                                 </TouchableOpacity>
                             </Container>
 
-                            <Container>
+                            {/* <Container>
                                 <View style={styles.row}>
                                     <View>
                                         <Image
@@ -279,7 +287,13 @@ const Index = ({ visible, onHide, item }) => {
                                         <Ionicons name='send' size={22} color={AppColors.black2} />
                                     </TouchableOpacity>
                                 </View>
-                            </Container>
+                            </Container> */}
+                            <Button
+                                title="Send"
+                                containerStyle={styles.buttonStyle1}
+                                textStyle={styles.buttonText1}
+                                onPress={pressHandler}
+                            />
                         </KeyboardAwareScrollView>
 
                     </View>

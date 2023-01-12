@@ -26,8 +26,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: AppColors.gray1,
         flexDirection: 'row',
-        borderRadius: width(2)
-
+        borderRadius: width(2),
+    },
+    button1: {
+        width: width(42),
+        height: height(4),
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: AppColors.gray1,
+        flexDirection: 'row',
+        borderRadius: width(2),
     },
     buttonText1: {
         color: AppColors.black1,
@@ -42,6 +50,7 @@ const styles = StyleSheet.create({
         height: height(15),
         justifyContent: 'center',
         alignSelf: 'center',
+        width: width(90)
     },
     assign: {
         flexDirection: 'row',
@@ -56,6 +65,7 @@ const styles = StyleSheet.create({
         height: height(7),
         alignItems: 'center',
         justifyContent: 'space-around',
+
     },
 
     btn: {
@@ -121,9 +131,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#EAF8FA'
     },
     buttonStyle1: {
-        borderRadius: width(3),
+        borderRadius: width(2),
         borderWidth: 1,
-        borderColor: AppColors.transparent
+        borderColor: AppColors.transparent,
+        width: width(90),
+        paddingVertical: height(1.5),
+        marginTop: height(2)
     },
     buttonText: {
         color: AppColors.green,
@@ -132,6 +145,10 @@ const styles = StyleSheet.create({
         color: AppColors.white,
         fontFamily: FontFamily.BlackSansBold,
         fontSize: width(3.5)
+    },
+    close: {
+        marginTop: height(1),
+        marginLeft: width(3)
     }
 
 
