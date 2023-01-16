@@ -9,11 +9,11 @@ import { H1, P, } from '../../utills/components'
 import styles from './styles'
 import { Images } from '../../component2/image/Image';
 import AppColors from '../../utills/AppColors';
-import { ActionModal, UnCompletedModal, SentActionModal, TaskModal } from '../ContactModal';
+import { ActionModal, UnCompletedModal, SentActionModal } from '../ContactModal';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { storeData } from '../../utills/Methods';
+import { storeData, getData } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
 
-const Index = ({ item, index, title, __flattenArr, isSent }) => {
+const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -43,39 +43,43 @@ const Index = ({ item, index, title, __flattenArr, isSent }) => {
 
 
     const onPressHandler = async (action) => {
-        let fd = {
-            status: action,
-            id: item.id,
-            due_date: moment().toISOString(true)
-        }
-        let res = await mutateAsync(fd)
-        if (res) {
-            await storeData('task update', res)
-            queryClient.invalidateQueries()
-            // queryClient.invalidateQueries('todos')
-            setModal(false)
-            setCompleted(false)
-            setSent(false)
-            showFlashMessage({ title: `status changed` })
-            setWatch(!watch)
-        }
-
-    }
-
-    const handleDelete = async () => {
         try {
-            let res = await deleteTask.mutateAsync()
-            console.log('deleted', res)
-            queryClient.invalidateQueries('todos')
+            let fd = {
+                status: action,
+                id: item.id,
+                due_date: moment().toISOString(true)
+            }
+            let res = await mutateAsync(fd)
+            if (res) {
+                await storeData('task update', res)
+                queryClient.invalidateQueries()
+                // queryClient.invalidateQueries('todos')
+                setModal(false)
+                setCompleted(false)
+                setSent(false)
+                showFlashMessage({ title: `status changed` })
+                setWatch(!watch)
+            }
+
         } catch (error) {
             console.log('err', error)
         }
+    }
+
+    const handleDelete = async () => {
+        // try {
+        //     let res = await deleteTask.mutateAsync()
+        //     console.log('deleted', res)
+        //     queryClient.invalidateQueries('todos')
+        // } catch (error) {
+        //     console.log('err', error)
+        // }
 
     }
 
     useEffect(() => {
         __flattenArr()
-    }, []);
+    }, [allTasks]);
 
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
@@ -100,6 +104,7 @@ const Index = ({ item, index, title, __flattenArr, isSent }) => {
                                     onPress={() => {
                                         if (title === 'In Progress') {
                                             onPressHandler("Completed")
+                                            alert('hello')
                                         }
                                         onPressHandler('In-progress')
                                     }}

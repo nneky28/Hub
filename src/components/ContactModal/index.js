@@ -626,6 +626,9 @@ const SentActionModal = ({ isVisible, onHide, loading, item, deleteHandler }) =>
 
   const [showForm, setShowForm] = useState(false)
 
+  let user = getData("about_me")
+
+
   const Loader = () => {
     if (loading)
       return (
@@ -651,12 +654,12 @@ const SentActionModal = ({ isVisible, onHide, loading, item, deleteHandler }) =>
       isVisible={isVisible}>
       <View style={styles.container1}>
 
-        <React.Fragment >
-          <TouchableOpacity onPress={() => { setShowForm(true), item }} style={styles.textCon}>
+        <React.Fragment>
+          <TouchableOpacity onPress={() => { setShowForm(true), item }} style={styles.textCon} disabled={(user?.id !== item?.created_by?.id)}>
             <P style={styles.text1}>Edit Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
+          <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()} disabled={(user?.id !== item?.created_by?.id)}>
             <P style={styles.text1}>Delete task</P>
           </TouchableOpacity>
         </React.Fragment>

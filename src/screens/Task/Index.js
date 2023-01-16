@@ -221,7 +221,7 @@ const Index = ({ navigation }) => {
         if (index === 2 && actionTitle === "To-Do" && tab === "Overdue")
             return teamOverduePage > 1 ? setTeamOverdueData([...teamOverdueData, ...arr]) : setTeamOverdueData(arr)
     }
-    console.log('dues', dueItems)
+    console.log("h----->>", data)
 
     const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const only_inProgress = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "To-do")
@@ -448,6 +448,7 @@ const Index = ({ navigation }) => {
                                             {
                                                 loadingAllTask || loadingDueTask || loadingUpcoming || loadingOverdue || loadingAllTeamTask || loadingAllTeamDue || loadingAllTeamUpcoming || loadingAllTeamOverdue || loadingAllSentDues || loadingAllSentOverdue || loadingAllSentUpcoming || loadingAllSentTask ? <PageLoader /> : null
                                             }
+
                                             {
                                                 (
                                                     (index === 0 && actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
@@ -516,6 +517,7 @@ const Index = ({ navigation }) => {
                                                             item={item}
                                                             title={actionTitle}
                                                             __flattenArr={__flattenArr}
+                                                            allTasks
                                                         />
                                                     )) : null
                                                 }
