@@ -12,6 +12,7 @@ import Button from '../../components/Button';
 import { Capitalize } from '../../utills/Methods';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper/index';
+import { borderColor } from 'styled-system';
 
 
 
@@ -142,7 +143,7 @@ const PeopleList = ({ navigation, route }) => {
 
     const RenderItems = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => setSearch(item)}>
+            <TouchableOpacity onPress={() => setSearch(item)} >
                 <Rounded
                     marginRight={3}
                     backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
@@ -296,7 +297,7 @@ const PeopleList = ({ navigation, route }) => {
                     ItemSeparatorComponent={() => <View style={styles.line} />}
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}
-                    contentContainerStyle={[CommonStyles.marginTop_1, { paddingBottom: height(100) }]}
+                    contentContainerStyle={[CommonStyles.marginTop_1, CommonStyles.marginLeft_5, { paddingBottom: height(100) }]}
                     onEndReachedThreshold={0.1}
                     onEndReached={loadMore}
                     refreshing={false}

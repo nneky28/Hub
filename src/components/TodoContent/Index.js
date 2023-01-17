@@ -37,10 +37,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
         isLoading,
     } = useMutation(APIFunction.update_status)
 
-    const deleteTask = useMutation(() => APIFunction.delete_task(id))
-
-
-
+    const deleteTask = useMutation(APIFunction.delete_task)
 
     const onPressHandler = async (action) => {
         try {
@@ -51,9 +48,8 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
             }
             let res = await mutateAsync(fd)
             if (res) {
-                await storeData('task update', res)
+                await storeData('task updated', res)
                 queryClient.invalidateQueries()
-                // queryClient.invalidateQueries('todos')
                 setModal(false)
                 setCompleted(false)
                 setSent(false)
@@ -66,14 +62,16 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
         }
     }
 
-    const handleDelete = async () => {
-        // try {
-        //     let res = await deleteTask.mutateAsync()
-        //     console.log('deleted', res)
-        //     queryClient.invalidateQueries('todos')
-        // } catch (error) {
-        //     console.log('err', error)
-        // }
+    const handleDelete = async (id) => {
+        try {
+            let res = await deleteTask.mutateAsync(id)
+            queryClient.invalidateQueries()
+            showFlashMessage({ title: `Task deleted` })
+            setModal(false)
+            setSent(false)
+        } catch (error) {
+            console.log('err', error)
+        }
 
     }
 
@@ -104,7 +102,6 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
                                     onPress={() => {
                                         if (title === 'In Progress') {
                                             onPressHandler("Completed")
-                                            alert('hello')
                                         }
                                         onPressHandler('In-progress')
                                     }}
@@ -178,12 +175,12 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
             <View style={styles.line1} />
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
-                deleteHandler={handleDelete}
+                deleteHandler={() => handleDelete(item.id)}
                 loading={isLoading} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
             <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item}
                 onPressHandle={onPressHandler}
-                deleteHandler={handleDelete}
+                deleteHandler={() => handleDelete(item.id)}
                 loading={isLoading} />
             <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
 

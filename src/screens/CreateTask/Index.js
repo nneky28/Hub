@@ -292,7 +292,7 @@ const Index = ({ visible, onHide, item }) => {
                                 title="Send"
                                 containerStyle={styles.buttonStyle1}
                                 textStyle={styles.buttonText1}
-                                onPress={pressHandler}
+                                onPress={submitHandler}
                             />
                         </KeyboardAwareScrollView>
 

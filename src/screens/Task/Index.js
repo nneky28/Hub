@@ -95,6 +95,7 @@ const Index = ({ navigation }) => {
         data: allTasks,
         isLoading: loadingAllTask,
     } = useFetchTodos(tab)
+    console.log('all', allTasks)
 
     const {
         data: dueTasks,
@@ -153,7 +154,7 @@ const Index = ({ navigation }) => {
 
     const __flattenArr = () => {
         let flattenedArr = []
-        if (index === 0 && actionTitle === "To-Do" && tab === "All" && allTasks && allTasks?.pages && Array.isArray(allTasks?.pages)) {
+        if (index === 0 && allTasks && allTasks?.pages && Array.isArray(allTasks?.pages)) {
             flattenedArr = allTasks?.pages
         }
         if (index === 0 && actionTitle === "To-Do" && tab === "Due Today" && dueTasks && dueTasks?.pages && Array.isArray(dueTasks?.pages)) {
@@ -193,8 +194,9 @@ const Index = ({ navigation }) => {
             flattenedArr = allTeamOverdue?.pages
         }
         let arr = __flatten(flattenedArr)
+        console.log('flattened', arr)
 
-        if (index === 0 && actionTitle === "To-Do" && tab === "All")
+        if (index === 0 && tab === "All")
             return taskpage > 1 ? setData([...data, ...arr]) : setData(arr)
         if (index === 0 && actionTitle === "To-Do" && tab === "Due Today")
             return dueTodayPage > 1 ? setDueItems([...dueItems, ...arr]) : setDueItems(arr)
@@ -221,8 +223,8 @@ const Index = ({ navigation }) => {
         if (index === 2 && actionTitle === "To-Do" && tab === "Overdue")
             return teamOverduePage > 1 ? setTeamOverdueData([...teamOverdueData, ...arr]) : setTeamOverdueData(arr)
     }
-    console.log("h----->>", data)
 
+    console.log('data', data)
     const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const only_inProgress = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
@@ -448,21 +450,6 @@ const Index = ({ navigation }) => {
                                             {
                                                 loadingAllTask || loadingDueTask || loadingUpcoming || loadingOverdue || loadingAllTeamTask || loadingAllTeamDue || loadingAllTeamUpcoming || loadingAllTeamOverdue || loadingAllSentDues || loadingAllSentOverdue || loadingAllSentUpcoming || loadingAllSentTask ? <PageLoader /> : null
                                             }
-
-                                            {
-                                                (
-                                                    (index === 0 && actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
-                                                    data.length === 0 && !loadingAllTask
-                                                ) ? (
-                                                    <EmptyStateWrapper
-                                                        icon={Images.EmptyTeams}
-                                                        header_1={"No task here"}
-                                                        sub_text={"When you have, they will show up here."}
-                                                        marginTop={1}
-                                                        backgroundColor={'#F5F5F5'}
-                                                    />
-                                                ) : null
-                                            }
                                             <View>
                                                 {
                                                     index === 0 && actionTitle === 'To-Do' && tab === "All" && !loadingAllTask ? only_Todos.map((item, i) => (
@@ -534,6 +521,20 @@ const Index = ({ navigation }) => {
                                 {/* empty state  for all tabs */}
                                 {
                                     (
+                                        (index === 0 && actionTitle === 'To-Do' && tab === "All") && only_Todos && Array.isArray(only_Todos) &&
+                                        only_Todos.length === 0 && !loadingAllTask
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            marginTop={1}
+                                            backgroundColor={'#F5F5F5'}
+                                        />
+                                    ) : null
+                                }
+                                {
+                                    (
                                         (index === 0 && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
                                         dueItems.length === 0 && !loadingDueTask
                                     ) ? (
@@ -562,8 +563,8 @@ const Index = ({ navigation }) => {
                                 }
                                 {
                                     (
-                                        (index === 0 && tab === "Overdue") && overdueItems && Array.isArray(overdueItems) &&
-                                        overdueItems.length === 0 && !loadingOverdue
+                                        (index === 0 && tab === "Overdue") && only_overdue && Array.isArray(only_overdue) &&
+                                        only_overdue.length === 0 && !loadingOverdue
                                     ) ? (
                                         <EmptyStateWrapper
                                             icon={Images.EmptyTeams}

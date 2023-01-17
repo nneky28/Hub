@@ -59,28 +59,28 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
         isLoading: loading
     } = useFetchActivities()
 
-    const {
-        data: comments,
-        isLoading: loadingComments
-    } = useFetchComments()
+    // const {
+    //     data: comments,
+    //     isLoading: loadingComments
+    // } = useFetchComments()
 
-    const toFlat = () => {
-        let flattened = []
-        if (comments && comments?.pages && Array.isArray(comments?.pages)) {
-            flattened = comments?.pages
-        }
+    // const toFlat = () => {
+    //     let flattened = []
+    //     if (comments && comments?.pages && Array.isArray(comments?.pages)) {
+    //         flattened = comments?.pages
+    //     }
 
-        flattened = flattened.map((res) => {
-            if (!res) return {}
-            return res.results
-        }).map((item, i) => {
-            return {
-                key: i,
-                data: Object.values(item)?.[0]
-            }
-        })
-        setComment(flattened)
-    }
+    //     flattened = flattened.map((res) => {
+    //         if (!res) return {}
+    //         return res.results
+    //     }).map((item, i) => {
+    //         return {
+    //             key: i,
+    //             data: Object.values(item)?.[0]
+    //         }
+    //     })
+    //     setComment(flattened)
+    // }
 
     const __flattenArr = () => {
         let flattenedArr = []
@@ -215,9 +215,9 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
         __flattenArr()
     }, [logs]);
 
-    useEffect(() => {
-        toFlat()
-    }, [comments]);
+    // useEffect(() => {
+    //     toFlat()
+    // }, [comments]);
 
     const RenderItem = ({ item }) => {
         return (

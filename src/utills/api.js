@@ -196,9 +196,10 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
-  delete_task: async (id) => {
+  delete_task: async (fd) => {
+    console.log('id', fd)
     let biz = await getStoredBusiness()
-    return deleteAPIs(`/c/${biz.business_id}/tasks_app/${id}/`)
+    return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
   },
   update_sub_task: async (fd) => {
     let biz = await getStoredBusiness()
@@ -295,14 +296,14 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me&due_date_status=overdue`)
   },
-  get_activity: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
-  },
-  get_comments: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
-  },
+  // get_activity: async (id) => {
+  //   let biz = await getStoredBusiness()
+  //   return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
+  // },
+  // get_comments: async (id) => {
+  //   let biz = await getStoredBusiness()
+  //   return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
+  // },
   departments: async (page, search) => {
     const user = await getData('user')
     const business_id = user?.employee_user_memberships?.[0]?.business_id
@@ -445,7 +446,7 @@ export const useFetchDepartments = (page, search) => {
 }
 export const useFetchTodos = (tab) => {
   return useInfiniteQuery(['todos', tab], () => APIFunction.get_to_dos(tab), {
-    enabled: tab === "All" && tab !== null && tab !== undefined
+    // enabled: tab === "All" && tab !== null && tab !== undefined
   })
 }
 export const useFetchDueToday = (tab) => {
