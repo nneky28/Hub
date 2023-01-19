@@ -95,6 +95,7 @@ const Index = ({ visible, onHide, item }) => {
                     }
                 })
             }
+            if (data?.due_date === "No Date") delete fd["due_date"]
 
             if (item) {
                 fd["id"] = item?.id;
@@ -108,13 +109,13 @@ const Index = ({ visible, onHide, item }) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
-                console.log('creating', res)
-                // await storeData('tasks', res)
-                // queryClient.invalidateQueries()
-                // dispatch(setLoaderVisible(false));
-                // onHide()
-                // navigation.navigate("Task")
-                // showFlashMessage({ title: `Task created successfully` })
+                console.log('res', res)
+                await storeData('tasks', res)
+                queryClient.invalidateQueries()
+                dispatch(setLoaderVisible(false));
+                onHide()
+                navigation.navigate("Task")
+                showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
             console.log('err', err)
@@ -132,12 +133,8 @@ const Index = ({ visible, onHide, item }) => {
     useEffect(() => {
         if (!item?.id) return
         setAssignTo({ id: item.id, name: item?.assigned_to?.first_name })
-        setData({ ...data, due_date: moment(item?.due_date).format("dddd D, MMM YYYY") })
-
-        console.log('edit', item?.due_date)
+        setData({ ...data, due_date: item?.due_date })
     }, [item])
-
-
 
     return (
         <Modal
@@ -221,7 +218,6 @@ const Index = ({ visible, onHide, item }) => {
                                         style={styles.button}>
                                         {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
                                         <P style={styles.btnIcon}>
-                                            {/* {!item?.assigned_to && !assignTo?.name ? "You" : item?.assigned_to ? item?.assigned_to?.first_name : assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"} */}
                                             {
                                                 !assignTo?.name ? "Me" : Capitalize(assignTo?.name)
                                             }
@@ -235,11 +231,7 @@ const Index = ({ visible, onHide, item }) => {
                                             onPress={() => setShow(true)}
                                             style={styles.button1}>
                                             <Text numberOfLines={1} style={styles.date}>
-                                                {/* {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") : data?.due_date === 'No Date' ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("dddd D, MMM YYYY")
-                                                } */}
-                                                {
-                                                    !data?.due_date ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(item?.due_date).format("ddd D, MMM YYYY")
-                                                }
+                                                {data?.due_date === "No Date" ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("ddd D, MMM YYYY")}
                                             </Text>
                                         </TouchableOpacity>
 
@@ -344,9 +336,15 @@ const Index = ({ visible, onHide, item }) => {
             }
 
 
-
+            {/* {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") :
+  data?.due_date === 'No Date' ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : 
+  moment(data?.due_date).format("dddd D, MMM YYYY")  } */}
+            {/* {!item?.assigned_to && !assignTo?.name ? "You" : 
+     item?.assigned_to ? item?.assigned_to?.first_name :
+      assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"} */}
 
         </Modal >
+
 
     )
 }

@@ -296,10 +296,10 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=overdue`)
   },
-  // get_activity: async (id) => {
-  //   let biz = await getStoredBusiness()
-  //   return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
-  // },
+  get_activity: async (id) => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
+  },
   // get_comments: async (id) => {
   //   let biz = await getStoredBusiness()
   //   return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)

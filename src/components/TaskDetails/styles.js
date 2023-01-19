@@ -161,6 +161,10 @@ const styles = StyleSheet.create({
     newBtn: {
         alignSelf: 'flex-end',
         paddingVertical: height(1)
+    },
+    stickyDate: {
+        paddingHorizontal: width(5),
+        marginTop: height(2),
     }
 
 });

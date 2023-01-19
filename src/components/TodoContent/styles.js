@@ -29,23 +29,29 @@ const styles = StyleSheet.create({
     },
     btn: { flexDirection: 'row', marginTop: height(1) },
     button: {
-        backgroundColor: '#D9D9D9',
+        // backgroundColor: '#D9D9D9',
+        backgroundColor: AppColors.white,
         width: width(25),
         borderTopLeftRadius: width(6),
         borderBottomLeftRadius: width(6),
         borderRightWidth: width(0.5),
-        borderRightColor: AppColors.white,
+        borderRightColor: '#D9D9D9',
         alignItems: 'center',
         padding: height(1),
+        // borderColor: AppColors.green,
+        // borderWidth: width(0.15)
     },
     btnPart: {
-        backgroundColor: '#D9D9D9',
+        // backgroundColor: '#D9D9D9',
+        backgroundColor: AppColors.white,
         width: width(6),
         alignItems: 'center',
         justifyContent: 'center',
         borderTopRightRadius: width(6),
         borderBottomRightRadius: width(6),
         margin: 0,
+        // borderColor: AppColors.green,
+        // borderWidth: width(0.15)
     },
 
     row: {
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: width(3),
         fontFamily: FontFamily.BlackSansRegular,
-        color: AppColors.black3,
+        color: AppColors.black,
         width: width(35),
         textAlign: 'center'
     },

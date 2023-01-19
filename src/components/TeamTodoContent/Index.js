@@ -65,6 +65,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
 
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
+    const noDate = item?.due_date === null
 
     useEffect(() => {
         __flattenArr()
@@ -111,12 +112,13 @@ const Index = ({ __flattenArr, item, title, team }) => {
                                             <P style={styles.date}>{moment(item?.due_date).format("MMM D, YYYY")}</P>
                                             <Entypo name="dot-single" size={18} color={AppColors.red} />
                                             <P color={AppColors.red} fontSize={3.1}>Overdue</P>
-                                        </React.Fragment> : <React.Fragment>
-                                            <Ionicons name="calendar-outline" size={12} color={AppColors.black3} />
-                                            <P style={styles.date}>{moment(item?.due_date).format("MMM D, YYYY")}</P>
-                                            <Entypo name="dot-single" size={18} color={AppColors.yellow} />
-                                            <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
-                                        </React.Fragment>}
+                                        </React.Fragment> : noDate ? null :
+                                            <React.Fragment>
+                                                <Ionicons name="calendar-outline" size={12} color={AppColors.black3} />
+                                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                                                <Entypo name="dot-single" size={18} color={AppColors.yellow} />
+                                                <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
+                                            </React.Fragment>}
                                     </View>
                             }
 

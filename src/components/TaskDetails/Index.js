@@ -57,7 +57,8 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
         isFetchingNextPage,
         hasNextPage,
         isLoading: loading
-    } = useFetchActivities()
+    } = useFetchActivities(item.id)
+    console.log('logs', logs)
 
     // const {
     //     data: comments,
@@ -173,42 +174,42 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
     // }
 
 
-    const {
-        mutate: mutateUpdate,
-        isLoading: loadingSubTask,
-    } = updateSubTask()
+    // const {
+    //     mutate: mutateUpdate,
+    //     isLoading: loadingSubTask,
+    // } = updateSubTask()
 
-    const onPress = async (action) => {
+    // const onPress = async (action) => {
 
-        let fd = {
-            status: action,
-            task: item?.id,
-            id: item?.sub_tasks_tasksapp[0]?.id,
-            due_date: moment().toISOString(true)
-        }
-        let res = mutateUpdate(fd)
-        queryClient.invalidateQueries()
-        setAction(false)
-        showFlashMessage({ title: `Sub task marked as completed` })
-    }
+    //     let fd = {
+    //         status: action,
+    //         task: item?.id,
+    //         id: item?.sub_tasks_tasksapp[0]?.id,
+    //         due_date: moment().toISOString(true)
+    //     }
+    //     let res = mutateUpdate(fd)
+    //     queryClient.invalidateQueries()
+    //     setAction(false)
+    //     showFlashMessage({ title: `Sub task marked as completed` })
+    // }
 
-    const { mutate: mutatePut,
-        isLoading: loadEdit
-    } = useUpdate()
+    // const { mutate: mutatePut,
+    //     isLoading: loadEdit
+    // } = useUpdate()
 
-    const onPressHandler = async (action) => {
-        let fd = {
-            status: action,
-            id: item?.id,
-            due_date: moment().toISOString(true)
-        }
-        let res = mutatePut(fd)
-        await storeData('task update', res)
-        queryClient.invalidateQueries()
-        setModal(false)
-        onHide()
-        showFlashMessage({ title: `${title} status changed` })
-    }
+    // const onPressHandler = async (action) => {
+    //     let fd = {
+    //         status: action,
+    //         id: item?.id,
+    //         due_date: moment().toISOString(true)
+    //     }
+    //     let res = mutatePut(fd)
+    //     await storeData('task update', res)
+    //     queryClient.invalidateQueries()
+    //     setModal(false)
+    //     onHide()
+    //     showFlashMessage({ title: `Sub task marked as completed` })
+    // }
 
 
     useEffect(() => {
@@ -258,6 +259,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
 
     const handleChecked = (item) => {
         setSelectedIDs((prev) => [...prev, item.id])
+        showFlashMessage({ title: `Sub task marked as completed` })
     }
 
     const handleUncomplete = (item) => {

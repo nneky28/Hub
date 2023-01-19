@@ -112,8 +112,14 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         zIndex: -1,
     },
+    // container: {
+    //     flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: width(5), marginTop: height(5)
+    // },
     container: {
-        flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: width(5), marginTop: height(5)
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: height(4),
+        paddingHorizontal: width(5)
     },
 
     boxContainer: {
@@ -168,19 +174,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(3),
         paddingVertical: height(2),
     },
-    scrollViewContainer: {
-        marginTop: height(3),
-        justifyContent: 'space-evenly',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        borderWidth: 0.2,
-        borderColor: AppColors.grayBorder,
-        borderRadius: width(15),
-        backgroundColor: '#F2F2F2',
-        paddingHorizontal: width(1),
-        marginLeft: width(4.5)
-
-    },
     currentTab: {
         backgroundColor: AppColors.white,
         borderRadius: width(8),
@@ -200,6 +193,25 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.black1,
         fontSize: width(3.3)
+    },
+    scrollViewContainer: {
+        flex: 1,
+        backgroundColor: '#F2F2F2',
+
+
+    },
+    scrollViewCon: {
+        marginTop: height(3),
+        justifyContent: 'space-evenly',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        borderWidth: 0.8,
+        borderColor: AppColors.grayBorder,
+        borderRadius: width(15),
+        backgroundColor: '#F2F2F2',
+        paddingHorizontal: width(1),
+        marginLeft: width(4.5)
+
     },
 
 });

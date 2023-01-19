@@ -91,6 +91,8 @@ const Index = ({ navigation }) => {
         data: sentStatistics,
     } = useFetchSentStatistics()
 
+    // my task here 
+
     const {
         data: allTasks,
         isLoading: loadingAllTask,
@@ -130,8 +132,10 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllSentOverdue,
     } = useFetchAllSentOverdue(tab, index)
 
-    // console.log('duetoday', allSentDues, allSentUpcoming, allSentOverdue)
-    // console.log('count', sentStatistics)
+
+    console.log('due', allSentDues)
+    console.log('overdue', allSentOverdue)
+    // console.log(first)
     // all team starts 
     const {
         data: allTeamData,
@@ -229,18 +233,21 @@ const Index = ({ navigation }) => {
     const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
     const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
-
+    const no_date = Object.values(data).filter((item) => item?.due_date === null);
+    // console.log('no date', no_date)
     // sent tasks 
     const sent_Todos = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const sent_inProgress = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const sent_completed = Object.values(sentItems).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const sent_overdue = Object.values(sentOverdueItem).filter((item) => item.status !== "In-progress");
-
+    const no_date_sent = Object.values(sentItems).filter((item) => item?.due_date === null);
+    // console.log('ssent_overdue', sent_overdue)
     //team card
     const team_todos = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const team_overdue = Object.values(teamOverdueData).filter((item) => item.status !== "In-progress");
     const team_inProgress = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const team_completed = Object.values(teamData).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
+    const no_date_team = Object.values(teamData).filter((item) => item?.due_date === null);
 
     const AddButton = ({ onPress, style }) => (
         <TouchableOpacity
@@ -490,6 +497,20 @@ const Index = ({ navigation }) => {
                                             <View>
                                                 {
                                                     index === 0 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingOverdue ? only_overdue.map((item, i) => (
+                                                        <TodoContent
+                                                            key={i}
+                                                            count={count}
+                                                            item={item}
+                                                            title={actionTitle}
+                                                            __flattenArr={__flattenArr}
+                                                            allTasks
+                                                        />
+                                                    )) : null
+                                                }
+                                            </View>
+                                            <View>
+                                                {
+                                                    index === 0 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTask ? no_date.map((item, i) => (
                                                         <TodoContent
                                                             key={i}
                                                             count={count}
@@ -833,6 +854,20 @@ const Index = ({ navigation }) => {
                             </View>
                             <View>
                                 {
+                                    index === 1 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllSentTask ? no_date_sent.map((item, i) => (
+                                        <TodoContent
+                                            key={i}
+                                            count={count}
+                                            item={item}
+                                            title={actionTitle}
+                                            __flattenArr={__flattenArr}
+                                            allTasks
+                                        />
+                                    )) : null
+                                }
+                            </View>
+                            <View>
+                                {
                                     index === 1 && actionTitle === 'In Progress' && !loadingAllSentTask ? sent_inProgress.map((item, i) => (
                                         <TodoContent
                                             key={i}
@@ -864,10 +899,6 @@ const Index = ({ navigation }) => {
                         </React.Fragment>
 
                     }
-
-
-
-
 
 
                     {/* Teams section starts here  */}
@@ -1052,7 +1083,7 @@ const Index = ({ navigation }) => {
                                     />
                                 ) : null
                             }
-                            <View style={CommonStyles.marginTop_1}>
+                            <View style={CommonStyles.marginTop_2}>
                                 {
                                     index === 2 && actionTitle === 'To-Do' && tab === "All" ? team_todos.map((item, i) => (
                                         <TeamTodoContent
@@ -1106,10 +1137,24 @@ const Index = ({ navigation }) => {
                                         )) : null
                                     }
                                 </View>
+                                <View>
+                                    {
+                                        index === 2 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTeamTask ? no_date_team.map((item, i) => (
+                                            <TodoContent
+                                                key={i}
+                                                count={count}
+                                                item={item}
+                                                title={actionTitle}
+                                                __flattenArr={__flattenArr}
+                                                allTasks
+                                            />
+                                        )) : null
+                                    }
+                                </View>
 
 
                             </View>
-                            <View style={CommonStyles.marginTop_1}>
+                            <View style={CommonStyles.marginTop_2}>
                                 {
                                     index === 2 && actionTitle === "In Progress" ? team_inProgress.map((item, i) => (
                                         <TeamTodoContent
@@ -1122,7 +1167,7 @@ const Index = ({ navigation }) => {
                                     )) : null
                                 }
                             </View>
-                            <View style={CommonStyles.marginTop_1}>
+                            <View style={CommonStyles.marginTop_2}>
                                 {
                                     index === 2 && actionTitle === "Completed" ? team_completed.map((item, i) => (
                                         <TeamTodoContent
