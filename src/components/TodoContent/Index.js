@@ -100,6 +100,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
                             </TouchableOpacity> :
                             <View style={styles.btn}>
                                 <TouchableOpacity
+
                                     onPress={() => {
                                         if (title === 'In Progress') {
                                             onPressHandler("Completed")
