@@ -13,7 +13,7 @@ import { ActionModal, UnCompletedModal, SentActionModal } from '../ContactModal'
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { storeData, getData } from '../../utills/Methods';
+import { storeData, getData, Capitalize } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -86,7 +86,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
         <TouchableOpacity style={styles.wrapper} onPress={() => setDisplay(true)}>
             <View style={styles.row}>
                 <View>
-                    <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
+                    <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
                 </View>
                 {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" ? null :

@@ -1,7 +1,7 @@
 import { View, Keyboard, Image, FlatList, TouchableOpacity, Platform, Text } from 'react-native'
 import Modal from 'react-native-modal';
 import moment from 'moment';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './style'
 import { Container, P, CustomCalender } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
@@ -42,27 +42,21 @@ const Index = ({ visible, onHide, item }) => {
     const [data, setData] = useState({
         title: item?.title ?? '',
         description: item?.description ?? '',
-        due_date: "Today"
+        due_date: "Today",
     })
 
-
-    const { mutateAsync, isLoading } = useMutation(APIFunction.post_task)
+    const { mutateAsync } = useMutation(APIFunction.post_task)
+    const { mutateAsync: editHandler } = useMutation(APIFunction.update_status)
 
     const _subTask = () => {
         let text = "task" + count
         setSubtask([...subTask, text])
         setCount(count + 1)
     }
-
-
     const handleDelete = (index) => {
         let arr = [...subTask]
         arr.splice(index, 1)
         setSubtask(arr)
-    }
-
-    if (item) {
-
     }
 
     const submitHandler = async () => {
@@ -88,11 +82,12 @@ const Index = ({ visible, onHide, item }) => {
 
             let fd = {
                 ...data,
-                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data.due_date).toISOString(true), created_by: employee?.id,
+                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data?.due_date).toISOString(true),
+                created_by: employee?.id,
                 assigned_to: assignTo?.type === "Employee" ? assignTo.id : assignTo?.type === "Departments" ? assignTo.id : employee.id,
                 department: assignTo?.type === "Departments" ? assignTo.id : null,
                 status: "To-do",
-
+                // due_date: data?.due_date === "No Date" ? " " : null,
                 sub_tasks: Object.values(subData).map(item => {
                     return {
                         title: item,
@@ -100,13 +95,27 @@ const Index = ({ visible, onHide, item }) => {
                     }
                 })
             }
-            let res = await mutateAsync(fd)
-            await storeData('tasks', res)
-            queryClient.invalidateQueries()
-            dispatch(setLoaderVisible(false));
-            onHide()
-            navigation.navigate("Task")
-            showFlashMessage({ title: `Task created successfully` })
+
+            if (item) {
+                fd["id"] = item?.id;
+                let res = await editHandler(fd)
+                console.log('res', res)
+                await storeData('edited tasks', res)
+                queryClient.invalidateQueries()
+                dispatch(setLoaderVisible(false));
+                onHide()
+                navigation.navigate("Task")
+                showFlashMessage({ title: `Task edited successfully` })
+            } else {
+                let res = await mutateAsync(fd)
+                console.log('creating', res)
+                // await storeData('tasks', res)
+                // queryClient.invalidateQueries()
+                // dispatch(setLoaderVisible(false));
+                // onHide()
+                // navigation.navigate("Task")
+                // showFlashMessage({ title: `Task created successfully` })
+            }
         } catch (err) {
             console.log('err', err)
             showFlashMessage({
@@ -119,6 +128,15 @@ const Index = ({ visible, onHide, item }) => {
     const pressHandler = () => {
         setShowDiscard(false)
     }
+
+    useEffect(() => {
+        if (!item?.id) return
+        setAssignTo({ id: item.id, name: item?.assigned_to?.first_name })
+        setData({ ...data, due_date: moment(item?.due_date).format("dddd D, MMM YYYY") })
+
+        console.log('edit', item?.due_date)
+    }, [item])
+
 
 
     return (
@@ -202,7 +220,12 @@ const Index = ({ visible, onHide, item }) => {
                                         onPress={() => setOpen(true)}
                                         style={styles.button}>
                                         {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
-                                        <P style={styles.btnIcon}>{!item?.assigned_to && !assignTo?.name ? "You" : item?.assigned_to ? item?.assigned_to?.first_name : assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"}</P>
+                                        <P style={styles.btnIcon}>
+                                            {/* {!item?.assigned_to && !assignTo?.name ? "You" : item?.assigned_to ? item?.assigned_to?.first_name : assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"} */}
+                                            {
+                                                !assignTo?.name ? "Me" : Capitalize(assignTo?.name)
+                                            }
+                                        </P>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.dueDate}>
@@ -212,18 +235,21 @@ const Index = ({ visible, onHide, item }) => {
                                             onPress={() => setShow(true)}
                                             style={styles.button1}>
                                             <Text numberOfLines={1} style={styles.date}>
-                                                {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("dddd D, MMM YYYY")}</Text>
+                                                {/* {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") : data?.due_date === 'No Date' ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("dddd D, MMM YYYY")
+                                                } */}
+                                                {
+                                                    !data?.due_date ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(item?.due_date).format("ddd D, MMM YYYY")
+                                                }
+                                            </Text>
                                         </TouchableOpacity>
 
-                                        <TouchableOpacity onPress={() => null}>
+                                        <TouchableOpacity onPress={() => setData({ ...data, due_date: "No Date" })}>
                                             <Ionicons name='close-outline' size={18} color={AppColors.black1} style={styles.close} />
                                         </TouchableOpacity>
                                     </View>
 
                                 </View>
                             </View>
-
-
                             {
                                 subTask &&
                                 <Formik>
@@ -261,8 +287,6 @@ const Index = ({ visible, onHide, item }) => {
                                         />
                                     )}
                                 </Formik>
-
-
                             }
                             <Container style={styles.addSubtask}>
                                 <TouchableOpacity
@@ -272,22 +296,6 @@ const Index = ({ visible, onHide, item }) => {
                                     <P color={AppColors.green}>Add subtask</P>
                                 </TouchableOpacity>
                             </Container>
-
-                            {/* <Container>
-                                <View style={styles.row}>
-                                    <View>
-                                        <Image
-                                            resizeMode={'contain'}
-                                            source={{ uri: Images.Attach }}
-                                            style={styles.attachIcon} />
-                                    </View>
-
-                                    <TouchableOpacity
-                                        onPress={submitHandler}>
-                                        <Ionicons name='send' size={22} color={AppColors.black2} />
-                                    </TouchableOpacity>
-                                </View>
-                            </Container> */}
                             <Button
                                 title="Send"
                                 containerStyle={styles.buttonStyle1}

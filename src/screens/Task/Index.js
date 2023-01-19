@@ -95,7 +95,6 @@ const Index = ({ navigation }) => {
         data: allTasks,
         isLoading: loadingAllTask,
     } = useFetchTodos(tab)
-    console.log('all', allTasks)
 
     const {
         data: dueTasks,
@@ -131,6 +130,8 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllSentOverdue,
     } = useFetchAllSentOverdue(tab, index)
 
+    // console.log('duetoday', allSentDues, allSentUpcoming, allSentOverdue)
+    // console.log('count', sentStatistics)
     // all team starts 
     const {
         data: allTeamData,
@@ -194,7 +195,6 @@ const Index = ({ navigation }) => {
             flattenedArr = allTeamOverdue?.pages
         }
         let arr = __flatten(flattenedArr)
-        console.log('flattened', arr)
 
         if (index === 0 && tab === "All")
             return taskpage > 1 ? setData([...data, ...arr]) : setData(arr)
@@ -224,7 +224,6 @@ const Index = ({ navigation }) => {
             return teamOverduePage > 1 ? setTeamOverdueData([...teamOverdueData, ...arr]) : setTeamOverdueData(arr)
     }
 
-    console.log('data', data)
     const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const only_inProgress = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
@@ -278,13 +277,6 @@ const Index = ({ navigation }) => {
     useEffect(() => {
         __flattenArr()
     }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
-
-
-
-    // useEffect(() => {
-    //     setTab(tab)
-    // }, [])
-
 
 
     return (

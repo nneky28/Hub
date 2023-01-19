@@ -622,22 +622,19 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
   );
 };
 
-const SentActionModal = ({ isVisible, onHide, loading, item, deleteHandler }) => {
-
+const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
   const [showForm, setShowForm] = useState(false)
+  const [employee, setEmployee] = useState({})
 
-  let user = getData("about_me")
-
-
-  const Loader = () => {
-    if (loading)
-      return (
-        <Container marginTop={3}>
-          <ActivityIndicator size={width(10)} color={AppColors.green} />
-        </Container>
-      )
-
+  const getUser = async () => {
+    let user = await getData("about_me")
+    setEmployee(user)
   }
+  // console.log('user data', employee)
+
+  useEffect(() => {
+    getUser()
+  }, [])
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -653,18 +650,23 @@ const SentActionModal = ({ isVisible, onHide, loading, item, deleteHandler }) =>
       swipeThreshold={0.3}
       isVisible={isVisible}>
       <View style={styles.container1}>
-
         <React.Fragment>
-          <TouchableOpacity onPress={() => { setShowForm(true), item }} style={styles.textCon} disabled={(user?.id !== item?.created_by?.id)}>
+          <TouchableOpacity onPress={() => { setShowForm(true), item }}
+            style={styles.textCon}
+            disabled={(employee?.id !== item?.created_by?.id)}
+          >
             <P style={styles.text1}>Edit Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()} disabled={(user?.id !== item?.created_by?.id)}>
+          <TouchableOpacity style={styles.textCon}
+            onPress={() => deleteHandler()}
+            disabled={(employee?.id !== item?.created_by?.id)}
+          >
             <P style={styles.text1}>Delete task</P>
           </TouchableOpacity>
         </React.Fragment>
-
       </View>
+
       <CreateTask
         visible={showForm}
         onHide={() => setShowForm(false)}

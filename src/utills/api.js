@@ -268,7 +268,7 @@ export const APIFunction = {
   },
   get_sent_statistics: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me_and_sent`)
   },
 
   get_employee_statistics: async (id) => {
@@ -282,19 +282,19 @@ export const APIFunction = {
   },
   get_all_sent: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent`)
   },
   get_sent_duetoday: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me&due_date_status=duetoday`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=duetoday`)
   },
   get_sent_upcoming: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me&due_date_status=upcoming`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=upcoming`)
   },
   get_sent_overdue: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me&due_date_status=overdue`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=overdue`)
   },
   // get_activity: async (id) => {
   //   let biz = await getStoredBusiness()
