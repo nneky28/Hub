@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: height(82),
+        top: height(80),
         left: width(80),
         borderWidth: 0.1,
-        borderColor: '#ADE5EB'
+        borderColor: '#ADE5EB',
+
     },
     addButtonText: {
         fontSize: width(10),
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     },
     scroll: {
         backgroundColor: '#F5F5F5',
-        // marginBottom: height(10)
+        paddingBottom: height(1)
 
     },
     emptyCon: {

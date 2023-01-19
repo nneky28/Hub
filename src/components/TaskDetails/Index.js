@@ -54,11 +54,9 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
 
     const {
         data: logs,
-        isFetchingNextPage,
-        hasNextPage,
         isLoading: loading
     } = useFetchActivities(item.id)
-    console.log('logs', logs)
+    // console.log('logs', logs)
 
     // const {
     //     data: comments,

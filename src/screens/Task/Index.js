@@ -132,10 +132,6 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllSentOverdue,
     } = useFetchAllSentOverdue(tab, index)
 
-
-    console.log('due', allSentDues)
-    console.log('overdue', allSentOverdue)
-    // console.log(first)
     // all team starts 
     const {
         data: allTeamData,
@@ -209,7 +205,7 @@ const Index = ({ navigation }) => {
         if (index === 0 && actionTitle === "To-Do" && tab === "Overdue")
             return overduepage > 1 ? setOverdueItems([...overdueItems, ...arr]) : setOverdueItems(arr)
 
-        if (index === 1 && actionTitle === "To-Do" && tab === "All")
+        if (index === 1 && tab === "All")
             return sentPage > 1 ? setSentItems([...sentItems, ...arr]) : setSentItems(arr)
         if (index === 1 && actionTitle === "To-Do" && tab === "Due Today")
             return sentPage > 1 ? setSentDueItems([...sentDueItem, ...arr]) : setSentDueItems(arr)
@@ -218,7 +214,7 @@ const Index = ({ navigation }) => {
         if (index === 1 && actionTitle === "To-Do" && tab === "Overdue")
             return sentPage > 1 ? setSentOverdueItems([...sentOverdueItem, ...arr]) : setSentOverdueItems(arr)
 
-        if (index === 2 && actionTitle === "To-Do" && tab === "All")
+        if (index === 2 && tab === "All")
             return teamPage > 1 ? setTeamData([...teamData, ...arr]) : setTeamData(arr)
         if (index === 2 && actionTitle === "To-Do" && tab === "Due Today")
             return teamDuePage > 1 ? setTeamDueData([...teamDueData, ...arr]) : setTeamDueData(arr)
