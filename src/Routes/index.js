@@ -94,6 +94,7 @@ const Routes = () => {
       dispatch(setLoaderVisible(false))
       queryCache.clear()
       queryClient.invalidateQueries("")
+      dispatch(setSecurityVisible(false))
       dispatch(login({ ...auth, route: "auth", isLogin: false }));
       ToastSuccess("Successfully logged out")
     } catch (err) {
