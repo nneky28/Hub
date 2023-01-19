@@ -13,9 +13,10 @@ import CryptoJS from 'crypto-js';
 import { login } from '../../../Redux/Actions/Auth';
 import { showFlashMessage } from '../../../components/SuccessFlash';
 import MobilePIN from '../MobilePIN';
-import { setLoaderVisible } from '../../../Redux/Actions/Config';
+import { setLoaderVisible, setSecurityVisible } from '../../../Redux/Actions/Config';
+import moment from "moment"
 
-const CreatePIN = (props) => {
+const CreatePIN = ({onModeChangeHandler}) => {
   const auth = useSelector(state=>state.Auth)
   const dispatch = useDispatch()
   const [PIN,setPIN] = React.useState("")
@@ -23,6 +24,7 @@ const CreatePIN = (props) => {
   const [original,setOriginal] = React.useState(null)
   const [holder,setHolder] = React.useState("")
   const [action,setAction] = React.useState("")
+  const [error,setError] = React.useState("")
 
   const getOLDPIN = async () => {
     try{
@@ -42,12 +44,16 @@ const CreatePIN = (props) => {
     }
   }
 
+  const onSkipHandler = () => {
+    storeData("lastActiveMoment", moment().toISOString())
+    dispatch(setSecurityVisible(false))
+  }
+
   const validatePIN = async (text) => {
     try{
-      Keyboard.dismiss()
       if(hasPIN && (original !== text)){
         setHolder("")
-        return showFlashMessage({title : "Wrong PIN :(",type : "error"})
+        return setError("Wrong PIN :(")
       }
       if(!hasPIN && action === "create"){
         setPIN(text)
@@ -57,14 +63,16 @@ const CreatePIN = (props) => {
       }
       if(!hasPIN && action === "confirm" && (text !== PIN)){
         setHolder("")
-        return showFlashMessage({title : "Please confirm that your PIN matches",type : "error"})
+        return setError("Please confirm that your PIN matches")
       }
+      Keyboard.dismiss()
       if(!hasPIN && action === "confirm"){
         let userInfo = await getData("user");
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
         storeData(userInfo.email.replaceAll("_",""),ciphertext)
       }
-      dispatch(login({...auth,route : "main"}))
+      storeData("lastActiveMoment", moment().toISOString())
+      dispatch(setSecurityVisible(false))
     }catch(err){
     }
   }
@@ -89,7 +97,7 @@ const CreatePIN = (props) => {
   return (
     <ScreenWrapper>
         {
-          action === "NoMobilePIN" && !props?.route?.rest_pin ? <MobilePIN setAction={setAction} /> : 
+          action === "NoMobilePIN" ? <MobilePIN setAction={setAction} /> : 
           action === "confirm" || action === "create" || action === "HasMobilePIN" ? (
 
             <Container 
@@ -115,7 +123,7 @@ const CreatePIN = (props) => {
                   </TouchableWrapper>
                   {
                     !hasPIN ? <TouchableWrapper 
-                      onPress={()=>{dispatch(login({...auth, route : "main"}))}} 
+                      onPress={onSkipHandler} 
                       isText
                     >
                       <H1 color={AppColors.black1}>Skip</H1>
@@ -127,10 +135,12 @@ const CreatePIN = (props) => {
                 setHolder={setHolder}
                 holder={holder}
                 auth={auth}
+                error={error}
+                setError={setError}
               />
               {
                 hasPIN ? <Container horizontalAlignment='center' marginTop={3}>
-                    <TouchableWrapper isText onPress={()=>props.navigation.navigate("ResetPIN")} width={90}>
+                    <TouchableWrapper isText onPress={()=>onModeChangeHandler("RESET_PIN")} width={90}>
                       <P color={AppColors.green}>Forgot PIN?</P>
                     </TouchableWrapper>
                   </Container> : null

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -6,24 +6,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  payslipIcon,
-  timeOffIcon,
-  lighteningIcon,
-  truckIcon,
-  threeMenIcon,
-  documentIcon,
-  benefitIcon
-} from '../../assets/images';
 import styles from './styles';
 import Modal from 'react-native-modal';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import { Images } from '../../component2/image/Image';
+import { getData } from '../../utills/Methods';
+import { useFetchOnboarding } from '../../utills/api';
 
-const SelectionModal = ({isVisible, onHide, navigation}) => {
+const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Todos');
-  const TextWithIcon = ({text, icon,fill}) => {
+  const TextWithIcon = ({ text, icon, fill }) => {
     return (
       <TouchableOpacity
         onPress={() => {
@@ -32,22 +25,30 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
           //navigation.navigate(text)
           onHide();
         }}
-        style={{alignItems: 'center'}}>
+        style={{ alignItems: 'center' }}>
         <Image
           resizeMode="contain"
           style={[
             styles.icon,
-            selected == text && {tintColor: AppColors.green},
+            selected == text && { tintColor: AppColors.green },
           ]}
-          source={{uri : selected == text ? fill : icon}}
+          source={{ uri: selected == text ? fill : icon }}
         />
         <Text
-          style={[styles.text, selected == text && {color: AppColors.green}]}>
+          style={[styles.text, selected == text && { color: AppColors.green }]}>
           {text}
         </Text>
       </TouchableOpacity>
     );
   };
+
+
+
+  const {
+    data,
+  } = useFetchOnboarding()
+
+
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -60,13 +61,13 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{justifyContent: 'flex-end', margin: 0}}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
         <View style={styles.line1} />
         <View style={styles.row}>
           <TextWithIcon text="Todos" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
-          <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon}/>
+          <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
           <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
         </View>
         <View style={styles.line} />
@@ -74,7 +75,13 @@ const SelectionModal = ({isVisible, onHide, navigation}) => {
           <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
-          
+        </View>
+        <View style={styles.line} />
+        <View style={styles.row}>
+          {
+            data && data.length > 0 || null ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> :
+              <TextWithIcon text="TaskOnboarding" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
+          }
         </View>
       </View>
     </Modal>

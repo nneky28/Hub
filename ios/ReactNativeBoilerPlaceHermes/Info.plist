@@ -60,6 +60,16 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This lets you upload a profile image to your account.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your location</string>
+	<key>NSLocationUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like access to your location</string>
+	
+	
+
+
 	<key>UIAppFonts</key>
 	<array>
 		<string>black-sans-black.otf</string>

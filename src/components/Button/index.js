@@ -20,7 +20,7 @@ const Button = ({
       activeOpacity={activeOpacity}
       style={[styles.container, containerStyle]}>
       {isLoading ? (
-        <ActivityIndicator color={loaderColor} size="large" />
+        <ActivityIndicator color={loaderColor} size="small" />
       ) : (
         <Text style={[styles.text, textStyle]} numberOfLines={1}>{title}</Text>
       )}
