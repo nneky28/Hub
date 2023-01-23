@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import ContentLoader, { BulletList, Facebook } from 'react-content-loader/native'
+import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Image } from 'react-native';
+import { ImageBackground, Text, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
-import Svg, {
+import {
   Circle,
   Rect,
 } from 'react-native-svg';
-import AppColors from './AppColors';
+import AppColors, { ColorList } from './AppColors';
 import { View, Dimensions, Modal } from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
@@ -17,7 +17,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
-import { WebView, WebViewNavigation } from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
 import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
@@ -34,17 +34,17 @@ import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ImgPlaceholderProps, LottieIconProps, PTagProps } from './types';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
-const winHeight = winDimensions.height
 
-export const PageLoader = props => {
+export const PageLoader = () => {
   return (
-    [...'123567'].map((item, i) => (
+    [...'123567'].map((item) => (
       <ContentLoader
-        key={i}
-        viewBox="0 0 778 116" width={350} height={100} {...props}
+        key={item}
+        viewBox="0 0 778 116" width={350} height={100} 
         backgroundColor={AppColors.gray1}
       >
         <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
@@ -57,12 +57,12 @@ export const PageLoader = props => {
   )
 }
 
-export const Reload = props => {
+export const Reload = () => {
   return (
-    [...'1'].map((item, i) => (
+    [...'1'].map((item) => (
       <ContentLoader
-        key={i}
-        viewBox="0 0 778 116" width={350} height={100} {...props}
+        key={item}
+        viewBox="0 0 778 116" width={350} height={100}
         backgroundColor={AppColors.gray1}
       >
         <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
@@ -75,7 +75,7 @@ export const Reload = props => {
   )
 }
 
-export const LottieIcon = ({ icon, size }) => {
+export const LottieIcon = ({ icon, size } : LottieIconProps) => {
   return (
     <LottieView
       source={icon}
@@ -105,7 +105,7 @@ export const ProfileLoader = () => (
   </ContentLoader>
 )
 
-export const P = (props) => (
+export const P = (props : PTagProps) => (
   <Text
     style={[
       {
@@ -304,6 +304,18 @@ export const _Rounded = (props) => (
     {props.children}
   </Container>
 )
+
+export const ImgPlaceholder = React.memo((props : ImgPlaceholderProps ) => (
+  <Rounded 
+      size={props.size || 10}
+      backgroundColor={props.backgroundColor || ColorList[Math.floor(Math.random()*4)]}
+      radius={props.radius || 10}
+  >
+      <H1 fontSize={props.fontSize} bold={props.bold} color={props.color}>{props.text}</H1>
+  </Rounded>
+),(prevProps,nextProps)=>{
+  return prevProps.text === nextProps.text
+})
 
 export const CustomCalender = (props) => {
   return (

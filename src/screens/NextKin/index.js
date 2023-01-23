@@ -112,14 +112,6 @@ export default function NextKin({navigation,route}) {
                         }
                     </View>
                     <View style={styles.line} />
-                    {/* <Container
-                        paddingHorizontal={5}
-                        marginTop={1}
-                        marginBottom={1}
-                        width={90}
-                    >
-                        <H1 color={AppColors.green}>All fields are required *</H1>
-                    </Container> */}
                 </View>
                 <KeyboardAvoidingScrollView>
                     <Formik>
