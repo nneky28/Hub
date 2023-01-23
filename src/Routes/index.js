@@ -62,6 +62,7 @@ import CreatePIN from '../screens/Security/CreatePIN';
 import ResetPIN from '../screens/Security/ResetPIN';
 import UsePassword from '../screens/Security/UsePassword';
 import SecurityModal from '../components/SecurityModal';
+import Config from "react-native-config"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -106,7 +107,7 @@ const Routes = () => {
   const getDeepLinkInfo = async () => {
     let url = await Linking.getInitialURL()
     if (route === "main" || !url) return
-    let split = Platform.OS === "ios" ? url.split("myedgeapp:///") : url.split("https://coolowo.com/")
+    let split = Platform.OS === "ios" ? url.split(Config.IOS_DEEP_LINK) : url.split(Config.ANDROID_DEEP_LINK)
     let load = { ...auth, onboard: true, url: split.length > 1 ? split[1] : null }
     await storeData("auth", load)
     dispatch(login(load))
@@ -114,7 +115,7 @@ const Routes = () => {
   const deepLinkListener = () => {
     Linking.addEventListener('url', async ({ url }) => {
       if (route === "main" || !url) return
-      let split = Platform.OS === "ios" ? url.split("myedgeapp:///") : url.split("https://coolowo.com/")
+      let split = Platform.OS === "ios" ? url.split(Config.IOS_DEEP_LINK) : url.split(Config.ANDROID_DEEP_LINK)
       let load = { ...auth, onboard: true, url: split.length > 1 ? split[1] : null }
       await storeData("auth", load)
       dispatch(login(load))

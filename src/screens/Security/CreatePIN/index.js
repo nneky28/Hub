@@ -65,7 +65,7 @@ const CreatePIN = ({onModeChangeHandler}) => {
         setHolder("")
         return setError("Please confirm that your PIN matches")
       }
-      Keyboard.dismiss()
+      //Keyboard.dismiss()
       if(!hasPIN && action === "confirm"){
         let userInfo = await getData("user");
         let ciphertext = CryptoJS.AES.encrypt(text,userInfo.email.replaceAll("_","")).toString();
