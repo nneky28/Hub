@@ -29,7 +29,8 @@ export default function PersonalInfo({navigation}) {
     const updateProfile = async () => {
         try{
             let failed = false;
-            let required = ["first_name","last_name","gender","birth_date","marital_status","email","address","phone_number","state","city"]
+            let required = ["first_name","last_name"]
+            //,"gender","birth_date","marital_status","email","address","phone_number","state","city"
             let msg = "";
             for(let req of required){
                if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")){
@@ -40,26 +41,26 @@ export default function PersonalInfo({navigation}) {
             if(failed) return ToastError(msg)
             setLoading(true)
             setLoading(true);
-            let token = await getData("token");
-            let user =  await getData("user");
+            // let token = await getData("token");
+            // let user =  await getData("user");
             let about = await getData("about_me");
             let fd = {
                 "title": "",
                 "first_name": data.first_name,
-                "middle_name": data.middle_name,
+                "middle_name": data.middle_name || "",
                 "last_name": data.last_name,
-                "birth_date": moment(data.birth_date).format("YYYY-MM-DD"),
-                "marital_status": data.marital_status && data.marital_status.toLowerCase()  ,
-                "gender": data.gender === "Male" ? "M" : "F",
-                "phone_number1": data.phone_number,
-                "phone_number2": data.mobileNumber2,
+                "birth_date": data?.birth_date ? moment(data.birth_date).format("YYYY-MM-DD") : "",
+                "marital_status": data?.marital_status ? data.marital_status.toLowerCase() : ""  ,
+                "gender": data?.gender || "",
+                "phone_number1": data.phone_number || "",
+                "phone_number2": data.mobileNumber2 || "",
                 "address": {
-                  "address1": data.address,
-                  "address2": data.address2,
+                  "address1": data.address || "",
+                  "address2": data.address2 || "",
                   "country": "NG",
-                  "state": data.state,
-                  "city": data.city,
-                  "postal_code": data.postal_code
+                  "state": data.state || "",
+                  "city": data.city || "",
+                  "postal_code": data.postal_code || ""
                 }
             }
             let res = await APIFunction.edit(fd,about.id);
@@ -232,10 +233,13 @@ export default function PersonalInfo({navigation}) {
                                     name="gender" 
                                     placeholder="Gender"
                                     component={CustomModalDropdown}
-                                    value={data.gender}
-                                    onChangeData={(value)=>setData({...data,gender : value})}
+                                    defaultValue={data.gender === "M" ? "Male" : data.gender === "F" ? "Female" : data.gender === "O" ? "Not Specified" : "Gender"}
+                                    onChangeData={(value)=>setData({
+                                    ...data,gender : value === "Male" ? "M" : 
+                                    value === "Female" ? "F" : "O"
+                                    })}
                                     color={AppColors.black}
-                                    options={["Male","Female","Others"]}
+                                    options={["Male","Female","Not Specified"]}
                                 />
 
                                 <Field

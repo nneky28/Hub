@@ -6,7 +6,7 @@ import { FontFamily } from '../../utills/FontFamily';
 const styles = StyleSheet.create({
   listContainer:{
     flexDirection: 'row',
-    backgroundColor: AppColors.white,
+    backgroundColor: AppColors.gray,
     width: width(90),
     height : height(6),
     //paddingVertical: height(2.5),
@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
     justifyContent:'flex-start',
     alignSelf:'center',
     alignItems: 'center',
-    borderRadius: width(1.5),
-    borderColor: AppColors.black3,
+    borderRadius: width(3),
+    borderColor: AppColors.grayBorder,
     borderWidth: 1,
     marginTop: height(2)
   },
