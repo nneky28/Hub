@@ -6,7 +6,7 @@ import { height } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import { ActivityIndicator } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import {useSelector } from 'react-redux';
 import { leftIcon } from '../../assets/images';
 import Button from '../../components/Button';
 import CustomDatePicker from '../../components/CustomDatePicker';

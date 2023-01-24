@@ -28,7 +28,10 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
@@ -54,7 +57,10 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
@@ -78,7 +84,10 @@ export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) 
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
@@ -103,7 +112,10 @@ export function SearchBoxWithout({ title, containerStyle, onSubmitEditing }) {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
