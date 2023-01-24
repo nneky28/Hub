@@ -11,8 +11,8 @@ import styles from './styles';
 
 
 export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
+    
     const dispatch = useDispatch();
-
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
@@ -40,13 +40,13 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
 }
 
 export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
+    
     const dispatch = useDispatch();
-
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+
     return (
         <View style={[styles.container, containerStyle]}>
             <Image source={searchIcon} style={styles.searchIcon} />
@@ -68,13 +68,13 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
     );
 }
 export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) => {
+   
     const dispatch = useDispatch();
-
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+
     return (
         <View style={[styles.container, containerStyle]}>
             <TextInput
@@ -96,13 +96,13 @@ export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) 
 }
 
 export function SearchBoxWithout({ title, containerStyle, onSubmitEditing }) {
-    const dispatch = useDispatch();
 
+    const dispatch = useDispatch();
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+
     return (
         <View style={[styles.container, containerStyle]}>
             <TextInput

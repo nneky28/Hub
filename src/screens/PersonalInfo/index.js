@@ -1,7 +1,7 @@
 import { Field, Formik } from 'formik';
 import moment from 'moment';
 import React, { useEffect } from 'react';
-import { Image, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { height } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
@@ -16,7 +16,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import { APIFunction, putAPIs } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
-import { BackHandler, Container, CustomCalender, DatePickerModal, H1 } from '../../utills/components';
+import { BackHandler, Container, CustomCalender, DatePickerModal, H1, KeyboardAwareWrapper } from '../../utills/components';
 import { Capitalize, getData, getStoredBusiness, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import { validationSchema } from '../../utills/validationSchema';
 import styles from './styles';
@@ -172,7 +172,7 @@ export default function PersonalInfo({navigation}) {
                 <View style={styles.line} />
             </View>
         
-            <KeyboardAvoidingScrollView>
+            <KeyboardAwareWrapper>
                 <Formik
                     initialValues={{
                         first_name: '',
@@ -347,7 +347,7 @@ export default function PersonalInfo({navigation}) {
                             </>
                     )}
                 </Formik>
-            </KeyboardAvoidingScrollView>
+            </KeyboardAwareWrapper>
         </ScreenWrapper>
     );
 }
