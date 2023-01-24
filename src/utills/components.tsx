@@ -1039,9 +1039,9 @@ export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => 
   )
 }
 
-const areEqual = (prevProps, nextProps) => {
-  return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
-}
+// const areEqual = (prevProps, nextProps) => {
+//   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
+// }
 
 
 //export const Rounded = React.memo(_Rounded, areEqual);

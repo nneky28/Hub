@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     },
     by: {
         paddingHorizontal: width(6),
-        paddingVertical: height(1)
+        paddingVertical: height(0.5)
 
     },
     date: {
