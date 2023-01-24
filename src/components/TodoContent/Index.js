@@ -129,7 +129,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
             <View style={styles.by}>
                 <P color={AppColors.black3}>
                     {
-                        isSent ? 'To:' : 'By:'
+                        isSent || user ? 'To:' : 'By:'
                     }
                     {" "}
                     {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}

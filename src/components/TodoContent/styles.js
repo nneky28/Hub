@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     },
     by: {
         paddingHorizontal: width(6),
+        paddingVertical: height(1)
 
     },
     date: {
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
 
     row1: {
         flexDirection: 'row',
-        marginTop: height(0.5),
         paddingHorizontal: width(6),
 
     },

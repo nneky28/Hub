@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        borderWidth: 0.8,
+        borderWidth: 1,
         borderColor: AppColors.grayBorder,
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
