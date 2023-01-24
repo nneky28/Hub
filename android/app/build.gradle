@@ -1,5 +1,11 @@
 apply plugin: "com.android.application"
-
+project.ext.envConfigFiles = [
+    stagingdebug: ".env.staging",
+    stagingrelease : ".env.staging",
+    productiondebug: ".env.production",
+    productionrelease: ".env.production",
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 import com.android.build.OutputFile
 
 /**
@@ -172,6 +178,14 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        production {}
+        staging {
+        // We can have build-specific configurations here. Like using applicationIdSuffix to create different package name (ex. ".staging")
         }
     }
 

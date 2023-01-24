@@ -55,8 +55,8 @@ export default function EditProfile({navigation}) {
                         ) : (
                             <Rounded  size={25} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
                                 <H1>
-                                    {about && about.first_name && about.first_name.length > 0 ? Capitalize([...about.first_name][0]) : ""}
-                                    {about && about.last_name && about.first_name.length > 0 ? `${Capitalize([...about.last_name][0])}` : ""}
+                                    {about?.first_name?.[0] ? Capitalize(about?.first_name?.[0]) : ""}
+                                    {about?.last_name?.[0] ? `${Capitalize(about?.last_name?.[0])}` : ""}
                                 </H1>
                             </Rounded>
                         )

@@ -250,6 +250,10 @@ PODS:
     - React-jsi (= 0.64.4)
     - React-perflogger (= 0.64.4)
   - React-jsinspector (0.64.4)
+  - react-native-config (1.5.0):
+    - react-native-config/App (= 1.5.0)
+  - react-native-config/App (1.5.0):
+    - React-Core
   - react-native-date-picker (4.1.0):
     - React-Core
   - react-native-geolocation-service (5.3.1):
@@ -345,7 +349,7 @@ PODS:
     - React-Core
   - RNPDF (0.12.2):
     - React
-  - RNReanimated (2.2.2):
+  - RNReanimated (2.14.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -353,7 +357,6 @@ PODS:
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
     - React-callinvoker
     - React-Core
     - React-Core/DevSupport
@@ -371,7 +374,6 @@ PODS:
     - React-RCTNetwork
     - React-RCTSettings
     - React-RCTText
-    - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
   - RNScreens (3.8.0):
@@ -412,6 +414,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-config (from `../node_modules/react-native-config`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -500,6 +503,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-geolocation-service:
@@ -576,7 +581,7 @@ SPEC CHECKSUMS:
   CodePush: f509246638a5ebe5209b08351e48a95093d1f307
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: fa8275d5086566e22a26ddc385ab5772e7f9b1bd
-  FBReactNativeSpec: 57afed0e85816f62b7f027e9a91a8900be301e4c
+  FBReactNativeSpec: eefdd4803b631fe83e8cc2e34decf136975fc20f
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   hermes-engine: 7d97ba46a1e29bacf3e3c61ecb2804a5ddd02d4f
   JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
@@ -594,6 +599,7 @@ SPEC CHECKSUMS:
   React-jsi: 64f80675a66899bf0f4a58b8e3908966fa516234
   React-jsiexecutor: 8c077bef1c64430b6034f27df1000d194551e2eb
   React-jsinspector: d4f6973dd474357dbaaf6f52f31ffc713bf3e766
+  react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
   react-native-date-picker: 52937fb39322ee5f6c44a10117456b3fa4225d4c
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-image-picker: 9c8a2687b69300ad9e95cec5d38f35ab9d32467d
@@ -621,7 +627,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNPDF: cec73ef87dec104e902bd38b1f47c6f611ee4698
-  RNReanimated: 241c586663f44f19a53883c63375fdd041253960
+  RNReanimated: bd6be32488d65cc66a843de8214c2fee49f761a6
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8

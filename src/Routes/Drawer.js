@@ -18,6 +18,7 @@ import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, H1, ImageWrap, Rounded, TouchWrap } from '../utills/components';
 import { useQueryClient } from 'react-query';
+import { setSecurityVisible } from '../Redux/Actions/Config';
 const Drawer = ({navigation, ...props}) => {
 
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const Drawer = ({navigation, ...props}) => {
     await AsyncStorage.multiRemove(keys);
     navigation.closeDrawer();
     queryClient.invalidateQueries("")
+    dispatch(setSecurityVisible(false))
     dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
     ToastSuccess("Successfully logged out")
   };

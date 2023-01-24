@@ -1,12 +1,12 @@
 import { useFocusEffect } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View,Keyboard } from 'react-native'
 import { leftIcon} from '../../assets/images'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import { APIFunction } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import { AppButton, BackHandler, Container, H1, P} from '../../utills/components'
-import {Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Methods'
+import {Capitalize, getData, storeData, ToastError, ToastSuccess, validateEmail } from '../../utills/Methods'
 import styles from './styles'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
@@ -40,28 +40,34 @@ export default function NextKin({navigation,route}) {
     });
    const handleSubmit = async () => {
         try{
-            let required = ["first_name","last_name","phone_number",
-            "email","gender","nationality","address1","country","state","city"];
-            let failed = false;
-            let msg = ""
-            for(let req of required){
-                if(data[req] && data[req] === "" || data[req].trim() === ""){
-                    failed = true;
-                    msg = `"${Capitalize(req.replace("_"," "))}" is required`;
-                }
-            }
-            if(failed){
-                return ToastError(msg);
+            Keyboard.dismiss()
+            // let required = ["first_name","last_name","phone_number",
+            // "email","gender","nationality","address1","country","state","city"];
+            // let failed = false;
+            // let msg = ""
+            // for(let req of required){
+            //     if(data[req] && data[req] === "" || data[req].trim() === ""){
+            //         failed = true;
+            //         msg = `"${Capitalize(req.replace("_"," "))}" is required`;
+            //     }
+            // }
+            // if(failed){
+            //     return ToastError(msg);
+            // }
+            if(data.email && !validateEmail(data.email)){
+                return ToastError("Please provide a valid email address")
             }
             let about = await getData("about_me")
             dispatch(setLoaderVisible(true));
             let res = await APIFunction.update_next_of_kin({...data,country : "NG"},about.id)
+            console.log("RES--",res)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been updated");
-            if(auth.route !== "main"){
-                let profile = await getData("profile") 
+            let profile = await getData("profile")
+            if(auth.route !== "main"){ 
                 return navigation.navigate("Emergency",{emergency : profile.emergency})
             }
+            storeData("profile",{...profile,kin : res})
             queryClient.invalidateQueries("next_of_kins")
         }catch(err){
             dispatch(setLoaderVisible(false));
@@ -106,14 +112,6 @@ export default function NextKin({navigation,route}) {
                         }
                     </View>
                     <View style={styles.line} />
-                    <Container
-                        paddingHorizontal={5}
-                        marginTop={1}
-                        marginBottom={1}
-                        width={90}
-                    >
-                        <H1 color={AppColors.green}>All fields are required *</H1>
-                    </Container>
                 </View>
                 <KeyboardAvoidingScrollView>
                     <Formik>
@@ -160,7 +158,7 @@ export default function NextKin({navigation,route}) {
                                 color={AppColors.black}
                                 keyboardType={"email-address"}
                             />
-                            <Field
+                            {/* <Field
                                 name="gender" 
                                 placeholder="Gender"
                                 component={CustomModalDropdown}
@@ -171,7 +169,7 @@ export default function NextKin({navigation,route}) {
                             })}
                                 color={AppColors.black}
                                 options={["Male","Female","Others"]}
-                            />
+                            /> */}
                             <Field
                                 component={CustomInput}
                                 name="relationship"
@@ -182,7 +180,7 @@ export default function NextKin({navigation,route}) {
                                 }}
                                 color={AppColors.black}
                             />
-                            <Field
+                            {/* <Field
                                 component={CustomInput}
                                 name="nationality"
                                 placeholder="Nationality"
@@ -191,7 +189,7 @@ export default function NextKin({navigation,route}) {
                                     setData({...data,nationality : value})
                                 }}
                                 color={AppColors.black}
-                            />
+                            /> */}
                             <Field
                                 component={CustomInput}
                                 name="address1"
