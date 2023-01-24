@@ -1033,6 +1033,7 @@ export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => 
         enableResetScrollToCoords={false}
         keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         {children}
       </KeyboardAwareScrollView>
