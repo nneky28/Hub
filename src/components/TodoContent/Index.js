@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
 
-const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
+const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => {
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -90,7 +90,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
                 </View>
                 {
-                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" ? null :
+                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" || user ? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
                             <TouchableOpacity style={CommonStyles.marginTop_2} onPress={() => {
                                 title === "Completed" && setCompleted(true)

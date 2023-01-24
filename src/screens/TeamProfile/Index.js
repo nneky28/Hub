@@ -299,6 +299,7 @@ const Index = ({ route }) => {
                                 title={actionTitle}
                                 count={count}
                                 item={item}
+                                user
                                 __flattenArr={__flattenArr}
                             />
                         )) : null
@@ -311,7 +312,7 @@ const Index = ({ route }) => {
                                     count={count}
                                     item={item}
                                     title={actionTitle}
-                                    isSent
+                                    user
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -326,7 +327,7 @@ const Index = ({ route }) => {
                                     count={count}
                                     item={item}
                                     title={actionTitle}
-                                    isSent
+                                    user
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -341,7 +342,7 @@ const Index = ({ route }) => {
                                     count={count}
                                     item={item}
                                     title={actionTitle}
-                                    isSent
+                                    user
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
@@ -355,7 +356,7 @@ const Index = ({ route }) => {
                                     count={count}
                                     item={item}
                                     title={actionTitle}
-                                    isSent
+                                    user
                                     __flattenArr={__flattenArr}
                                 />
                             )) : null
