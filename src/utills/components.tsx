@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
 import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
 import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus, useFetchLocationType } from './api';
-import { setLoaderVisible } from '../Redux/Actions/Config';
+import { setBottomTabBarVisible, setLoaderVisible } from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
@@ -34,7 +34,8 @@ import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ImgPlaceholderProps, LottieIconProps, PTagProps } from './types';
+import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps } from './types';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -290,7 +291,7 @@ export const Width = (val) => {
   val === undefined || null ? (res = null) : (res = (val / 100) * winWidth);
   return res;
 };
-export const _Rounded = (props) => (
+export const Rounded = (props) => (
   <Container
     style={{
       width: Width(props.size || 15),
@@ -1019,12 +1020,31 @@ export const ClockINContainer = ({ setVisible }) => {
   )
 }
 
+export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => {
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+      dispatch(setBottomTabBarVisible(false))
+      return () => dispatch(setBottomTabBarVisible(true))
+  }, []);
+
+  return(
+      <KeyboardAwareScrollView 
+        enableResetScrollToCoords={false}
+        keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
+        showsVerticalScrollIndicator={false}
+      >
+        {children}
+      </KeyboardAwareScrollView>
+  )
+}
+
 const areEqual = (prevProps, nextProps) => {
   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
 }
 
 
-export const Rounded = React.memo(_Rounded, areEqual);
+//export const Rounded = React.memo(_Rounded, areEqual);
 
 
 const ComponentStyles = StyleSheet.create({

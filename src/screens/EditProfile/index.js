@@ -1,13 +1,14 @@
 import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { width } from 'react-native-dimension';
 import { cameraIcon, leftIcon } from '../../assets/images';
 import { Images } from '../../component2/image/Image';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TextWithIcon from '../../components/TextWithIcon';
-import { ColorList } from '../../utills/AppColors';
+import AppColors, { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, H1, Rounded } from '../../utills/components';
+import { BackHandler, H1, ImgPlaceholder, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
 import { Capitalize, getData } from '../../utills/Methods';
 import styles from './styles';
@@ -36,6 +37,7 @@ export default function EditProfile({navigation}) {
             getProfile();
            },[])
        )
+
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
@@ -53,12 +55,11 @@ export default function EditProfile({navigation}) {
                                 source={{uri:about.photo}}
                                 style={styles.avatarStyle}/>
                         ) : (
-                            <Rounded  size={25} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
-                                <H1>
-                                    {about?.first_name?.[0] ? Capitalize(about?.first_name?.[0]) : ""}
-                                    {about?.last_name?.[0] ? `${Capitalize(about?.last_name?.[0])}` : ""}
-                                </H1>
-                            </Rounded>
+                            <ImgPlaceholder 
+                                text={`${about?.first_name?.[0] ? Capitalize(about?.first_name?.[0]) : ""}${about?.last_name?.[0] ? Capitalize(about?.last_name?.[0]) : ""}`}
+                                size={20}
+                            />
+                            
                         )
                     }
                     

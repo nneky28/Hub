@@ -11,8 +11,8 @@ import styles from './styles';
 
 
 export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
+    
     const dispatch = useDispatch();
-
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
@@ -28,7 +28,10 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
@@ -37,13 +40,13 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
 }
 
 export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
+    
     const dispatch = useDispatch();
-
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+
     return (
         <View style={[styles.container, containerStyle]}>
             <Image source={searchIcon} style={styles.searchIcon} />
@@ -54,7 +57,10 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
@@ -62,13 +68,13 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
     );
 }
 export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) => {
+   
     const dispatch = useDispatch();
-
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+
     return (
         <View style={[styles.container, containerStyle]}>
             <TextInput
@@ -78,7 +84,10 @@ export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) 
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 
@@ -87,13 +96,13 @@ export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) 
 }
 
 export function SearchBoxWithout({ title, containerStyle, onSubmitEditing }) {
-    const dispatch = useDispatch();
 
+    const dispatch = useDispatch();
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
         Keyboard.addListener('keyboardDidHide', () => dispatch(setBottomTabBarVisible(true)))
-
     }, []);
+
     return (
         <View style={[styles.container, containerStyle]}>
             <TextInput
@@ -103,7 +112,10 @@ export function SearchBoxWithout({ title, containerStyle, onSubmitEditing }) {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={onSubmitEditing}
+                onSubmitEditing={(value)=>{
+                    if(typeof(value) === "object") return
+                    onSubmitEditing(value)
+                }}
                 color={AppColors.black}
             />
 

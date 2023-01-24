@@ -47,3 +47,7 @@ export type HTagProps = {
     children : React.ReactNode,
     bold? : boldType
   }
+
+  export interface KeyboardAwareWrapperProps {
+    children : React.ReactNode
+  }
