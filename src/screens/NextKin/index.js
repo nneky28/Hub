@@ -5,7 +5,7 @@ import { leftIcon} from '../../assets/images'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import { APIFunction } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import { AppButton, BackHandler, Container, H1, P} from '../../utills/components'
+import { AppButton, BackHandler, Container, H1, KeyboardAwareWrapper, P} from '../../utills/components'
 import {Capitalize, getData, storeData, ToastError, ToastSuccess, validateEmail } from '../../utills/Methods'
 import styles from './styles'
 import { Field, Formik } from 'formik'
@@ -113,7 +113,7 @@ export default function NextKin({navigation,route}) {
                     </View>
                     <View style={styles.line} />
                 </View>
-                <KeyboardAvoidingScrollView>
+                <KeyboardAwareWrapper>
                     <Formik>
                         <>
                         <Field
@@ -251,7 +251,7 @@ export default function NextKin({navigation,route}) {
                             />
                         </>
                     </Formik>
-                </KeyboardAvoidingScrollView>
+                </KeyboardAwareWrapper>
         </ScreenWrapper>
     )
 }
