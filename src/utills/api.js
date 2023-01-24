@@ -2,8 +2,9 @@ import axios from "axios";
 import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "react-query"
+import Config from "react-native-config";
 
-export const endPoint = 'https://coolowo.com';
+export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
 
 export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
@@ -803,3 +804,6 @@ const refreshToken = async () => {
   } catch (err) {
   }
 }
+
+
+// ~/Desktop/myedge-mobile/.git/MERGE_MSG
