@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react'
 import styles from './style'
-import { Container, P, CustomCalender } from '../../utills/components'
+import { Container, P, CustomCalender, KeyboardAwareWrapper } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button'
 import { Field, Formik } from 'formik';
@@ -167,7 +167,7 @@ const Index = ({ visible, onHide, item }) => {
                     />
                 </View> :
                     <View style={styles.mainViewContainer}>
-                        <KeyboardAwareScrollView
+                        <KeyboardAwareWrapper
                             showsVerticalScrollIndicator={false}
                             style={{ marginBottom: height(10) }}
                             behavior={Platform.OS === "ios" ? "padding" : "height"} >
@@ -295,7 +295,7 @@ const Index = ({ visible, onHide, item }) => {
                                 textStyle={styles.buttonText1}
                                 onPress={submitHandler}
                             />
-                        </KeyboardAwareScrollView>
+                        </KeyboardAwareWrapper>
 
                     </View>
 
