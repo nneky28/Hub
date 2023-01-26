@@ -19,11 +19,12 @@ height: number,
     placeholderColor? : string,
     underlineColor? : string,
     textColor? : string,
-rightPressable: () => JSX.Element,
+    right? : React.ReactNode
   onChangeData: (text: string) => void,
   keyboardType?: KeyboardTypeOptions,
   secureTextEntry?: boolean,
-  value : string
+  value: string,
+  
 }
 
 const CustomInput: React.FC<Props> = (props) => {
@@ -79,17 +80,11 @@ roundness: width(3)
 onChangeText={(text) => {
   if(!props?.onChangeData) return
   return props.onChangeData(props?.keyboardType === "email-address" ? text?.toLowerCase() : text)
+
 }}
-// {...inputProps}
+right={props.right}
   />
-  
-  {
-    props?.rightPressable ? <Container>
-      {props?.rightPressable()}
-    </Container> : null
-  }
-   
-</Container>
+  </Container>
 )
 }
 
