@@ -84,11 +84,11 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
     return (
-        <TouchableOpacity style={styles.wrapper} onPress={() => setDisplay(true)}>
+        <View style={styles.wrapper}>
             <View style={styles.row}>
-                <View>
+                <TouchableOpacity onPress={() => setDisplay(true)}>
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
-                </View>
+                </TouchableOpacity>
                 {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" || user ? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
@@ -188,7 +188,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                 loading={isLoading} />
             <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
 
-        </TouchableOpacity>
+        </View>
     )
 }
 

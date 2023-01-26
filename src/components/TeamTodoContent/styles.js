@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
     },
     buttonText: {
-        fontSize: width(3),
+        fontSize: width(2.7),
         fontFamily: FontFamily.BlackSansBold,
         color: AppColors.black1,
     },
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.4),
         color: AppColors.black1,
+        width: width(35)
     },
     content: {
         flexDirection: 'row',

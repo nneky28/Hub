@@ -193,7 +193,7 @@ const Index = ({ route }) => {
                                 icon={Images.EmptyTeams}
                                 header_1={"No task here"}
                                 sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
+                                backgroundColor={'#F2F2F2'}
                             />
                         ) : null
                     }
@@ -206,7 +206,7 @@ const Index = ({ route }) => {
                                 icon={Images.EmptyTeams}
                                 header_1={"No task here"}
                                 sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
+                                backgroundColor={'#F2F2F2'}
                             />
                         ) : null
                     }
@@ -242,7 +242,7 @@ const Index = ({ route }) => {
                                 icon={Images.EmptyTeams}
                                 header_1={"No task here"}
                                 sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
+                                backgroundColor={'#F2F2F2'}
                             />
                         ) : null
                     }
@@ -255,7 +255,7 @@ const Index = ({ route }) => {
                                 icon={Images.EmptyTeams}
                                 header_1={"No task here"}
                                 sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
+                                backgroundColor={'#F2F2F2'}
                             />
                         ) : null
                     }
@@ -268,7 +268,7 @@ const Index = ({ route }) => {
                                 icon={Images.EmptyTeams}
                                 header_1={"No task here"}
                                 sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
+                                backgroundColor={'#F2F2F2'}
                             />
                         ) : null
                     }
@@ -281,7 +281,7 @@ const Index = ({ route }) => {
                                 icon={Images.EmptyTeams}
                                 header_1={"No task here"}
                                 sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F5F5F5'}
+                                backgroundColor={'#F2F2F2'}
                             />
                         ) : null
                     }
