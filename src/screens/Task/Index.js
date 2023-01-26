@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import React, { useState, useEffect, } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import { H1, Container, Rounded, PageLoader, TouchableWrapper, EmptyStateWrapper } from '../../utills/components'
+import { H1, Container, Rounded, PageLoader, TouchableWrapper, EmptyStateWrapper, ImgPlaceholder } from '../../utills/components'
 import { width } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
 import MyTeamCard from '../../components/MyTeamCard/Index'
@@ -256,13 +256,7 @@ const Index = ({ navigation }) => {
     const RenderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => navigation.navigate('search', { people })} >
-                <Rounded
-                    marginRight={3}
-                    backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
-                    <H1 style={styles.team}>
-                        {item}
-                    </H1>
-                </Rounded>
+                <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
     }

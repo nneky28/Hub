@@ -1,6 +1,6 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { Container, Rounded, H1 } from '../../utills/components'
+import { Container, Rounded, H1, ImgPlaceholder } from '../../utills/components'
 import AppColors from '../../utills/AppColors'
 import { width } from 'react-native-dimension';
 import { ColorList } from './../../utills/AppColors';
@@ -41,11 +41,8 @@ const Index = () => {
                     item.photo ? (
                         <Image source={{ uri: item.photo }} style={styles.avatarStyle} />
                     ) : (
-                        <Rounded backgroundColor={ColorList[Math.floor(Math.random() * 4)]} size={12}>
-                            <H1>
-                                {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
-                            </H1>
-                        </Rounded>
+
+                        <ImgPlaceholder text={item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""} size={15} />
                     )
                 }
             </TouchableOpacity>

@@ -34,8 +34,10 @@ import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps } from './types';
+import ReactNativeModal from 'react-native-modal'
+import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
@@ -352,61 +354,121 @@ export const CustomCalender = (props) => {
   )
 }
 
-export const DatePickerModal = (props) => {
-  const [selected, setSelected] = useState(moment().format("YYYY-MM-DD"))
-  useEffect(() => {
-    let current = props.current ? props.current : moment().subtract(18, "years").format("YYYY-MM-DD")
+export const DatePickerModal = (props : DatePickerModalProps) => {
+  const [selected,setSelected] = React.useState<string | Date>(moment().format("YYYY-MM-DD"))
+  
+  useEffect(()=>{
+    let current = props.current ? props.current : props?.type === "dob" ? moment().subtract(18,"years").format("YYYY-MM-DD") : moment().format("YYYY-MM-DD")
     setSelected(current)
   }, [props.show])
   return (
-    <Modal visible={true}>
+    <ReactNativeModal
+      onBackButtonPress={() => {
+        if (!props?.setShow) return
+        props?.setShow(false)
+      }}
+      onModalHide={() => {
+        if (!props?.setShow) return
+        props?.setShow(false)
+      }}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={() => {
+        if (!props?.setShow) return
+        props?.setShow(false)
+      }}
+      onBackdropPress={() => {
+        if (!props?.setShow) return
+        props?.setShow(false)
+      }}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
+      isVisible={props?.show}
+    >
       <Container
-        flex={1}
+        //flex={1}
         style={{
           justifyContent: "center",
-          alignItems: 'center'
+          alignItems: 'center',
+          borderTopLeftRadius: width(5),
+          borderTopRightRadius: width(5)
         }}
+        backgroundColor={AppColors.white}
+        paddingHorizontal={5}
       >
+        {
+          props?.header ? <Container marginBottom={5}
+            width={90}
+          >
+            <H1 fontSize={4}>{props.header}</H1>
+          </Container> : null
+        }
         <Container
           style={{
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            marginTop: height(3)
           }}
         >
+            {
+              props?.header ? <Container 
+                width={90}
+                marginTop={4}
 
-          <DatePicker
-            date={new Date(selected)}
-            onDateChange={(newDate) => {
-              setSelected(moment(newDate).format("YYYY-MM-DD"))
-            }}
-            mode="date"
-            maximumDate={null}
-          />
-          <Container
-            marginTop={5}
-            width={90}
-            direction="row"
-            style={{
-              justifyContent: 'space-between'
-            }}
-          >
-            <TouchWrap
-              onPress={() => props.setShow(false)}
-            >
-              <P color={AppColors.black3}>Cancel</P>
-            </TouchWrap>
-
-            <TouchWrap
-              onPress={() => {
-                props.onChangeData(selected)
+              >
+                <H1 fontSize={4} color={AppColors.black2}>{props.header}</H1>
+              </Container> : null
+            }
+            <Container
+              style={{
+                justifyContent : "center",
+                alignItems : "center",
+                marginTop : height(3)
               }}
             >
-              <H1 color={AppColors.lightMediumGreen}>Select</H1>
-            </TouchWrap>
-          </Container>
+              <DatePicker
+                date={new Date(selected)} 
+                onDateChange={(newDate) => {
+                  if(props.mode) return setSelected(newDate)
+                  setSelected(moment(newDate).format("YYYY-MM-DD"))
+                }} 
+                mode={props.mode || "date"} 
+                maximumDate={undefined}
+                timeZoneOffsetInMinutes={0}
+              /> 
+              <Container 
+                marginTop={5}
+                marginBottom={3}
+                width={90}
+                direction="row"
+                style={{
+                  justifyContent : 'space-between'
+                }}
+              >
+                  <TouchableWrapper
+                    onPress={()=>props.setShow(false)}
+                    isText
+                  >
+                     <P color={AppColors.black3}>Cancel</P>
+                  </TouchableWrapper>
+
+                  <TouchableWrapper
+                    onPress={()=>{
+                      props.onChangeData(selected)
+                    }}
+                    isText
+                  >
+                    <H1 color={AppColors.green}>Select</H1>
+                  </TouchableWrapper>
+              </Container>
+            </Container>
         </Container>
       </Container>
-    </Modal>
+    </ReactNativeModal>
   )
 }
 

@@ -220,7 +220,7 @@ const Index = ({ visible, onHide, item }) => {
                                         {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
                                         <P style={styles.btnIcon}>
                                             {
-                                                !assignTo?.name ? "Me" : Capitalize(assignTo?.name)
+                                                !assignTo?.name ? "You" : Capitalize(assignTo?.name)
                                             }
                                         </P>
                                     </TouchableOpacity>
