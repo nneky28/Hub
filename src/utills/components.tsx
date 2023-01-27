@@ -697,7 +697,6 @@ export const TouchableWrapper = (props) => (
 )
 
 export const UserPINComponent = (props) => {
-  console.log('user onboard', props?.auth?.about)
   return (
     <React.Fragment>
       <Container

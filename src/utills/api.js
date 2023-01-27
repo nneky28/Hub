@@ -137,19 +137,19 @@ export const APIFunction = {
   },
   attendance_config: async (limit) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/v2/attendance/config/?page_size=${limit}`)
+    return getAPIs(`/c/${biz.business_id}/attendance_config/?page_size=${limit}`)
   },
   attendance_status: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/v2/attendance/status/`)
+    return getAPIs(`/c/${biz.business_id}/attendance/status/`)
   },
   employee_clock_in: async (fd) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/v2/attendance/clock_in/`, fd)
+    return postAPIs(`/c/${biz.business_id}/attendance/clock_in/`, fd)
   },
   employee_clock_out: async (fd) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/v2/attendance/clock_out/`, fd)
+    return postAPIs(`/c/${biz.business_id}/attendance/clock_out/`, fd)
   },
   payslip_info: async (date, payroll_id) => {
     let biz = await getStoredBusiness()
@@ -177,7 +177,7 @@ export const APIFunction = {
   get_onboarding: async () => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
-    console.log('here', id)
+    //console.log('here', id)
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
   },
@@ -198,7 +198,7 @@ export const APIFunction = {
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
   delete_task: async (fd) => {
-    console.log('id', fd)
+    //console.log('id', fd)
     let biz = await getStoredBusiness()
     return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
   },
@@ -570,10 +570,10 @@ export const updateSubTask = () => {
   return useMutation(() => APIFunction.update_sub_task(),
     {
       onSuccess: () => {
-        console.log('success')
+        //console.log('success')
       },
       onError: () => {
-        console.log('fail')
+        //console.log('fail')
       }
     }
   )
@@ -583,19 +583,19 @@ export const useUpdate = () => {
   return useMutation(() => APIFunction.update_status(),
     {
       onSuccess: () => {
-        console.log('success')
+        //console.log('success')
       },
       onError: () => {
-        console.log('fail')
+        //console.log('fail')
       }
     }
   )
 }
 
 export const getAPIs = async (path) => {
-  console.log('path', path)
+  //console.log('path', path)
   let _token = await getData("token");
-  console.log('token', _token)
+  //console.log('token', _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -612,7 +612,7 @@ export const getAPIs = async (path) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log('get Error', error)
+        //console.log('get Error', error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -642,6 +642,7 @@ export const postAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
+        //console.log("ERROR",error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"

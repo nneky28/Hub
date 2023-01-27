@@ -100,7 +100,7 @@ const Index = ({ visible, onHide, item }) => {
             if (item) {
                 fd["id"] = item?.id;
                 let res = await editHandler(fd)
-                console.log('res', res)
+                //console.log('res', res)
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
@@ -109,7 +109,7 @@ const Index = ({ visible, onHide, item }) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
-                console.log('res', res)
+                //console.log('res', res)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
@@ -118,7 +118,7 @@ const Index = ({ visible, onHide, item }) => {
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
-            console.log('err', err)
+            //console.log('err', err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
