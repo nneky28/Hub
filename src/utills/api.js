@@ -505,9 +505,9 @@ export const useFetchPersonalOverdue = (tab, id) => {
     enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
-export const useFetchTeamTask = (index) => {
-  return useInfiniteQuery(['All teamTask'], () => APIFunction.get_team_tasks(tab), {
-    enabled: index === 2
+export const useFetchTeamTask = (index, tab) => {
+  return useInfiniteQuery(['All teamTask', tab], () => APIFunction.get_team_tasks(tab), {
+    // enabled: index === 2 && index !== null && index !== undefined,
   })
 }
 

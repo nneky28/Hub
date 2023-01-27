@@ -154,6 +154,7 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllTeamOverdue,
     } = useFetchMyTeamOverdue(tab, index)
 
+    console.log('all', allTeamData)
     const __flattenArr = () => {
         let flattenedArr = []
         if (index === 0 && allTasks && allTasks?.pages && Array.isArray(allTasks?.pages)) {
