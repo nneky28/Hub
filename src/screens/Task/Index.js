@@ -1131,7 +1131,7 @@ const Index = ({ navigation }) => {
                                 <View>
                                     {
                                         index === 2 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTeamTask ? no_date_team.map((item, i) => (
-                                            <TodoContent
+                                            <TeamTodoContent
                                                 key={i}
                                                 count={count}
                                                 item={item}
@@ -1145,7 +1145,7 @@ const Index = ({ navigation }) => {
 
 
                             </View>
-                            <View style={CommonStyles.marginTop_2}>
+                            <View >
                                 {
                                     index === 2 && actionTitle === "In Progress" ? team_inProgress.map((item, i) => (
                                         <TeamTodoContent
@@ -1158,7 +1158,7 @@ const Index = ({ navigation }) => {
                                     )) : null
                                 }
                             </View>
-                            <View style={CommonStyles.marginTop_2}>
+                            <View>
                                 {
                                     index === 2 && actionTitle === "Completed" ? team_completed.map((item, i) => (
                                         <TeamTodoContent
