@@ -467,7 +467,7 @@ export const useFetchOverDue = (tab) => {
 }
 export const useFetchAllSent = (tab, index) => {
   return useInfiniteQuery(['sent todos', tab], () => APIFunction.get_all_sent(tab), {
-    // enabled: index === 1 && index !== null && index !== undefined
+    enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentDue = (tab, index) => {
@@ -487,7 +487,7 @@ export const useFetchAllSentOverdue = (tab, index) => {
 }
 export const useFetchPersonalTask = (tab, id) => {
   return useInfiniteQuery(['employeeTask', id], () => APIFunction.get_personal_tasks(id), {
-    // enabled: tab === "All" && id !== null && id !== undefined,
+    enabled: tab === "All" && id !== null && id !== undefined,
   })
 }
 export const useFetchPersonalDue = (tab, id) => {
@@ -505,9 +505,9 @@ export const useFetchPersonalOverdue = (tab, id) => {
     enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
-export const useFetchTeamTask = (tab, index) => {
-  return useInfiniteQuery(['All teamTask', tab], () => APIFunction.get_team_tasks(tab), {
-    // enabled: index === 2 && tab === 'All' && tab !== null && tab !== undefined
+export const useFetchTeamTask = (index) => {
+  return useInfiniteQuery(['All teamTask'], () => APIFunction.get_team_tasks(tab), {
+    enabled: index === 2
   })
 }
 

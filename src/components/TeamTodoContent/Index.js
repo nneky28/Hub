@@ -20,7 +20,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { Images } from '../../component2/image/Image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CommonStyles from '../../utills/CommonStyles';
-import { UnCompletedModal } from '../ContactModal';
+import { UnCompletedModal, ActionModal } from '../ContactModal';
 import TaskDetails from '../TaskDetails/Index'
 
 
@@ -183,6 +183,10 @@ const Index = ({ __flattenArr, item, title, team }) => {
             <View style={styles.line1} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
             <TaskDetails isVisible={show} onHide={() => setShow(false)} item={item} />
+            <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
+                onPressHandle={onPressHandler}
+                deleteHandler={() => handleDelete(item.id)}
+                loading={isLoading} />
         </View>
 
 
