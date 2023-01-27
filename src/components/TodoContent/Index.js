@@ -123,9 +123,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
 
                 }
 
-
             </View>
-
             <View style={styles.by}>
                 <P color={AppColors.black3}>
                     {

@@ -6,7 +6,7 @@ import {
     FlatList
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { Container, P, Rounded, H1 } from '../../utills/components'
+import { Container, P, Rounded, H1, ImgPlaceholder } from '../../utills/components'
 import styles from './styles'
 import Button from '../Button/index';
 import AppColors, { ColorList } from '../../utills/AppColors';
@@ -21,6 +21,7 @@ import { Images } from '../../component2/image/Image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CommonStyles from '../../utills/CommonStyles';
 import { UnCompletedModal } from '../ContactModal';
+import TaskDetails from '../TaskDetails/Index'
 
 
 const Index = ({ __flattenArr, item, title, team }) => {
@@ -31,7 +32,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
     const [subTask, setSubTask] = useState(false)
     const [completed, setCompleted] = useState(false)
     const [watch, setWatch] = useState(false)
-
+    const [show, setShow] = useState(false)
 
     const hideModal = () => {
         setSubTask(false)
@@ -42,14 +43,14 @@ const Index = ({ __flattenArr, item, title, team }) => {
         isLoading,
     } = useMutation(APIFunction.update_status)
 
-    const onPressHandler = async () => {
+    const onPressHandler = async (action) => {
 
         let employee = await getData("about_me")
         let fd = {
             assigned_to: employee?.id,
             id: item.id,
             due_date: moment().toISOString(true),
-            status: "In-progress",
+            status: action,
         }
 
         let res = await mutateAsync(fd)
@@ -78,22 +79,21 @@ const Index = ({ __flattenArr, item, title, team }) => {
                 <View style={CommonStyles.row}>
                     {
                         item?.department !== item?.assigned_to?.id ?
-                            <Rounded backgroundColor='#BCEFFF' size={12}>
-                                <H1>
-                                    {item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""}
-                                </H1>
-                            </Rounded>
+                            <ImgPlaceholder text={item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""} size={12} />
                             :
                             (
-                                <Rounded backgroundColor='#E1E1E1' size={12}>
-                                    <H1 color={AppColors.black1}>?</H1>
-                                </Rounded>
+                                // <Rounded backgroundColor='#E1E1E1' size={12}>
+                                //     <H1 color={AppColors.black1}>?</H1>
+                                // </Rounded>
+                                <ImgPlaceholder text={'?'} size={12} />
                             )
 
                     }
 
                     <View style={{ marginLeft: width(3), marginTop: height(0.5) }}>
-                        <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
+                        <TouchableOpacity onPress={() => setShow(true)}>
+                            <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
+                        </TouchableOpacity>
                         <P fontSize={3} style={styles.author}>
                             {item?.department === item?.assigned_to?.id ? `To: ${item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} `
                                 : `Claimed by: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
@@ -152,7 +152,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
                                     title="Claim task"
                                     textStyle={styles.buttonText}
                                     containerStyle={styles.button}
-                                    onPress={() => onPressHandler('assign_to')}
+                                    onPress={() => onPressHandler('In-progress')}
                                 /> : null
                     }
                 </View>
@@ -180,10 +180,9 @@ const Index = ({ __flattenArr, item, title, team }) => {
                         </>
                 }
             </View>
-
             <View style={styles.line1} />
-
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
+            <TaskDetails isVisible={show} onHide={() => setShow(false)} item={item} />
         </View>
 
 

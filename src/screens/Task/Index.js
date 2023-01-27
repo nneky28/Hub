@@ -137,7 +137,7 @@ const Index = ({ navigation }) => {
         data: allTeamData,
         isLoading: loadingAllTeamTask,
     } = useFetchTeamTask(tab, index)
-    // console.log('all', allTeamData)
+
 
     const {
         data: allTeamDue,
@@ -196,7 +196,7 @@ const Index = ({ navigation }) => {
             flattenedArr = allTeamOverdue?.pages
         }
         let arr = __flatten(flattenedArr)
-        console.log({ arr })
+
         if (index === 0 && tab === "All")
             return taskpage > 1 ? setData([...data, ...arr]) : setData(arr)
         if (index === 0 && actionTitle === "To-Do" && tab === "Due Today")
@@ -231,14 +231,14 @@ const Index = ({ navigation }) => {
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
     const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
     const no_date = Object.values(data).filter((item) => item?.due_date === null);
-    // console.log('no date', no_date)
+
     // sent tasks 
     const sent_Todos = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const sent_inProgress = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const sent_completed = Object.values(sentItems).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const sent_overdue = Object.values(sentOverdueItem).filter((item) => item.status !== "In-progress");
     const no_date_sent = Object.values(sentItems).filter((item) => item?.due_date === null);
-    console.log('ssent_overdue', sentItems)
+
     //team card
     const team_todos = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const team_overdue = Object.values(teamOverdueData).filter((item) => item.status !== "In-progress");
