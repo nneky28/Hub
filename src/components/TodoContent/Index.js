@@ -92,7 +92,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                 {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" || user ? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
-                            <TouchableOpacity style={CommonStyles.marginTop_2} onPress={() => {
+                            <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => {
                                 title === "Completed" && setCompleted(true)
                                 index === 1 && setSent(true)
                             }}>
