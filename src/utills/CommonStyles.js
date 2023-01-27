@@ -126,6 +126,9 @@ const CommonStyles = StyleSheet.create({
     paddingBottom_5: {
         paddingBottom: height(5)
     },
+    paddingBottom_8: {
+        paddingBottom: height(8)
+    },
     row: {
         flexDirection: 'row'
     },
@@ -150,8 +153,8 @@ const CommonStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    alignLeft : {
-        alignItems : "flex-start"
+    alignLeft: {
+        alignItems: "flex-start"
     }
 });
 export default CommonStyles;
