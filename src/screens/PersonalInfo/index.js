@@ -309,7 +309,7 @@ export default function PersonalInfo({ navigation }) {
                                 name="country"
                                 placeholder="Country"
                                 component={CustomModalDropdown}
-                                value={data.country}
+                                // value={data.country}
                                 onChangeData={(value) => setData({ ...data, country: value })}
                                 color={AppColors.black}
                                 options={["Nigeria"]}

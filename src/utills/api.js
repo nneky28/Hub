@@ -177,7 +177,7 @@ export const APIFunction = {
   get_onboarding: async () => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
-    console.log('here', id)
+    // console.log('here', id)
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
   },
@@ -198,7 +198,7 @@ export const APIFunction = {
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
   delete_task: async (fd) => {
-    console.log('id', fd)
+    // console.log('id', fd)
     let biz = await getStoredBusiness()
     return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
   },
@@ -415,9 +415,7 @@ export const useFetchBanking = (employee_id) => {
   })
 }
 export const useFetchOnboarding = () => {
-
-  return useQuery(["onboard",], () => APIFunction.get_onboarding()
-
+  return useQuery(["onboard_task_app",], () => APIFunction.get_onboarding()
   )
 }
 export const useFetchEmployees = (page, search) => {
