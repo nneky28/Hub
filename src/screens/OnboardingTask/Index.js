@@ -111,7 +111,6 @@ const Index = ({ navigation }) => {
 
         let res = await mutateAsync(fd)
         await storeData('onboard', res)
-        // console.log('onboard', res)
         navigation.navigate("onBoardHome")
 
     }

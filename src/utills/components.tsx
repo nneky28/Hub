@@ -825,6 +825,7 @@ export const ClockINContainer = ({ setVisible }) => {
       dispatch(setLoaderVisible(false))
       showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
     } catch (err) {
+      console.log("ERROR",err)
       dispatch(setLoaderVisible(false))
       if ((err && err.toString().includes("Location not available")) || err?.name === "LocationError") {
         return setVisible(true)

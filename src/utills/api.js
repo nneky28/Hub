@@ -177,7 +177,6 @@ export const APIFunction = {
   get_onboarding: async () => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
-    console.log('here', id)
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
   },
@@ -198,7 +197,6 @@ export const APIFunction = {
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
   delete_task: async (fd) => {
-    console.log('id', fd)
     let biz = await getStoredBusiness()
     return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
   },
@@ -225,7 +223,6 @@ export const APIFunction = {
   get_team_tasks: async () => {
     let biz = await getStoredBusiness()
     const user = await getData("about_me")
-    // console.log('dept_id', user?.department.id)
     return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
   },
 
@@ -570,10 +567,8 @@ export const updateSubTask = () => {
   return useMutation(() => APIFunction.update_sub_task(),
     {
       onSuccess: () => {
-        console.log('success')
       },
       onError: () => {
-        console.log('fail')
       }
     }
   )
@@ -583,10 +578,8 @@ export const useUpdate = () => {
   return useMutation(() => APIFunction.update_status(),
     {
       onSuccess: () => {
-        console.log('success')
       },
       onError: () => {
-        console.log('fail')
       }
     }
   )
