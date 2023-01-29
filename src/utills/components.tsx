@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -26,7 +26,7 @@ import { setBottomTabBarVisible, setLoaderVisible } from '../Redux/Actions/Confi
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
-import GetLocation from 'react-native-get-location'
+import Geolocation from 'react-native-geolocation-service'
 import CustomButton from '../component2/button/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
@@ -812,20 +812,39 @@ export const ClockINContainer = ({ setVisible }) => {
         return showFlashMessage({ title: `You clocked out from work at ${moment().format("hh:mm a")}`, type: "success" })
       }
       dispatch(setLoaderVisible(true))
-      let res = await GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 3000,
-      })
-      let fd = {
-        ...res,
-        location_type: tab === "Remote" ? "remote" : "on_site"
-      }
-      await clockEmployeeIn.mutateAsync(fd)
-      queryClient.invalidateQueries("attendance_status")
-      dispatch(setLoaderVisible(false))
-      showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
+      if(Platform.OS === "ios") await Geolocation.requestAuthorization("always")
+      Geolocation.getCurrentPosition(
+        async (position) => {
+          try{
+            let fd = {
+              latitude : position?.coords?.latitude,
+              longitude : position?.coords?.longitude,
+              location_type: tab === "Remote" ? "remote" : "on_site"
+            }
+            await clockEmployeeIn.mutateAsync(fd)
+            queryClient.invalidateQueries("attendance_status")
+            dispatch(setLoaderVisible(false))
+            showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
+          }catch(error){
+            dispatch(setLoaderVisible(false))
+            ToastError(error?.msg)
+          }
+        },
+        error => {
+          // See error code charts below.
+          dispatch(setLoaderVisible(false))
+          ToastError(error?.message)
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          accuracy: {
+            ios: 'best',
+            android: 'high',
+          },
+        },
+      );
     } catch (err) {
-      console.log("ERROR",err)
       dispatch(setLoaderVisible(false))
       if ((err && err.toString().includes("Location not available")) || err?.name === "LocationError") {
         return setVisible(true)

@@ -586,9 +586,7 @@ export const useUpdate = () => {
 }
 
 export const getAPIs = async (path) => {
-  console.log('path', path)
   let _token = await getData("token");
-  console.log('token', _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -605,7 +603,6 @@ export const getAPIs = async (path) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log('get Error', error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -640,12 +637,11 @@ export const postAPIs = async (path, fd) => {
           error.response.data.detail && typeof (error.response.data.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.detail });
-        } else if (
-          error.response && error.response.data &&
-          error.response.data.message && typeof (error.response.data.message) === "string"
-        ) {
-          reject({ status: 400, msg: error.response.data.message });
-        } else {
+        } else if(
+          error?.response?.data &&
+          typeof error?.response?.data === "object"){
+        reject({status: 400, msg: Object.values(error?.response?.data).toString()});
+      } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
@@ -673,7 +669,11 @@ export const deleteAPIs = async (path, fd) => {
           error.response.data.detail && typeof (error.response.data.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.detail });
-        } else {
+        }else if(
+          error?.response?.data &&
+          typeof error?.response?.data === "object"){
+        reject({status: 400, msg: Object.values(error?.response?.data).toString()});
+      } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
@@ -701,7 +701,11 @@ export const putAPIs = async (path, fd) => {
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.msg.detail });
-        } else {
+        }else if(
+          error?.response?.data &&
+          typeof error?.response?.data === "object"){
+        reject({status: 400, msg: Object.values(error?.response?.data).toString()});
+      } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
