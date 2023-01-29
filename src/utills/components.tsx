@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -487,6 +487,17 @@ export const OnboardModal = (props) => {
       </Container>
     </Modal>
   )
+}
+
+export const CustomRefreshControl = (props : {loading : boolean, onRefresh : () => void}) =>{
+  return(
+    <RefreshControl
+        colors={[AppColors.white]}
+        progressBackgroundColor={AppColors.green}
+        refreshing={props.loading}
+      // onRefresh={props.onRefresh}
+      {...props}
+  />)
 }
 
 export const CustomWebView = (props) => (

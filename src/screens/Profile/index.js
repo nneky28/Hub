@@ -1,10 +1,11 @@
 import { useFocusEffect } from '@react-navigation/core';
 import moment from 'moment';
 import numeral from 'numeral';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, LayoutAnimation, Platform, Text, TouchableOpacity, UIManager, View } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Image, LayoutAnimation, Platform, ScrollView, Text, TouchableOpacity, UIManager, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
-import { useDispatch } from 'react-redux';
+import { useQueryClient } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import { downIcon, leftIcon, settingIcon } from '../../assets/images';
 import { Images } from '../../component2/image/Image';
 import Button from '../../components/Button';
@@ -14,7 +15,7 @@ import { scrollToPosition } from '../../Redux/Actions/Config';
 import { APIFunction, getAPIs, useFetchBanking, useFetchEmergency, useFetchKin } from '../../utills/api';
 import { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, Container, H1, ProfileLoader, Rounded } from '../../utills/components';
+import { BackHandler, Container, CustomRefreshControl, H1, ProfileLoader, Rounded } from '../../utills/components';
 import { profileData } from '../../utills/data/profileData';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
@@ -32,10 +33,32 @@ export default function Profile({navigation}) {
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [about,setAbout] = useState(null)
     const [banking,setBanking] = useState(null);
+    const scrollRef = useRef(null);
+    const scrollPosition = useSelector(state => state.Config.scrollPosition);
+    const [cords,setCords] = React.useState([])
+    const queryClient = useQueryClient()
+    const [loading,setLoading] = React.useState(false)
+
+    useEffect(()=>{
+      if(!scrollRef?.current?.scrollTo) return
+      scrollRef?.current?.scrollTo({x:scrollPosition.x, y:scrollPosition.y, animated : true})
+    },[scrollPosition])
 
     useEffect(() => {
       return dispatch(scrollToPosition({x: 0, y: 0}))
     }, []);
+
+    const refreshHandler = async () => {
+        setLoading(true)
+        queryClient.invalidateQueries("next_of_kins")
+        queryClient.invalidateQueries("emergency")
+        queryClient.invalidateQueries("banks")
+        let res = await APIFunction.about_me()  
+        await storeData("about_me",res)
+        setLoading(false)
+        getUserData()
+    } 
+
     const TopBottomText = ({topText, bottomText, containerStyle}) => {
       return(
       <View style={[{justifyContent: 'flex-start'},containerStyle]}>
@@ -90,15 +113,16 @@ export default function Profile({navigation}) {
       }
     }
 
-    const RenderList = ({item, index,about}) => {
+    const RenderList = ({item, index}) => {
         const handleClick = (index) => {
           if (selectedIndex == index) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
             setSelectedIndex(-1);
-            dispatch(scrollToPosition({x: 0, y: (index + 1)*120}))
+            dispatch(scrollToPosition(cords[index]))
           } else {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
             setSelectedIndex(index);
-            dispatch(scrollToPosition({x: 0, y: (index + 1)*120}))
+            dispatch(scrollToPosition(cords[index]))
           }
         };
 
@@ -109,7 +133,13 @@ export default function Profile({navigation}) {
         
         const {data} = item;
         return (
-          <View style={styles.profileListContainer}>
+          <View style={styles.profileListContainer} 
+            onLayout={(event)=>{
+              const layout = event.nativeEvent.layout;
+              cords[index] = layout
+              setCords(cords);
+            }}
+          >
             <TouchableOpacity onPress={() => handleClick(index)} 
             style={[styles.row]}
             >
@@ -248,7 +278,7 @@ export default function Profile({navigation}) {
 
 
     return (
-        <ScreenWrapper scrollEnabled={true} allowScrollToPosition={true}>
+        <ScreenWrapper allowScrollToPosition={true}>
             <View style={styles.header}>
                 <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
@@ -262,86 +292,87 @@ export default function Profile({navigation}) {
             </View>
 
             {
-              loadingBank || loadingKin || loadingEmergency ? (
-                <Container flex={1} horizontalAlignment="center" verticalAlignment="center"
-                  marginTop={10}
-                >
+              loadingBank || loadingKin || loadingEmergency || loading ? (
+                <Container flex={1} horizontalAlignment="center" verticalAlignment="center">
                   <ProfileLoader />
                 </Container>
               ) : (
-                <React.Fragment>
-                  <View style={styles.line} />
-                  <View style={styles.mainViewContainer}>
-                      <View style={styles.userInfoContainer}>
-                        {
-                          about && about.photo ? (
-                            <Image source={{uri : about.photo}} style={styles.avatarStyle} />   
-                          ) : (
-                            <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
-                            size={20}
-                          >
-                            <H1>
-                              {about && about.first_name && about.first_name.length > 0 ? 
-                                Capitalize([...about.first_name][0]) : ""}
-                              {about && about.last_name && about.last_name.length > 1 ? 
-                              `${Capitalize([...about.last_name][0])}` : ""}
-                            </H1>
-                          </Rounded>
-                          )
-                        }
-                          
-                          <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
-                            {`${about && about.first_name ? Capitalize(about.first_name):  ""}`} {" "}
-                            {`${about && about.last_name ? Capitalize(about.last_name):  ""}`}
-                          </Text>
-                          <Text numberOfLines={1} style={[styles.designationText, CommonStyles.marginTop_05]}>
-                          {`${about && about.title ? Capitalize(about.title):  ""}`}
-                          </Text>
+                <ScrollView ref={scrollRef} refreshControl={<CustomRefreshControl 
+                  loading={loading}
+                  onRefresh={refreshHandler}
+                />}>
+                  <React.Fragment>
+                    <View style={styles.line} />
+                    <View style={styles.mainViewContainer}>
+                        <View style={styles.userInfoContainer}>
                           {
-                             about?.title_display && about?.level ? <View style={[CommonStyles.rowAlignItemCenter, CommonStyles.marginTop_05]}>
-                                <Text numberOfLines={1} style={styles.designationText}>{`${about && about.title_display ? Capitalize(about.title_display):  ""}`} | </Text>
-                                <Text numberOfLines={1} style={[styles.designationText, {fontWeight: 'bold'}]}>
-                                {`${about && about.level ? about.level :  ""}`}
-                                </Text>
-                            </View> : null
+                            about && about.photo ? (
+                              <Image source={{uri : about.photo}} style={styles.avatarStyle} />   
+                            ) : (
+                              <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
+                              size={20}
+                            >
+                              <H1>
+                                {about && about.first_name && about.first_name.length > 0 ? 
+                                  Capitalize([...about.first_name][0]) : ""}
+                                {about && about.last_name && about.last_name.length > 1 ? 
+                                `${Capitalize([...about.last_name][0])}` : ""}
+                              </H1>
+                            </Rounded>
+                            )
                           }
-                          
-                      </View>
-                      <View style={[CommonStyles.rowJustifySpaceBtw, {width: width(90)}, CommonStyles.marginBottom_2]}>
-                          <Button 
-                          title="Edit Profile" 
-                          containerStyle={styles.buttonStyle} 
-                          textStyle={styles.buttonText}
-                          onPress={async () => {
-                            await storeData("profile",{
-                              banking,
-                              about,
-                              kin : kinsData,
-                              emergency : emergData,
-                            });
-                            navigation.navigate('EditProfile')
-                          }}
-                          />
-                          <Button 
-                          title="Contact" 
-                          containerStyle={styles.buttonStyle} 
-                          textStyle={styles.buttonText} 
-                          onPress={() => setModal(true)}
-                          />
-                      </View>
-                      <FlatList
-                        data={profileData}
-                        renderItem={({item,index})=><RenderList about={about} item={item} index={index}/>}
-                        ItemSeparatorComponent={() => <View />}
-                        showsVerticalScrollIndicator={false}
-                        nestedScrollEnabled={true}
-                        contentContainerStyle={CommonStyles.marginTop_2}
-                        keyExtractor={(item) => item.key}
-                      />
-                        {/* {profileData.map((item, index) => <RenderList title="Personal Information" item={item} index={index}/>) } */}
-                      
-                  </View>
-                </React.Fragment>
+                            
+                            <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
+                              {`${about && about.first_name ? Capitalize(about.first_name):  ""}`} {" "}
+                              {`${about && about.last_name ? Capitalize(about.last_name):  ""}`}
+                            </Text>
+                            <Text numberOfLines={1} style={[styles.designationText, CommonStyles.marginTop_05]}>
+                            {`${about && about.title ? Capitalize(about.title):  ""}`}
+                            </Text>
+                            {
+                              about?.title_display && about?.level ? <View style={[CommonStyles.rowAlignItemCenter, CommonStyles.marginTop_05]}>
+                                  <Text numberOfLines={1} style={styles.designationText}>{`${about && about.title_display ? Capitalize(about.title_display):  ""}`} | </Text>
+                                  <Text numberOfLines={1} style={[styles.designationText, {fontWeight: 'bold'}]}>
+                                  {`${about && about.level ? about.level :  ""}`}
+                                  </Text>
+                              </View> : null
+                            }
+                            
+                        </View>
+                        <View style={[CommonStyles.rowJustifySpaceBtw, {width: width(90)}, CommonStyles.marginBottom_2]}>
+                            <Button 
+                            title="Edit Profile" 
+                            containerStyle={styles.buttonStyle} 
+                            textStyle={styles.buttonText}
+                            onPress={async () => {
+                              await storeData("profile",{
+                                banking,
+                                about,
+                                kin : kinsData,
+                                emergency : emergData,
+                              });
+                              navigation.navigate('EditProfile')
+                            }}
+                            />
+                            <Button 
+                            title="Contact" 
+                            containerStyle={styles.buttonStyle} 
+                            textStyle={styles.buttonText} 
+                            onPress={() => setModal(true)}
+                            />
+                        </View>
+                        {
+                          <Container>
+                            {
+                              profileData.map((item,index)=><RenderList item={item} index={index} key={index} />)
+                            }
+                          </Container>
+                        }
+                          {/* {profileData.map((item, index) => <RenderList title="Personal Information" item={item} index={index}/>) } */}
+                        
+                    </View>
+                  </React.Fragment>
+                </ScrollView>
               )
             }
             
