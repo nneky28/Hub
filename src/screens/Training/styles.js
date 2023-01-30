@@ -9,12 +9,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex : 1,
   },
-  titleContainer: {
-    alignSelf: 'center', 
-    justifyContent: 'center', 
-    width: width(80), 
-    alignItems: 'center'
-  },
   header: {
     width: width(100),
     paddingHorizontal: width(5),
@@ -31,6 +25,7 @@ const styles = StyleSheet.create({
     fontSize: width(4),
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold,
+    marginLeft : width(24)
   },
   selectedHeading: {
     fontSize: width(3.4),

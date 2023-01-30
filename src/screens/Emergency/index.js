@@ -1,32 +1,35 @@
 import { useFocusEffect } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View,Keyboard } from 'react-native'
 import { leftIcon} from '../../assets/images'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import { APIFunction} from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import { AppButton, Container, H1, P} from '../../utills/components'
-import {Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Methods'
+import { AppButton, BackHandler, Container, H1, KeyboardAwareWrapper, P} from '../../utills/components'
+import {Capitalize, getData, storeData, ToastError, ToastSuccess, validateEmail } from '../../utills/Methods'
 import styles from './styles'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
 import { setLoaderVisible } from '../../Redux/Actions/Config'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
 import Button from '../../components/Button';
 import { ActivityIndicator } from 'react-native-paper'
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view'
+import { ScrollView } from 'react-native-gesture-handler'
+import { useQueryClient } from 'react-query'
 
 
 export default function NextKin({navigation,route}) {
     const dispatch = useDispatch()
+    const auth = useSelector(state=>state.Auth)
+    const queryClient = useQueryClient()
     const [loading,setLoading] = useState(false)
     const [data,setData] = useState({
         first_name : "",
-        middle_name : "",
         last_name :"",
         phone_number : "",
         email : "",
-        marital_status : "",
         gender : "",
         nationality : "NG",
         address1 :  "",
@@ -34,30 +37,38 @@ export default function NextKin({navigation,route}) {
         country : "",
         state : "",
         city : "",
-        postal_code : ""
+        postal_code : "",
+        relationship : ""
     });
    const handleSubmit = async () => {
         try{
-            let required = ["first_name","middle_name","last_name","phone_number",
-            "email","marital_status","gender","nationality","address1","country","state","city","postal_code"];
-            let failed = false;
-            let msg = ""
-            for(let req of required){
-                if(data[req] && data[req] === "" || data[req].trim() === ""){
-                    failed = true;
-                    msg = `"${Capitalize(req.replace("_"," "))}" is required`;
-                }
-            }
-            if(failed){
-                return ToastError(msg);
-            }
+            // let required = ["first_name","last_name","phone_number",
+            // "email","gender","nationality","address1","country","state","city"];
+            // let failed = false;
+            // let msg = ""
+            // for(let req of required){
+            //     if(data[req] && data[req] === "" || data[req].trim() === ""){
+            //         failed = true;
+            //         msg = `"${Capitalize(req.replace("_"," "))}" is required`;
+            //     }
+            // }
+            // if(failed){
+            //     return ToastError(msg);
+            // }
+            Keyboard.dismiss()
+            if(data.email && !validateEmail(data.email.toString().trim())) return ToastError("Please enter a valid email")
             let about = await getData("about_me")
             dispatch(setLoaderVisible(true));
             let res = await APIFunction.update_emergency({...data,country : "NG"},about.id)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been updated");
+            let profile = await getData("profile") 
+            if(auth.route !== "main"){
+                return navigation.navigate("PensionInfo",{pension : profile.pension})
+            }
+            storeData("profile",{...profile,emergency : res})
+            queryClient.invalidateQueries("emergency")
         }catch(err){
-            console.log("errr--",err)
             dispatch(setLoaderVisible(false));
             let msg = err.msg && Object.values(err.msg) && Object.values(err.msg).length > 0 ? Object.values(err.msg)[0][0] : 
             "Something went wrong.Please retry";
@@ -66,7 +77,6 @@ export default function NextKin({navigation,route}) {
     }
     const getRecord = () => {
         const {emergency} = route.params;
-        console.log("getRecord",emergency)
         setData({
             ...data,
            ...emergency
@@ -77,14 +87,14 @@ export default function NextKin({navigation,route}) {
     },[])
     
     return (
-        <ScreenWrapper scrollEnabled={true}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+        <ScreenWrapper
+            scrollEnabled={false}
+        >
+             <View style={styles.header}>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
-                    Update Contact
+                    Emergency Contact
                   </Text>
                 </View>
                {
@@ -100,18 +110,9 @@ export default function NextKin({navigation,route}) {
                }
             </View>
             <View style={styles.line} />
-            <Container
-                paddingHorizontal={5}
-                marginTop={1}
-            >
-                <H1 color={AppColors.green}>All fields are required *</H1>
-            </Container>
-            <Container 
-                flex={1}
-            >
-                {console.log("SATA---",data)}
+            <KeyboardAwareWrapper>
                 <Formik>
-                    <Container>
+                    <>
                         <Field
                             component={CustomInput}
                             name="first_name"
@@ -124,17 +125,7 @@ export default function NextKin({navigation,route}) {
                         />
                         <Field
                             component={CustomInput}
-                            name="middle_name"
-                            placeholder="Middle Name"
-                            value={data.middle_name}
-                            onChangeData={(value)=>{
-                                setData({...data,middle_name : value})
-                            }}
-                            color={AppColors.black}
-                        />
-                        <Field
-                            component={CustomInput}
-                            name="middle_name"
+                            name="last_name"
                             placeholder="Last Name"
                             value={data.last_name}
                             onChangeData={(value)=>{
@@ -151,6 +142,7 @@ export default function NextKin({navigation,route}) {
                                 setData({...data,phone_number : value})
                             }}
                             color={AppColors.black}
+                            keyboardType="numeric"
                         />
                         <Field
                             component={CustomInput}
@@ -163,15 +155,16 @@ export default function NextKin({navigation,route}) {
                             color={AppColors.black}
                         />
                         <Field
-                            name="marital_status" 
-                            placeholder="Marital Status"
-                            component={CustomModalDropdown}
-                            value={data.gender}
-                            onChangeData={(value)=>setData({...data,marital_status : value.toLowerCase()})}
+                            component={CustomInput}
+                            name="relationship"
+                            placeholder="Relationship"
+                            value={data.relationship}
+                            onChangeData={(value)=>{
+                                setData({...data,relationship : value})
+                            }}
                             color={AppColors.black}
-                            options={["Married","Single","Divorced"]}
                         />
-                        <Field
+                        {/* <Field
                             name="gender" 
                             placeholder="Gender"
                             component={CustomModalDropdown}
@@ -182,8 +175,8 @@ export default function NextKin({navigation,route}) {
                         })}
                             color={AppColors.black}
                             options={["Male","Female","Others"]}
-                        />
-                        <Field
+                        /> */}
+                        {/* <Field
                             component={CustomInput}
                             name="nationality"
                             placeholder="Nationality"
@@ -192,7 +185,7 @@ export default function NextKin({navigation,route}) {
                                 setData({...data,nationality : value})
                             }}
                             color={AppColors.black}
-                        />
+                        /> */}
                         <Field
                             component={CustomInput}
                             name="address1"
@@ -225,7 +218,7 @@ export default function NextKin({navigation,route}) {
                         <Field
                             component={CustomInput}
                             name="state"
-                            placeholder="state"
+                            placeholder="State"
                             value={data.state}
                             onChangeData={(value)=>{
                                 setData({...data,state : value})
@@ -252,9 +245,9 @@ export default function NextKin({navigation,route}) {
                             }}
                             color={AppColors.black}
                         />
-                    </Container>
+                    </>
                 </Formik>
-            </Container>
+            </KeyboardAwareWrapper>
         </ScreenWrapper>
     )
 }

@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageBackground, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 //import ImagePicker from 'react-native-image-crop-picker';
 import { Circle, Defs, Mask, Rect, Svg } from 'react-native-svg';
@@ -13,23 +13,26 @@ import CommonStyles from '../../utills/CommonStyles';
 import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import {setLoaderVisible} from '../../Redux/Actions/Config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
 import { ActivityIndicator } from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { H1, Rounded } from '../../utills/components';
+import { BackHandler, H1, Rounded } from '../../utills/components';
 import { PermissionsAndroid } from 'react-native';
+import { WarningModal } from '../../components/ContactModal';
+import { login } from '../../Redux/Actions/Auth';
 
 
 
 export default function EditPhoto({navigation}) {
-
+  const auth = useSelector(state=>state.Auth)
   const [profilePicture, setProfilePicture] = useState(null);
   const [isSaved, setIsSaved] = useState(true);
   const [about,setAbout] = useState(null);
   const [loading,setLoading] = useState(null);
   const [file,setFile] = useState(null)
   const [fileMeta,setFileMeta] = useState(null)
+  const [show,setShow] = React.useState(false)
   const dispatch = useDispatch();
     var cropValues;
     const SvgCircle = (props) => {
@@ -41,7 +44,6 @@ export default function EditPhoto({navigation}) {
                 <Circle 
                 onLayout={async event => {
                     var {x, y, width, height} = await event.nativeEvent.layout;
-                    console.log(x, y, width, height);
                     cropValues = {x: x, y: y, width: width, height: height}
                 }}
                 r={width(25)} 
@@ -55,26 +57,23 @@ export default function EditPhoto({navigation}) {
         );
       }
 
-    const imageFromGallery = () => {
-      const options = {
-        title: 'Select Profile PIcture',
-      };
-      launchImageLibrary(options, response => {
-        try {
-          if(response.fileSize > 2000000){
-            return ToastError("Image must not be more than 2mb");
+    const imageFromGallery = async () => {
+      try{
+        const options = {
+          title: 'Select Profile PIcture',
+        };
+        launchImageLibrary(options,response=>{
+          if(response.didCancel){
+            return false
           }
-          if(response.didCancel) {
-            return false;
-          }
-          if(response.error) {
-            return ToastError(response.error);
+          if(response.error){
+            ToastError("Something went wrong.Please retry")
           }
           setProfilePicture(response);
-        } catch (error) {
-          console.log("ERR---",error)
-        }
-      });
+        })
+      }catch(err){
+        ToastError("Something went wrong.Please retry")
+      }
     };
   
     const __imageFromCamera = () => {
@@ -83,10 +82,6 @@ export default function EditPhoto({navigation}) {
       };
       launchCamera(options, response => {
         try {
-          console.log("response--",response)
-          if(response.fileSize > 2000000){
-            return ToastError("Image must not be more than 2mb");
-          }
           if(response.didCancel) {
             return false;
           }
@@ -95,7 +90,6 @@ export default function EditPhoto({navigation}) {
           }
           setProfilePicture(response);
         } catch (error) {
-          console.log("ERR--",error)
         }
       });
     };
@@ -103,6 +97,9 @@ export default function EditPhoto({navigation}) {
 
     const imageFromCamera = async () => {
       try {
+        if(Platform.OS === "ios"){
+          return __imageFromCamera()
+        }
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.CAMERA,
           {
@@ -116,24 +113,44 @@ export default function EditPhoto({navigation}) {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           __imageFromCamera()
         } else {
-          console.log("Camera permission denied");
+          ToastError("Something went wrong.Please retry")
         }
       } catch (err) {
-        console.warn(err);
+        ToastError("Something went wrong.Please retry")
       }
     };
     
+    const removeImage = async () =>{
+      try{
+        setProcess(true)
+        let about = await getData("about_me");
+        let res =  await APIFunction.remove_photo(about.id)
+        let user = {...about,photo : null}
+        let profile = await getData("profile")
+        profile["about"] = {...about,photo : null}
+        setProfilePicture(null)
+        storeData("about_me",{...about,photo : null})
+        await storeData("profile",profile)
+        setProcess(false)
+        setShow(false)
+        setAbout(user)
+        showFlashMessage({title : "Photo removed"})
+      }catch(err){
+        ToastError(err.msg)
+      }
+    }
 
     const getProfile = async () => {
       try{
           const profile = await getData("profile");
           setAbout(profile.about);
       }catch(err){
-          console.log("member---",err)
           let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
           ToastError(msg)
       }
     }
+
+    const [processing,setProcess] = React.useState(false)
     
     useEffect(() => {
         getProfile();
@@ -141,6 +158,13 @@ export default function EditPhoto({navigation}) {
 
     const updateImage = async () => {
       try{
+        if(!profilePicture && about?.photo && auth?.route !== "main"){
+            let info = {...about,completed_user_onboarding : true}
+            await storeData("about_me",info);
+            let profile = await getData("profile")
+            await storeData("profile",{...profile,about : info})
+            return dispatch(login({...auth,onboard : false, route : "main"}))
+        }
         if(!profilePicture){
           return ToastError("Please select an image to upload");
         }
@@ -163,15 +187,31 @@ export default function EditPhoto({navigation}) {
         }
         fd.append("photo",file)
         let res = await storeFilePut(url,token,fd);
-        await storeData("about_me",res);
-        await storeData("profile",{...profile,about : res })
+        if(auth.route !== "main"){
+          await APIFunction.onboarded(about_me.id)
+          setIsSaved(true);
+          setLoading(false);
+          dispatch(setLoaderVisible(false));
+          let about = {...res,completed_user_onboarding : true}
+          await storeData("about_me",about);
+          await storeData("profile",{...profile,about})
+          return dispatch(login({...auth,onboard : false, route : "main"}))
+        }
         setIsSaved(true);
         setLoading(false);
         dispatch(setLoaderVisible(false));
+        await storeData("about_me",res);
+        await storeData("profile",{...profile,about : res })
         showFlashMessage();
       }catch(err){
-        let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-        console.log("err|||",err,msg)
+        let msg = "Something went wrong. Please retry"
+        if(err.msg && err.msg.detail && typeof(err.msg.detail) == "string"){
+          msg = err.msg.detail
+        }
+        if(err.msg && err.msg.photo && Array.isArray(err.msg.photo) && err.msg.photo[0] &&
+         typeof(err.msg.photo[0]) == "string"){
+          msg = err.msg.photo[0]
+        }
         dispatch(setLoaderVisible(false));
         ToastError(msg)
         setLoading(false)
@@ -181,9 +221,7 @@ export default function EditPhoto({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.screenTitle}>
                   Edit Photo
                 </Text>
@@ -243,10 +281,10 @@ export default function EditPhoto({navigation}) {
                 
                 <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_5]}>
                     <Button 
-                    title="Take Photo"
-                    onPress={imageFromCamera}
-                    containerStyle={styles.takePhotoBtn}
-                    textStyle={styles.btnText}
+                      title="Take Photo"
+                      onPress={imageFromCamera}
+                      containerStyle={styles.takePhotoBtn}
+                      textStyle={styles.btnText}
                     />
                     <Button 
                     title="Choose Photo"
@@ -256,15 +294,23 @@ export default function EditPhoto({navigation}) {
                     />
                 </View>
                 <Button 
-                title="Remove Photo"
-                onPress={() => {
-                  setIsSaved(false)
-                  setProfilePicture(null)
-                }}
-                containerStyle={styles.removeBtn}
-                textStyle={[styles.btnText, {color: AppColors.red}]}
+                  title="Remove Photo"
+                  onPress={()=>setShow(true)}
+                  containerStyle={styles.removeBtn}
+                  textStyle={[styles.btnText, {color: AppColors.red}]}
                 />
             </View>
+            <WarningModal 
+              btnText={"Remove Photo"}
+              isVisible={show}
+              onHide={()=>{
+                setShow(false)
+              }}
+              question={"Are you sure you want to delete this image?"}
+              performAction={removeImage}
+              butto
+              loading={processing}
+            />
         </ScreenWrapper>  
     );
 }

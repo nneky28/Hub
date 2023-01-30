@@ -21,12 +21,12 @@ const GenButton = (props) => {
       onPress={props.handelButtonPress}
       rippleColor="transparent">
       <Button
-        //= contentStyle={{width: '100%'}}
         mode="contained"
-        style={{
-          ...{backgroundColor: AppColors.green},
-          ...(props.btnStyle ? props.btnStyle : {} || styles.GeneralBtnSty),
-        }}
+        style={[
+          {backgroundColor: AppColors.green},
+          //styles.GeneralBtnSty,
+          props.btnStyle
+        ]}
         onPress={props.handelButtonPress}
         loading={props.isloading || false}
         disabled={props.isdisabled || false}>

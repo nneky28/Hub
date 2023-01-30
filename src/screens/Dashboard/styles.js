@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     marginTop: height(2),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   row: {flexDirection: 'row', alignItems: 'center'},
   center: {alignSelf: 'center', marginTop: height(2)},
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   icon: {
     width: width(4),
     height: width(4),
-    tintColor: AppColors.green,
+    tintColor: AppColors.black3,
   },
   logo1: {
     width: width(7),
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   text4: {
     fontSize: width(3.2),
-    color: AppColors.black,
+    color: AppColors.black3,
     marginRight: width(2),
     fontFamily: FontFamily.BlackSansSemiBold,
 
@@ -121,7 +121,12 @@ const styles = StyleSheet.create({
     height: height(5.5),
     alignItems: 'center',
   },
-  button: {width: '33%', alignItems: 'center'},
+  button: {
+    width: '33%',
+    height : height(3),
+    alignItems : "center",
+    justifyContent : "center"
+  },
   animatedView: {
     position: 'absolute',
     width: '33%',

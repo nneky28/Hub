@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     borderWidth: 0.5,
     borderColor: AppColors.grayBorder,
-    ...AppColors.shadowStyles,
+    ...AppColors.smallShadow,
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderRadius: 20,
     paddingVertical: height(1.5),
     paddingHorizontal: width(3),
-    justifyContent: 'space-between',
+    justifyContent: "flex-start",
   },
   margin: {
     width: width(5),
@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
   },
   details: {
     width: '60%',
+    marginLeft : width(5),
+    alignSelf : "center"
   },
   button: {
     marginLeft: 0,
@@ -51,12 +53,12 @@ const styles = StyleSheet.create({
     borderColor: AppColors.green,
     paddingVertical: height(0.7),
     alignSelf: 'flex-start',
-    width: '66%',
+    width: '50%',
     ...AppColors.noShadow
   },
   buttonText: {
     color: AppColors.black1,
-    fontSize: width(3.5),
+    fontSize: width(3.1),
     fontFamily: FontFamily.BlackSansRegular
   },
 });

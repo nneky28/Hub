@@ -4,10 +4,15 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
 
 const styles = StyleSheet.create({
+  header : {
+    alignItems : "center",
+    flexDirection : "row",
+  },
   text: {
     color: AppColors.black1,
     fontSize: width(3.5),
-    fontFamily: FontFamily.BlackSansBold
+    fontFamily: FontFamily.BlackSansBold,
+    marginLeft : width(24)
   },
   row: {
     flexDirection: 'row',

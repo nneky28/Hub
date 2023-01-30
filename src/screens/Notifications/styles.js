@@ -104,8 +104,7 @@ const styles = StyleSheet.create({
 
   flatListIcon: {
       height: height(2.5),
-      width: width(4.5),
-      color: AppColors.black1
+      width: width(4.5)
   }, 
   iconAndTextContainer:{
       justifyContent: 'center',

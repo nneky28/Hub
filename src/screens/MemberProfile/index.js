@@ -8,14 +8,13 @@ import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, H1, LottieIcon, PageLoader, ProfileLoader, Rounded } from '../../utills/components';
-import { persons } from '../../utills/data/persons';
+import { Container, H1, ImageWrap, LottieIcon, PageLoader, ProfileLoader, Rounded,P, EmptyStateWrapper, BackHandler } from '../../utills/components';
 import { FontFamily } from '../../utills/FontFamily';
 import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
 import styles from './styles';
-import Empty from '../../assets/lottie/empty.json'
 import AppColors, { ColorList } from '../../utills/AppColors';
 import Teamjson from '../../assets/lottie/teams.json'
+import { Images } from '../../component2/image/Image';
 
 
 
@@ -69,16 +68,13 @@ export default function MemberProfile({route,navigation}) {
         && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
         let url = APIFunction.team_members(biz.business_id,member.id);
         let detail_url = APIFunction.basic_details(biz.business_id,member.id);
-        console.log("url<<<",url)
         let res = await getAPIs(url,token);
         let detail_res = await getAPIs(detail_url,token);
         let members = res && res.results && Array.isArray(res.results) ? res.results : [];
         setMembers(members)
-        console.log("members---",detail_res,members)
         setMember({...member,...detail_res});
         setLoading(false);
      }catch(err){
-       console.log("member---",err)
       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
       ToastError(msg)
      }
@@ -90,9 +86,7 @@ export default function MemberProfile({route,navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
+                <BackHandler />
                 <View style={styles.titleContainer}>
                   <Text numberOfLines={1} style={styles.screenTitle}>
                     {`${member && member.first_name ? Capitalize(member.first_name) : ""} ${member && member.last_name ? Capitalize(member.last_name) : ""}`}
@@ -129,17 +123,69 @@ export default function MemberProfile({route,navigation}) {
                       <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
                         {`${member && member.job && member.job.title ? Capitalize(member.job.title) : ""}`}
                       </Text>
-                      {/* <Text numberOfLines={1} style={[styles.designationText]}>Tech and Design</Text> */}
                       <Text numberOfLines={1} style={[styles.designationText, {fontFamily: FontFamily.BlackSansBold}]}>
                         {member && member.type ? Capitalize(member.type.replace("_"," ")) : ""} | {member && member.hire_date ? Capitalize(moment(member.hire_date).fromNow().replace("ago","")) : ""}
                       </Text>
                   </View>
                   <Button 
-                  title="Contact" 
-                  containerStyle={styles.buttonStyle} 
-                  textStyle={styles.buttonText} 
-                  onPress={() => setModal(true)}
+                    title="Contact" 
+                    containerStyle={styles.buttonStyle} 
+                    textStyle={styles.buttonText} 
+                    onPress={() => setModal(true)}
                   />
+
+                  <Container 
+                    marginTop={5}
+                    width={90}
+                  >
+                    {
+                      [
+                        {
+                          key: '1',
+                          title: member && member.email ? member.email : "",
+                          iconLeft: Images.MessageIcon
+                      },
+                      {
+                          key: '2',
+                          title: member && member.address && member.address.address1 ? member.address.address1 : 
+                          member && member.address ? member.address : "",
+                          iconLeft: Images.MapPIN
+                      },
+                      {
+                          key: '3',
+                          title: member && member.phone_number1 ? member.phone_number1 : "",
+                          iconLeft: Images.PhoneIcon
+                      }
+                      ].map((item,key)=>(
+                        <Container
+                          direction="row" 
+                          key={key}
+                          paddingVertical={2}
+                          marginBottom={2}
+                          borderBottomWidth={0.5}
+                          borderColor={AppColors.grayBorder}
+                          style={{
+                            alignItems : 'center'
+                          }}
+                        >
+                          <Container
+                            width={20}
+                          >
+                            <ImageWrap 
+                              fit="contain"
+                              url={item.iconLeft}
+                              height={2}
+                            />
+                          </Container>
+                          <Container
+                            width={50}
+                          > 
+                            <P>{item.title}</P>
+                          </Container>
+                        </Container>
+                      ))
+                    }
+                  </Container> 
                   {
                     member && member.line_manager ? (
                       <React.Fragment>
@@ -163,25 +209,17 @@ export default function MemberProfile({route,navigation}) {
                   </View>
                   {
                     members && Array.isArray(members) && members.length === 0 ? (
-                      <Container
-                        style={{
-                          alignItems : "center",
-                          justifyContent : "center"
-                        }}
-                      >
-                          <LottieIcon 
-                            icon={Teamjson}
-                          />
-                          <H1
-                            color={AppColors.black3}
-                          >{member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}</H1>
-                      </Container>
+                      <EmptyStateWrapper
+                        marginTop={0.1}
+                        icon={Images.EmptyTeams}
+                        header_1={member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}
+                      />
                     ) : null
                   }
                   <FlatList
                   data={members}
                   horizontal
-                  keyExtractor={(item) => item.key}
+                  keyExtractor={(item,index) => index.toString()}
                   renderItem={({item}) => (
                     <PersonCard 
                           item={item} 
@@ -203,7 +241,6 @@ export default function MemberProfile({route,navigation}) {
               </View>
               )
             }
-
             <ContactModal isVisible={modal} onHide={() => setModal(false)} data={member} />
         </ScreenWrapper>  
     );

@@ -13,7 +13,7 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction, deleteAPIs, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, LottieIcon, PageLoader, Reload } from '../../utills/components'
+import { BackHandler, Container, LottieIcon, PageLoader, Reload, SizedBox } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
@@ -90,38 +90,39 @@ export default function TimeOff({navigation}) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
-                <View style={styles.titleContainer}>
-                  <Text numberOfLines={1} style={styles.screenTitle}>
+                <BackHandler />
+                <Text numberOfLines={1} style={styles.screenTitle}>
                     Time Off
-                  </Text>
-                </View>
+                </Text>
             </View>
             <View style={styles.line} />
             {
                 loading && tabs && Array.isArray(tabs) && tabs.length === 0 ? (
                     <PageLoader />
                 ) : (
-                    <View style={styles.mainViewContainer}>
-                        <ScrollView
+                    <View style={{...styles.mainViewContainer,height : tabs && Array.isArray(tabs) && tabs.length > 0 ? null : height(60)}}>
+                        {
+                            tabs.length > 0 && <ScrollView
                             nestedScrollEnabled={true}
                             contentContainerStyle={styles.scrollViewContainer}
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}>
-                            {['Active', 'Available','Request', 'History'].filter(tab=>{
+                            {['Active', 'Available','Requests', 'History'].filter(tab=>{
                                 return tabs.includes(tab)
-                            }).map((item) => (
+                            }).map((item,index) => (
                             <TouchableOpacity 
                             onPress={() => setSelected(item)}
+                            key={index}
                             >
                                 <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
                                 {selected == item && <View style={styles.animated} />}
                             </TouchableOpacity>
                             ))}
                         </ScrollView>
-                        <View style={styles.line2} />
+                        }
+                        {
+                            tabs && Array.isArray(tabs) && tabs.length > 0 && <View style={styles.line2} />
+                        }
                         {
                             process ? (
                                 <Reload />
@@ -140,10 +141,13 @@ export default function TimeOff({navigation}) {
                         } */}
                         {selected === 'Active' &&
                             <>
+                                <SizedBox height={2} />
                                 <View style={styles.headingContainer}>
                                     <Text style={styles.heading}>Active and upcoming</Text>
                                 </View>
+                                <SizedBox height={2} />
                                 <TimeoffVertical
+                                    tab={"active"}
                                     data={'active'}
                                     load={active}
                                     setModal={(item)=>{
@@ -154,12 +158,13 @@ export default function TimeOff({navigation}) {
                                 />
                             </>
                         }
-                        {selected === 'Request' &&
+                        {selected === 'Requests' &&
                             <React.Fragment>
                                 <View style={styles.headingContainer}>
                                     <Text style={styles.heading}></Text>
                                 </View>
                                 <TimeoffVertical
+                                    tab={"request"}
                                     data={'request'}
                                     load={requests}
                                     setModal={(item)=>{
@@ -176,6 +181,7 @@ export default function TimeOff({navigation}) {
                                     <Text style={styles.heading}></Text>
                                 </View>
                                 <TimeoffVertical
+                                    tab={"history"}
                                     data={'fewDays'}
                                     load={history}
                                     setModal={(id)=>{
@@ -193,6 +199,7 @@ export default function TimeOff({navigation}) {
                                 <TimeoffVertical
                                     data={'balance'}
                                     load={available}
+                                    tab={"active"}
                                     setModal={(id,item)=>{
                                         if(
                                             item && item.max_days_allowed && 
@@ -219,13 +226,6 @@ export default function TimeOff({navigation}) {
                     getTimeOffs();
                 }} 
                 timeoff_id={current} active={active}
-                hideAndOpen={(msg)=>{
-                    setModal(false);
-                    ToastError(msg)
-                    setTimeout(()=>{
-                        setModal(true);
-                    },1000)
-                }}
             />
             <WarningModal 
               isVisible={show}

@@ -1,6 +1,7 @@
-import {SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE} from '../Types';
+import {SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE} from '../Types';
 const intialState = {
   isLoaderVisible: false,
+  isSecurityVisible : false,
   isBottomTabBarVisible: true,
   scrollPosition: {x:0, y:0}
 };
@@ -10,6 +11,12 @@ const reducer = (state = intialState, action) => {
       return {
         ...state,
         isLoaderVisible: action.payload,
+      };
+    }
+    case SETSECURITYVISIBLE: {
+      return {
+        ...state,
+        isSecurityVisible: action.payload,
       };
     }
     case SETBOTTOMTABBARVISIBLE: {

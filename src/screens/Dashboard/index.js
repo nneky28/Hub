@@ -1,61 +1,177 @@
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { width } from 'react-native-dimension';
-import { logoIcon, questionMarkIcon, rightIcon } from '../../assets/images';
+import { Image, RefreshControl, Text, TouchableOpacity, View, Platform, Linking } from 'react-native';
+import { height, width } from 'react-native-dimension';
+import { ScrollView } from 'react-native-gesture-handler';
+import { rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
-import { TimeoffModal, WarningModal } from '../../components/ContactModal';
+import { ReportModal, RestrictionModal, TimeoffModal, WarningModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
+import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
-import { APIFunction, getAPIs,deleteAPIs } from '../../utills/api';
+import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { H1, PageLoader, Reload, Rounded } from '../../utills/components';
+import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
-import { smallListUnCompleteTodo } from '../../utills/data/todoData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
-export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
+import { useDispatch, useSelector } from 'react-redux';
+import { Images } from '../../component2/image/Image';
+import { setLoaderVisible } from '../../Redux/Actions/Config';
+import { useQueryClient } from 'react-query';
+const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
+
+
+
+export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
+  const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const queryClient = useQueryClient()
   const [margin, setMargin] = useState(0.1);
   const [index, setIndex] = useState(0);
-  const [user,setUser] = React.useState(null);
-  const [bizs,setBiz] = React.useState(null);
-  const [about,setAbout] = React.useState(null);
-  const [business,setBusiness] = React.useState(null);
-  const [loading,setLoading] = React.useState(true);
-  const [assets,setAssets] = React.useState(null)
-  const [benefits,setBenefits] = React.useState(null)
-  const [whos_out,setWhosOut] = React.useState(null)
-  const [active_birthdays,setActiveBirthDay] = React.useState(null)
-  const [upcoming_birthdays,setUpcomingBirthDay] = React.useState(null)
-  const [process,setProcess] = React.useState(true)
-  const [available,setAvailable] = React.useState([]);
-  const [tabs,setTabs] = React.useState([]);
-  const [active,setActive] = React.useState([]);
-  const [requests,setRequests] = React.useState([]);
-  const [modal,setModal] = React.useState(false);
-  const [current,setCurrent] = useState(null);
-  const [show,setShow] = useState(false);
-  const [del,setDelete] = useState(null);
-  const [cancel,setCancel] =  useState(false);
-  const [text,setText] = useState("");
-  const [anniversary,setAnniversary] = React.useState(null);
+  const [business, setBusiness] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [available, setAvailable] = React.useState([]);
+  const [active, setActive] = React.useState([]);
+  const [requests, setRequests] = React.useState([]);
+  const [modal, setModal] = React.useState(false);
+  const [current, setCurrent] = useState(null);
+  const [show, setShow] = useState(false);
+  const [del, setDelete] = useState(null);
+  const [cancel, setCancel] = useState(false);
+  const [text, setText] = useState("");
+  const [tab, setTab] = React.useState("Leave")
+  const [web, setWeb] = React.useState(false)
+  const [web_url, setWebUrl] = React.useState(null)
+  const [report, setReport] = React.useState(false)
+  const [asset, setAsset] = React.useState(null)
+  const [tasks, setTasks] = React.useState([])
+  const [task, setTask] = React.useState(null)
+  const auth = useSelector(state => state.Auth)
+  const [processing, setProcessing] = React.useState(false)
+  const [visible, setVisible] = React.useState(false)
+  const [employee_pk, setEmployeePK] = React.useState(null)
+  const [category, setCategory] = React.useState("timeoff")
+
+  const {
+    data: assets,
+    isLoading: assetLoading
+  } = useFetchAssets(employee_pk)
+
+  const {
+    data: benefits,
+    isLoading: benefitLoading
+  } = useFetchBenefits(employee_pk)
+
+  const {
+    data: outData,
+    isLoading: whosoutLoading
+  } = useFetchWhosOut(category)
+
+  const {
+    data: upcomingBD,
+    isLoading: upcomingBDLoading
+  } = useFetchBirthdays("upcoming")
+
+  const {
+    data: activeBD,
+    isLoading: activeBDLoading
+  } = useFetchBirthdays("active")
+
+  const {
+    data: activeANN,
+    isLoading: activeANNLoading
+  } = useFetchAnniversary("active")
+
+  const {
+    data: taskData,
+    isLoading: taskLoading
+  } = useFetchTasks(employee_pk)
+
+  const mapDataToState = () => {
+    if (taskLoading && taskData?.results && Array.isArray(taskData?.results)) {
+      setTasks(taskData?.results)
+    }
+  }
+
+  useEffect(() => {
+    mapDataToState()
+  }, [taskData])
+
+  useEffect(() => {
+    if (assetLoading || benefitLoading || activeBDLoading ||
+      upcomingBDLoading || activeANNLoading) {
+      dispatch(setLoaderVisible(true))
+      return setLoading(true)
+    }
+    dispatch(setLoaderVisible(false))
+    setLoading(false)
+  }, [assetLoading, benefitLoading, activeBDLoading,
+    upcomingBDLoading,
+    activeANNLoading, loading
+  ])
+
+
+
+  const goToWeb = (url) => {
+    setWebUrl(url)
+    setWeb(true)
+  }
+
+  const getWhosOut = (param) => {
+    try {
+      if (param === "Training") {
+        return setTab(param)
+      }
+      let categ = param == "Remote Work" ? "work_from_home" : "timeoff";
+      setCategory(categ)
+      setTab(param)
+    } catch (err) {
+      ToastError(err.msg)
+    }
+  }
+
+  const markAsCompleted = async () => {
+    try {
+      let about = await getData("about_me")
+      setProcessing(true)
+      await APIFunction.toggle_completed(about.id, task.id, { is_completed: !task.is_completed })
+      let arr = [...tasks].filter(item => item.id !== task.id)
+      setProcessing(false)
+      setShow(false)
+      setTasks([...arr])
+      showFlashMessage({ title: "Marked as done" })
+    } catch (err) {
+      showFlashMessage({ title: "Marked as done", type: "error" })
+    }
+  }
+
+  const openWarningModal = (data) => {
+    try {
+      setTask(data)
+      setText(`Are you sure you have completed "${data?.title}"?`)
+      setShow(true)
+    } catch (err) {
+    }
+  }
+
   const cancelRequest = async () => {
-    try{
+    try {
       setCancel(true)
       let about = await getData("about_me")
       let biz = await getStoredBusiness();
-      let cancel_url = APIFunction.delete_timeoff(biz.business_id,about.id,del.id);
+      let cancel_url = APIFunction.delete_timeoff(biz.business_id, about.id, del.id);
       let res = await deleteAPIs(cancel_url);
-      let filtered = requests.filter(item=>item.id !== del.id);
+      let filtered = requests.filter(item => item.id !== del.id);
       setRequests(filtered);
       setShow(false);
       setCancel(false);
       return ToastSuccess("Request has been canceled");
-    }catch(err){
+    } catch (err) {
       setCancel(false);
       setShow(false);
       ToastError(err.msg)
@@ -68,245 +184,340 @@ export default function Dashboard({navigation: {navigate, toggleDrawer}}) {
     if (margin == 0) margin = 0.1;
     setMargin(width(margin));
   };
+  const closeWeb = () => {
+    setWeb(false)
+  }
+  const closeAndRefresh = (res) => {
+    setAvailable(res.available)
+    setActive(res.active);
+    setRequests(res.requests);
+  }
+
   const getInfo = async () => {
-    try{
-      setProcess(true);
-      console.log("setProcess---")
-      let token = await getData("token");
-      let user =  await getData("user");
+    try {
+      setLoading(true)
       let about_me = await getData("about_me");
+      setEmployeePK(about_me?.id)
       let biz = await getStoredBusiness();
-      let assets_url = APIFunction.my_business_assests(biz.business_id,about_me.id);
-      let benefits_url = APIFunction.benefits(biz.business_id,about_me.id);
-      let whos_out_url = APIFunction.whos_out(biz.business_id,about_me.id)
-      let active_birthdays_url = APIFunction.birthdays(biz.business_id,"active");
-      let upcoming_birthdays_url = APIFunction.birthdays(biz.business_id,"upcoming");
-      let ann_url = APIFunction.job_anniversary("active",biz.business_id);
-      let asset_res = await getAPIs(assets_url,token);
-      let benefits_res = await getAPIs(benefits_url,token)
-      let whos_out_res = await getAPIs(whos_out_url,token)
-      let upcoming_res = await getAPIs(upcoming_birthdays_url,token);
-      let active_res = await getAPIs(active_birthdays_url,token);
-      let active_ann = await getAPIs(ann_url,token);
       let res = await getTimeOffsFunction();
-      setAvailable(res.available)
-      setTabs(res.tabs);
-      setActive(res.active);
-      setRequests(res.requests);
-      setBusiness(biz);
-      setAbout(about_me);
-      setAssets(asset_res.results)
-      setBenefits(benefits_res.results);
-      setUpcomingBirthDay(upcoming_res.results);
-      setActiveBirthDay(active_res.results);
-      setWhosOut(whos_out_res.results)
-      setAnniversary(active_ann.results);
-      if(res.active.length === 0){
+      var margin = 30;
+      setMargin(width(margin));
+      setIndex(1)
+      if (res.active.length === 0) {
         var margin = 30;
         setMargin(width(margin));
         setIndex(1)
-      }else{
+      }
+      if (res.active.length !== 0) {
         setIndex(0)
         setMargin(width(0.1))
       }
-      setLoading(false);
-      setProcess(false);
-    }catch(err){
-      console.log("Err--",err);
-      let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-      console.log("err|||",err,msg)
-      ToastError(msg)
+      setAvailable(res.available)
+      setActive(res.active);
+      setRequests(res.requests);
+      setBusiness(biz);
+      setLoading(false)
+    } catch (err) {
+
     }
   }
-  useFocusEffect(
-    React.useCallback(()=>{
-      getInfo()
-    },[])
-  )
+
+  const refreshDashboard = () => {
+    getInfo()
+    queryClient.invalidateQueries("")
+  }
+
+  const openReport = (item) => {
+    try {
+      setReport(true)
+      setAsset(item)
+    } catch (err) {
+      ToastError(err.msg)
+    }
+  }
+  let requestResolution = () => {
+    Linking.canOpenURL('App-Prefs:LOCATION_SERVICES').then(supported => {
+      if (!supported) {
+      } else {
+        return Linking.openURL('App-Prefs:LOCATION_SERVICES');
+      }
+    }).catch(err => { });
+  }
+
+  if (Platform.OS === "android") {
+    const {
+      PRIORITIES: { HIGH_ACCURACY },
+      addListener,
+      useLocationSettings
+    } = LocationEnabler.default
+    let useLocationSettingsRes = useLocationSettings({
+      priority: HIGH_ACCURACY, // optional: default BALANCED_POWER_ACCURACY
+      alwaysShow: true, // optional: default false
+      needBle: true, // optional: default false
+    });
+    if (useLocationSettingsRes?.[1]) requestResolution = useLocationSettingsRes?.[1]
+
+    let listener = null
+    useEffect(() => {
+      listener = addListener(({ locationEnabled }) => {
+        if (locationEnabled) {
+          setVisible(false)
+        }
+      })
+      return () => {
+        listener.remove();
+      }
+    }, [])
+  }
+
+  useEffect(() => {
+    getInfo()
+  }, [])
+
   return (
-    <ScreenWrapper scrollEnabled={true}>
-      <View style={styles.header}>
-        <View style={styles.row}>
-          <TouchableOpacity onPress={() => toggleDrawer()}>
-            {
-              business && business.logo ? (
-                <Image resizeMode="contain" source={{uri : business.logo}} style={styles.logo} />
-              ) : (
-                <Rounded  size={10} backgroundColor={AppColors.gray}>
-                  <H1>
-                      {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
-                  </H1>
-              </Rounded>
-              )
-            }
-          </TouchableOpacity>
-          <Text numberOfLines={1} style={styles.text1}>
-            {business && business.business_name ? business.business_name : ""}
-          </Text>
-        </View>
-        {/* <TouchableOpacity>
-          <Image
-            resizeMode="contain"
-            source={questionMarkIcon}
-            style={styles.logo1}
-          />
-        </TouchableOpacity> */}
-      </View>
-      <View style={styles.line} />
-      {/*<View style={styles.nameContainer}>
-         <Text style={styles.text2}>{getGreetingTime()}</Text> 
-        <Text numberOfLines={1} style={styles.text3}>
-        {about && about.first_name ? Capitalize(about.first_name) : ""}
-        </Text>
-      </View>*/}
-          {
-            loading ? (
-              <PageLoader />
-            ) : ( 
-                  <React.Fragment>
-                   {
-                     process ? (
-                      <Reload />
-                     ) : null
-                   }
-                            {/*       <View style={styles.toDoContainer}>
-                   <View style={styles.row1}>
-                    <Text numberOfLines={1} style={styles.text3}>
-                      To do
-                    </Text>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => navigate('Todos')}
-                      style={styles.row}>
-                      <Text style={styles.text4}>See all task</Text>
-                      <Image
-                        resizeMode="contain"
-                        source={rightIcon}
-                        style={styles.icon}
-                      />
-                    </TouchableOpacity>
-                  </View> 
-                  <View style={styles.line} />
-                  <Todo data={smallListUnCompleteTodo} />
-                </View>*/}
-                <Text numberOfLines={1} style={styles.timeOffText}>
-                  Time Off
-                </Text>
-                <View style={styles.threeButtonCont}>
-                  {
-                    ['Active', 'Available','Request'].map((item,i)=>(
-                      <TouchableOpacity
-                        onPress={() =>setButtons(i)}
-                        style={styles.button}
-                        activeOpacity={0.8}>
-                        <Text style={[styles.buttonText, index == i && styles.buttonText1]}>
-                          {item}
-                        </Text>
-                      </TouchableOpacity>
-                    ))
-                  }
-                  <AnimatedView marginLeft={margin} styles={styles.animatedView} />
-                </View>
-                <View>
-                <Timeoff
-                    data={
-                      index == 0
-                        ? active && Array.isArray(active) ? active : []
-                        : index == 1
-                        ? available && Array.isArray(available) ? available : []
-                        : requests && Array.isArray(requests) ? requests : []
+    <ScreenWrapper scrollEnabled={false}
+      statusBarColor={AppColors.lightGreen}
+    >
+      {
+        web ? <CustomWebView show={web} setShow={closeWeb} web_url={web_url} /> : (
+          <React.Fragment>
+            <Container
+              backgroundColor={AppColors.lightGreen}
+            >
+              <View style={styles.header}>
+                <View style={styles.row}>
+                  <TouchableOpacity onPress={() => toggleDrawer()}>
+                    {
+                      business && business.logo ? (
+                        <Image resizeMode="contain" source={{ uri: business.logo }} style={styles.logo} />
+                      ) : (
+                        <Rounded size={10} backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
+                          <H1>
+                            {business && business.business_name && business.business_name.length > 0 ? Capitalize([...business.business_name][0]) : ""}
+                          </H1>
+                        </Rounded>
+                      )
                     }
-                    tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
-                    showModal={(timeoff_id,item,tab_name)=>{
-                      if(tab_name == "active"){
-                        setText("Are you sure you want to end this leave?")
-                        setDelete(item);
-                        return setShow(true);
-                      }
-                      if(tab_name === "request"){
-                        setDelete(item);
-                        setText("Are you sure you want to cancel this request?")
-                        return setShow(true);
-                      }
-                      
-                      if(item && item.max_days_allowed && 
-                        item.total_days_taken >= 0 && 
-                        item.total_days_taken < 
-                        item.max_days_allowed){
-                        setCurrent(timeoff_id)
-                        return setModal(true)
-                      }
-                    }}
-                  />
+                  </TouchableOpacity>
+                  <Text numberOfLines={1} style={styles.text1}>
+                    {business && business.business_name ? business.business_name : ""}
+                  </Text>
                 </View>
                 <TouchableOpacity
-                  onPress={()=>navigate("Time off")}
+                  onPress={() => {
+                    navigate("Notifications")
+                  }}
                 >
-                  <View style={[styles.row, styles.center]}>
-                    <Text style={styles.text4}>See all time off</Text>
-                    <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
-                  </View>
+                  <React.Fragment>
+                    {
+                      auth && auth.notifications > 0 ? <Container
+                        position="absolute"
+                        backgroundColor={"transparent"}
+                        style={{
+                          top: 5,
+                          left: 5,
+                          zIndex: 10
+                        }}
+                      >
+                        <Rounded size={4}
+                          backgroundColor={AppColors.pink}
+
+                        ></Rounded>
+                      </Container> : null
+                    }
+                    <ImageWrap
+                      url={Images.BellIcon}
+                      height={5}
+                      fit={"contain"}
+                      width={5}
+                    />
+                  </React.Fragment>
                 </TouchableOpacity>
-                {
-                  assets && Array.isArray(assets) && assets.length > 0 ? (
-                      <React.Fragment>
-                        <Text style={styles.heading}>
-                          Asset (
-                            {assets && Array.isArray(assets) ? assets.length : 0 }
-                          )
-                        </Text>
-                        <View>
-                          <AssetsList data={assets} />
-                        </View>
-                      </React.Fragment>
-                  ) : null
-                }
-                {
-                  benefits && Array.isArray(benefits) && benefits.length > 0 ? (
-                    <React.Fragment>
-                      <Text style={[styles.heading, {marginTop: 0}]}>Benefit</Text>
-                      <BenifitList data={['#C2D4FF', '#99E6FF']} horizontal={true}
-                        benefits={benefits}
+              </View>
+              <View style={styles.line} />
+            </Container>
+            {
+              loading ? (
+                <PageLoader />
+              ) : (
+                <ScrollView
+                  horizontal={false}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={false}
+                      onRefresh={refreshDashboard}
+                    />
+                  }
+                >
+                  <React.Fragment>
+
+                    <ClockINContainer setVisible={setVisible} />
+
+                    {
+                      tasks && Array.isArray(tasks) && tasks.length > 0 ?
+                        (
+                          <View style={styles.toDoContainer}>
+                            <View style={styles.row1}>
+                              <Text numberOfLines={1} style={styles.text3}>
+                                Tasks
+                              </Text>
+                              <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={() => {
+                                  navigate("Todos")
+                                }}
+                                style={styles.row}>
+                                <Text style={styles.text4}>See all task</Text>
+                                <Image
+                                  resizeMode="contain"
+                                  source={rightIcon}
+                                  style={styles.icon}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                            <View style={styles.line} />
+                            <Todo data={[...tasks].splice(0, 2)}
+                              openWarningModal={openWarningModal}
+                            />
+                          </View>
+                        ) : null
+                    }
+                    <Container marginTop={tasks && Array.isArray(tasks) && tasks.length > 1 ? 2 : 0}>
+                      <Text numberOfLines={1} style={styles.timeOffText}>
+                        Time Off
+                      </Text>
+                    </Container>
+                    <View style={styles.threeButtonCont}>
+                      {
+                        ['Active', 'Available', 'Requests'].map((item, i) => (
+                          <TouchableOpacity
+                            onPress={() => setButtons(i)}
+                            style={styles.button}
+                            activeOpacity={0.8}
+                            key={i}
+                          >
+                            <Text style={[styles.buttonText, index == i && styles.buttonText1]}>
+                              {item}
+                            </Text>
+                          </TouchableOpacity>
+                        ))
+                      }
+                      <AnimatedView marginLeft={margin} styles={styles.animatedView} />
+                    </View>
+                    <View>
+                      <Timeoff
+                        data={
+                          index == 0
+                            ? active && Array.isArray(active) ? active : []
+                            : index == 1
+                              ? available && Array.isArray(available) ? available : []
+                              : requests && Array.isArray(requests) ? requests : []
+                        }
+                        tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
+                        showModal={(timeoff_id, item, tab_name) => {
+                          if (tab_name == "active") {
+                            setText("Are you sure you want to end this leave?")
+                            setDelete(item);
+                            return setShow(true);
+                          }
+                          if (tab_name === "request") {
+                            setDelete(item);
+                            setText("Are you sure you want to cancel this request?")
+                            return setShow(true);
+                          }
+
+                          if (item && item.max_days_allowed &&
+                            item.total_days_taken >= 0 &&
+                            item.total_days_taken <
+                            item.max_days_allowed) {
+                            setCurrent(timeoff_id)
+                            return setModal(true)
+                          }
+                        }}
                       />
-                    </React.Fragment>
-                  ) : null
-                }
-                <TasksList data={tasksData} 
-                  whos_out={whos_out}
-                  birthdays={active_birthdays}
-                  upcoming_birthdays={upcoming_birthdays}
-                  anniversary={anniversary}
-                  navigate={navigate}
-                />
-              </React.Fragment>
-            )
-          }
-              <TimeoffModal 
-                isVisible={modal} 
-                onHide={()=>setModal(false)}
-                closeAndRefresh={() => {
-                    setModal(false)
-                    ToastSuccess("Request has been submitted for processing")
-                   getInfo();
-                }} 
-                timeoff_id={current} active={active}
-                hideAndOpen={(msg)=>{
-                    setModal(false);
-                    ToastError(msg)
-                    setTimeout(()=>{
-                        setModal(true);
-                    },1000)
-                }}
-            />  
-            <WarningModal 
+                    </View>
+                    {
+                      assets?.results && Array.isArray(assets?.results) && assets?.results.length > 0 ? (
+                        <React.Fragment>
+                          <Text style={styles.heading}>
+                            Asset
+                            {assets?.results && Array.isArray(assets?.results) && assets?.results.length > 1 ? `(${assets?.results.length})` : ""}
+                          </Text>
+                          <View>
+                            <AssetsList data={assets?.results}
+                              onPressHandler={openReport}
+                            />
+                          </View>
+                        </React.Fragment>
+                      ) : null
+                    }
+                    {
+                      benefits?.results && Array.isArray(benefits?.results) && benefits?.results.length > 0 ? (
+                        <React.Fragment>
+                          <Text style={styles.heading}>Benefit</Text>
+                          <BenifitList
+                            data={['#C2D4FF', '#99E6FF']}
+                            horizontal={benefits?.results.length === 1 ? false : true}
+                            benefits={benefits?.results}
+                            goToWeb={goToWeb}
+                          />
+                        </React.Fragment>
+                      ) : null
+                    }
+                    <TasksList data={tasksData}
+                      whos_out={tab !== "Training" && outData?.results && Array.isArray(outData?.results) ? outData?.results : []}
+                      birthdays={activeBD?.results && Array.isArray(activeBD?.results) ? activeBD?.results : []}
+                      upcoming_birthdays={upcomingBD?.results && Array.isArray(upcomingBD?.results) ? upcomingBD?.results : []}
+                      anniversary={activeANN?.results && Array.isArray(activeANN?.results) ? activeANN?.results : []}
+                      tab={tab}
+                      navigate={navigate}
+                      getWhosOut={getWhosOut}
+                      fetch={whosoutLoading}
+                    />
+                  </React.Fragment>
+                </ScrollView>
+              )
+            }
+            <TimeoffModal
+              isVisible={modal}
+              onHide={() => setModal(false)}
+              closeAndRefresh={closeAndRefresh}
+              timeoff_id={current} active={active}
+            />
+            <WarningModal
               isVisible={show}
-              onHide={()=>{
+              onHide={() => {
+                setCancel(false)
+                setProcessing(false)
                 setShow(false)
               }}
               question={text}
-              performAction={cancelRequest}
-              loading={cancel}
+              performAction={["Are you sure you want to end this leave?", "Are you sure you want to cancel this request?"].includes(text) ? cancelRequest : markAsCompleted}
+              loading={cancel || processing}
+              btnText={["Are you sure you want to end this leave?", "Are you sure you want to cancel this request?"].includes(text) ? "Cancel Request" : "Mark as Completed"}
             />
+
+            <ReportModal
+              isVisible={report}
+              onHide={() => {
+                setReport(false)
+                setAsset(null)
+              }}
+              asset={asset}
+              btnText={"Submit Report"}
+            />
+
+            <RestrictionModal isVisible={visible} onHide={() => setVisible(false)}
+              onPressHandler={requestResolution}
+
+            />
+          </React.Fragment>
+        )
+      }
+
     </ScreenWrapper>
   );
 }
+
+
+

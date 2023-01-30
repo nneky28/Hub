@@ -12,13 +12,14 @@ import TrainingList from '../../components/TrainingList'
 import { APIFunction, getAPIs } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, H1, LottieIcon, PageLoader } from '../../utills/components'
+import { BackHandler, Container, H1, ImageWrap, LottieIcon, P, PageLoader, SizedBox } from '../../utills/components'
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
 import { getData, ToastError } from '../../utills/Methods'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
+import { Images } from '../../component2/image/Image'
 
 
 
@@ -27,7 +28,7 @@ import Empty from '../../assets/lottie/empty.json'
 
 
 export default function Training({navigation}) {
-    var [selected, setSelected] = useState('Overview');
+    var [selected, setSelected] = useState('Upcoming');
     const [loading,setLoading] = useState(true);
     const [histories,setHistories] = useState(null);
     const [trainings,setTrainings] = useState(null);
@@ -62,14 +63,10 @@ export default function Training({navigation}) {
         <ScreenWrapper scrollEnabled={selected === "Available" && trainings && 
         Array.isArray(trainings) && trainings.length === 0 ? false : true}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon}/>
-                </TouchableOpacity>
-                <View style={styles.titleContainer}>
-                  <Text numberOfLines={1} style={styles.screenTitle}>
-                  Training
+                <BackHandler />
+                <Text numberOfLines={1} style={styles.screenTitle}>
+                    Training
                   </Text>
-                </View>
             </View>
             <View style={styles.line} />
             <View style={styles.mainViewContainer}>
@@ -79,10 +76,12 @@ export default function Training({navigation}) {
                     }}
                     paddingTop={2}
                     paddingHorizontal={5}
+                    width={90}
                 >
-                    {['Overview', 'Available'].map((item) => (
+                    {['Upcoming',"History"].map((item,index) => (
                         <TouchableOpacity 
-                        onPress={() => setSelected(item)}
+                            onPress={() => setSelected(item)}
+                            key={index}
                         >
                             <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
                             {selected == item && <View style={styles.animated} />}
@@ -112,90 +111,87 @@ export default function Training({navigation}) {
                         <PageLoader />
                     ) : (
                         <React.Fragment>
-                    {
-                        selected === 'Overview' &&
-                        <>
-                        {
-                            Platform.OS === "android" ? (
-                                <SearchBox title="Search for Training"/>
-                            ) : (
-                                <SearchBoxIOS title="Search for Training"/>
-                            )
-                        }
-                        <View style={styles.headingContainer}>
-                            <Text style={styles.heading}>Upcoming</Text>
-                        </View>
-                        {
-                            trainings && Array.isArray(trainings) && trainings.length > 0 ? (
-                                <TrainingList data={trainings}/>
-                            ) : (
-                                <Container
-                                    style={{
-                                        justifyContent : "center",
-                                        alignItems : "center"
-                                    }}
-                                >
-                                    <LottieIcon icon={Empty}/>
-                                    <H1
-                                        color={AppColors.black3}
-                                    >You have no Upcoming Training</H1>
-                                </Container>
-                            )
-                        }
-                        <React.Fragment>
                             {
-                                trainings && Array.isArray(trainings) && trainings.length > 0 &&  histories && Array.isArray(histories) && histories.length >= 0 ? (
-                                    <View style={styles.headingContainer}>
-                                        <Text style={styles.heading}>History</Text>
-                                    </View>
-                                ) : null
-                            }
-                            {
-                                histories && Array.isArray(histories) && histories.length > 0 ? (
-                                    <TrainingList data={histories}/>
-                                ) : null
-                            }
-                            {
-                                trainings && Array.isArray(trainings) && trainings.length > 0 &&  histories && Array.isArray(histories) && histories.length === 0 ? (
-                                    <LottieIcon icon={Empty}/>
-                                ) : null
-                            }
-                        </React.Fragment>
-                        </>
-                    }
-                    {
-                        selected === "Available" ? (
-                            <React.Fragment>
+                                selected === 'Upcoming' &&
+                                <>
+                                {/* {
+                                    Platform.OS === "android" ? (
+                                        <SearchBox title="Search for Training"/>
+                                    ) : (
+                                        <SearchBoxIOS title="Search for Training"/>
+                                    )
+                                } */}
+                                {/* <View style={styles.headingContainer}>
+                                    <Text style={styles.heading}>Upcoming</Text>
+                                </View> */}
+                                
                                 {
-                                        trainings && Array.isArray(trainings) 
-                                        && trainings.length > 0 ? (
-                                            <TrainingList data={trainings}/>
-                                        ) : (
-                                            <Container
-                                                style={{
-                                                    justifyContent : "center",
-                                                    alignItems : "center",
-                                                    flex:1
-                                                }}
-                                            >
-                                                <LottieIcon icon={Empty}/>
+                                    trainings && Array.isArray(trainings) && trainings.length > 0 ? (
+                                        <TrainingList data={trainings}/>
+                                    ) : (
+                                        <Container
+                                                        marginTop={8}
+                                                    style={{
+                                                        //justifyContent : "center",
+                                                        alignItems : "center",
+                                                        flex:1
+                                                    }}
+                                                >
+                                                    <ImageWrap 
+                                                        url={Images.EmptyTraining}
+                                                        height={30}
+                                                        fit="contain"
+                                                    />
                                                 <H1
                                                     color={AppColors.black3}
-                                                >You have no available training yet</H1>
+                                                    fontSize={5}
+                                                >You have no upcoming</H1>
+                                                <H1 color={AppColors.black3}
+                                                    fontSize={5}>training.</H1>
+                                                    <SizedBox height={2} />
+                                                <P color={AppColors.black2}>When you do, they will show up here.</P>
                                                 
                                             </Container>
-                                        )
+                                    )
                                 }
-                            </React.Fragment> 
-                        )  : (
-                            null
-                        )
-                        
-                       
-                    }
+                                </>
+                            }
                         </React.Fragment>
                     )
                 }
+
+
+                                    {
+                                        selected === "History" ? <React.Fragment>
+                                        {
+                                                histories && Array.isArray(histories) && histories.length > 0 ? (
+                                                    <TrainingList data={histories} opacity={0.5}/>
+                                                ) : <Container
+                                                        marginTop={8}
+                                                    style={{
+                                                        //justifyContent : "center",
+                                                        alignItems : "center",
+                                                        flex:1
+                                                    }}
+                                                >
+                                                    <ImageWrap 
+                                                        url={Images.EmptyTraining}
+                                                        height={30}
+                                                        fit="contain"
+                                                    />
+                                                <H1
+                                                    color={AppColors.black3}
+                                                    fontSize={5}
+                                                >You have not taken</H1>
+                                                <H1 color={AppColors.black3}
+                                                    fontSize={5}>any training yet.</H1>
+                                                    <SizedBox height={2} />
+                                                <P color={AppColors.black2}>When you do, they will show up here.</P>
+                                                
+                                            </Container>
+                                        }
+                                    </React.Fragment> : null
+                                    }
             </View>
         </ScreenWrapper>
     )

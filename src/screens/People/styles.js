@@ -6,12 +6,12 @@ import { FontFamily } from '../../utills/FontFamily';
 const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
+    flex : 1,
     alignItems: 'center',
   },
   mainViewContainer2: {
     backgroundColor: AppColors.white,
-    alignItems: 'center',
-    flex : 1,
+    alignItems: 'center'
   },
   header: {
     width: width(100),
@@ -107,13 +107,14 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: 'space-between',
     height: height(5),
-    marginLeft: width(2)
+    marginLeft: width(2),
+    //alignItems : "center"
   },
 
   flatListIcon: {
       height: height(2.5),
       width: width(4.5),
-      color: AppColors.black1
+     // color: AppColors.black1
   }, 
   iconAndTextContainer:{
       justifyContent: 'center',
@@ -192,10 +193,10 @@ const styles = StyleSheet.create({
     width: width(90), 
     justifyContent: 'flex-start', 
     flexDirection: 'row', 
-    alignItems: 'center'
+    alignItems: 'center',
   },
   searchBoxStyle: {
-    width: width(79), 
+    width: width(90), 
     alignSelf: 'flex-start'
   },
 });

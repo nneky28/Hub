@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View,ScrollView
+  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
-import { contactData } from '../../utills/data/contactData';
 import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
-import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import { Field, Formik } from 'formik';
 import CustomText from '../../component2/customText/CustomText';
 import CustomButton from '../../component2/button/Button';
@@ -17,48 +15,53 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
-import { getData, ToastError,storeData, getStoredBusiness } from '../../utills/Methods';
-import { Container, H1, LottieIcon, P, SizedBox } from '../../utills/components';
+import { getData, ToastError, storeData, getStoredBusiness, getTimeOffsFunction } from '../../utills/Methods';
+import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap, TouchableWrapper } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import AppColors from '../../utills/AppColors';
+import { showFlashMessage } from '../SuccessFlash';
+import { Images } from '../../component2/image/Image';
+import { height, width } from 'react-native-dimension';
+import { useQueryClient } from 'react-query';
+import TaskDetails from '../TaskDetails/Index'
+import CreateTask from '../../screens/CreateTask/Index'
 
-const ContactModal = ({isVisible, onHide,data}) => {
-//   email: ""
-// first_name: "asha"
-// hire_date: "2021-09-21"
-// job: Object
-// last_name: "abi"
-// line_manager: null
-// phone_number1: ""
-// photo: null
+
+const ContactModal = ({ isVisible, onHide, data }) => {
+  let address = ""
+  if(data?.address){
+      address = data?.address?.address1 || ""
+      address =   address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2  : address
+      address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
+      address = address && data?.address?.state ? `${address}, ${data?.address?.state}` : data?.address?.state ? data?.address?.state : address
+      address = address && data?.address?.country_display ? `${address}, ${data?.address?.country_display}` : data?.address?.country_display ? data?.address?.country_display : address
+  }
   const contactData = [
-      {
-          key: '1',
-          title: data && data.email ? data.email : "",
-          iconLeft: require('../../assets/images/icons/message.png'),
-          iconRight: require('../../assets/images/icons/copy.png'),
-      },
-      {
-          key: '2',
-          title: data && data.address && data.address.address1 ? data.address.address1 : 
-          data && data.address ? data.address : "",
-          iconLeft: require('../../assets/images/icons/location.png'),
-          iconRight: require('../../assets/images/icons/copy.png'),
-      },
-      {
-          key: '3',
-          title: data && data.phone_number1 ? data.phone_number1 : "",
-          iconLeft: require('../../assets/images/icons/phone.png'),
-          iconRight: require('../../assets/images/icons/copy.png'),
-      },
-      // {
-      //     key: '4',
-      //     title: 'linkedin',
-      //     iconLeft: require('../../assets/images/icons/linked-in.png'),
-      //     iconRight: null,
-      // },
+    {
+      key: '1',
+      title: data && data.email ? data.email : "",
+      iconLeft: { uri: Images.MessageIcon },
+      iconRight: { uri: Images.CopyIcon },
+    },
+    {
+      key: '2',
+      title: address,
+      iconLeft: { uri: Images.MapPIN },
+      iconRight: { uri: Images.CopyIcon },
+    },
+    {
+      key: '3',
+      title: data && data.phone_number1 ? data.phone_number1 : "",
+      iconLeft: { uri: Images.PhoneIcon },
+      iconRight: { uri: Images.CopyIcon },
+    },
+    // {
+    //     key: '4',
+    //     title: 'linkedin',
+    //     iconLeft: require('../../assets/images/icons/linked-in.png'),
+    //     iconRight: null,
+    // },
   ]
   return (
     <Modal
@@ -73,98 +76,33 @@ const ContactModal = ({isVisible, onHide,data}) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{justifyContent: 'flex-end', margin: 0}}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <TextWithIconCopy item={contactData[0]} onHide={onHide}/>
-        <TextWithIconCopy item={contactData[1]} onHide={onHide}/>
-        <TextWithIconCopy item={contactData[2]} onHide={onHide}/>
+        <TextWithIconCopy item={contactData[0]} onHide={onHide} />
+        <TextWithIconCopy item={contactData[1]} onHide={onHide} />
+        <TextWithIconCopy item={contactData[2]} onHide={onHide} />
         {/* <TextWithIcon item={contactData[3]} textStyle={styles.text2}/> */}
       </View>
     </Modal>
   );
 };
 
-const DocumentModal = ({isVisible, onHide}) => {
-
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{justifyContent: 'flex-end', margin: 0}}
-      isVisible={isVisible}>
-      <View style={styles.container}>
-        <TextWithIcon item={{title: 'Share', iconLeft: shareIcon}} textStyle={styles.text2}/>
-        <TextWithIcon item={{title: 'Download', iconLeft: downloadIcon}} textStyle={styles.text2}/>
-        <TextWithIcon item={{title: 'Delete', iconLeft: deleteIcon}} textStyle={styles.text2}/>
-      </View>
-    </Modal>
-  );
-};
-
-const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndRefresh}) => {
-  const dispatch = useDispatch();
-  console.log("TimeoffModal",timeoff_id)
-  const defaultColor = "";
-  const blackColor = "";
-  const [data,setData] = React.useState({
-    "timeoff": timeoff_id,
-    "start_date": "",
-    "end_date": "",
-    "reason": ""
-  })
-  const handleSubmit = async () => {
-    try{
-      let failed = false;
-      required = ["start_date","end_date",
-          "reason"]
-      for(let req of required){
-          console.log("data--",data[req],active)
-          if(!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
+const DocumentModal = ({ isVisible, onHide, document }) => {
+  const onPressHandle = (action) => {
+    try {
+      if (!document || !document.file) return
+      if (action === "view") {
+        return
       }
-      if(failed) {
-        return hideAndOpen("All fields are required")
-      };
-      if(!moment(data.start_date).isBefore(moment(data.end_date))){
-        return hideAndOpen("Start date must be before end date")
+      if (action === "share") {
+        return Share.share({
+          message: `${document.file}`
+        })
       }
-      if(moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.start_date)) || moment(moment(new Date()).format("YYYY-MM-DD")).isAfter(moment(data.end_date))){
-        return hideAndOpen("Date must be in the future")
-      }
-      let check = active && Array.isArray(active) && active.length > 0 ?  active.some(item=>{
-        return item.start_date && moment(item.start_date).isBefore(moment(data.start_date)) &&
-        item.end_date && moment(item.end_date).isBefore(moment(data.end_date))
-      }) : true;
-      if(!check){
-        return hideAndOpen("Please select dates that do not fall within active timeoffs")
-      }
-      let token = await getData("token");
-      let user =  await getData("user");
-      let about_me = await getData("about_me")
-      let biz = getStoredBusiness();
-      dispatch(setLoaderVisible(true));
-      let timeoff_url = APIFunction.timeoff_reqs(biz.business_id,about_me.id)
-      let fd = {
-        ...data,timeoff : timeoff_id
-      }
-      let res = await postAPIs(timeoff_url,fd);
-      storeData("curr_timeoff",null)
-      dispatch(setLoaderVisible(false));
-      closeAndRefresh()
-    }catch(err){
-      let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-      console.log("err|||",err,msg)
-      dispatch(setLoaderVisible(false));
-      return hideAndOpen(msg)
+      if (!Linking.canOpenURL(document.file)) return
+      return Linking.openURL(document.file)
+    } catch (err) {
     }
   }
   return (
@@ -180,146 +118,418 @@ const TimeoffModal = ({isVisible, onHide,timeoff_id,active,hideAndOpen,closeAndR
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{justifyContent: 'flex-end', margin: 0}}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-                    
-        <ScrollView contentContainerStyle={styles.inner}>
-          <View style={styles.bodyWrap}>
-            <Formik>
-              <React.Fragment>
-                <View
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginTop: 25,
-                  }}>
+        <TextWithIcon item={{ title: 'Share', iconLeft: Images.ShareIcon }} textStyle={styles.text2}
+          onPressHandle={() => onPressHandle("share")}
+          url={true}
+        />
+        <TextWithIcon item={{ title: 'Download', iconLeft: Images.DownloadIcon }} textStyle={styles.text2}
+          onPressHandle={() => onPressHandle("download")}
+          url={true}
+        />
+        {/* <TextWithIcon item={{title: 'View', iconLeft: Images.EyeIcon}} textStyle={styles.text2}
+          onPressHandle={()=>onPressHandle("view")}
+          url={true}
+        /> */}
+      </View>
+    </Modal>
+  );
+};
+
+export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
+  return (
+    <Modal
+      //onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      // onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
+      isVisible={isVisible}
+    >
+      <View style={styles.container}>
+        <EmptyStateWrapper
+          marginTop={height(0.3)}
+          height={height(1.8)}
+          icon={Images.PINLocation}
+          header_1={"Where are you?"}
+          sub_text={"Please turn on your location so you can clock in."}
+        />
+        <Container width={80} marginTop={2}
+          // direction="row"
+          style={{
+            justifyContent: "space-between",
+            alignSelf: "center",
+            alignItems: "center"
+          }}
+        >
+          {/* <TouchableOpacity onPress={onHide}>
+              <H1>Cancel</H1>
+            </TouchableOpacity> */}
+          <CustomButton
+            handelButtonPress={onPressHandler}
+            btnStyle={{
+              width: width(70),
+            }}
+            btnText={"Turn on"}
+          />
+          <CustomButton
+            handelButtonPress={onHide}
+            btnStyle={{
+              width: width(70),
+              marginTop: height(2),
+              backgroundColor: AppColors.white
+            }}
+            btnText={"Cancel"}
+            textStyle={{
+              color: AppColors.black
+            }}
+          />
+        </Container>
+      </View>
+    </Modal>
+  );
+};
+
+const __TimeoffModal = ({ isVisible, onHide, timeoff_id, closeAndRefresh }) => {
+  const dispatch = useDispatch();
+  const defaultColor = AppColors.black;
+  const [action, setAction] = React.useState(null)
+  const [loading, setLoading] = React.useState(false)
+  const [data, setData] = React.useState({
+    "timeoff": timeoff_id,
+    "start_date": "",
+    "end_date": "",
+    "reason": ""
+  })
+  const [show, setShow] = React.useState(false)
+  useEffect(() => {
+    setData({
+      "timeoff": timeoff_id,
+      "start_date": "",
+      "end_date": "",
+      "reason": ""
+    })
+    setShow(false)
+  }, [isVisible])
+
+  const handleSubmit = async () => {
+    try {
+      let failed = false;
+      required = ["start_date", "end_date", "reason"]
+      for (let req of required) {
+        if (!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
+      }
+      if (failed) {
+        return showFlashMessage({ type: "error", title: "All fields are required" })
+      };
+      let about_me = await getData("about_me")
+      let biz = await getStoredBusiness();
+      dispatch(setLoaderVisible(true));
+      setLoading(true)
+      let timeoff_url = APIFunction.timeoff_reqs(biz.business_id, about_me.id)
+      let fd = {
+        ...data, timeoff: timeoff_id
+      }
+      await postAPIs(timeoff_url, fd);
+      let res = await getTimeOffsFunction();
+      storeData("curr_timeoff", null)
+      closeAndRefresh(res)
+      setLoading(false)
+      dispatch(setLoaderVisible(false));
+      showFlashMessage({ title: "Request has been submitted for processing" })
+      onHide()
+    } catch (err) {
+      let msg = err.msg && err.msg.detail && typeof (err.msg.detail) == "string" ? err.msg.detail : err.msg
+      dispatch(setLoaderVisible(false));
+      setLoading(false)
+      return showFlashMessage({ type: "error", title: msg })
+    }
+  }
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      //swipeDirection={'down'}
+      // onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
+      isVisible={isVisible}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1, justifyContent: "flex-end" }}
+      >
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.inner}>
+            <View style={styles.bodyWrap}>
+              {
+                show ? <CustomCalender
+                  date={action === "start_date" ? data.start_date : data.end_date}
+                  setShow={(date) => {
+                    if (action === "start_date") {
+                      setData({ ...data, start_date: date.dateString })
+                    }
+                    if (action === "end_date") {
+                      setData({ ...data, end_date: date.dateString })
+                    }
+                    setShow(false)
+                  }}
+                /> : <Formik>
+                  <React.Fragment>
+                    <Container marginLeft={2}>
+                      <TouchWrap onPress={onHide}
+                        width={15}
+                        height={6}
+                      >
+                        <P>Close</P>
+                      </TouchWrap>
+                    </Container>
+                    <View
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginTop: 25,
+                      }}>
+                      <CustomText
+                        textSize={20}
+                        textWeight={'bold'}
+                        textcolor={defaultColor}
+                        displayText={'Timeoff Request'}
+                        textStyle={{
+                          marginTop: -3,
+                        }}
+                      />
+                    </View>
+                    <Field
+                      name="start_date"
+                      placeholder="Start Date"
+                      component={CustomDatePicker}
+                      value={data.start_date}
+                      setShow={() => {
+                        setAction("start_date")
+                        setShow(true)
+                      }}
+                      maximumDate={null}
+                      color={AppColors.black}
+                    />
+                    <Field
+                      name="end_date"
+                      placeholder="Resumption Date"
+                      component={CustomDatePicker}
+                      value={data.end_date}
+                      setShow={() => {
+                        setAction("end_date")
+                        setShow(true)
+                      }}
+                      maximumDate={null}
+                      color={AppColors.black}
+                    />
+                    <Field
+                      component={CustomInput}
+                      name="reason"
+                      placeholder="Reason"
+                      keyboardType="default"
+                      value={data.reason}
+                      onChangeData={(value) => {
+                        setData({ ...data, reason: value })
+                      }}
+                      minHeight={10}
+                      multiline={true}
+                      color={AppColors.black}
+                    />
+                    <View style={{ width: '100%', padding: '5%' }}>
+                      {
+                        loading ? <ActivityIndicator
+                          color={AppColors.pink}
+                        /> : <CustomButton
+                          btnText={'Submit'}
+                          handelButtonPress={handleSubmit}
+                        />
+                      }
+                    </View>
+                  </React.Fragment>
+                </Formik>
+              }
+            </View>
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+};
+
+
+
+const __ReportModal = ({ isVisible, onHide, asset }) => {
+  const dispatch = useDispatch();
+  const defaultColor = "";
+  const [message, setMessage] = React.useState("")
+  useEffect(() => {
+    setMessage("")
+  }, [isVisible])
+  const handleSubmit = async () => {
+    try {
+      let failed = false;
+      if (!message || (message === "") || (message.trim() === "")) failed = true;
+      if (failed) {
+        return showFlashMessage({ type: "error", title: "Message field is required" })
+      };
+      dispatch(setLoaderVisible(true));
+      let fd = { message: message, date: moment().format("YYYY-MM-DD") }
+      await APIFunction.report_asset(fd, asset.id)
+      dispatch(setLoaderVisible(false));
+      showFlashMessage({ title: "Issue has been reported to HR" })
+      onHide()
+    } catch (err) {
+      dispatch(setLoaderVisible(false));
+      return showFlashMessage({ type: "error", title: err.msg })
+    }
+  }
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
+      isVisible={isVisible}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1, justifyContent: "flex-end" }}
+      >
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.inner}>
+            <View style={styles.bodyWrap}>
+              <Formik>
+                <React.Fragment>
+                  <Container marginLeft={4}
+                    width={10}
+                  >
+                    <TouchWrap onPress={onHide}>
+                      <P>Close</P>
+                    </TouchWrap>
+                  </Container>
+                  <View
+                    style={{
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginTop: 25,
+                    }}>
                     <CustomText
                       textSize={20}
                       textWeight={'bold'}
-                      textcolor={defaultColor}
-                      displayText={'Timeoff Request'}
+                      displayText={'Report Issue'}
                       textStyle={{
                         marginTop: -3,
                       }}
                     />
-                </View>
-                <CustomText
-                  textSize={12}
-                  textWeight={'normal'}
-                  textcolor={blackColor}
-                  textStyle={{
-                    marginTop: 5,
-                  }}
-                />
-                <Field
-                    name="start_date"
-                    placeholder="Start Date"
-                    component={CustomDatePicker}
-                    value={data.start_date}
-                    onChangeData={(value)=>{
-                      setData({...data,start_date : value})
-                    }}
-                    maximumDate={null}
-                    color={AppColors.black}
-                />
-                <Field
-                    name="end_date"
-                    placeholder="End Date"
-                    component={CustomDatePicker}
-                    value={data.end_date}
-                    onChangeData={(value)=>{
-                      setData({...data,end_date : value})
-                    }}
-                    maximumDate={null}
-                    color={AppColors.black}
-                />
+                  </View>
                   <Field
                     component={CustomInput}
-                    name="reason"
-                    placeholder="Reason"
+                    name="message"
+                    placeholder="Message"
                     keyboardType="default"
-                    value={data.email}
-                    onChangeData={(value)=>{
-                      setData({...data,reason : value})
+                    value={message}
+                    onChangeData={(value) => {
+                      setMessage(value)
                     }}
-                    height={100}
+                    height={10}
                     multiline={true}
                     color={AppColors.black}
                   />
-                  <View style={{width: '100%', padding : '5%'}}>
+                  <View style={{ width: '100%', padding: '5%' }}>
                     <CustomButton
                       btnText={'Submit'}
                       handelButtonPress={handleSubmit}
-                      //isloading={isprocessing}
                     />
-                  </View> 
+                  </View>
                 </React.Fragment>
-            </Formik>
-        </View>
-      </ScrollView>
-
-
-      </View>
-    </Modal>
-  );
-};
-
-
-
-export const WarningModal = ({isVisible, onHide, onPressHandle,question,performAction,loading}) => {
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{justifyContent: 'flex-end', margin: 0}}
-      isVisible={isVisible}>
-      <View style={styles.container}>
-          <View style={{
-            padding : 20,
-            width : "100%"
-          }}>
-            <View style={{
-              alignItems : "center"
-            }}>
-              <LottieIcon 
-                icon={Warningjson}
-                size={100}
-              />
+              </Formik>
             </View>
-              <H1 textAlign="center" fontSize={3}>{question}</H1>
-              <SizedBox />
-              {
-                loading ? (
-                  <ActivityIndicator 
-                    color={AppColors.pink}
-                  />
-                ) : (
-                  <CustomButton 
-                    btnText={"Cancel Request"}
-                    btnStyle={{
-                      backgroundColor : "#FF7372",
-                      width : "100%",
-                      textAlign : "center"
-                    }}
-                    handelButtonPress={()=>{
-                      performAction();
-                    }}
-                />
-                )
-              }
-            {/* <SizedBox /> */}
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+};
+
+
+
+const __WarningModal = ({ isVisible, onHide, onPressHandle, question, performAction, loading, btnText }) => {
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
+      isVisible={isVisible}>
+      <View style={styles.container}>
+        <View style={{
+          padding: 20,
+          width: "100%"
+        }}>
+          <View style={{
+            alignItems: "center"
+          }}>
+            <LottieIcon
+              icon={Warningjson}
+              size={100}
+            />
           </View>
+          <H1 textAlign="center" fontSize={3}>{question}</H1>
+          <SizedBox />
+          {
+            loading ? (
+              <ActivityIndicator
+                color={AppColors.pink}
+              />
+            ) : (
+              <CustomButton
+                btnText={btnText || "Cancel Request"}
+                btnStyle={{
+                  backgroundColor: "#FF7372",
+                  width: "100%",
+                  textAlign: "center"
+                }}
+                handelButtonPress={() => {
+                  performAction();
+                }}
+              />
+            )
+          }
+          {/* <SizedBox /> */}
+        </View>
       </View>
     </Modal>
   );
@@ -327,7 +537,7 @@ export const WarningModal = ({isVisible, onHide, onPressHandle,question,performA
 
 
 
-const FilterModal = ({isVisible, onHide, onPressHandle}) => {
+const FilterModal = ({ isVisible, onHide, onPressHandle }) => {
 
   return (
     <Modal
@@ -342,20 +552,171 @@ const FilterModal = ({isVisible, onHide, onPressHandle}) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{justifyContent: 'flex-end', margin: 0}}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <View style={styles.line1}/>
+        <View style={styles.line1} />
         <View style={styles.textContainer}>
           <Text style={styles.text1}>Filter</Text>
         </View>
-        <TextWithIcon item={{title: 'Department', iconRight: unCheckRectIcon}} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2}/>
-        <TextWithIcon item={{title: 'Job Role', iconRight: unCheckRectIcon}} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2}/>
-        <TextWithIcon item={{title: 'Line Manager', iconRight: unCheckRectIcon}} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2}/>
+        <TextWithIcon item={{ title: 'Department', iconRight: unCheckRectIcon }} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2} />
+        <TextWithIcon item={{ title: 'Job Role', iconRight: unCheckRectIcon }} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2} />
+        <TextWithIcon item={{ title: 'Line Manager', iconRight: unCheckRectIcon }} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2} />
+      </View>
+    </Modal>
+  );
+};
+const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler }) => {
+  const [showDetails, setShowDetails] = useState(false)
+  const [showForm, setShowForm] = useState(false)
+
+  const Loader = () => {
+    if (loading)
+      return (
+        <Container marginTop={3}>
+          <ActivityIndicator size={width(10)} color={AppColors.green} />
+        </Container>
+      )
+
+  }
+
+  const handleOpen = () => {
+    setShowDetails(true)
+    item
+  }
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ margin: 0 }}
+      isVisible={isVisible}>
+
+      <View style={styles.container1}>
+        <TouchableOpacity style={styles.textCon} onPress={handleOpen}>
+          <P>View Task</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
+        <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
+          <P>Mark task as complete</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
+        <TouchableOpacity style={styles.textCon} onPress={() => { setShowForm(true), item }}>
+          <P>Edit Task</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
+        <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
+          <P>Delete Task</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
+      </View>
+
+      <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
+      <CreateTask
+        visible={showForm}
+        onHide={() => setShowForm(false)}
+        item={item}
+      />
+    </Modal>
+  );
+};
+
+const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
+  const [showForm, setShowForm] = useState(false)
+  const [employee, setEmployee] = useState({})
+
+  const getUser = async () => {
+    let user = await getData("about_me")
+    setEmployee(user)
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      isVisible={isVisible}>
+      <View style={styles.container1}>
+        <React.Fragment>
+          <TouchableOpacity onPress={() => { setShowForm(true), item }}
+            style={styles.textCon}
+            disabled={(employee?.id !== item?.created_by?.id)}
+          >
+            <P style={styles.text1}>Edit Task</P>
+          </TouchableOpacity>
+          <View style={styles.line} />
+          <TouchableOpacity style={styles.textCon}
+            onPress={() => deleteHandler()}
+            disabled={(employee?.id !== item?.created_by?.id)}
+          >
+            <P style={styles.text1}>Delete task</P>
+          </TouchableOpacity>
+        </React.Fragment>
+      </View>
+
+      <CreateTask
+        visible={showForm}
+        onHide={() => setShowForm(false)}
+        item={item}
+      />
+    </Modal>
+  );
+};
+
+
+const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
+
+  return (
+    <Modal
+      onBackButtonPress={onHide}
+      onModalHide={onHide}
+      animationInTiming={500}
+      animationOutTiming={10}
+      backdropOpacity={0.2}
+      swipeDirection={'down'}
+      onSwipeComplete={onHide}
+      onBackdropPress={onHide}
+      animationIn="fadeInUp"
+      animationOut="fadeInDown"
+      swipeThreshold={0.3}
+      style={{ margin: 0 }}
+      isVisible={isVisible}>
+      <View style={styles.container1}>
+        <TouchableWrapper style={styles.textCon} onPress={() => onPressHandle('In-progress')}>
+          <Text style={styles.progress}>Undo completed</Text>
+        </TouchableWrapper>
       </View>
     </Modal>
   );
 };
 
-export { DocumentModal, FilterModal,TimeoffModal };
+
+
+
+const areEqual = (prevProps, nextProps) => {
+  return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
+}
+export const WarningModal = React.memo(__WarningModal, areEqual)
+export const TimeoffModal = React.memo(__TimeoffModal, areEqual)
+export const ReportModal = React.memo(__ReportModal, areEqual)
+export { DocumentModal, FilterModal, ActionModal, UnCompletedModal, SentActionModal };
 export default ContactModal;

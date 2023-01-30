@@ -6,8 +6,9 @@ import {checkIcon, unCheckIcon, placeholderIcon4} from '../../assets/images';
 import styles from './styles';
 import { H1, Rounded } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
+import { width } from 'react-native-dimension';
 
-const AssetsList = ({data}) => {
+const AssetsList = ({data,onPressHandler}) => {
   return (
     <FlatList
       data={data}
@@ -19,7 +20,7 @@ const AssetsList = ({data}) => {
       horizontal={true}
       renderItem={({item}) => {
         return (
-          <View style={styles.container}>
+          <View style={{...styles.container,width : data.length === 1 ? width(90) : width(80)}}>
             {
               item && item.image ? (
                 <Image source={{uri : item.image}} style={styles.image} />
@@ -33,12 +34,15 @@ const AssetsList = ({data}) => {
             }
             
             <View style={styles.details}>
-              <Text style={styles.text}>{item && item.name ? item.name: ""}</Text>
-              <Text style={styles.text1}>{item && item.brand ? item.brand : ""}</Text>
+              {
+                item?.name ? <Text style={styles.text}>{item.name}</Text> : null
+              }
+              {item?.brand ? <Text style={styles.text1}>{item.brand}</Text> : null}
               {/* <Button
                 title="Report"
                 textStyle={styles.buttonText}
                 containerStyle={styles.button}
+                onPress={()=>onPressHandler(item)}
               /> */}
             </View>
           </View>

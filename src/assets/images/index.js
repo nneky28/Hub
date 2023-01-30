@@ -28,6 +28,7 @@ const documentIcon = require('./icons/document.png');
 const downIcon = require('./icons/down.png');
 const downloadIcon = require('./icons/download.png');
 const filterIcon = require('./icons/filter.png');
+const arrowIcon = require('./icons/arrows.png');
 const giftIcon = require('./icons/gift.png');
 const HorDotIcon = require('./icons/h_dots.png');
 const homeIcon1 = require('./icons/home.png');
@@ -124,5 +125,6 @@ export {
   leftIcon,
   cameraIcon,
   placeholder5,
-  tickIcon
+  tickIcon,
+  arrowIcon
 };

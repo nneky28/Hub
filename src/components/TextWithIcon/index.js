@@ -7,8 +7,10 @@ import {
   View
 } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
-import { lockIcon } from '../../assets/images';
+import { leftIcon, lockIcon } from '../../assets/images';
+import { Images } from '../../component2/image/Image';
 import CommonStyles from '../../utills/CommonStyles';
+import { ImageWrap } from '../../utills/components';
 import styles from './styles';
 
 const TextWithIconCopy = ({item, iconStyle, onHide}) => {
@@ -30,7 +32,7 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
       <>
       <View style={[styles.contactComponentContainer]}>
         <TouchableOpacity 
-        onLongPress={() => handleLongPress(item && item.title ? item.title : "")}
+        onPress={() => handleLongPress(item && item.title ? item.title : "")}
         style={[styles.row]}
         >
           <View style={CommonStyles.rowAlignItemCenter}>
@@ -38,9 +40,9 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
             <Text style={[styles.listCompTitle, CommonStyles.marginLeft_4]}>{item && item.title ? item.title : ""}</Text>
           </View>
           <Image
-          resizeMode={'contain'}
-          source={item.iconRight}
-          style={[styles.iconStyle, iconStyle]}
+            resizeMode={'contain'}
+            source={item.iconRight}
+            style={[styles.iconStyle, iconStyle]}
           />
         </TouchableOpacity>
         <View style={styles.line}/>
@@ -50,7 +52,7 @@ const TextWithIconCopy = ({item, iconStyle, onHide}) => {
     );
   };
 
-const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle}) => {
+const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle,url}) => {
 
     let lock = false;
 
@@ -61,12 +63,30 @@ const TextWithIcon = ({item, iconStyle, onPressHandle, containerStyle, textStyle
     return (
       <View style={[styles.contactComponentContainer, {opacity:  lock ? 0.5 : 1}, containerStyle]}>
         <TouchableOpacity 
-        style={[styles.row]}
-        disabled={lock}
-        onPress={onPressHandle}
+          style={[styles.row]}
+          disabled={lock}
+          onPress={onPressHandle}
         >
           <View style={CommonStyles.rowAlignItemCenter}>
-            {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={item.iconLeft} style={styles.iconStyle} />} 
+            {
+              url ? <ImageWrap 
+                  url={item.iconLeft}
+                  width={5}
+                  height={3}
+                  fit={'contain'}
+                /> : (
+                  <React.Fragment>
+                    {item && item.iconLeft !== undefined && <Image resizeMode="contain" source={!url ? item.iconLeft : {uri : item.iconLeft}} style={styles.iconStyle} />} 
+                  </React.Fragment>
+                )
+            }
+            {/* <ImageWrap 
+              url={item.iconLeft}
+              width={5}
+              height={3}
+              fit={'contain'}
+            /> */}
+            
             <Text style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>{item.title}</Text>
           </View>
           {lock? <Image

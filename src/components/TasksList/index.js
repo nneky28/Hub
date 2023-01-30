@@ -15,16 +15,19 @@ import {
 import Button from '../Button';
 import {giftIcon, placeholderIcon, upIcon} from '../../assets/images';
 import styles from './styles';
-import {height} from 'react-native-dimension';
-import { Capitalize, getData } from '../../utills/Methods';
-import { getAPIs } from '../../utills/api';
+import {height, width} from 'react-native-dimension';
+import { Capitalize, getData, getStoredBusiness, ToastError } from '../../utills/Methods';
+import { APIFunction, getAPIs } from '../../utills/api';
 import moment from 'moment';
-import { Container, H1, LottieIcon, Rounded } from '../../utills/components';
+import { Container, H1, ImageWrap, LottieIcon, P, Rounded, SizedBox } from '../../utills/components';
 import Birthdayjson from '../../assets/lottie/birthday.json'
 import Emptyjson from '../../assets/lottie/birthday-icon.json'
 import Outjson from '../../assets/lottie/out.json'
 import { useNavigation } from '@react-navigation/core';
-import { ColorList } from '../../utills/AppColors';
+import AppColors, { ColorList } from '../../utills/AppColors';
+import { FontFamily } from '../../utills/FontFamily';
+import { ActivityIndicator } from 'react-native-paper';
+import { Images } from '../../component2/image/Image';
 
 if (
   Platform.OS === 'android' &&
@@ -32,7 +35,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary}) => {
+const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetch,tab}) => {
   return (
     <FlatList
       data={data}
@@ -46,17 +49,20 @@ const TasksList = ({data,whos_out,birthdays,navigate,upcoming_birthdays,annivers
         upcoming_birthdays={upcoming_birthdays}
         navigate={navigate}
         anniversary={anniversary}
+        getWhosOut={getWhosOut}
+        fetching={fetch}
+        tab={tab}
       />}
     />
   );
 };
-const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary}) => {
+const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniversary,getWhosOut,fetching,tab}) => {
   var {title, headings} = item;
   const [arr, setArr] = useState(['', '', '', '']);
-  var [selected, setSelected] = useState(headings[0]);
+  let default_tab = title === "Who’s Out" ? tab : headings[0]
+  var [selected, setSelected] = useState(default_tab);
   const [hasMore, setHasMore] = useState(true);
   const spinValue = new Animated.Value(0);
-
   const [show, setShow] = useState(true);
   const [spin, setSpin] = useState(
     spinValue.interpolate({
@@ -65,12 +71,11 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
     }),
   );
   const showMore = (title,selected) => {
-    //return console.log("showMore",title,selected)
     let tab = title == "Celebrations" ? title : "Who's out"
     return navigate("People",{tab})
-    setArr((a) => [...a, '', '', '', '']);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setHasMore(false);
+    // setArr((a) => [...a, '', '', '', '']);
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    // setHasMore(false);
   };
 
   const showLess = () => {
@@ -112,22 +117,36 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
   };
 
   return (
+    <React.Fragment>
+                  <Text style={styles.custom_heading}>{title}</Text>
+                  <SizedBox height={2}/>
     <View style={styles.container}>
-      <Text style={styles.text}>{title}</Text>
       <ScrollView
         nestedScrollEnabled={true}
-        contentContainerStyle={{paddingTop: height(2)}}
+        contentContainerStyle={{paddingTop: height(0.5),paddingHorizontal : width(1.3)}}
         showsHorizontalScrollIndicator={false}
         horizontal={true}>
-        {headings.map((item) => (
-          <TouchableOpacity onPress={(e) => onSelection(item)}>
-            <Text style={styles.heading}>{item}</Text>
+        {headings.map((item,i) => (
+          <TouchableOpacity onPress={(e) => {
+            onSelection(item)
+            if(!['Leave', 'Remote Work', 'Training'].includes(item)) return
+            getWhosOut(item)
+          }} key={i}>
+            <Text style={[
+              styles.heading,selected === item ? 
+              {color : AppColors.green,fontFamily : FontFamily.BlackSansSemiBold} : {color: AppColors.black3}
+            ]}>{item}</Text>
             {selected == item && <View style={styles.animated} />}
           </TouchableOpacity>
         ))}
       </ScrollView>
 
       <View style={styles.line} />
+          {
+            fetching && title === "Who’s Out" ? <Container marginTop={2}>
+                <ActivityIndicator color={AppColors.green} size={15} />
+              </Container> : null
+          }
         {selected == 'Birthdays' ? (
               <React.Fragment>
                 {
@@ -137,7 +156,9 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                         item && item.photo ? (
                           <Image source={{uri : item.photo}} style={styles.image} />
                         ) : (
-                          <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
+                          <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
+                            size={10}
+                          >
                             <H1>
                               {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
                               {item && item.last_name && item.last_name.length > 1 ? `${Capitalize([...item.last_name][0])}` : ""}
@@ -169,46 +190,84 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                       </View>
                     </View>
                   )) : (
-                    <Container
-                      style={{
-                        alignItems : "center"
-                      }}
+                    <Container 
+                      style={{justifyContent : "center", alignItems : "center"}}
+                      marginTop={3}
                     >
-                      <LottieIcon icon={Emptyjson} />
+                        <Container width={50}>
+                          <ImageWrap 
+                            url={Images.CakeIcon}
+                            height={3}
+                            fit={"contain"}
+                          />
+                          <SizedBox height={1}/>
+                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No birthday`}</P>
+                          <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`today`}</P>
+                        </Container>
                     </Container>
                   )
                 }
-          <TouchableOpacity onPress={hide} style={styles.row}>
-            <Text style={styles.upcomming}>Upcoming Birthdays</Text>
-            <Animated.Image
-              resizeMode="contain"
-              source={upIcon}
-              style={[styles.icon1, {transform: [{rotate: spin}]}]}
-            />
-          </TouchableOpacity>
-          <View style={[styles.line, {marginTop: height(0.5)}]} />
+            {
+               upcoming_birthdays && Array. isArray(upcoming_birthdays) && upcoming_birthdays.length ? (
+                <React.Fragment>
+                  <TouchableOpacity onPress={hide} style={styles.row}>
+                    <Text style={styles.upcomming}>Upcoming Birthdays</Text>
+                    <Animated.Image
+                      resizeMode="contain"
+                      source={upIcon}
+                      style={[styles.icon1, {transform: [{rotate: spin}]}]}
+                    />
+                  </TouchableOpacity>
+                  <View style={[styles.line, {marginTop: height(0.5)}]} />
+                </React.Fragment>
+               ) : null
+            }
         </React.Fragment>
       ) : null}
       {
-        selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) && anniversary.length === 0 ? (
-          <Container
-            style={{
-              alignItems : "center"
-            }}
+        selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) 
+        && anniversary.length === 0 ? (
+          <Container 
+            style={{justifyContent : "center", alignItems : "center"}}
+            marginTop={3}
           >
-            <LottieIcon icon={Emptyjson} />
+            <Container width={50}>
+              <ImageWrap 
+                url={Images.AnnivIcon}
+                height={3}
+                fit={"contain"}
+              />
+              <SizedBox height={1}/>
+              <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No upcoming`}</P>
+              <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`anniversaries`}</P>
+            </Container>
           </Container>
         ) : null
       }
 
       {
         item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 0 ? (
-          <Container
-            style={{
-              alignItems : "center"
-            }}
+          <Container 
+            style={{justifyContent : "center", alignItems : "center"}}
+            marginTop={3}
           >
-            <LottieIcon icon={Outjson} />
+              <Container width={50}>
+                <Container
+                  style={{
+                    alignItems : "center"
+                  }}
+                >
+                  <ImageWrap 
+                      url={selected === "Leave" ? Images.LeaveIcon : selected === "Training" ? Images.TrainingIcon : Images.RemoteIcon}
+                      height={3}
+                      fit={"contain"}
+                      width={6}
+                    />
+                </Container>
+                <SizedBox height={1}/>
+                <P textAlign="center" color={AppColors.black3} fontSize={3.1}>{`No one is currently`}</P>
+                <P textAlign="center" color={AppColors.black3} fontSize={3.1}>on {selected && selected.toLowerCase()}</P>
+              </Container>
           </Container>
         ) : null
       }
@@ -227,20 +286,21 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
             ItemSeparatorComponent={() => <View style={styles.margin} />}
             renderItem={({item}) => {
               return (
-                <View style={whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
+                <View style={title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length === 1 ?  styles.userContainer2 : styles.userContainer}>
                   {
                     item && item.employee && item.employee.photo ? (
-                      <Image source={item.employee.photo} style={styles.image} />
-                    ) : (
+                      <Image source={{uri : item.employee.photo}} style={styles.image} />
+                    ) : item && item.photo ?  <Image source={{uri : item.photo}} style={styles.image} /> :  (
                       <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
                         size={10}
                       >
-                          {console.log("---}}}}",item)}
-                           <H1>
-                          {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
-                            Capitalize([...item.employee.first_name][0]) : ""}
-                          {item && item.employee && item.employee.last_name && item.employee.last_name.length > 1 ? 
-                          `${Capitalize([...item.employee.last_name][0])}` : ""}
+                          <H1>
+                            {item && item.employee && item.employee.first_name && item.employee.first_name.length > 0 ? 
+                            Capitalize([...item.employee.first_name][0]) : 
+                            item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""
+                            }
+                            {item && item.employee && item.employee.last_name && item.employee.last_name.length > 1 ? 
+                          `${Capitalize([...item.employee.last_name][0])}` : item && item.last_name && item.last_name.length > 0 ? Capitalize([...item.last_name][0]) : ""}
                         </H1>
                       </Rounded>
                     )
@@ -266,9 +326,12 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
                           <Text numberOfLines={1} style={styles.text3}>
                               {item && item.first_name ? Capitalize(item.first_name) : ""}
                             </Text>
-                            <Text numberOfLines={1} style={styles.text1}>
-                            {item && item.job && item.job.title ? Capitalize(item.job.title) : "Lead Designer"}
-                          </Text>
+                            {
+                              item && item.job && item.job.title ?  <Text numberOfLines={1} style={styles.text1}>
+                              {Capitalize(item.job.title)}
+                            </Text> : null
+                            }
+                           
                         </React.Fragment>
                       )
                     }
@@ -294,20 +357,33 @@ const RenderItem = ({item,whos_out,birthdays,navigate,upcoming_birthdays,anniver
               );
             }}
           />
-          {hasMore? (
+
+{/* || (selected === "Job Anniversary" && anniversary && Array.isArray(anniversary) 
+          && anniversary.length > 0) ||  */}
+          {/* (
+            selected == 'Birthdays' && birthdays && Array.isArray(birthdays) && birthdays.length > 4
+          ) */}
+          {
+            (item.title === "Who’s Out" && whos_out && Array.isArray(whos_out) && whos_out.length > 4) 
+          ? (
             <TouchableOpacity activeOpacity={0.8} onPress={()=>showMore(item.title,selected)}>
               <Text style={styles.viewAll}>View all </Text>
             </TouchableOpacity>
           ) : 
-          (
+            null
+          }
+          {/* (
             <TouchableOpacity activeOpacity={0.8} onPress={showLess}>
               <Text style={styles.viewAll}>View less </Text>
             </TouchableOpacity>
-          )
-          }
+          ) */}
         </>
       ) : null}
     </View>
+    </React.Fragment>
   );
 };
-export default TasksList;
+const areEqual = (prevProps,nextProps)=>{
+  return prevProps.fetch === nextProps.fetch && prevProps?.tab === nextProps?.tab
+}
+export default React.memo(TasksList,areEqual);

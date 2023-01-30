@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: AppColors.black1,
-    fontSize: width(4),
+    fontSize: width(3.5),
     textAlign: 'center',
     fontFamily: FontFamily.BlackSansRegular
   },
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   icon: {
-    width: width(7),
-    height: height(5),
+    width: width(5),
+    height: height(4),
     tintColor: AppColors.black1,
   },
   line: {

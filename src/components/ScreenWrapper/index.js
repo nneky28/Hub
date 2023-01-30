@@ -8,6 +8,7 @@ import {height, width} from 'react-native-dimension';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 const ScreenWrapper = ({
+  allowScrollToPosition,
   children,
   statusBarColor = AppColors.white,
   transclucent = false,
@@ -24,8 +25,9 @@ const ScreenWrapper = ({
   const content = () => {
     const scrollRef = useRef(null);
     const scrollPosition = useSelector(state => state.Config.scrollPosition);
-
-    scrollRef.current?.scrollToPosition(0, scrollPosition.y, true)
+    if(allowScrollToPosition){
+      scrollRef.current?.scrollToPosition(0, scrollPosition.y, true)
+    }
     return (
       <View style={styles.container}>
         <FocusAwareStatusBar

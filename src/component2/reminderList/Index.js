@@ -14,7 +14,6 @@ let deviceHeight = Dimensions.get('window').height;
 
 const ReminderListIndex = (props) => {
   // let UpcaseName = ReturnFirstChar(name);
-  console.log(props.data, 'props.data');
   let vehicle_make = props.data.vehicle_make;
   let vehicle_model = props.data.vehicle_model;
   let VehicleName = `${vehicle_make.name} ${vehicle_model.name} `;

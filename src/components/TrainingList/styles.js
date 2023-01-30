@@ -17,12 +17,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansRegular,
   },
   ttext: {
-    fontSize: width(2.8),
+    fontSize: width(3.1),
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansSemiBold,
   },
   ttext1: {
-    fontSize: width(2.5),
+    fontSize: width(3.1),
     color: AppColors.black1,
     marginVertical: height(0.5),
     fontFamily: FontFamily.BlackSansRegular,
@@ -30,10 +30,11 @@ const styles = StyleSheet.create({
   container: {
     width: width(90),
     backgroundColor: AppColors.white,
-    ...AppColors.shadowStyles,
+    ...AppColors.bigShadow,
     borderRadius: 20,
     paddingVertical: height(1.5),
     paddingHorizontal: width(3),
+    marginTop : height(3)
   },
   row: {
     flexDirection: 'row',

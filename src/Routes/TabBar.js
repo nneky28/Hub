@@ -11,15 +11,16 @@ import {
   profileFillIcon,
   profileIcon
 } from '../assets/images';
+import { Images } from '../component2/image/Image';
 import SelectionModal from '../components/SelectionModal';
 import AppColors from '../utills/AppColors';
 import { Container, H1, Rounded } from '../utills/components';
 import { FontFamily } from '../utills/FontFamily';
 
 
-function TabBar({state, descriptors, navigation}) {
+function TabBar({ state, descriptors, navigation }) {
   const isBottomTabBarVisible = useSelector(state => state.Config.isBottomTabBarVisible);
-  const auth = useSelector(state=>state.Auth);
+  const auth = useSelector(state => state.Auth);
   const [modal, setModal] = useState(false);
 
   if (!isBottomTabBarVisible)
@@ -27,110 +28,95 @@ function TabBar({state, descriptors, navigation}) {
   else
     return (
       <>
-      <Container
-        paddingVertical={3}
-        style={{
-          flexDirection : "row"
-        }}
-      >
-        {state.routes.map((route, index) => {
-          const {options} = descriptors[route.key];
-          const label =
-            options.tabBarLabel !== undefined
-              ? options.tabBarLabel
-              : options.title !== undefined
-              ? options.title
-              : route.name;
+        <Container
+          style={{
+            flexDirection: "row",
+            paddingBottom: height(3)
+          }}
+        >
+          {state.routes.map((route, index) => {
+            const { options } = descriptors[route.key];
+            const label =
+              options.tabBarLabel !== undefined
+                ? options.tabBarLabel
+                : options.title !== undefined
+                  ? options.title
+                  : route.name;
 
-          const isFocused = state.index === index;
+            const isFocused = state.index === index;
 
-          const onPress = () => {
-            if (route.name === 'Menu')
-              setModal(true);
-            else {
-              const event = navigation.emit({
-                type: 'tabPress',
+            const onPress = () => {
+              if (route.name === 'Menu')
+                setModal(true);
+              else {
+                const event = navigation.emit({
+                  type: 'tabPress',
+                  target: route.key,
+                  canPreventDefault: true,
+                });
+                if (!isFocused && !event.defaultPrevented) {
+                  // The `merge: true` option makes sure that the params inside the tab screen are preserved
+                  navigation.navigate({ name: route.name, merge: true });
+                }
+              }
+            };
+
+            const onLongPress = () => {
+              navigation.emit({
+                type: 'tabLongPress',
                 target: route.key,
-                canPreventDefault: true,
               });
-              if (!isFocused && !event.defaultPrevented) {
-                // The `merge: true` option makes sure that the params inside the tab screen are preserved
-                navigation.navigate({name: route.name, merge: true});
-              }
+            };
+            var image;
+            var image1;
+            if (index == 0) {
+              image = Images.HomeIcon;
+              image1 = Images.HomeFillIcon;
             }
-          };
+            if (index == 1) {
+              image = Images.MenuIcon;
+              image1 = Images.MenuFillIcon;
+            }
+            if (index == 2) {
+              image = Images.PeopleIcon;
+              image1 = Images.PeopleFillIcon;
+            }
+            if (index == 3) {
+              image = Images.ProfileIcon;
+              image1 = Images.ProfileFillIcon;
+            }
+            return (
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityState={isFocused ? { selected: true } : {}}
+                accessibilityLabel={options.tabBarAccessibilityLabel}
+                testID={options.tabBarTestID}
+                onPress={onPress}
+                activeOpacity={1}
+                onLongPress={onLongPress}
+                style={styles.container}
+                key={index}
+              >
+                <Image
+                  resizeMode="contain"
+                  source={isFocused ? { uri: image1 } : { uri: image }}
+                  style={styles.image}
+                />
+                <Text
+                  style={[
+                    { color: isFocused ? AppColors.green : AppColors.black2 },
+                    styles.text,
+                  ]}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </Container>
+        <SelectionModal navigation={navigation} isVisible={modal} onHide={() => setModal(false)} />
+      </>
 
-          const onLongPress = () => {
-            navigation.emit({
-              type: 'tabLongPress',
-              target: route.key,
-            });
-          };
-          var image;
-          var image1;
-          if (index == 0) {
-            image = homeIcon;
-            image1 = homeFillIcon;
-          }
-          if (index == 1) {
-            image = categoryIcon;
-            image1 = categoryFillIcon;
-          }
-          if (index == 2) {
-            image = notificationIcon;
-            image1 = notificationFillIcon;
-          }
-          if (index == 3) {
-            image = profileIcon;
-            image1 = profileFillIcon;
-          }
-          return (
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityState={isFocused ? {selected: true} : {}}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              testID={options.tabBarTestID}
-              onPress={onPress}
-              activeOpacity={1}
-              onLongPress={onLongPress}
-              style={styles.container}
-            >
-              {
-                index === 2  && auth && auth.notifications > 0 && (moment().isAfter(auth.last_checked) || !auth.last_checked) ? (
-                  <Container
-                    style={{
-                      position:"absolute",
-                      top : -10,
-                      left : 30
-                    }}
-                    backgroundColor={'transparent'}
-                  >
-                    <Rounded size={7}>
-                      <H1 color={AppColors.white} fontSize={3.5}>{auth.notifications}</H1>
-                    </Rounded>
-                  </Container>
-                ) : null
-              }
-              <Image
-                resizeMode="contain"
-                source={isFocused ? image1 : image}
-                style={styles.image}
-              />
-              <Text
-                style={[
-                  {color: isFocused ? AppColors.green : AppColors.black2},
-                  styles.text,
-                ]}>
-                {label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </Container>
-    <SelectionModal navigation={navigation} isVisible={modal} onHide={() => setModal(false)} />
-    </>
-
-  );
+    );
 }
 
 export default TabBar;

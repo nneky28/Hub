@@ -4,6 +4,7 @@ import {height, width} from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
+    flex : 1,
     backgroundColor: AppColors.white,
     alignItems: 'center',
   },
@@ -18,7 +19,6 @@ const styles = StyleSheet.create({
     marginTop: height(2),
     marginBottom: height(1.5),
     flexDirection: 'row',
-    // justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   leftIcon: {
@@ -29,9 +29,7 @@ const styles = StyleSheet.create({
     fontSize: width(4),
     color: AppColors.black1,
     fontWeight: 'bold',
-    alignSelf: 'center',
-    marginLeft: width(30),
-    // width: width(60),
+    marginLeft : width(24)
   },
   line: {
     width: '100%',

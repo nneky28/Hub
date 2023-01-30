@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, Image, FlatList, SectionList, Touchable } from 'react-native'
 import { downIcon, leftIcon } from '../../assets/images'
 import ScreenWrapper from '../../components/ScreenWrapper'
@@ -9,13 +9,16 @@ import { totalSize } from 'react-native-dimension'
 import AppColors, { ColorList } from '../../utills/AppColors'
 import { getData, getStoredBusiness, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api';
-import { Container, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components'
+import { BackHandler, Container, EmptyStateWrapper, H1, P, PageLoader, Reload, Rounded, TouchWrap } from '../../utills/components'
 import { useFocusEffect} from '@react-navigation/core'
 import {Capitalize} from '../../utills/Methods';
 import moment from 'moment'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../Redux/Actions/Auth'
+import Swipeable from 'react-native-swipeable';
+import { showFlashMessage } from '../../components/SuccessFlash'
+import { Images } from '../../component2/image/Image'
 
 
 
@@ -29,39 +32,50 @@ export default function Notifications({navigation}) {
     let background  = "pink";
     const load = (item) => {
         background = background === "pink" ? "green" : "pink"
-        if(item && item.type === "timeoff_request_approval"){
+        
+        if(item && ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type)){
+            let title = ""
+            if(item.type === "timeoff-request"){
+                title = `${item.data && item.data.employee_first_name ? Capitalize(item.data.employee_first_name) : ""} is requesting for a ${item.data && item.data.days ? item.data.days : ""} day(s) ${item.data && item.data.timeoff_policy_title ? Capitalize(item.data.timeoff_policy_title) : ""}`
+            }
+            if(item.type === "timeoff-request-approval"){
+                title = `Your time off request for ${item.data && item.data.timeoff_policy_title ? Capitalize(item.data.timeoff_policy_title) : ""} has been approved.`
+            }
+            if(item.type === "timeoff-request-dismissal"){
+                title = `Your time off request for ${item.data && item.data.timeoff_policy_title ? Capitalize(item.data.timeoff_policy_title) : ""} has been declined.`
+            }
             return {
                 id : item.id,
-                avatar : item && item.actor && item.actor.avatar ? item.actor.avatar : null,
-                subtitle : "Tech Support",
-                title : `Your request for ${item.action_object && item.action_object.timeoff_policy ? Capitalize(item.action_object.timeoff_policy) : null} for ${item.action_object && item.action_object.days_requested ? item.action_object.days_requested : null} day(s) has been accepted`,
+                avatar : item &&item.image ? item.image : null,
+                subtitle : "",
+                title : title,
                 icon : require('../../assets/images/icons/list.png'),
-                type : "timeoff_request_approval",
+                type : item.type,
                 date :  item.created_at,
                 placeholder : "Success"
             }
         }
-        if(item && item.type === "employee_birthday"){
+        if(item && item.type === "birthday"){
             return {
                 id : item.id,
-                avatar : item && item.actor && item.actor.photo ? item.actor.photo : null,
-                subtitle : "Tech Support",
-                title : `${item && item.actor && item.actor.first_name ? Capitalize(item.actor.first_name) : null}'s birthday is today`,
+                avatar : item && item.image ? item.image : null,
+                subtitle : "",
+                title : `Wish ${item && item.data && item.data.employee_first_name ? Capitalize(item.data.employee_first_name) : ""} a happy birthday (${item && item.data.date ? moment(item.data.date).format("MMM DD") : ""})`,
                 icon : require('../../assets/images/icons/cake.png'),
-                type : "employee_birthday",
+                type : "birthday",
                 date :  item.created_at,
                 background : background,
                 placeholder : "Birthday"
             }
         }
-        if(item && item.type === "job_anniversary"){
+        if(item && item.type === "work-anniversary"){
             return {
                 id : item.id,
-                avatar : item && item.actor && item.actor && item.actor.photo ? item.actor.photo : null,
-                subtitle : "Tech Support",
-                title : `${item && item.actor && item.actor.first_name ? Capitalize(item.actor.first_name) : ""}'s ${item.data && item.data.num_years_spent ? item.data.num_years_spent : ""} year(s) anniversary`,
+                avatar : item && item.image ? item.image : null,
+                subtitle : "",
+                title : `Congratulate ${item && item.data && item.data.employee_first_name ? Capitalize(item.data.employee_first_name) : ""} for ${item.data && item.data.years ? item.data.years : 0} year work anniversary`,
                 icon : require('../../assets/images/icons/document2.png'),
-                type : "job_anniversary",
+                type : "work-anniversary",
                 date :  item.created_at,
                 background : background,
                 placeholder : "Job"
@@ -73,18 +87,8 @@ export default function Notifications({navigation}) {
         try{
             setProcess(true)
             dispatch(login({...auth,last_checked : moment(new Date())}))
-            let about = await getData("about_me");
-            let biz = await getStoredBusiness();
-            let token = await getData("token");
+            APIFunction.seen_all()
             let res = await APIFunction.notifications(1);
-            // const icons = [{
-            //     cake : require('../../assets/images/icons/cake.png'),
-            //     bag : require('../../assets/images/icons/bag.png'),
-            //     document : require('../../assets/images/icons/document2.png'),
-            //     list : require('../../assets/images/icons/list.png'),
-            //     up_cake : require('../../assets/images/icons/cake1.png')
-            // }]
-            console.log("---RES----",res)
             let other_data = res && res.results && Array.isArray(res.results) && res.results.length > 0 ? 
             res.results.map((item)=>(
                 load(item)
@@ -112,66 +116,37 @@ export default function Notifications({navigation}) {
                     data: grp.notifications
                }
             })
-
-            // [
-            //     {
-            //     title: 'Naomi Ashley’s birthday is today',
-            //     avatar: require('../../assets/images/dummy/placeholder.png'),
-            //     subtitle: 'Tech Support',
-            //     icon: require('../../assets/images/icons/cake1.png'),
-            //     background: 'pink',
-            //     },
-            //     {
-            //     title: 'Naomi Ashley’s birthday is today',
-            //     avatar: require('../../assets/images/dummy/placeholder.png'),
-            //     subtitle: 'Tech Support',
-            //     icon: require('../../assets/images/icons/cake.png'),
-            //     background: 'green',
-            //     }
-                
-            // ]
-            // [
-            //     {
-            //         title: 'July Payslip is avaliable',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['document']
-            //     },
-            //     {
-            //         title: 'ABC12KJA is due for service ',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['cake']
-            //     },
-            //     {
-            //         title: 'Onboarding task due in a day ',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['list']
-            //     },
-            //     {
-            //         title: 'Dr Drey birthday in 3 days ',
-            //         date: 'Aug 28',
-            //         avatar: require('../../assets/images/dummy/placeholder.png'),
-            //         subtitle: 'Tech Support',
-            //         icon: icons['up_cake']
-            //     }
-            // ]
             setNotification(data)
             setLoading(false)
             setProcess(false)
         }catch(err){
-            console.log("err",err);
             ToastError(err.msg)
         }
     }
-    useFocusEffect(
-        React.useCallback(()=>{
-            getNotifications()        
-        },[])
-    )
+    // useFocusEffect(
+    //     React.useCallback(()=>{
+    //         getNotifications()        
+    //     },[])
+    // )
+    useEffect(()=>{
+        getNotifications()  
+    },[])
 
-    const NotificationItem = ({item, section}) => {
+    const markAsRead = async (id,index) => {
+        var holders = [...notifications]
+        var arr = [...notifications]
+        try{
+            arr.splice(index,1)
+            setNotification([...arr])
+           await APIFunction.read_notification(id)
+           showFlashMessage({title : "Notification has been deleted"})
+        }catch(err){
+            setNotification([...holders])
+            ToastError(err.msg)
+        }
+    }
+
+    const NotificationItem = ({item, section,index}) => {
         let bgColor, borderColor;
         const {date} = section;
         if(item.background === 'pink') {
@@ -186,48 +161,40 @@ export default function Notifications({navigation}) {
             borderColor = AppColors.grayBorder;
             bgColor = AppColors.white;
         }
-
+        const rightContent = <P></P>
         return(
-            <TouchWrap
-                onPress={()=>{
-                    APIFunction.read_notification(item.id);
-                    if(item && item.type === "employee_birthday"){
-                        return navigation.navigate("People",{tab : "Celebrations"})
-                    }
-                    if(item && item.type === "timeoff_request_approval"){
-                        return navigation.navigate("People",{tab : "Who's out"})
-                    }
-                    if(item && item.type === "job_anniversary"){
-                        return navigation.navigate("People",{tab : "Celebrations"})
-                    }
-                }}
+            <Swipeable
+                rightContent={rightContent}
+                onRightActionRelease={()=>markAsRead(item.id,index)}
             >
                 <View 
-                style={[section && section.key != 2 ?  styles.listItemContainer : styles.listItemContainer2, {backgroundColor: bgColor, borderColor: borderColor}]}
-                >
-                    <View style={CommonStyles.rowJustifySpaceBtw}>
-                        {
-                            item && item.avatar ? (
-                                <Image source={item.avatar} style={styles.avatarStyle} />
-                            ) : (
-                                <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={10}>
-                                    <H1>
-                                        {item && item.placeholder && item.placeholder.length > 0 ? Capitalize([...item.placeholder][0]) : ""}
-                                    </H1>
-                                </Rounded>
-                            )
-                        }
-                        <View style={styles.textContainer}>
-                            <Text style={styles.titleText} numberOfLines={2}>{item.title}</Text>
-                            {/* <Text style={styles.subText}>{item.subtitle}</Text> */}
+                    style={[section && section.key != 2 ?  styles.listItemContainer : styles.listItemContainer2, {backgroundColor: bgColor, borderColor: borderColor}]}
+                    >
+                        <View style={CommonStyles.rowJustifySpaceBtw}>
+                            {
+                                item && item.avatar ? (
+                                    <Image source={item.avatar} style={styles.avatarStyle} />
+                                ) : ["timeoff-request","timeoff-request-approval","timeoff-request-dismissal"].includes(item.type) ? (
+                                    <View style={styles.iconAndTextContainer}>
+                                        <Image source={item.icon} style={styles.flatListIcon} />
+                                        <Text style={styles.subText}>{item.date ? moment(item.date).format("MMM DD") : null}</Text>
+                                    </View>
+                                ) : (
+                                    <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]} size={10}>
+                                        <H1>
+                                            {item && item.placeholder && item.placeholder.length > 0 ? Capitalize([...item.placeholder][0]) : ""}
+                                        </H1>
+                                    </Rounded>
+                                )
+                            }
+                            <View style={styles.textContainer}>
+                                <Text style={styles.titleText} numberOfLines={2}>{item.title}</Text>
+                                {/* <Text style={styles.subText}>{item.subtitle}</Text> */}
+                            </View>
                         </View>
+                        
                     </View>
-                    <View style={styles.iconAndTextContainer}>
-                        <Image source={item.icon} style={styles.flatListIcon} />
-                        <Text style={styles.subText}>{item.date ? moment(item.date).format("MMM DD") : null}</Text>
-                    </View>
-                </View>
-            </TouchWrap>
+            </Swipeable>
         );
     }
     return (
@@ -235,11 +202,7 @@ export default function Notifications({navigation}) {
             scrollEnabled={!process && notifications && Array.isArray(notifications) && notifications.length === 0 ? false : true}
         >
             <View style={styles.header}>
-                <TouchableOpacity
-                    onPress={()=>navigation.goBack()}
-                >
-                    <Image resizeMode="contain" source={leftIcon} style={styles.leftIcon} />
-                </TouchableOpacity>
+                <BackHandler />
                 <Text numberOfLines={1} style={styles.text1}>
                 Notifications
                 </Text>
@@ -272,7 +235,7 @@ export default function Notifications({navigation}) {
                                     section.date && moment(section.date).format("MMM DD") === moment().format("MMM DD") ? <Text numberOfLines={1} style={styles.heading}>Today</Text>:
                                     <Text numberOfLines={1} style={styles.heading2}>{section && section.date ? moment(section.date).format("MMM DD") : null}</Text>
                                 }
-                                    <Image resizeMode="contain" source={downIcon} style={styles.downIcon} />
+                                    {/* <Image resizeMode="contain" source={downIcon} style={styles.downIcon} /> */}
                                 </View>
                                 )}}
                             />
@@ -280,17 +243,11 @@ export default function Notifications({navigation}) {
                         {
                             !process && notifications && Array.isArray(notifications) && notifications.length === 0 ?
                             (
-                                <Container
-                                    flex={1}
-                                    style={{
-                                        justifyContent : "center",
-                                        alignItems : "center"
-                                    }}
-                                >
-                                    <H1
-                                        color={AppColors.black3}
-                                    >You have no notifications yet.</H1>
-                                </Container>
+                                <EmptyStateWrapper
+                                    icon={Images.EmptyNotification} 
+                                    header_1={"You have no notifications yet"}
+                                    sub_text={"When you do, they will show up here."}
+                                />
                             ) : null
                         }
                     </React.Fragment>

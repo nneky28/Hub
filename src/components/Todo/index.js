@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 import {checkIcon, unCheckIcon} from '../../assets/images';
 import styles from './styles';
 
-const Todo = ({data, onPressHandle}) => {
+const Todo = ({data, onPressHandle,openWarningModal}) => {
   return (
     <FlatList
       data={data}
@@ -16,7 +16,7 @@ const Todo = ({data, onPressHandle}) => {
       nestedScrollEnabled={true}
       initialNumToRender={10}
       renderItem={({item}) => {
-        var checked = item.completed;
+        var checked = item.is_completed;
         return (
           <TouchableOpacity
             key={String(item.id)}
@@ -28,7 +28,10 @@ const Todo = ({data, onPressHandle}) => {
               </Text>
               <Text style={styles.text1}>{item.desc}</Text>
             </View>
-            <TouchableOpacity onPress={onPressHandle}>
+            <TouchableOpacity onPress={()=>{
+              if(item.is_completed) return
+              openWarningModal(item)
+            }}>
               <Image
                 resizeMode="contain"
                 source={checked ? checkIcon : unCheckIcon}

@@ -3,16 +3,32 @@ import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
 
-
+// BlackSansBold: 'black-sans-bold',
+//   BlackSansCondensedBold: 'black-sans-condensed-bold',
+//   BlackSansCondensedBook: 'black-sans-condensed-book',
+//   BlackSansCondensedLight: 'black-sans-condensed-light',
+//   BlackSansCondensedMedium: 'black-sans-condensed-medium',
+//   BlackSansLight: 'black-sans-light',
+//   BlackSansRegular: 'black-sans-regular',
+//   BlackSansSemiBold: 'black-sans-semi-bold',
+//   BlackSansThin: 'black-sans-thin',
+//   BlackSansUltraLight: 'black-sans-ultralight',
 const styles = StyleSheet.create({
   text: {
     fontSize: width(3.5),
     color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold
+    fontFamily: FontFamily.BlackSansSemiBold
   },
-  heading: {
-    fontSize: width(3.4),
+  custom_heading: {
+    fontSize: width(4),
     color: AppColors.black1,
+    fontFamily: FontFamily.BlackSansBold,
+    marginTop: height(2)
+  },
+
+  heading: {
+    fontSize: width(3.1),
+    color: AppColors.black3,
     paddingRight: width(5),
     fontFamily: FontFamily.BlackSansRegular
   },
@@ -50,9 +66,9 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     borderWidth: 0.5,
     borderColor: AppColors.grayBorder,
-    ...AppColors.shadowStyles,
+    ...AppColors.smallShadow,
 
-    borderRadius: 20,
+    borderRadius: 15,
     paddingVertical: height(2),
     paddingHorizontal: width(3),
   },
@@ -61,7 +77,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: width(5),
-    paddingVertical: height(2.5),
+    paddingBottom: height(2.5),
   },
   image: {
     width: width(10),
@@ -126,7 +142,7 @@ const styles = StyleSheet.create({
   animated: {
     width: '80%',
     backgroundColor: AppColors.green,
-    height: height(0.8),
+    height: height(0.2),
     marginTop: height(1),
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,

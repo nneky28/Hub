@@ -12,36 +12,36 @@ import {Fragment} from 'react';
 import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import {login, logout} from '../Redux/Actions/Auth';
-import {
-  rightIcon,
-  logoIcon,
-  plusIcon,
-  settingIcon,
-  logoutIcon,
-} from '../assets/images';
+import {Images} from "../component2/image/Image"
 import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
-import AsyncStorage from '@react-native-community/async-storage';
-import moment from 'moment';
-import { H1, Rounded, TouchWrap } from '../utills/components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Container, H1, ImageWrap, Rounded, TouchWrap } from '../utills/components';
+import { useQueryClient } from 'react-query';
+import { setSecurityVisible } from '../Redux/Actions/Config';
 const Drawer = ({navigation, ...props}) => {
 
   const dispatch = useDispatch();
+  const queryClient = useQueryClient()
   const auth = useSelector((state)=>state.Auth);
   const [about,setAbout] =  React.useState(null);
   const [user,setUser] = React.useState(null);
   const [bizs,setBiz] = React.useState(null);
   const logoutMethod = async () => {
     let keys = await AsyncStorage.getAllKeys()
+    keys.splice(keys.indexOf(`@${user?.email}`),1)
     await AsyncStorage.multiRemove(keys);
-    dispatch(login({...auth,route : "auth",isLogin : false}));
+    navigation.closeDrawer();
+    queryClient.invalidateQueries("")
+    dispatch(setSecurityVisible(false))
+    dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
     ToastSuccess("Successfully logged out")
   };
   const getUserDetails = async () => {
     let about_me = await getData("about_me");
     let user = await getData("user");
-    let biz = user.employee_user_memberships &&
-    Array.isArray(user.employee_user_memberships) ? user.employee_user_memberships : [];
+    let biz = user?.employee_user_memberships &&
+    Array.isArray(user?.employee_user_memberships) ? user.employee_user_memberships : [];
     setBiz(biz);
     setUser(user);
     setAbout(about_me);
@@ -55,9 +55,9 @@ const Drawer = ({navigation, ...props}) => {
         <View style={styles.row}>
           {
             item && item.logo ? (
-              <Image resizeMode="contain" source={logoIcon} style={styles.logo} />
+              <Image resizeMode="contain" source={{uri : item.logo}} style={styles.logo} />
             ) : (
-              <Rounded  size={10} backgroundColor={AppColors.white}>
+              <Rounded  size={10} backgroundColor={ColorList[Math.floor(Math.random()*4)]}>
                   <H1>
                       {item && item.business_name && item.business_name.length > 0 ? Capitalize([...item.business_name][0]) : ""}
                   </H1>
@@ -73,7 +73,7 @@ const Drawer = ({navigation, ...props}) => {
             </Text>
           </View>
         </View>
-        <Image resizeMode="contain" source={rightIcon} style={styles.icon} />
+        <Image resizeMode="contain" source={{uri : Images.ArrowRight}} style={styles.icon} />
       </TouchableOpacity>
     );
   };
@@ -82,7 +82,7 @@ const Drawer = ({navigation, ...props}) => {
       <TouchableOpacity
         style={styles.row1}
         onPress={onPress}
-        activeOpacity={0.8}>
+      >
         <Image source={icon} resizeMode="contain" style={styles.icon1} />
         <Text style={styles.text3}>{text}</Text>
       </TouchableOpacity>
@@ -90,7 +90,15 @@ const Drawer = ({navigation, ...props}) => {
   };
   return (
     <Fragment>
-      <Text style={styles.text}>Businesses</Text>
+      {/* <Text style={styles.text}></Text> */}
+      <Container
+        marginTop={5}
+      >
+        <ImageWrap 
+          url={Images.AppLogo}
+          fit="contain"
+        />
+      </Container>
       <View style={styles.line} />
       <View style={{height: height(63)}}>
         <FlatList
@@ -104,10 +112,11 @@ const Drawer = ({navigation, ...props}) => {
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />
-      <ItemWithText icon={settingIcon} text="Settings" onPress={()=>{
-        navigation.navigate("Settings")
-      }}/>
-      <ItemWithText onPress={logoutMethod} icon={logoutIcon} text="Sign Out" />
+      <ItemWithText icon={{uri : Images.Settings}} text="Change Password" onPress={()=>{
+          navigation.navigate("Settings")
+        }}
+      />
+      <ItemWithText onPress={logoutMethod} icon={{uri : Images.Signout}} text="Sign Out" />
     </Fragment>
   );
 };

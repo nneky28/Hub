@@ -1,54 +1,56 @@
+import { Images } from '../../component2/image/Image';
+
 export const profileData = [
     {
         key: '1',
         title: 'Personal Information',
-        iconLeft: require('../../assets/images/icons/man-fill.png'),
+        iconLeft: {uri : Images.ManFillIcon},
         data: [
             'Nationality', 'Nigerian', 'Gender', 'Female', 'Marital Status', 'Married', 'Date Of Birth', '14 Jun, 1978'
         ],
-        iconRight: require('../../assets/images/icons/right.png'),
+        iconRight: {uri : Images.ArrowDown},
     },
     {
         key: '2',
         title: 'Job Detail',
-        iconLeft: require('../../assets/images/icons/home.png'),
+        iconLeft: {uri : Images.ShopFillIcon},
         data: [
-            'Hire Date', '23, Jun 2021', 'Employment Status', 'Full Time', 'Title', 
+            'Hire Date', '23, Jun 2021', 'Employment Status', 'Full Time', 'Role', 
             'Abuja, Lagos', 'Marital Status', 'Married', 'Salary (Monthly)', 'N400,000'
         ],
-        iconRight: require('../../assets/images/icons/right.png'),
+        iconRight: {uri : Images.ArrowDown},
     },
     {
         key: '3',
         title: 'Next of Kin',
-        iconLeft: require('../../assets/images/icons/two-mens.png'),
+        iconLeft: {uri : Images.TwoFillMen},
         data: [
             'First Name', 'Laracroft', 'Last Name', 'Williams', 'Relationship ', 'Sibiling', 
             'Mobile Number', '08145687952', 'Address', '23/24 Nashville Estate, Ikeja Lagos',
             'Email', 'Jessicastones@gmail.com'
         ],
-        iconRight: require('../../assets/images/icons/right.png'),
+        iconRight:{uri : Images.ArrowDown},
     },
     {
         key: '4',
         title: 'Emergency Contact',
-        iconLeft: require('../../assets/images/icons/link.png'),
+        iconLeft: {uri : Images.EmergencyIcon},
         data: [
             'First Name', 'Laracroft', 'Last Name', 'Williams', 'Relationship ', 'Sibiling', 
             'Mobile Number', '08145687952', 'Address', '23/24 Nashville Estate, Ikeja Lagos',
             'Email', 'Jessicastones@gmail.com'
         ],
-        iconRight: require('../../assets/images/icons/right.png'),
+        iconRight: {uri : Images.ArrowDown},
     },
     {
         key: '5',
         title: 'Banking and Pension Details',
-        iconLeft: require('../../assets/images/icons/banking.png'),
+        iconLeft: {uri : Images.BankingIcon},
         data: [
             'Bank Name', 'First City Momument Bank', 'Account Number', '31097730073', 'Pension Provider', 
             'Leadway Pension Provider', 'Pencom No', '131097730073'
         ],
-        iconRight: require('../../assets/images/icons/right.png'),
+        iconRight: {uri : Images.ArrowDown},
     },
 ];
 

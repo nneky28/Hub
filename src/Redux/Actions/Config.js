@@ -1,8 +1,15 @@
-import {SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE} from '../Types';
+import {SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE} from '../Types';
 
 export const setLoaderVisible = (payload) => {
   return {
     type: SETLOADERVISIBLE,
+    payload: payload,
+  };
+};
+
+export const setSecurityVisible = (payload) => {
+  return {
+    type: SETSECURITYVISIBLE,
     payload: payload,
   };
 };

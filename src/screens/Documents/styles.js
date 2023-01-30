@@ -26,8 +26,7 @@ const styles = StyleSheet.create({
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold,
     alignSelf: 'center',
-    marginLeft: width(30),
-    // width: width(60),
+    marginLeft: width(20),
   },
   line: {
     width: '100%',
@@ -48,18 +47,17 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: 'space-evenly',
     height: height(5),
-    marginLeft: width(3.5)
+    marginLeft: width(3.5),
+    width : width(80)
   },
 
   fileIcon: {
       height: height(4),
-      width: width(5),
-      color: AppColors.black1
+      width: width(5)
   }, 
   dotsIcon: {
     height: height(0.5),
-    width: width(3.5),
-    color: AppColors.black1
+    width: width(3.5)
   }, 
   subText: {
     fontSize: width(2.5),
@@ -69,6 +67,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: width(3),
     color: AppColors.black1,
+    flexWrap : 'wrap',
     marginRight: width(2),
     fontFamily: FontFamily.BlackSansBold,
   },
