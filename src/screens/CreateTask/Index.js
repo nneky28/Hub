@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react'
 import styles from './style'
-import { Container, P, CustomCalender } from '../../utills/components'
+import { Container, P, CustomCalender, KeyboardAwareWrapper } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button'
 import { Field, Formik } from 'formik';
@@ -165,7 +165,7 @@ const Index = ({ visible, onHide, item }) => {
                     />
                 </View> :
                     <View style={styles.mainViewContainer}>
-                        <KeyboardAwareScrollView
+                        <KeyboardAwareWrapper
                             showsVerticalScrollIndicator={false}
                             style={{ marginBottom: height(10) }}
                             behavior={Platform.OS === "ios" ? "padding" : "height"} >
@@ -199,6 +199,7 @@ const Index = ({ visible, onHide, item }) => {
                                             placeholder="Enter Task description here"
                                             keyboardType={'default'}
                                             multiline={true}
+                                            minHeight={5}
                                             value={data.description}
                                             onChangeData={(value) => {
                                                 setData({ ...data, description: value })
@@ -217,7 +218,7 @@ const Index = ({ visible, onHide, item }) => {
                                         {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
                                         <P style={styles.btnIcon}>
                                             {
-                                                !assignTo?.name ? "Me" : Capitalize(assignTo?.name)
+                                                !assignTo?.name ? "You" : Capitalize(assignTo?.name)
                                             }
                                         </P>
                                     </TouchableOpacity>
@@ -292,7 +293,7 @@ const Index = ({ visible, onHide, item }) => {
                                 textStyle={styles.buttonText1}
                                 onPress={submitHandler}
                             />
-                        </KeyboardAwareScrollView>
+                        </KeyboardAwareWrapper>
 
                     </View>
 

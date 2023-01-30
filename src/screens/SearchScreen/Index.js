@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
-import { CloseHandler, Container, P, Rounded, H1, BackHandler, } from '../../utills/components';
+import { CloseHandler, Container, P, Rounded, H1, BackHandler, ImgPlaceholder, } from '../../utills/components';
 import SearchBox, { SearchBoxIOS, SearchBoxIOSWithout, SearchBoxWithout } from '../../components/SearchBox/index';
 import CommonStyles from '../../utills/CommonStyles';
 import AppColors, { ColorList } from '../../utills/AppColors';
@@ -53,12 +53,14 @@ const PeopleList = ({ navigation, route }) => {
                         item.photo ? (
                             <Image source={{ uri: item.photo }} style={styles.avatarStyle} />
                         ) : (
-                            <Rounded backgroundColor={ColorList[Math.floor(Math.random() * 4)]} size={12}>
-                                <H1>
-                                    {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
-                                    {item && item.last_name && item.first_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ""}
-                                </H1>
-                            </Rounded>
+                            // <Rounded backgroundColor={ColorList[Math.floor(Math.random() * 4)]} size={12}>
+                            //     <H1>
+                            //         {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
+                            //         {item && item.last_name && item.first_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ""}
+                            //     </H1>
+                            //     </Rounded>
+                            <ImgPlaceholder text={`${item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}${item && item.last_name && item.first_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ""}`}
+                                size={12} />
                         )
                     }
                     <View style={styles.textContainer}>
@@ -144,13 +146,14 @@ const PeopleList = ({ navigation, route }) => {
     const RenderItems = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => setSearch(item)} >
-                <Rounded
+                {/* <Rounded
                     marginRight={3}
                     backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
                     <H1 style={styles.team}>
                         {item}
                     </H1>
-                </Rounded>
+                </Rounded> */}
+                <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
     }

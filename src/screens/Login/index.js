@@ -147,16 +147,19 @@ export default function Dashboard(props) {
               component={CustomInput}
               name="Password"
               secureTextEntry={secure}
-              onChangeText={(value) => setData({ ...data, password: value })}
-              value={data?.password}
+              onChangeData={(value) => setData({ ...data, password: value })}
+              // value={data?.password}
+
               keyboardType={'default'}
               right={<TextInput.Icon name={secure ? "eye" : "eye-off"} style={CommonStyles.marginTop_2}
                 color={AppColors.black1}
                 onPress={() => setSecure(!secure)}
               />}
+
             />
           </>
         </Formik>
+
         <Container marginTop={3} width={90}>
           <CustomButton
             btnText={'Sign In'}

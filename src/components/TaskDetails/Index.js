@@ -350,7 +350,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                         <View>
 
 
-                            {item?.sub_tasks_tasksapp.length !== 0 ?
+                            {item?.sub_tasks_tasksapp?.length !== 0 ?
                                 <>
                                     <View style={[CommonStyles.rowJustifySpaceBtw, { paddingVertical: height(2) }]}>
                                         <H1 color={AppColors.black1}>Subtasks</H1>
@@ -407,9 +407,8 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                                                             <Field
                                                                                 component={CustomInput}
                                                                                 placeholder="Add subtasks here"
-                                                                                keyboardType={'default'}
-                                                                                style={styles.input}
                                                                                 multiline={true}
+                                                                                minHeight={5}
                                                                                 value={subData?.[item]}
                                                                                 onChangeData={(value) => {
                                                                                     setSubdata({ ...subData, [item]: value })
@@ -452,9 +451,6 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                 </View>
                             }
                         </View>
-
-
-
                         <View style={styles.descriptionCon}>
                             <H1 color={AppColors.black1}>Created By</H1>
                             <Text style={styles.description}>
@@ -498,11 +494,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                         data={comment}
                         renderItem={renderItem}
                     /> */}
-                {/* <CommentTask item={item} />
-                    <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item} onPressHandle={onPressHandler}
-                        loading={loadEdit} />
-                    <SubTaskActionModal isVisible={action} onHide={() => setAction(false)} item={item} onPressHandle={onPress}
-                        loading={loadingSubTask} /> */}
+                {/* <CommentTask item={item} /> */}
             </ScreenWrapper>
         </Modal>
 

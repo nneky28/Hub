@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
 
-const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
+const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => {
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -84,15 +84,15 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
     return (
-        <TouchableOpacity style={styles.wrapper} onPress={() => setDisplay(true)}>
+        <View style={styles.wrapper}>
             <View style={styles.row}>
-                <View>
+                <TouchableOpacity onPress={() => setDisplay(true)}>
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
-                </View>
+                </TouchableOpacity>
                 {
-                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" ? null :
+                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" || user ? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
-                            <TouchableOpacity style={CommonStyles.marginTop_2} onPress={() => {
+                            <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => {
                                 title === "Completed" && setCompleted(true)
                                 index === 1 && setSent(true)
                             }}>
@@ -123,13 +123,11 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
 
                 }
 
-
             </View>
-
             <View style={styles.by}>
                 <P color={AppColors.black3}>
                     {
-                        isSent ? 'To:' : 'By:'
+                        isSent || user ? 'To:' : 'By:'
                     }
                     {" "}
                     {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}
@@ -188,7 +186,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks }) => {
                 loading={isLoading} />
             <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
 
-        </TouchableOpacity>
+        </View>
     )
 }
 

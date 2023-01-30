@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     searchIcon: {
         width: width(4),
         height: height(2),
+        marginRight: width(3)
     },
 
 });

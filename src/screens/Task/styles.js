@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(4),
+        marginTop: height(2.5),
         paddingHorizontal: width(5)
     },
 
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     },
     scroll: {
         backgroundColor: '#F5F5F5',
-        paddingBottom: height(1)
+        paddingBottom: height(5),
 
     },
     emptyCon: {
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     boxContainer: {
         elevation: 3,
         flexDirection: 'row',
-        marginTop: height(3),
+        marginTop: height(2),
         justifyContent: 'space-evenly',
         paddingHorizontal: width(3)
 

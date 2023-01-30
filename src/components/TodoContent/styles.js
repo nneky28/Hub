@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(3),
+        marginTop: height(2),
         paddingHorizontal: width(5),
 
     },
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     },
     by: {
         paddingHorizontal: width(6),
+        paddingVertical: height(0.5)
 
     },
     date: {
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
 
     row1: {
         flexDirection: 'row',
-        marginTop: height(0.5),
         paddingHorizontal: width(6),
 
     },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(10),
     },
     buttonText: {
-        fontSize: width(3),
+        fontSize: width(2.7),
         fontFamily: FontFamily.BlackSansRegular,
         color: AppColors.black,
         width: width(35),
@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.4),
         color: AppColors.black1,
-        marginTop: height(1.5),
+        marginTop: height(1),
+        width: width(50)
     },
 
     dots: {

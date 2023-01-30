@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import React, { useState, useEffect, } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import { H1, Container, Rounded, PageLoader, TouchableWrapper, EmptyStateWrapper } from '../../utills/components'
+import { H1, Container, Rounded, PageLoader, TouchableWrapper, EmptyStateWrapper, ImgPlaceholder } from '../../utills/components'
 import { width } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
 import MyTeamCard from '../../components/MyTeamCard/Index'
@@ -138,6 +138,7 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllTeamTask,
     } = useFetchTeamTask(tab, index)
 
+
     const {
         data: allTeamDue,
         isLoading: loadingAllTeamDue,
@@ -153,6 +154,7 @@ const Index = ({ navigation }) => {
         isLoading: loadingAllTeamOverdue,
     } = useFetchMyTeamOverdue(tab, index)
 
+    // console.log('all', allTeamData)
     const __flattenArr = () => {
         let flattenedArr = []
         if (index === 0 && allTasks && allTasks?.pages && Array.isArray(allTasks?.pages)) {
@@ -170,7 +172,7 @@ const Index = ({ navigation }) => {
         if (index === 0 && actionTitle === "To-Do" && tab === "Overdue" && overdueTasks && overdueTasks?.pages && Array.isArray(overdueTasks?.pages)) {
             flattenedArr = overdueTasks?.pages
         }
-        if (index === 1 && actionTitle === "To-Do" && tab === "All" && allSentTasks && allSentTasks?.pages && Array.isArray(allSentTasks?.pages)) {
+        if (index === 1 && allSentTasks && allSentTasks?.pages && Array.isArray(allSentTasks?.pages)) {
             flattenedArr = allSentTasks?.pages
         }
         if (index === 1 && actionTitle === "To-Do" && tab === "Due Today" && allSentDues && allSentDues?.pages && Array.isArray(allSentDues?.pages)) {
@@ -182,7 +184,7 @@ const Index = ({ navigation }) => {
         if (index === 1 && actionTitle === "To-Do" && tab === "Overdue" && allSentOverdue && allSentOverdue?.pages && Array.isArray(allSentOverdue?.pages)) {
             flattenedArr = allSentOverdue?.pages
         }
-        if (index === 2 && actionTitle === "To-Do" && tab === "All" && allTeamData && allTeamData?.pages && Array.isArray(allTeamData?.pages)) {
+        if (index === 2 && allTeamData && allTeamData?.pages && Array.isArray(allTeamData?.pages)) {
             flattenedArr = allTeamData?.pages
         }
         if (index === 2 && actionTitle === "To-Do" && tab === "Due Today" && allTeamDue && allTeamDue?.pages && Array.isArray(allTeamDue?.pages)) {
@@ -230,12 +232,14 @@ const Index = ({ navigation }) => {
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
     const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
     const no_date = Object.values(data).filter((item) => item?.due_date === null);
+
     // sent tasks 
     const sent_Todos = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const sent_inProgress = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const sent_completed = Object.values(sentItems).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const sent_overdue = Object.values(sentOverdueItem).filter((item) => item.status !== "In-progress");
     const no_date_sent = Object.values(sentItems).filter((item) => item?.due_date === null);
+
     //team card
     const team_todos = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const team_overdue = Object.values(teamOverdueData).filter((item) => item.status !== "In-progress");
@@ -253,13 +257,7 @@ const Index = ({ navigation }) => {
     const RenderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => navigation.navigate('search', { people })} >
-                <Rounded
-                    marginRight={3}
-                    backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
-                    <H1 style={styles.team}>
-                        {item}
-                    </H1>
-                </Rounded>
+                <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
     }
@@ -306,7 +304,7 @@ const Index = ({ navigation }) => {
                     <View style={styles.line} />
                 </View>
                 <ScrollView
-                    style={[styles.scroll, CommonStyles.paddingBottom_5]}
+                    style={[styles.scroll, CommonStyles.paddingBottom_8]}
                     showsVerticalScrollIndicator={false}>
 
                     <View style={styles.threeButtonCont}>
@@ -1134,7 +1132,7 @@ const Index = ({ navigation }) => {
                                 <View>
                                     {
                                         index === 2 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTeamTask ? no_date_team.map((item, i) => (
-                                            <TodoContent
+                                            <TeamTodoContent
                                                 key={i}
                                                 count={count}
                                                 item={item}
@@ -1148,7 +1146,7 @@ const Index = ({ navigation }) => {
 
 
                             </View>
-                            <View style={CommonStyles.marginTop_2}>
+                            <View >
                                 {
                                     index === 2 && actionTitle === "In Progress" ? team_inProgress.map((item, i) => (
                                         <TeamTodoContent
@@ -1161,7 +1159,7 @@ const Index = ({ navigation }) => {
                                     )) : null
                                 }
                             </View>
-                            <View style={CommonStyles.marginTop_2}>
+                            <View>
                                 {
                                     index === 2 && actionTitle === "Completed" ? team_completed.map((item, i) => (
                                         <TeamTodoContent

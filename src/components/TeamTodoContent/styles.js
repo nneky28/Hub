@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
 const styles = StyleSheet.create({
-    wrapper: { backgroundColor: '#F5F5F5', paddingVertical: height(1) },
+    wrapper: { backgroundColor: '#F5F5F5', paddingBottom: height(9) },
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
     },
     buttonText: {
-        fontSize: width(3),
+        fontSize: width(2.7),
         fontFamily: FontFamily.BlackSansBold,
         color: AppColors.black1,
     },
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.4),
         color: AppColors.black1,
+        width: width(35)
     },
     content: {
         flexDirection: 'row',

@@ -177,6 +177,7 @@ export const APIFunction = {
   get_onboarding: async () => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
+    // console.log('here', id)
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
   },
@@ -197,6 +198,7 @@ export const APIFunction = {
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
   delete_task: async (fd) => {
+    // console.log('id', fd)
     let biz = await getStoredBusiness()
     return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
   },
@@ -412,13 +414,11 @@ export const useFetchBanking = (employee_id) => {
   })
 }
 export const useFetchOnboarding = () => {
-
-  return useQuery(["onboard",], () => APIFunction.get_onboarding()
-
+  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding()
   )
 }
 export const useFetchEmployees = (page, search) => {
-  return useInfiniteQuery(['people', page, search], () => APIFunction.get_users(page, search), {
+  return useInfiniteQuery(['get_users', page, search], () => APIFunction.get_users(page, search), {
 
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next
@@ -428,7 +428,7 @@ export const useFetchEmployees = (page, search) => {
 }
 
 export const useFetchTeams = (page, id) => {
-  return useInfiniteQuery(['teams', page, id], () => APIFunction.get_teams(page, id), {
+  return useInfiniteQuery(['get_teams', page, id], () => APIFunction.get_teams(page, id), {
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next
     }
@@ -436,128 +436,128 @@ export const useFetchTeams = (page, id) => {
   )
 }
 export const useFetchDepartments = (page, search) => {
-  return useInfiniteQuery(["departments", page, search], () => APIFunction.departments(page, search), {
+  return useInfiniteQuery(["get_departments", page, search], () => APIFunction.departments(page, search), {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.next
     }
   })
 }
 export const useFetchTodos = (tab) => {
-  return useInfiniteQuery(['todos', tab], () => APIFunction.get_to_dos(tab), {
+  return useInfiniteQuery(['ge_to_dos', tab], () => APIFunction.get_to_dos(tab), {
     // enabled: tab === "All" && tab !== null && tab !== undefined
   })
 }
 export const useFetchDueToday = (tab) => {
-  return useInfiniteQuery(['duetoday', tab], () => APIFunction.get_duetoday(tab), {
+  return useInfiniteQuery(['get_duetoday', tab], () => APIFunction.get_duetoday(tab), {
     enabled: tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
 export const useFetchUpcoming = (tab) => {
-  return useInfiniteQuery(['upcoming', tab], () => APIFunction.get_upcoming(tab), {
+  return useInfiniteQuery(['get_upcoming', tab], () => APIFunction.get_upcoming(tab), {
     enabled: tab === "Upcoming" && tab !== null && tab !== undefined
   })
 }
 export const useFetchOverDue = (tab) => {
-  return useInfiniteQuery(['overdue', tab], () => APIFunction.get_overdue(tab), {
+  return useInfiniteQuery(['get_overdue', tab], () => APIFunction.get_overdue(tab), {
     enabled: tab === "Overdue" && tab !== null && tab !== undefined
   })
 }
 export const useFetchAllSent = (tab, index) => {
-  return useInfiniteQuery(['sent todos', tab], () => APIFunction.get_all_sent(tab), {
+  return useInfiniteQuery(['get_all_sent', tab], () => APIFunction.get_all_sent(tab), {
     enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentDue = (tab, index) => {
-  return useInfiniteQuery(['sent due', tab], () => APIFunction.get_sent_duetoday(tab), {
+  return useInfiniteQuery(['get_sent_duetoday', tab], () => APIFunction.get_sent_duetoday(tab), {
     enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentUpcoming = (tab, index) => {
-  return useInfiniteQuery(['sent upcoming', tab], () => APIFunction.get_sent_upcoming(tab), {
+  return useInfiniteQuery(['get_sent_upcoming', tab], () => APIFunction.get_sent_upcoming(tab), {
     enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentOverdue = (tab, index) => {
-  return useInfiniteQuery(['sent overdue', tab], () => APIFunction.get_sent_overdue(tab), {
+  return useInfiniteQuery(['get_sent_overdue', tab], () => APIFunction.get_sent_overdue(tab), {
     enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchPersonalTask = (tab, id) => {
-  return useInfiniteQuery(['employeeTask', id], () => APIFunction.get_personal_tasks(id), {
+  return useInfiniteQuery(['get_personal_tasks', id], () => APIFunction.get_personal_tasks(id), {
     enabled: tab === "All" && id !== null && id !== undefined,
   })
 }
 export const useFetchPersonalDue = (tab, id) => {
-  return useInfiniteQuery(['dueTask', id], () => APIFunction.get_personal_due(id), {
+  return useInfiniteQuery(['get_personal_due', id], () => APIFunction.get_personal_due(id), {
     enabled: tab === "Due Today" && id !== null && id !== undefined,
   })
 }
 export const useFetchPersonalUpcoming = (tab, id) => {
-  return useInfiniteQuery(['upcomingTask', id], () => APIFunction.get_personal_upcoming(id), {
+  return useInfiniteQuery(['get_personal_upcoming', id], () => APIFunction.get_personal_upcoming(id), {
     enabled: tab === "Upcoming" && id !== null && id !== undefined,
   })
 }
 export const useFetchPersonalOverdue = (tab, id) => {
-  return useInfiniteQuery(['overdueTask', id], () => APIFunction.get_personal_overdue(id), {
+  return useInfiniteQuery(['get_personal_overdue', id], () => APIFunction.get_personal_overdue(id), {
     enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
-export const useFetchTeamTask = (tab, index) => {
-  return useInfiniteQuery(['All teamTask', tab], () => APIFunction.get_team_tasks(tab), {
-    enabled: index === 2 && tab === 'All' && tab !== null && tab !== undefined
+export const useFetchTeamTask = (index, tab) => {
+  return useInfiniteQuery(['get_team_tasks', tab], () => APIFunction.get_team_tasks(tab), {
+    // enabled: index === 2 && index !== null && index !== undefined,
   })
 }
 
 export const useFetchTeamDuetoday = (tab, index) => {
-  return useInfiniteQuery(['allDue', tab], () => APIFunction.get_team_duetoday(tab), {
+  return useInfiniteQuery(['get_team_duetoday', tab], () => APIFunction.get_team_duetoday(tab), {
     enabled: index === 2 && tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
 export const useFetchMyTeamUpcoming = (tab, index) => {
-  return useInfiniteQuery(['allUpcoming', tab], () => APIFunction.get_team_upcoming(tab), {
+  return useInfiniteQuery(['get_team_upcoming', tab], () => APIFunction.get_team_upcoming(tab), {
     enabled: index === 2 && tab === "Upcoming" && tab !== null && tab !== undefined,
 
   })
 }
 export const useFetchMyTeamOverdue = (tab) => {
-  return useInfiniteQuery(['allOverdue', tab], () => APIFunction.get_team_overdue(tab), {
+  return useInfiniteQuery(['get_team_overdue', tab], () => APIFunction.get_team_overdue(tab), {
     enabled: tab === "Overdue" && tab !== null && tab !== undefined,
   })
 }
 export const useFetchMyStatus = (status, tab, id) => {
-  return useInfiniteQuery(['employeeStatus', status, id], () => APIFunction.get_Mystatus(status, id), {
+  return useInfiniteQuery(['get_Mystatus', status, id], () => APIFunction.get_Mystatus(status, id), {
     enabled:
       tab === "Status" && status !== null && status !== undefined,
   })
 }
 
 export const useFetchStatistics = () => {
-  return useQuery("statistics", APIFunction.get_task_statistics)
+  return useQuery("get_task_statistics", APIFunction.get_task_statistics)
 }
 export const useFetchSentStatistics = () => {
-  return useQuery("sent", APIFunction.get_sent_statistics)
+  return useQuery("get_sent_statistics", APIFunction.get_sent_statistics)
 }
 
 export const useFetchPeopleStatics = (id) => {
-  return useQuery(["count", id], () => APIFunction.get_employee_statistics(id), {
+  return useQuery(["get_employee_statistics", id], () => APIFunction.get_employee_statistics(id), {
     enabled: id !== null && id !== undefined
   },
 
   )
 }
 export const useFetchTeamStatistics = () => {
-  return useQuery("team", APIFunction.get_team_statistics)
+  return useQuery("get_team_statistics", APIFunction.get_team_statistics)
 }
 
 export const useFetchActivities = (id) => {
-  return useInfiniteQuery(["logs", id], () => APIFunction.get_activity(id), {
+  return useInfiniteQuery(["get_activity", id], () => APIFunction.get_activity(id), {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.next
     }
   })
 }
 export const useFetchComments = (id) => {
-  return useInfiniteQuery(["comments", id], () => APIFunction.get_comments(id), {
+  return useInfiniteQuery(["get_comments", id], () => APIFunction.get_comments(id), {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.next
     }
@@ -637,11 +637,11 @@ export const postAPIs = async (path, fd) => {
           error.response.data.detail && typeof (error.response.data.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.detail });
-        } else if(
+        } else if (
           error?.response?.data &&
-          typeof error?.response?.data === "object"){
-        reject({status: 400, msg: Object.values(error?.response?.data).toString()});
-      } else {
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
+        } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
@@ -669,11 +669,11 @@ export const deleteAPIs = async (path, fd) => {
           error.response.data.detail && typeof (error.response.data.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.detail });
-        }else if(
+        } else if (
           error?.response?.data &&
-          typeof error?.response?.data === "object"){
-        reject({status: 400, msg: Object.values(error?.response?.data).toString()});
-      } else {
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
+        } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
@@ -701,11 +701,11 @@ export const putAPIs = async (path, fd) => {
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.msg.detail });
-        }else if(
+        } else if (
           error?.response?.data &&
-          typeof error?.response?.data === "object"){
-        reject({status: 400, msg: Object.values(error?.response?.data).toString()});
-      } else {
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
+        } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
@@ -801,3 +801,6 @@ const refreshToken = async () => {
   } catch (err) {
   }
 }
+
+
+// ~/Desktop/myedge-mobile/.git/MERGE_MSG
