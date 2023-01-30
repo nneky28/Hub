@@ -407,9 +407,8 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                                                             <Field
                                                                                 component={CustomInput}
                                                                                 placeholder="Add subtasks here"
-                                                                                keyboardType={'default'}
-                                                                                style={styles.input}
                                                                                 multiline={true}
+                                                                                minHeight={5}
                                                                                 value={subData?.[item]}
                                                                                 onChangeData={(value) => {
                                                                                     setSubdata({ ...subData, [item]: value })
