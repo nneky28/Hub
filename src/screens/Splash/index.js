@@ -14,7 +14,6 @@ const Splash = (props) => {
   const loginMethod = async () => {
     let user = await getData("user")
     let about = await getData("about_me")
-    console.log('about', about)
     await storeData("page", 1)
     setTimeout(async () => {
       try {

@@ -225,7 +225,6 @@ export const APIFunction = {
   get_team_tasks: async () => {
     let biz = await getStoredBusiness()
     const user = await getData("about_me")
-    // console.log('dept_id', user?.department.id)
     return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
   },
 
@@ -568,10 +567,8 @@ export const updateSubTask = () => {
   return useMutation(() => APIFunction.update_sub_task(),
     {
       onSuccess: () => {
-        console.log('success')
       },
       onError: () => {
-        console.log('fail')
       }
     }
   )
@@ -581,19 +578,15 @@ export const useUpdate = () => {
   return useMutation(() => APIFunction.update_status(),
     {
       onSuccess: () => {
-        console.log('success')
       },
       onError: () => {
-        console.log('fail')
       }
     }
   )
 }
 
 export const getAPIs = async (path) => {
-  console.log('path', path)
   let _token = await getData("token");
-  console.log('token', _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -610,7 +603,6 @@ export const getAPIs = async (path) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log('get Error', error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -646,10 +638,9 @@ export const postAPIs = async (path, fd) => {
         ) {
           reject({ status: 400, msg: error.response.data.detail });
         } else if (
-          error.response && error.response.data &&
-          error.response.data.message && typeof (error.response.data.message) === "string"
-        ) {
-          reject({ status: 400, msg: error.response.data.message });
+          error?.response?.data &&
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
         } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
@@ -678,6 +669,10 @@ export const deleteAPIs = async (path, fd) => {
           error.response.data.detail && typeof (error.response.data.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.detail });
+        } else if (
+          error?.response?.data &&
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
         } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
@@ -706,6 +701,10 @@ export const putAPIs = async (path, fd) => {
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
         ) {
           reject({ status: 400, msg: error.response.data.msg.detail });
+        } else if (
+          error?.response?.data &&
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
         } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }

@@ -29,6 +29,14 @@ import CreateTask from '../../screens/CreateTask/Index'
 
 
 const ContactModal = ({ isVisible, onHide, data }) => {
+  let address = ""
+  if(data?.address){
+      address = data?.address?.address1 || ""
+      address =   address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2  : address
+      address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
+      address = address && data?.address?.state ? `${address}, ${data?.address?.state}` : data?.address?.state ? data?.address?.state : address
+      address = address && data?.address?.country_display ? `${address}, ${data?.address?.country_display}` : data?.address?.country_display ? data?.address?.country_display : address
+  }
   const contactData = [
     {
       key: '1',
@@ -38,8 +46,7 @@ const ContactModal = ({ isVisible, onHide, data }) => {
     },
     {
       key: '2',
-      title: data && data.address && data.address.address1 ? data.address.address1 :
-        data && data.address ? data.address : "",
+      title: address,
       iconLeft: { uri: Images.MapPIN },
       iconRight: { uri: Images.CopyIcon },
     },
@@ -630,7 +637,6 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
     let user = await getData("about_me")
     setEmployee(user)
   }
-  // console.log('user data', employee)
 
   useEffect(() => {
     getUser()

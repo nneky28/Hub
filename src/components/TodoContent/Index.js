@@ -58,7 +58,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
             }
 
         } catch (error) {
-            console.log('err', error)
+            //console.log('err', error)
         }
     }
 
@@ -70,7 +70,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
             setModal(false)
             setSent(false)
         } catch (error) {
-            console.log('err', error)
+            //console.log('err', error)
         }
 
     }

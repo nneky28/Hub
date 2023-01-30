@@ -1,7 +1,7 @@
 import { Field, Formik } from 'formik';
 import moment from 'moment';
 import React, { useEffect } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { height } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
@@ -28,6 +28,7 @@ export default function PersonalInfo({ navigation }) {
     const auth = useSelector(state => state.Auth)
     const updateProfile = async () => {
         try {
+            Keyboard.dismiss()
             let failed = false;
             let required = ["first_name", "last_name"]
             //,"gender","birth_date","marital_status","email","address","phone_number","state","city"
@@ -49,7 +50,7 @@ export default function PersonalInfo({ navigation }) {
                 "first_name": data.first_name,
                 "middle_name": data.middle_name || "",
                 "last_name": data.last_name,
-                "birth_date": data?.birth_date ? moment(data.birth_date).format("YYYY-MM-DD") : "",
+                "birth_date": data?.birth_date ? moment(data.birth_date).format("YYYY-MM-DD") : null,
                 "marital_status": data?.marital_status ? data.marital_status.toLowerCase() : "",
                 "gender": data?.gender || "",
                 "phone_number1": data.phone_number || "",
@@ -77,8 +78,7 @@ export default function PersonalInfo({ navigation }) {
             }
             navigation.goBack();
         } catch (err) {
-            let msg = err.msg && err.msg.detail && typeof (err.msg.detail) == "string" ? err.msg.detail : "Something went wrong. Please retry"
-            ToastError(msg)
+            ToastError(err?.msg)
             setLoading(false);
         }
     }

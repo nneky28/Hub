@@ -54,7 +54,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
         }
 
         let res = await mutateAsync(fd)
-        console.log('res', res)
+        //console.log('res', res)
         await storeData('task claim', res)
         queryClient.invalidateQueries()
         showFlashMessage({ title: `task updated` })

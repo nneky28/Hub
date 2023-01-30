@@ -388,7 +388,7 @@ const CustomizeHeader  = (props) => {
         <Button
           transparent
           onPress={() => {
-            console.log("props>>>",props,navigation)
+           // console.log("props>>>",props,navigation)
             navigation.toggleDrawer();
           }}>
           <Image
@@ -427,7 +427,6 @@ const CustomizeHeader  = (props) => {
                     <Button
                       transparent
                       onPress={() => {
-                        console.log("---|||----",props)
                         props.navigation.toggleDrawer();
                       }}>
                       <NativeImage style={{width: 24, height: 24}} source={BarBlack} />

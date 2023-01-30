@@ -60,7 +60,6 @@ export default function NextKin({navigation,route}) {
             let about = await getData("about_me")
             dispatch(setLoaderVisible(true));
             let res = await APIFunction.update_next_of_kin({...data,country : "NG"},about.id)
-            console.log("RES--",res)
             dispatch(setLoaderVisible(false));
             ToastSuccess("Record has been updated");
             let profile = await getData("profile")
