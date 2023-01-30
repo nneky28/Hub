@@ -466,7 +466,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                     <H1 style={styles.logText}>Activity log</H1>
                     <Animated.Image
                         resizeMode="contain"
-                        source={downIcon}
+                        source={{ uri: Images.ArrowDown }}
                         style={[styles.leftIcon, { transform: [{ rotate: spin }] }]}
                     />
                 </TouchableOpacity>

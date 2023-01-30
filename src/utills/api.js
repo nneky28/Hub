@@ -567,6 +567,7 @@ export const useFetchComments = (id) => {
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");
+  console.log('token', _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

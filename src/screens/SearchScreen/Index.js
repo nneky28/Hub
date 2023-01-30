@@ -13,6 +13,7 @@ import { Capitalize } from '../../utills/Methods';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper/index';
 import { borderColor } from 'styled-system';
+import { Images } from '../../component2/image/Image';
 
 
 
@@ -187,7 +188,7 @@ const PeopleList = ({ navigation, route }) => {
                                             onSubmitEditing={handleSearch}
                                         />
                                         <TouchableOpacity style={styles.filterIconContainer}>
-                                            <Image resizeMode="contain" source={arrowIcon} style={styles.filterIcon} />
+                                            <Image resizeMode="contain" source={{ uri: Images.FilterArrow }} style={styles.filterIcon} />
                                         </TouchableOpacity>
                                     </View>
                                 </> : Platform.OS === 'ios' ?
@@ -198,7 +199,7 @@ const PeopleList = ({ navigation, route }) => {
                                             onSubmitEditing={handleSearch}
                                         />
                                         <TouchableOpacity style={styles.filterIconContainerIOS}>
-                                            <Image resizeMode="contain" source={arrowIcon} style={styles.filterIconIOS} />
+                                            <Image resizeMode="contain" source={{ uri: Images.FilterArrow }} style={styles.filterIconIOS} />
                                         </TouchableOpacity>
                                     </View> : null
                         }

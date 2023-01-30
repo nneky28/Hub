@@ -97,7 +97,9 @@ export const Images = {
   clippedPart: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Rectangle+4029+(1).png",
   TaskLogo: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(14).png",
   DueFlag: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(15).png",
-  Attach: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(16).png"
+  Attach: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(16).png",
+  FilterArrow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/arrows.png",
+  ArrowDown: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/down.png"
 
 }
 
