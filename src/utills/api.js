@@ -563,27 +563,7 @@ export const useFetchComments = (id) => {
     }
   })
 }
-export const updateSubTask = () => {
-  return useMutation(() => APIFunction.update_sub_task(),
-    {
-      onSuccess: () => {
-      },
-      onError: () => {
-      }
-    }
-  )
-}
 
-export const useUpdate = () => {
-  return useMutation(() => APIFunction.update_status(),
-    {
-      onSuccess: () => {
-      },
-      onError: () => {
-      }
-    }
-  )
-}
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");
