@@ -35,19 +35,34 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps } from './types';
+import {
+  ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps,
+  PTagProps, DatePickerModalProps, BackHandlerProps, CustomFallBackScreenProps,
+  EmptyStateWrapperProps, TouchableWrapperProps, UserPINComponentProps,
+  SizedBoxProps,
+  ImageWrapProps,
+  RoundedProps,
+  CustomWebViewProps,
+  OnboardModalProps,
+  onNavigationStateChangeProps,
+  TouchWrapProps,
+  AppButtonProp,
+  HTagProps,
+  ContainerProps
+} from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { CustomCalenderProps } from './types';
 
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
 
-export const PageLoader = () => {
+export const PageLoader = (props={}) => {
   return (
     [...'123567'].map((item) => (
       <ContentLoader
         key={item}
-        viewBox="0 0 778 116" width={350} height={100} 
+        viewBox="0 0 778 116" width={350} height={100} {...props}
         backgroundColor={AppColors.gray1}
       >
         <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
@@ -60,12 +75,12 @@ export const PageLoader = () => {
   )
 }
 
-export const Reload = () => {
+export const Reload = (props={}) => {
   return (
     [...'1'].map((item) => (
       <ContentLoader
         key={item}
-        viewBox="0 0 778 116" width={350} height={100}
+        viewBox="0 0 778 116" width={350} height={100}{...props}
         backgroundColor={AppColors.gray1}
       >
         <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
@@ -125,11 +140,11 @@ export const P = (props : PTagProps) => (
   </Text>
 )
 
-export const H1 = (props) => (
+export const H1 = (props:HTagProps) => (
   <Text
     style={[
       {
-        fontSize: width(props.fontSize) || width(4),
+        fontSize : props?.fontSize ? width(props.fontSize) : width(4),
         fontFamily: FontFamily.BlackSansBold,
         color: props.color || 'black',
         textAlign: props.textAlign,
@@ -146,17 +161,17 @@ export const H1 = (props) => (
   </Text>
 )
 
-export const SizedBox = (props) => (
+export const SizedBox = ({...props}:SizedBoxProps) => (
   <View
     style={{
       height: height(props.size || 1),
       backgroundColor: props.backgroundColor || AppColors.white,
-      width: props?.width ? width(props.width) : null
+      width: props?.width ? width(props.width) : 0
     }}
   />
 )
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value:any, delay:any) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(
@@ -177,7 +192,7 @@ export const useDebounce = (value, delay) => {
   return debouncedValue;
 }
 
-export const Container = (props) => (
+export const Container = (props:ContainerProps) => (
   <View
     style={[
       {
@@ -187,7 +202,7 @@ export const Container = (props) => (
         flexDirection: props.direction,
         width: props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
         padding: props.padding ? width(props.padding) : null,
-        height: props.height,
+        height: props?.height,
         //? height(props.height) : null,
         justifyContent:
           props.direction === "row"
@@ -221,7 +236,7 @@ export const Container = (props) => (
   </View>
 )
 
-export const ImageWrap = (props) => (
+export const ImageWrap = (props:ImageWrapProps) => (
   <ImageBackground
     source={props.source || { uri: props.url }}
     resizeMode={props.fit}
@@ -229,20 +244,19 @@ export const ImageWrap = (props) => (
       overflow: "hidden",
       //...Elevation(props.elevation),
       position: props.position,
-      width: width(props.width) || props.widthPercent || "100%",
-      height: height(props.height) || height(3),
-      backgroundColor: props.backgroundColor,
-      color: props.color,
+      width:props?.width || props.widthPercent || "100%",
+      height:props?.height || height(3),
+      backgroundColor: props?.backgroundColor,
       borderRadius: props.borderRadius,
       borderTopLeftRadius: props.borderTopLeftRadius,
       borderBottomLeftRadius: props.borderBottomLeftRadius,
-      margin: width(props.margin) || 0,
-      marginVertical: height(props.marginVertical) || 0,
-      marginHorizontal: width(props.marginHorizontal) || 0,
-      marginRight: width(props.marginRight) || 0,
-      marginLeft: width(props.marginLeft) || 0,
-      marginTop: height(props.marginTop) || 0,
-      marginBottom: height(props.marginBottom) || 0,
+      margin: props?.margin || 0,
+      marginVertical: props?.marginVertical || 0,
+      marginHorizontal: props?.marginHorizontal || 0,
+      marginRight:props?.marginRight || 0,
+      marginLeft: props?.marginLeft|| 0,
+      marginTop: props?.marginTop || 0,
+      marginBottom: props?.marginBottom || 0,
       padding: props.padding,
     }}
   >
@@ -250,7 +264,7 @@ export const ImageWrap = (props) => (
   </ImageBackground>
 )
 
-export const AppButton = (props) => (
+export const AppButton = (props:AppButtonProp) => (
   <TouchableOpacity
     onPress={props.onPress}
   >
@@ -271,7 +285,7 @@ export const AppButton = (props) => (
   </TouchableOpacity>
 )
 
-export const TouchWrap = (props) => (
+export const TouchWrap = (props:TouchWrapProps) => (
   <TouchableRipple
     onPress={props.onPress}
     rippleColor="rgba(0, 0, 0, .32)"
@@ -284,16 +298,18 @@ export const TouchWrap = (props) => (
       },
       props.style
     ]}
+    hasTVPreferredFocus={false}
+    tvParallaxProperties={false}
   >
     {props.children}
   </TouchableRipple>
 )
-export const Width = (val) => {
+export const Width = (val:any) => {
   let res;
   val === undefined || null ? (res = null) : (res = (val / 100) * winWidth);
   return res;
 };
-export const Rounded = (props) => (
+export const Rounded = (props:RoundedProps) => (
   <Container
     style={{
       width: Width(props.size || 15),
@@ -320,7 +336,7 @@ export const ImgPlaceholder = React.memo((props : ImgPlaceholderProps ) => (
   return prevProps.text === nextProps.text
 })
 
-export const CustomCalender = (props) => {
+export const CustomCalender = (props:CustomCalenderProps) => {
   return (
     <Container
       paddingVertical={5}
@@ -473,7 +489,7 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
 }
 
 
-const onNavigationStateChange = async (param, dispatch, auth) => {
+const onNavigationStateChange = async ({param, dispatch, auth}:onNavigationStateChangeProps) => {
   try {
     let split = param.url && typeof (param.url) == "string" ? param.url.split("&business_id") : []
     if (split.length === 1) return
@@ -512,7 +528,7 @@ const onNavigationStateChange = async (param, dispatch, auth) => {
   }
 };
 
-export const OnboardModal = (props) => {
+export const OnboardModal = (props:OnboardModalProps) => {
   const dispatch = useDispatch()
   const auth = useSelector(state => state.Auth)
   return (
@@ -562,7 +578,7 @@ export const CustomRefreshControl = (props : {loading : boolean, onRefresh : () 
   />)
 }
 
-export const CustomWebView = (props) => (
+export const CustomWebView = (props:CustomWebViewProps) => (
   <Modal visible={props.show}>
     <Container
       flex={1}
@@ -573,8 +589,7 @@ export const CustomWebView = (props) => (
         width={20}
       >
         <TouchWrap
-          onPress={() => props.setShow(false)}
-        >
+          onPress={() => props.setShow}>
           <H1 textAlign="center">Close</H1>
         </TouchWrap>
       </Container>
@@ -592,7 +607,7 @@ export const CustomWebView = (props) => (
   </Modal>
 )
 
-export const BackHandler = ({ onPress, position }) => {
+export const BackHandler = ({ onPress, position }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -615,7 +630,7 @@ export const BackHandler = ({ onPress, position }) => {
     </TouchableWrapper>
   )
 }
-export const CloseHandler = ({ onPress }) => {
+export const CloseHandler = ({ onPress }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -642,7 +657,7 @@ export const CloseHandler = ({ onPress }) => {
 
 
 
-export const NotifyHandler = ({ onPress }) => {
+export const NotifyHandler = ({ onPress }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -667,7 +682,7 @@ export const NotifyHandler = ({ onPress }) => {
   )
 }
 
-export const CustomFallBackScreen = (props) => {
+export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
   const reportError = useMutation((load) => APIFunction.error_report(load))
   const logoutMethod = async () => {
     try {
@@ -710,7 +725,7 @@ export const CustomFallBackScreen = (props) => {
   )
 }
 
-export const EmptyStateWrapper = (props) => (
+export const EmptyStateWrapper = (props:EmptyStateWrapperProps) => (
   <Container
     marginTop={props.marginTop || 8}
     style={{
@@ -746,10 +761,9 @@ export const EmptyStateWrapper = (props) => (
   </Container>
 )
 
-export const TouchableWrapper = (props) => (
+export const TouchableWrapper = (props:TouchableWrapperProps) => (
   <TouchableRipple onPress={props.onPress}
     rippleColor={AppColors.whiteBase}
-
     style={[
       props?.isText ? {
         height: props?.height ? height(props?.height) : height(5),
@@ -764,12 +778,16 @@ export const TouchableWrapper = (props) => (
         alignItems: "center"
       } : {}, props.style
     ]}
+    disabled={props?.disabled}
+    onLayout={props?.onLayout}
+    hasTVPreferredFocus={false}
+    tvParallaxProperties={false}
   >
     {props.children}
   </TouchableRipple>
 )
 
-export const UserPINComponent = (props) => {
+export const UserPINComponent = (props:UserPINComponentProps) => {
   return (
     <React.Fragment>
       <Container
@@ -803,7 +821,7 @@ export const UserPINComponent = (props) => {
             codeLength={4}
             autoFocus={true}
             value={props.holder}
-            onTextChange={value => {
+            onTextChange={(value:string)=> {
               props.setError("")
               props?.setHolder(value)
             }}

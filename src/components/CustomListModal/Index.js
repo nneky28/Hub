@@ -12,6 +12,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { Images } from '../../component2/image/Image';
 
 
+
+
+
 const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
     const [options, setOptions] = useState(true)

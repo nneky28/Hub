@@ -238,7 +238,8 @@ export default function PersonalInfo({ navigation }) {
                                 name="maritalStatus"
                                 placeholder="Marital Status"
                                 component={CustomModalDropdown}
-                                value={data.marital_status}
+                                // value={data.marital_status}
+                                defaultValue={data.marital_status === "Single" ? "Single" : data.marital_status === "Married" ? "Married" : data.marital_status === "Divorced" ? "Divorced" : "Marital Status"}
                                 onChangeData={(value) => setData({ ...data, marital_status: value })}
                                 color={AppColors.black}
                                 options={["Single", "Married", "Divorced"]}
@@ -310,6 +311,7 @@ export default function PersonalInfo({ navigation }) {
                                 placeholder="Country"
                                 component={CustomModalDropdown}
                                 // value={data.country}
+                                defaultValue={data.country}
                                 onChangeData={(value) => setData({ ...data, country: value })}
                                 color={AppColors.black}
                                 options={["Nigeria"]}
