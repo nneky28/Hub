@@ -28,7 +28,7 @@ export type SizedBoxProps = {
 }
 export type BackHandlerProps = {
   onPress? : () => void
-  position : "flex-start" | "center" | "flex-end"
+  position? : "flex-start" | "center" | "flex-end"
 }
 export type CustomWebViewProps = {
   web_url : string
@@ -219,6 +219,7 @@ export type HTagProps = {
   export interface KeyboardAwareWrapperProps {
     children : React.ReactNode
   }
+  
 
 export type DatePickerModalProps = {
     show : boolean
@@ -294,4 +295,4 @@ export type ItemListModalProps = {
      index : number, 
      item : any,
      onPress : () => void
-}
+ }

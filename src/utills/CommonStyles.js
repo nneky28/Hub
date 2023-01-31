@@ -155,6 +155,10 @@ const CommonStyles = StyleSheet.create({
     },
     alignLeft: {
         alignItems: "flex-start"
-    }
+    },
+    flatList: {
+        paddingHorizontal: width(5),
+        // paddingVertical: height(2),
+    },
 });
 export default CommonStyles;

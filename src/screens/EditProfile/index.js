@@ -41,7 +41,7 @@ export default function EditProfile({ navigation }) {
     return (
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.header}>
-                <BackHandler />
+                <BackHandler position='center' />
                 <Text numberOfLines={1} style={styles.screenTitle}>
                     Edit Profile
                 </Text>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl,FlatList ,SafeAreaView} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -48,7 +48,9 @@ import {
   TouchWrapProps,
   AppButtonProp,
   HTagProps,
-  ContainerProps
+  ContainerProps,
+  ItemListModalProps,
+  ListComponentProps
 } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { CustomCalenderProps } from './types';
@@ -244,8 +246,8 @@ export const ImageWrap = (props:ImageWrapProps) => (
       overflow: "hidden",
       //...Elevation(props.elevation),
       position: props.position,
-      width:props?.width || props.widthPercent || "100%",
-      height:props?.height || height(3),
+      width:props.width ? width(props?.width)|| props.widthPercent : "100%",
+      height:props.height? width(props?.height) : height(3),
       backgroundColor: props?.backgroundColor,
       borderRadius: props.borderRadius,
       borderTopLeftRadius: props.borderTopLeftRadius,
@@ -1157,6 +1159,83 @@ export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => 
 
 //export const Rounded = React.memo(_Rounded, areEqual);
 
+export const ListComponent = ({index, item,onPress} : ListComponentProps) => {
+  let name = ""
+  if (item.title) {
+    name = item.title
+  }
+  if (item.name) {
+    name = item.name
+  }
+  if (item.first_name || item.last_name) {
+    name = `${item.first_name} ${item.last_name}`.trim()
+  }
+  if (item.account_name) {
+    name = item.account_name
+  }
+
+  return (
+    <TouchableWrapper
+      style={{justifyContent:'center',alignItems:'center'}}
+      onPress={() => {
+      if (!onPress) {
+        return
+      }
+      onPress()
+    }} key={index}>
+      <Container paddingVertical={1}
+        verticalAlignment='center'
+        borderBottomWidth={0.6}
+        borderColor={AppColors.grayBorder}
+        width={90}
+        marginTop={1}
+      >
+        {/* <P color={AppColors.black1}>{name ? Capitalize(name) : ""}</P> */}
+        <P color={AppColors.black1}>{item}</P>
+      </Container>
+    </TouchableWrapper>
+  )
+}
+
+
+export const ItemListModal = ({data, open, onPressHandler,
+  header_1,
+  header_2, sub_text,
+  getMore,
+  setPage,
+  page,
+
+} : ItemListModalProps) => {
+ 
+  return (
+    <Modal visible={open}>
+          <SafeAreaView style={{ flex: 1 }}>
+            <Container marginBottom={2}>
+              <CloseHandler  position={'center'} />
+            </Container>
+            <FlatList
+              data={data}
+              ItemSeparatorComponent={() => <View />}
+              keyExtractor={(item, i) => i.toString()}
+              contentContainerStyle={CommonStyles.flatList}
+              renderItem={({ item, index }) => <ListComponent item={item} index={index}
+                onPress={() => onPressHandler(item)}
+              />}
+              ListEmptyComponent={<EmptyStateWrapper icon={Images.EmptyDoc}
+                header_1={header_1}
+                header_2={header_2}
+                sub_text={sub_text}
+              />}
+              onEndReachedThreshold={0.1}
+              onEndReached={() => {
+                if (!getMore) return
+                setPage(page + 1)
+              }}
+        />
+        </SafeAreaView>   
+    </Modal>
+  )
+}
 
 const ComponentStyles = StyleSheet.create({
   attendance_tab: {
