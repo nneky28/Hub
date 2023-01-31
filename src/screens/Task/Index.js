@@ -533,7 +533,6 @@ const Index = ({ navigation }) => {
                                             icon={Images.EmptyTeams}
                                             header_1={"No task here"}
                                             sub_text={"When you have, they will show up here."}
-                                            marginTop={1}
                                             backgroundColor={'#F5F5F5'}
                                         />
                                     ) : null
