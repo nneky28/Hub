@@ -20,21 +20,14 @@ height: number,
     underlineColor? : string,
     textColor? : string,
     right? : React.ReactNode
-  onChangeData: (text: string) => void,
+  onChangeData: (text: string|number) => void,
   keyboardType?: KeyboardTypeOptions,
   secureTextEntry?: boolean,
-  value: string,
-  
+  value?: string,
+  autoFocus?:boolean
 }
 
-const CustomInput: React.FC<Props> = (props) => {
-// const {
-// field: { name},
-// form: { errors, touched },
-// ...inputProps
-// } = props
-
-// const hasError = errors[name] && touched[name]
+const CustomInput = (props : Props) => {
 
 return (
   <Container>
@@ -47,13 +40,14 @@ return (
       outlineColor={AppColors.grayBorder}
       keyboardType={props.keyboardType}
       secureTextEntry={props?.secureTextEntry}
+      autoFocus={props?.autoFocus}
 style={[
 {
 backgroundColor: AppColors.gray,
 width: props?.inputWidth ? width(props.inputWidth) : width(90),
 justifyContent: 'center',
 alignSelf: 'center',
-marginTop: props?.inputMarginTop ? height(props.inputMarginTop) : height(2),
+marginTop: props?.inputMarginTop ? height(props.inputMarginTop) : height(1.5),
 height: height(props.height || 5.5),
 fontSize: width(4)
 },

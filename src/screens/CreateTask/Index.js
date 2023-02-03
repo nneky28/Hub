@@ -28,7 +28,7 @@ import { useNavigation } from '@react-navigation/native';
 const Index = ({ visible, onHide, item }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient()  
     const [show, setShow] = useState(false)
     const [open, setOpen] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -55,6 +55,7 @@ const Index = ({ visible, onHide, item }) => {
     }
     const handleDelete = (index) => {
         let arr = [...subTask]
+        // console.log('arr', index)
         arr.splice(index, 1)
         setSubtask(arr)
     }
@@ -199,7 +200,7 @@ const Index = ({ visible, onHide, item }) => {
                                             placeholder="Enter Task description here"
                                             keyboardType={'default'}
                                             multiline={true}
-                                            minHeight={5}
+                                            minHeight={6}
                                             value={data.description}
                                             onChangeData={(value) => {
                                                 setData({ ...data, description: value })
@@ -249,7 +250,7 @@ const Index = ({ visible, onHide, item }) => {
                                         <FlatList
                                             data={subTask}
                                             keyExtractor={(item, index) => index.toString()}
-                                            renderItem={({ item }) =>
+                                            renderItem={({ item, index }) =>
                                                 <View style={styles.subRow}>
                                                     <Image
                                                         resizeMode={'contain'}
@@ -261,6 +262,9 @@ const Index = ({ visible, onHide, item }) => {
                                                         name={item}
                                                         placeholder="Add subtasks"
                                                         keyboardType={'default'}
+                                                        multiline={true}
+                                                        minHeight={5}
+                                                        autoFocus={true}
                                                         value={subData?.[item]}
                                                         onChangeData={(value) => {
                                                             setSubdata({ ...subData, [item]: value })
@@ -268,14 +272,16 @@ const Index = ({ visible, onHide, item }) => {
                                                         right={<TextInput.Icon name={"close"}
                                                             style={CommonStyles.marginTop_2}
                                                             color={AppColors.darkGray}
-                                                            onPress={() => handleDelete(item.index)}
+                                                            onPress={() => handleDelete(index)}
                                                         />}
                                                     />
                                                 </View>
+
                                             }
                                             showsVerticalScrollIndicator={false}
                                             showsHorizontalScrollIndicator={false}
                                         />
+
                                     )}
                                 </Formik>
                             }
@@ -349,3 +355,23 @@ const Index = ({ visible, onHide, item }) => {
 }
 
 export default Index
+
+
+
+ 
+
+// const calcTip = (bill) => {
+//     return bill >=50 && bill <=300 ? bill * 2 :bill * 1
+// }
+ 
+// const bills = [22, 295, 176, 440, 37, 105, 10, 1100, 86, 52]
+// const tips=[]
+// const totals = []
+
+// for (let i = 0; i < bills.length; i++){
+//     const tip = calcTip(bills[i])
+//     tips.push(tip)
+//     totals.push(tips+ tip[i])
+// }
+
+// console.log(tips,bills,totals)

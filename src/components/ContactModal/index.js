@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity
+  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity, Alert
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
@@ -30,12 +30,12 @@ import CreateTask from '../../screens/CreateTask/Index'
 
 const ContactModal = ({ isVisible, onHide, data }) => {
   let address = ""
-  if(data?.address){
-      address = data?.address?.address1 || ""
-      address =   address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2  : address
-      address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
-      address = address && data?.address?.state ? `${address}, ${data?.address?.state}` : data?.address?.state ? data?.address?.state : address
-      address = address && data?.address?.country_display ? `${address}, ${data?.address?.country_display}` : data?.address?.country_display ? data?.address?.country_display : address
+  if (data?.address) {
+    address = data?.address?.address1 || ""
+    address = address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2 : address
+    address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
+    address = address && data?.address?.state ? `${address}, ${data?.address?.state}` : data?.address?.state ? data?.address?.state : address
+    address = address && data?.address?.country_display ? `${address}, ${data?.address?.country_display}` : data?.address?.country_display ? data?.address?.country_display : address
   }
   const contactData = [
     {
@@ -637,6 +637,11 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
     let user = await getData("about_me")
     setEmployee(user)
   }
+  const disabled = () => {
+    if (employee?.id !== item?.created_by?.id) {
+      Alert('You can not delete this task')
+    }
+  }
 
   useEffect(() => {
     getUser()
@@ -664,7 +669,7 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
             <P style={styles.text1}>Edit Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon}
+          <TouchableOpacity style={[styles.textCon]}
             onPress={() => deleteHandler()}
             disabled={(employee?.id !== item?.created_by?.id)}
           >

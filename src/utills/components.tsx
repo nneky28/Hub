@@ -735,11 +735,13 @@ export const EmptyStateWrapper = (props:EmptyStateWrapperProps) => (
       backgroundColor: props.backgroundColor || AppColors.white
     }}
   >
+    <View style={{width:width(50)}}>
     <ImageWrap
       url={props.icon}
-      height={props.height || 30}
+      height={props.height ? height(props.height ) : 50}
       fit="contain"
     />
+</View>
     <SizedBox height={props?.spacing || 2} />
     {
       props.header_1 ? (

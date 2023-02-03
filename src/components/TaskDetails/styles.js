@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
         borderRadius: width(2),
         minHeight: height(8),
         paddingHorizontal: width(4),
-        paddingVertical: height(1.8)
+        paddingVertical: height(1.8),
+        width: width(90),
     },
     name: {
         color: AppColors.black1,

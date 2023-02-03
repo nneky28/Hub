@@ -130,7 +130,8 @@ const CommonStyles = StyleSheet.create({
         paddingBottom: height(8)
     },
     row: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+
     },
     rowAlignItemCenter: {
         flexDirection: 'row',

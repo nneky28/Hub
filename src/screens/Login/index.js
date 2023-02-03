@@ -134,13 +134,14 @@ export default function Dashboard(props) {
               component={CustomInput}
               name="email"
               placeholder="Email"
-              value={data.email}
+              // value={data.email}
               onChangeData={(value) => {
                 setData({ ...data, email: value })
               }}
               keyboardType={"email-address"}
               color={AppColors.black}
             />
+
 
             <Field
               placeholder="Password"

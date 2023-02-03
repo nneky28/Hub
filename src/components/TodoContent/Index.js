@@ -156,22 +156,23 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                     </View>
             }
 
-
+            {console.log('---->>>', item?.sub_tasks_tasksapp[0])}
             <View style={styles.subTaskRow}>
                 {
-                    item?.sub_tasks_tasksapp?.length > 0 ?
-                        <FlatList
-                            data={Object.values(item?.sub_tasks_tasksapp)}
-                            renderItem={({ item }) =>
-                                <View style={styles.content}>
-                                    <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
-                                    <Text numberOfLines={1}
-                                        style={styles.sub}>{item.title}</Text>
-                                </View>
-                            }
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                        : null
+                    item?.sub_tasks_tasksapp?.title === "" ? null :
+                        item?.sub_tasks_tasksapp?.length > 0 ?
+                            <FlatList
+                                data={Object.values(item?.sub_tasks_tasksapp)}
+                                renderItem={({ item }) =>
+                                    <View style={styles.content}>
+                                        <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
+                                        <Text numberOfLines={1}
+                                            style={styles.sub}>{item.title}</Text>
+                                    </View>
+                                }
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                            : null
                 }
             </View>
             <View style={styles.line1} />

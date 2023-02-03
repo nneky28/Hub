@@ -380,7 +380,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                                                 numberOfLines={1}
                                                                 style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
                                                         </View>
-                                                        {index <= 1 ? <View style={styles.line1} /> : null}
+                                                        {index <= 2 ? <View style={styles.line1} /> : null}
                                                     </>
                                                 }
                                                 keyExtractor={(item, index) => index.toString()}
@@ -397,7 +397,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                                                 <FlatList
                                                                     data={subTask}
                                                                     keyExtractor={(item, index) => index.toString()}
-                                                                    renderItem={({ item }) =>
+                                                                    renderItem={({ item, index }) =>
                                                                         <View>
                                                                             <Image
                                                                                 resizeMode={'contain'}
@@ -409,14 +409,16 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                                                                 placeholder="Add subtasks here"
                                                                                 multiline={true}
                                                                                 minHeight={5}
+                                                                                inputWidth={80}
+                                                                                autoFocus={true}
                                                                                 value={subData?.[item]}
                                                                                 onChangeData={(value) => {
                                                                                     setSubdata({ ...subData, [item]: value })
                                                                                 }}
                                                                                 right={<TextInput.Icon name={"close"}
-                                                                                    style={CommonStyles.marginTop_2}
+                                                                                    style={CommonStyles.marginTop_1}
                                                                                     color={AppColors.darkGray}
-                                                                                    onPress={() => handleDelete(item.index)}
+                                                                                    onPress={() => handleDelete(index)}
                                                                                 />}
                                                                             />
                                                                         </View>

@@ -519,10 +519,6 @@ const Index = ({ navigation }) => {
                                 }
 
                                 {/* empty state for other boxes  */}
-
-
-
-
                                 {/* empty state  for all tabs */}
                                 {
                                     (
