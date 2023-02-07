@@ -156,7 +156,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                     </View>
             }
 
-            {console.log('---->>>', item?.sub_tasks_tasksapp[0])}
+
             <View style={styles.subTaskRow}>
                 {
                     item?.sub_tasks_tasksapp?.title === "" ? null :

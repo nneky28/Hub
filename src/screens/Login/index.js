@@ -112,6 +112,7 @@ export default function Dashboard(props) {
             alignItems: "center"
           }}
         >
+
           <ImageWrap
             url={Images.AppLogo}
             height={5}
@@ -161,7 +162,8 @@ export default function Dashboard(props) {
           </>
         </Formik>
 
-        <Container marginTop={3} width={90}>
+        <Container marginTop={3}
+          width={90}>
           <CustomButton
             btnText={'Sign In'}
             handelButtonPress={loginMethod}
