@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -35,7 +35,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps } from './types';
+import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
@@ -769,7 +769,12 @@ export const TouchableWrapper = (props) => (
   </TouchableRipple>
 )
 
-export const UserPINComponent = (props) => {
+export const UserPINComponent = (props : UserPINComponentProps) => {
+  const ref = useRef<TextInput>(null)
+    useEffect(()=>{
+      if(!ref?.current?.focus) return
+      ref?.current?.focus()
+    },[props.action])
   return (
     <React.Fragment>
       <Container

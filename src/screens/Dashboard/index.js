@@ -56,6 +56,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [visible, setVisible] = React.useState(false)
   const [employee_pk, setEmployeePK] = React.useState(null)
   const [category, setCategory] = React.useState("timeoff")
+  const isSecurityVisible = useSelector(state=>state.Config.isSecurityVisible)
 
   const {
     data: assets,
@@ -337,7 +338,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
               <View style={styles.line} />
             </Container>
             {
-              loading ? (
+              loading && !isSecurityVisible ? (
                 <PageLoader />
               ) : (
                 <ScrollView

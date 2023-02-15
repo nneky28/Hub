@@ -127,3 +127,20 @@ export type ItemListModalProps = {
      item : any,
      onPress : () => void
 }
+export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
+
+export type UserPINComponentProps = {
+  action : UserPINActionType,
+  hasPIN : boolean,
+  auth : {
+      user : {
+          firstName : string,
+          lastName : string
+      }
+  },
+  holder : string,
+  setHolder : (param : string) => void,
+  validatePIN : ((param : string) => void) | ((param : string) => Promise<void>),
+  error : string
+  setError : (param : string) => void
+}
