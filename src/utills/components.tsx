@@ -829,7 +829,7 @@ export const UserPINComponent = (props : UserPINComponentProps) => {
 }
 
 
-export const ClockINContainer = ({ setVisible }) => {
+export const ClockINContainer = () => {
   const [current, setCurrent] = React.useState("")
   const auth = useSelector(state => state.Auth)
   const dispatch = useDispatch()
@@ -889,16 +889,7 @@ export const ClockINContainer = ({ setVisible }) => {
         dispatch(setLoaderVisible(false))
         return showFlashMessage({ title: `You clocked out from work at ${moment().format("hh:mm a")}`, type: "success" })
       }
-      if(Platform.OS === "android") await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title : "MyEdge",
-          message : "MyEdge needs access to your location before you can clock in",
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        }
-      )
+      if(Platform.OS === "android") await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
       if(Platform.OS === "ios") await Geolocation.requestAuthorization("always")
       dispatch(setLoaderVisible(true))
       Geolocation.getCurrentPosition(
@@ -913,7 +904,7 @@ export const ClockINContainer = ({ setVisible }) => {
             queryClient.invalidateQueries("attendance_status")
             dispatch(setLoaderVisible(false))
             showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
-          }catch(error){
+          }catch(error : any){
             dispatch(setLoaderVisible(false))
             ToastError(error?.msg)
           }
@@ -932,11 +923,8 @@ export const ClockINContainer = ({ setVisible }) => {
           },
         },
       );
-    } catch (err) {
+    } catch (err :any) {
       dispatch(setLoaderVisible(false))
-      if ((err && err.toString().includes("Location not available")) || err?.name === "LocationError") {
-        return setVisible(true)
-      }
       ToastError(err.msg)
     }
   }

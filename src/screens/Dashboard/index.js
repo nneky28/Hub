@@ -358,7 +358,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                 >
                   <React.Fragment>
 
-                    <ClockINContainer setVisible={setVisible} />
+                    <ClockINContainer />
 
                     {
                       tasks && Array.isArray(tasks) && tasks.length > 0 ?
