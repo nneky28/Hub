@@ -55,6 +55,18 @@ export const APIFunction = {
   timeoff_reqs: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id, id, status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff: (business_id, id, timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  employee_timeoff: async (id) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff/`)
+  },
+  employee_timeoff_taken: async (id,status) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
+  },
+  employee_timeoff_reqs: async (id) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_requests/`)
+  },
   job_anniversary: async (status, page = 1) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
@@ -320,6 +332,24 @@ export const APIFunction = {
     return getAPIs(`/c/${business_id}/employees/${id}/team_members/?page=${page}`)
   },
 
+}
+
+export const useFetchEmployeeTimeOff = (id) => {
+  return useQuery(["employee_timeoff",id],()=>APIFunction.employee_timeoff(id),{
+    enabled : !!id
+  })
+}
+
+export const useFetchEmployeeTimeOffTaken = (id,status) => {
+  return useQuery(["employee_timeoff_taken",id,status],()=>APIFunction.employee_timeoff_taken(id,status),{
+    enabled : !!id && !!status
+  })
+}
+
+export const useFetchEmployeeTimeOffReqs = (id) => {
+  return useQuery(["employee_timeoff_reqs",id],()=>APIFunction.employee_timeoff_reqs(id),{
+    enabled : !!id
+  })
 }
 
 export const useFetchPayrollYears = () => {

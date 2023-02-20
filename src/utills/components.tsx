@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -889,8 +889,18 @@ export const ClockINContainer = ({ setVisible }) => {
         dispatch(setLoaderVisible(false))
         return showFlashMessage({ title: `You clocked out from work at ${moment().format("hh:mm a")}`, type: "success" })
       }
-      dispatch(setLoaderVisible(true))
+      if(Platform.OS === "android") await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title : "MyEdge",
+          message : "MyEdge needs access to your location before you can clock in",
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        }
+      )
       if(Platform.OS === "ios") await Geolocation.requestAuthorization("always")
+      dispatch(setLoaderVisible(true))
       Geolocation.getCurrentPosition(
         async (position) => {
           try{
