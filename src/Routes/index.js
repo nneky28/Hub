@@ -178,6 +178,16 @@ const Routes = () => {
       // Default values are used if a method with return parameter isn't defined.
     });
   }, [])
+
+  const handleOpenSecurityModal = () => {
+    if(route !== "auth_main") return
+    dispatch(setSecurityVisible(true))
+  }
+
+  React.useEffect(()=>{
+    handleOpenSecurityModal()
+  },[route])
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary FallbackComponent={CustomFallBackScreen}>
@@ -193,7 +203,7 @@ const Routes = () => {
                 <Stack.Screen name="Splash" component={Splash} />
                 <Stack.Screen name="Onboard" component={Onboard} />
               </Stack.Navigator>
-            ) : route === "main" ?
+            ) : route === "main" || route === "auth_main" ?
               (
                 <DrawerStack.Navigator
                   screenListeners={{

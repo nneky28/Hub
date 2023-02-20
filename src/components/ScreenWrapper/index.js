@@ -8,7 +8,7 @@ import {height, width} from 'react-native-dimension';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 const ScreenWrapper = ({
-  allowScrollToPosition,
+  allowScrollToPosition = false,
   children,
   statusBarColor = AppColors.white,
   transclucent = false,
