@@ -21,7 +21,7 @@ import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFun
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
-import { setLoaderVisible } from '../../Redux/Actions/Config';
+import { setLoaderVisible, setSecurityVisible } from '../../Redux/Actions/Config';
 import { useQueryClient } from 'react-query';
 const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
@@ -276,6 +276,15 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   useEffect(()=>{
     timeoffResponseHandler()
   },[timeoffData,activeData,reqData,historyData])
+
+  const handleOpenSecurityModal = () => {
+    if(auth.route !== "auth_main") return
+    dispatch(setSecurityVisible(true))
+  }
+
+  React.useEffect(()=>{
+    handleOpenSecurityModal()
+  },[])
 
   useEffect(() => {
     getInfo()
