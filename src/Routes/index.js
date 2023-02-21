@@ -125,13 +125,11 @@ const Routes = () => {
   let subscription;
   const AppStateListener = () => {
     subscription = AppState.addEventListener("change", async nextAppState => {
-      if (nextAppState === "active") {
+      if (nextAppState === "active" && auth?.route === "main") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
         if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
-        let userInfo = await getData("about_me")
         dispatch(setSecurityVisible(true))
-        //dispatch(login({ ...auth, user: userInfo, route: "security" }))
       }
     })
   }
@@ -194,7 +192,7 @@ const Routes = () => {
                 <Stack.Screen name="Splash" component={Splash} />
                 <Stack.Screen name="Onboard" component={Onboard} />
               </Stack.Navigator>
-            ) : route === "main" || route === "auth_main" ?
+            ) : route === "main" ?
               (
                 <DrawerStack.Navigator
                   screenListeners={{

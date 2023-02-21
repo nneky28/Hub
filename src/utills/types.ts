@@ -133,9 +133,9 @@ export type UserPINComponentProps = {
   action : UserPINActionType,
   hasPIN : boolean,
   auth : {
-      user : {
-          firstName : string,
-          lastName : string
+      user? : {
+          first_name? : string,
+          last_name? : string
       }
   },
   holder : string,

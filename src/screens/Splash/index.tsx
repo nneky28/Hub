@@ -7,6 +7,8 @@ import AppColors from '../../utills/AppColors';
 import { getData, storeData } from '../../utills/Methods';
 import { Images } from '../../component2/image/Image';
 import styles from "./styles"
+import { setSecurityVisible } from '../../Redux/Actions/Config';
+//import { getBuildNumber } from 'react-native-device-info';
 
 const Splash = () => {
   const auth = useSelector((state : any) => state.Auth);
@@ -17,8 +19,10 @@ const Splash = () => {
     await storeData("page", 1)
     setTimeout(async () => {
       try {
+        //let build_num = getBuildNumber()
         if (user && about && about.completed_user_onboarding) {
-          dispatch(login({ ...auth, about: about, isLogin: true, route: "auth_main" }));
+          dispatch(login({ ...auth, user: about, isLogin: true, route: "main" }));
+          dispatch(setSecurityVisible(true))
           //dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
         } else if (user && about && !about.completed_user_onboarding) {
           dispatch(login({ ...auth, user: about, isLogin: true, route: "onboard" }));

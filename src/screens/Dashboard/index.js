@@ -21,13 +21,24 @@ import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFun
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
-import { setLoaderVisible, setSecurityVisible } from '../../Redux/Actions/Config';
+import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useQueryClient } from 'react-query';
 const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
 
 
 export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
+
+  const {
+    data: activeBD,
+    isLoading: activeBDLoading
+  } = useFetchBirthdays("active")
+
+  const {
+    data: activeANN,
+    isLoading: activeANNLoading
+  } = useFetchAnniversary("active")
+
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
@@ -56,17 +67,6 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [visible, setVisible] = React.useState(false)
   const [employee_pk, setEmployeePK] = React.useState(null)
   const [category, setCategory] = React.useState("timeoff")
-  const isSecurityVisible = useSelector(state=>state.Config.isSecurityVisible)
-
-  const {
-    data: activeBD,
-    isLoading: activeBDLoading
-  } = useFetchBirthdays("active")
-
-  const {
-    data: activeANN,
-    isLoading: activeANNLoading
-  } = useFetchAnniversary("active")
 
   const {
     data: outData,
@@ -123,6 +123,21 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       setTasks(taskData?.results)
     }
   }
+
+  const getInfo = async () => {
+    try {
+      let about_me = await getData("about_me");
+      setEmployeePK(about_me?.id)
+      let biz = await getStoredBusiness();
+      setBusiness(biz);
+    } catch (err) {
+
+    }
+  }
+
+  useEffect(() => {
+    getInfo()
+  }, [])
 
   useEffect(() => {
     mapDataToState()
@@ -227,16 +242,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     queryClient.invalidateQueries("employee_timeoff_reqs")
   }
 
-  const getInfo = async () => {
-    try {
-      let about_me = await getData("about_me");
-      setEmployeePK(about_me?.id)
-      let biz = await getStoredBusiness();
-      setBusiness(biz);
-    } catch (err) {
-
-    }
-  }
+  
 
   const refreshDashboard = () => {
     getInfo()
@@ -277,18 +283,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     timeoffResponseHandler()
   },[timeoffData,activeData,reqData,historyData])
 
-  const handleOpenSecurityModal = () => {
-    if(auth.route !== "auth_main") return
-    dispatch(setSecurityVisible(true))
-  }
-
-  React.useEffect(()=>{
-    handleOpenSecurityModal()
-  },[])
-
-  useEffect(() => {
-    getInfo()
-  }, [])
+  
 
   return (
     <ScreenWrapper scrollEnabled={false}
@@ -353,7 +348,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
               <View style={styles.line} />
             </Container>
             {
-              loading && !isSecurityVisible ? (
+              loading ? (
                 <PageLoader />
               ) : (
                 <ScrollView

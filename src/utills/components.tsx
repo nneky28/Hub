@@ -798,7 +798,7 @@ export const UserPINComponent = (props : UserPINComponentProps) => {
         {
           props?.hasPIN ? <React.Fragment>
             <P color={AppColors.black1}>Welcome back</P>
-            <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.about?.first_name ? Capitalize(props?.auth?.about?.first_name) : null} {props?.auth?.about?.last_name ? `${Capitalize(props?.auth?.about?.last_name[0])}.` : null}</H1>
+            <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.user?.first_name ? Capitalize(props?.auth?.user?.first_name) : null} {props?.auth?.user?.last_name ? `${Capitalize(props?.auth?.user?.last_name?.[0])}.` : null}</H1>
             {props?.error ? <P color={AppColors.red} style={CommonStyles.marginTop_1}>{props?.error}</P> : null}
           </React.Fragment> : null
         }
@@ -808,7 +808,7 @@ export const UserPINComponent = (props : UserPINComponentProps) => {
             codeLength={4}
             autoFocus={true}
             value={props.holder}
-            onTextChange={value => {
+            onTextChange={(value : string) => {
               props.setError("")
               props?.setHolder(value)
             }}
