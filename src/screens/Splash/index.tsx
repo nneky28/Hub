@@ -31,7 +31,7 @@ const Splash = () => {
     setTimeout(async () => {
       try {
         let build_number = getBuildNumber()
-        if(build_number < stable_build_number){
+        if(Number(build_number) < Number(stable_build_number)){
           setForce(true)
         }else if (user && about && about.completed_user_onboarding) {
           dispatch(login({ ...auth, user: about, isLogin: true, route: "main" }));
