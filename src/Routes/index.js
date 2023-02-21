@@ -125,13 +125,11 @@ const Routes = () => {
   let subscription;
   const AppStateListener = () => {
     subscription = AppState.addEventListener("change", async nextAppState => {
-      if (nextAppState === "active") {
+      if (nextAppState === "active" && auth?.route === "main") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
         if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
-        let userInfo = await getData("about_me")
         dispatch(setSecurityVisible(true))
-        //dispatch(login({ ...auth, user: userInfo, route: "security" }))
       }
     })
   }
@@ -169,7 +167,7 @@ const Routes = () => {
   }
 
   useEffect(() => {
-    inAppUpdatesCheck()
+    //inAppUpdatesCheck()
     Crashes.setListener({
       shouldProcess: function (report) {
         return true; // return true if the crash report should be processed, otherwise false.
@@ -178,6 +176,7 @@ const Routes = () => {
       // Default values are used if a method with return parameter isn't defined.
     });
   }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary FallbackComponent={CustomFallBackScreen}>

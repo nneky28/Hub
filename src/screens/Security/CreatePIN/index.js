@@ -2,7 +2,7 @@ import React, {Component, useEffect} from 'react';
 import {BackHandler, Image, Keyboard} from 'react-native';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import styles from './styles';
-import { H1, P,Container} from '../../../utills/components';
+import { H1, P,Container, PageLoader} from '../../../utills/components';
 import { useDispatch, useSelector } from 'react-redux';
 import AppColors from '../../../utills/AppColors';
 import { TouchableWrapper, UserPINComponent } from '../../../utills/components';
@@ -15,6 +15,7 @@ import { showFlashMessage } from '../../../components/SuccessFlash';
 import MobilePIN from '../MobilePIN';
 import { setLoaderVisible, setSecurityVisible } from '../../../Redux/Actions/Config';
 import moment from "moment"
+import { useIsFetching } from 'react-query';
 
 const CreatePIN = ({onModeChangeHandler}) => {
   const auth = useSelector(state=>state.Auth)
@@ -25,6 +26,7 @@ const CreatePIN = ({onModeChangeHandler}) => {
   const [holder,setHolder] = React.useState("")
   const [action,setAction] = React.useState("")
   const [error,setError] = React.useState("")
+  const isFetching = useIsFetching()
 
   const getOLDPIN = async () => {
     try{
@@ -35,11 +37,11 @@ const CreatePIN = ({onModeChangeHandler}) => {
         setAction("NoMobilePIN")
         return setHasPIN(false)
       }
-      setAction("HasMobilePIN")
       setHasPIN(true)
       var bytes  = CryptoJS.AES.decrypt(userPIN,userInfo.email.replaceAll("_",""));
       var originalText = bytes.toString(CryptoJS.enc.Utf8);
       setOriginal(originalText)
+      setAction("HasMobilePIN")
     }catch(err){
     }
   }
@@ -93,12 +95,12 @@ const CreatePIN = ({onModeChangeHandler}) => {
 
     return () => backHandler.remove();
   },[action])
-
+  
   return (
     <ScreenWrapper>
         {
-          action === "NoMobilePIN" ? <MobilePIN setAction={setAction} /> : 
-          action === "confirm" || action === "create" || action === "HasMobilePIN" ? (
+          action === "NoMobilePIN" && !isFetching ? <MobilePIN setAction={setAction} /> : 
+          (action === "confirm" || action === "create" || action === "HasMobilePIN") && !isFetching ? (
 
             <Container 
               flex={1}>
@@ -148,7 +150,7 @@ const CreatePIN = ({onModeChangeHandler}) => {
           </Container>
 
 
-          ) : null
+          ) : isFetching ? <PageLoader /> : null
         }
     </ScreenWrapper>
   )

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -35,7 +35,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps } from './types';
+import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
@@ -116,6 +116,7 @@ export const P = (props : PTagProps) => (
         fontFamily: FontFamily.BlackSansRegular,
         textAlign: props.textAlign,
         color: props.color || AppColors.black,
+        marginTop: props?.marginTop ? height(props?.marginTop) : null
         //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
       },
       props.style
@@ -769,7 +770,12 @@ export const TouchableWrapper = (props) => (
   </TouchableRipple>
 )
 
-export const UserPINComponent = (props) => {
+export const UserPINComponent = (props : UserPINComponentProps) => {
+  const ref = useRef<TextInput>(null)
+    useEffect(()=>{
+      if(!ref?.current?.focus) return
+      ref?.current?.focus()
+    },[props.action])
   return (
     <React.Fragment>
       <Container
@@ -793,7 +799,7 @@ export const UserPINComponent = (props) => {
         {
           props?.hasPIN ? <React.Fragment>
             <P color={AppColors.black1}>Welcome back</P>
-            <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.about?.first_name ? Capitalize(props?.auth?.about?.first_name) : null} {props?.auth?.about?.last_name ? `${Capitalize(props?.auth?.about?.last_name[0])}.` : null}</H1>
+            <H1 fontSize={6} color={AppColors.black1} style={CommonStyles.marginTop_1}>{props?.auth?.user?.first_name ? Capitalize(props?.auth?.user?.first_name) : null} {props?.auth?.user?.last_name ? `${Capitalize(props?.auth?.user?.last_name?.[0])}.` : null}</H1>
             {props?.error ? <P color={AppColors.red} style={CommonStyles.marginTop_1}>{props?.error}</P> : null}
           </React.Fragment> : null
         }
@@ -803,7 +809,7 @@ export const UserPINComponent = (props) => {
             codeLength={4}
             autoFocus={true}
             value={props.holder}
-            onTextChange={value => {
+            onTextChange={(value : string) => {
               props.setError("")
               props?.setHolder(value)
             }}
@@ -824,7 +830,7 @@ export const UserPINComponent = (props) => {
 }
 
 
-export const ClockINContainer = ({ setVisible }) => {
+export const ClockINContainer = () => {
   const [current, setCurrent] = React.useState("")
   const auth = useSelector(state => state.Auth)
   const dispatch = useDispatch()
@@ -884,8 +890,9 @@ export const ClockINContainer = ({ setVisible }) => {
         dispatch(setLoaderVisible(false))
         return showFlashMessage({ title: `You clocked out from work at ${moment().format("hh:mm a")}`, type: "success" })
       }
-      dispatch(setLoaderVisible(true))
+      if(Platform.OS === "android") await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
       if(Platform.OS === "ios") await Geolocation.requestAuthorization("always")
+      dispatch(setLoaderVisible(true))
       Geolocation.getCurrentPosition(
         async (position) => {
           try{
@@ -898,7 +905,7 @@ export const ClockINContainer = ({ setVisible }) => {
             queryClient.invalidateQueries("attendance_status")
             dispatch(setLoaderVisible(false))
             showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
-          }catch(error){
+          }catch(error : any){
             dispatch(setLoaderVisible(false))
             ToastError(error?.msg)
           }
@@ -917,11 +924,8 @@ export const ClockINContainer = ({ setVisible }) => {
           },
         },
       );
-    } catch (err) {
+    } catch (err :any) {
       dispatch(setLoaderVisible(false))
-      if ((err && err.toString().includes("Location not available")) || err?.name === "LocationError") {
-        return setVisible(true)
-      }
       ToastError(err.msg)
     }
   }

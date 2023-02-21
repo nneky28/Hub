@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
     alignItems: 'center',
+    flex : 1
   },
   header: {
     width: width(100),
@@ -42,7 +43,8 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     paddingTop: height(2), 
     width: width(90), 
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flexDirection : "row"
   },
   line: {
     width: '100%',
@@ -69,9 +71,7 @@ const styles = StyleSheet.create({
     marginTop: height(2),
     width: width(90),
     marginBottom: height(2),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    
+    alignSelf : "center"
   },
   listItemContainer: {
     width: width(90),

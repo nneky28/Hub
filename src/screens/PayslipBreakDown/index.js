@@ -95,6 +95,10 @@ export default function PayslipBreakDown({route,navigation}) {
                 ...payslip?.data?.salary_breakdown && Array.isArray(payslip?.data?.salary_breakdown) ? 
                 payslip?.data?.salary_breakdown.filter(item=>item.name !== "Basic salary").map(item=>{
                   return{sub_title : item.name ? Capitalize(item.name) : "",sub_value : numeral(item.value).format("0,0.00")}
+                }) : [],
+                ...payslip?.data?.payment_additions && Array.isArray(payslip?.data?.payment_additions) ? 
+                payslip?.data?.payment_additions.map(item=>{
+                  return{sub_title : item.name ? Capitalize(item.name) : "",sub_value : numeral(item.amount).format("0,0.00")}
                 }) : []
               ]
             },
@@ -110,7 +114,11 @@ export default function PayslipBreakDown({route,navigation}) {
               menus : [
                 {sub_title : "Staff Loan",sub_value : payslip?.data?.staff_loan ? numeral(payslip.data.staff_loan).format("0,0.00") : "0.00"},
                 {sub_title : "Income Tax",sub_value : payslip?.data?.paye ? numeral(payslip.data.paye).format("0,0.00") : 0},
-                {sub_title : "Others",sub_value : payslip?.data?.other_deductions ? numeral(payslip?.data?.other_deductions).format("0,0.00") : "0.00"}
+                {sub_title : "Others",sub_value : payslip?.data?.other_deductions ? numeral(payslip?.data?.other_deductions).format("0,0.00") : "0.00"},
+                ...payslip?.data?.payment_deductions && Array.isArray(payslip?.data?.payment_deductions) ? 
+                payslip?.data?.payment_deductions.map(item=>{
+                  return{sub_title : item.name ? Capitalize(item.name) : "",sub_value : numeral(item.amount).format("0,0.00")}
+                }) : []
               ]
             }
           ].map((item,index)=><Container key={index} marginTop={2.5} horizontalAlignment="center">

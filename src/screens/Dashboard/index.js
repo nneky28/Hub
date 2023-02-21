@@ -13,7 +13,7 @@ import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
-import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks } from '../../utills/api';
+import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
@@ -28,6 +28,17 @@ const LocationEnabler = Platform.OS === "android" ? require('react-native-locati
 
 
 export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
+
+  const {
+    data: activeBD,
+    isLoading: activeBDLoading
+  } = useFetchBirthdays("active")
+
+  const {
+    data: activeANN,
+    isLoading: activeANNLoading
+  } = useFetchAnniversary("active")
+
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
@@ -58,16 +69,6 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [category, setCategory] = React.useState("timeoff")
 
   const {
-    data: assets,
-    isLoading: assetLoading
-  } = useFetchAssets(employee_pk)
-
-  const {
-    data: benefits,
-    isLoading: benefitLoading
-  } = useFetchBenefits(employee_pk)
-
-  const {
     data: outData,
     isLoading: whosoutLoading
   } = useFetchWhosOut(category)
@@ -78,14 +79,39 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   } = useFetchBirthdays("upcoming")
 
   const {
-    data: activeBD,
-    isLoading: activeBDLoading
-  } = useFetchBirthdays("active")
+    data: assets,
+    isLoading: assetLoading
+  } = useFetchAssets(employee_pk)
 
   const {
-    data: activeANN,
-    isLoading: activeANNLoading
-  } = useFetchAnniversary("active")
+    data: benefits,
+    isLoading: benefitLoading
+  } = useFetchBenefits(employee_pk)
+
+  const {
+    data : timeoffData,
+    isLoading : loadingTimeoff
+  } = useFetchEmployeeTimeOff(employee_pk)
+
+  const {
+    data : activeData,
+    isLoading : loadingActive
+  } = useFetchEmployeeTimeOffTaken(employee_pk,"active")
+
+  const {
+    data : upcomingData,
+    isLoading : loadingUpcoming
+  } = useFetchEmployeeTimeOffTaken(employee_pk,"upcoming")
+
+  const {
+    data : historyData,
+    isLoading : loadingHistory
+  } = useFetchEmployeeTimeOffTaken(employee_pk,"history")
+
+  const {
+    data : reqData,
+    isLoading : loadingReq
+  } = useFetchEmployeeTimeOffReqs(employee_pk)
 
   const {
     data: taskData,
@@ -98,21 +124,44 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     }
   }
 
+  const getInfo = async () => {
+    try {
+      let about_me = await getData("about_me");
+      setEmployeePK(about_me?.id)
+      let biz = await getStoredBusiness();
+      setBusiness(biz);
+    } catch (err) {
+
+    }
+  }
+
+  useEffect(() => {
+    getInfo()
+  }, [])
+
   useEffect(() => {
     mapDataToState()
   }, [taskData])
 
   useEffect(() => {
     if (assetLoading || benefitLoading || activeBDLoading ||
-      upcomingBDLoading || activeANNLoading) {
+      upcomingBDLoading || activeANNLoading ||
+      loadingTimeoff || loadingActive ||
+      loadingHistory || loadingReq ||
+      loadingUpcoming
+      ) {
       dispatch(setLoaderVisible(true))
       return setLoading(true)
     }
     dispatch(setLoaderVisible(false))
     setLoading(false)
-  }, [assetLoading, benefitLoading, activeBDLoading,
+  }, [
+    assetLoading, benefitLoading, activeBDLoading,
     upcomingBDLoading,
-    activeANNLoading, loading
+    activeANNLoading, loading,
+    loadingTimeoff,loadingActive,
+    loadingHistory,loadingReq,
+    loadingUpcoming
   ])
 
 
@@ -167,7 +216,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       let cancel_url = APIFunction.delete_timeoff(biz.business_id, about.id, del.id);
       let res = await deleteAPIs(cancel_url);
       let filtered = requests.filter(item => item.id !== del.id);
-      setRequests(filtered);
+      setRequests(filtered)
       setShow(false);
       setCancel(false);
       return ToastSuccess("Request has been canceled");
@@ -187,40 +236,13 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const closeWeb = () => {
     setWeb(false)
   }
-  const closeAndRefresh = (res) => {
-    setAvailable(res.available)
-    setActive(res.active);
-    setRequests(res.requests);
+  const closeAndRefresh = () => {
+    queryClient.invalidateQueries("employee_timeoff")
+    queryClient.invalidateQueries("employee_timeoff_taken")
+    queryClient.invalidateQueries("employee_timeoff_reqs")
   }
 
-  const getInfo = async () => {
-    try {
-      setLoading(true)
-      let about_me = await getData("about_me");
-      setEmployeePK(about_me?.id)
-      let biz = await getStoredBusiness();
-      let res = await getTimeOffsFunction();
-      var margin = 30;
-      setMargin(width(margin));
-      setIndex(1)
-      if (res.active.length === 0) {
-        var margin = 30;
-        setMargin(width(margin));
-        setIndex(1)
-      }
-      if (res.active.length !== 0) {
-        setIndex(0)
-        setMargin(width(0.1))
-      }
-      setAvailable(res.available)
-      setActive(res.active);
-      setRequests(res.requests);
-      setBusiness(biz);
-      setLoading(false)
-    } catch (err) {
-
-    }
-  }
+  
 
   const refreshDashboard = () => {
     getInfo()
@@ -235,44 +257,36 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       ToastError(err.msg)
     }
   }
-  let requestResolution = () => {
-    Linking.canOpenURL('App-Prefs:LOCATION_SERVICES').then(supported => {
-      if (!supported) {
-      } else {
-        return Linking.openURL('App-Prefs:LOCATION_SERVICES');
-      }
-    }).catch(err => { });
+
+  const timeoffResponseHandler = () => {
+
+    var margin = 30;
+    setMargin(width(margin));
+    setIndex(1)
+    let arr = []
+    if(timeoffData?.results && Array.isArray(timeoffData?.results)){
+      setAvailable(timeoffData?.results)
+    }
+    if(activeData?.results && Array.isArray(activeData?.results)){
+      arr = activeData?.results
+    }
+    if(upcomingData?.results && Array.isArray(upcomingData?.results)){
+      arr = [...arr,...upcomingData?.results]
+    }
+    if(reqData?.results && Array.isArray(reqData?.results)){
+      setRequests(reqData?.results)
+    }
+    setActive(arr)
+    if (activeData?.results && Array.isArray(activeData?.results) && activeData?.results.length > 0) {
+      setIndex(0)
+      setMargin(width(0.1))
+    }
   }
+  useEffect(()=>{
+    timeoffResponseHandler()
+  },[timeoffData,activeData,reqData,historyData])
 
-  if (Platform.OS === "android") {
-    const {
-      PRIORITIES: { HIGH_ACCURACY },
-      addListener,
-      useLocationSettings
-    } = LocationEnabler.default
-    let useLocationSettingsRes = useLocationSettings({
-      priority: HIGH_ACCURACY, // optional: default BALANCED_POWER_ACCURACY
-      alwaysShow: true, // optional: default false
-      needBle: true, // optional: default false
-    });
-    if (useLocationSettingsRes?.[1]) requestResolution = useLocationSettingsRes?.[1]
-
-    let listener = null
-    useEffect(() => {
-      listener = addListener(({ locationEnabled }) => {
-        if (locationEnabled) {
-          setVisible(false)
-        }
-      })
-      return () => {
-        listener.remove();
-      }
-    }, [])
-  }
-
-  useEffect(() => {
-    getInfo()
-  }, [])
+  
 
   return (
     <ScreenWrapper scrollEnabled={false}
@@ -351,7 +365,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                 >
                   <React.Fragment>
 
-                    <ClockINContainer setVisible={setVisible} />
+                    <ClockINContainer />
 
                     {
                       tasks && Array.isArray(tasks) && tasks.length > 0 ?
@@ -505,11 +519,6 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
               }}
               asset={asset}
               btnText={"Submit Report"}
-            />
-
-            <RestrictionModal isVisible={visible} onHide={() => setVisible(false)}
-              onPressHandler={requestResolution}
-
             />
           </React.Fragment>
         )
