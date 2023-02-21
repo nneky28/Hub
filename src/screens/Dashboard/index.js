@@ -263,17 +263,20 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     var margin = 30;
     setMargin(width(margin));
     setIndex(1)
-    
+    let arr = []
     if(timeoffData?.results && Array.isArray(timeoffData?.results)){
       setAvailable(timeoffData?.results)
     }
     if(activeData?.results && Array.isArray(activeData?.results)){
-      setActive(activeData?.results)
+      arr = activeData?.results
+    }
+    if(upcomingData?.results && Array.isArray(upcomingData?.results)){
+      arr = [...arr,...upcomingData?.results]
     }
     if(reqData?.results && Array.isArray(reqData?.results)){
       setRequests(reqData?.results)
     }
-
+    setActive(arr)
     if (activeData?.results && Array.isArray(activeData?.results) && activeData?.results.length > 0) {
       setIndex(0)
       setMargin(width(0.1))
