@@ -10,12 +10,12 @@ import styles from "./styles"
 import { setSecurityVisible } from '../../Redux/Actions/Config';
 import { getBuildNumber } from 'react-native-device-info';
 import { Container, H1, P, TouchableWrapper } from '../../utills/components';
-import { APP_STORE_URL, PLAY_STORE_URL } from '../../utills/Constants';
+import { ANDROID_STABLE_BUILD_NUMBER, APP_STORE_URL, IOS_STABLE_BUILD_NUMBER, PLAY_STORE_URL } from '../../utills/Constants';
 
 const Splash = () => {
   const auth = useSelector((state : any) => state.Auth);
   const dispatch = useDispatch();
-  const stable_build_number = "3.4"
+ 
   const [force,setForce] = React.useState(false)
   
 
@@ -31,6 +31,7 @@ const Splash = () => {
     setTimeout(async () => {
       try {
         let build_number = getBuildNumber()
+        const stable_build_number = Platform.OS === "android" ? ANDROID_STABLE_BUILD_NUMBER : IOS_STABLE_BUILD_NUMBER
         if(Number(build_number) < Number(stable_build_number)){
           setForce(true)
         }else if (user && about && about.completed_user_onboarding) {
@@ -63,22 +64,22 @@ const Splash = () => {
           !force ? <Image source={{ uri: Images.LogoGIF }}
           style={styles.resize}
         /> : <Container
-          style={styles.container}
-        >
-              <Container style={styles.content}>
-                <Image 
-                  source={{uri : Images.AppLogo}}
-                  style={styles.logo}
-                />
-                <H1 fontSize={6}>Myedge Needs an update</H1>
-                <P fontSize={3.5} marginTop={3}>To use this app, download the latest Version</P>
-              </Container>
-              <TouchableWrapper style={styles.button}
-                onPress={onPressHandler}
-              >
-                <H1 style={styles.buttonText}>Update</H1>
-              </TouchableWrapper>
-        </Container>
+            style={styles.container}
+          >
+                <Container style={styles.content}>
+                  <Image 
+                    source={{uri : Images.AppLogo}}
+                    style={styles.logo}
+                  />
+                  <H1 fontSize={6}>Myedge needs an update</H1>
+                  <P fontSize={3.5} marginTop={3}>To use this app, download the latest Version</P>
+                </Container>
+                <TouchableWrapper style={styles.button}
+                  onPress={onPressHandler}
+                >
+                  <H1 style={styles.buttonText}>Update</H1>
+                </TouchableWrapper>
+          </Container>
         }
       </View>
     </ScreenWrapper>

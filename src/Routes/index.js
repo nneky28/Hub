@@ -167,7 +167,7 @@ const Routes = () => {
   }
 
   useEffect(() => {
-    inAppUpdatesCheck()
+    //inAppUpdatesCheck()
     Crashes.setListener({
       shouldProcess: function (report) {
         return true; // return true if the crash report should be processed, otherwise false.
