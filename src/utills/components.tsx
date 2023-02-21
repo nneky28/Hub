@@ -116,6 +116,7 @@ export const P = (props : PTagProps) => (
         fontFamily: FontFamily.BlackSansRegular,
         textAlign: props.textAlign,
         color: props.color || AppColors.black,
+        marginTop: props?.marginTop ? height(props?.marginTop) : null
         //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
       },
       props.style
