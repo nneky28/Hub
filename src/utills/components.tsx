@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid, SafeAreaView, FlatList, KeyboardAvoidingView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -35,8 +35,12 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps } from './types';
+import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import SearchBox from '../components/SearchBox';
+import Button from '../components/Button';
+import styles from "./styles"
+import CustomInput from '../components/CustomInput';
 
 
 const winDimensions = Dimensions.get("window")
@@ -178,6 +182,180 @@ export const useDebounce = (value, delay) => {
   return debouncedValue;
 }
 
+export const ListComponent = ({index, item,onPress} : ListComponentProps) => {
+  let name = ""
+  if(item.title){
+    name = item.title
+  }
+  if(item.name){
+    name = item.name
+  }
+  if(item.first_name || item.last_name){
+    name = `${item.first_name} ${item.last_name}`.trim()
+  }
+  if(item.account_name){
+    name = item.account_name
+  }
+  return(
+    <TouchableWrapper onPress={()=>{
+      if(!onPress){
+        return 
+      }
+      onPress()
+    }} key={index} style={styles.list_component}>
+       <P color={AppColors.black1}>{name ? Capitalize(name) : ""}</P>
+    </TouchableWrapper>
+  )
+}
+
+export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
+  header_1,
+  header_2,sub_text,
+  getMore,
+  setPage,
+  page,
+  saving,
+  type = "",
+  buttonTitle,
+  addNewHandler,
+  handleSearch,
+  error,
+  setError
+} : ItemListModalProps) => {
+  const [add,setAdd] = React.useState(false)
+  const [text,setText] = React.useState("")
+  const [search,setSearch] = React.useState("")
+
+  const onSubmitEditing = (text : string) => {
+    setSearch(text)
+    if(!handleSearch) return
+    setPage(1)
+    handleSearch({
+      type,
+      text : text
+    })
+  }
+  const submitHandler = () => {
+    if(!add) return setAdd(true)
+    if(!addNewHandler) return
+    addNewHandler({
+      type,
+      text
+    })
+  }
+
+  useEffect(()=>{
+    setText("")
+    setAdd(false)
+    if(setError) setError("")
+    if(handleSearch){
+      handleSearch({
+        type,
+        text : text
+      })
+    }
+  },[open])
+  
+  return(
+    <Modal visible={open}>
+        {
+          !add ? (
+              <SafeAreaView style={{flex : 1}}>
+                <Container marginBottom={2}>
+                  <TouchableWrapper onPress={setOpen} size={8}>
+                    <Ionicons name="close" size={width(8)} />
+                  </TouchableWrapper>
+                  {
+                    handleSearch ? <SearchBox title="Search"
+                      onSubmitEditing={onSubmitEditing}
+                      value={search}
+                    /> : null
+                  }
+                  
+                </Container>
+                <FlatList 
+                    data={data}
+                    ItemSeparatorComponent={() => <View />}
+                    keyExtractor={(item,i) => `${item}${i}`.toString()}
+                    contentContainerStyle={CommonStyles.flatList}
+                    renderItem={({item,index})=><ListComponent item={item} index={index}
+                        onPress={()=>onPressHandler(item)}
+                      />}
+                      ListEmptyComponent={<EmptyStateWrapper icon={Images.EmptyDoc} 
+                        header_1={header_1}
+                        header_2={header_2}
+                        sub_text={sub_text}
+                      />}
+                      onEndReachedThreshold={0.1}
+                      onEndReached={()=>{
+                        if(!getMore) return
+                        setPage(page + 1)
+                      }}
+                      ListFooterComponent={()=>{
+                        if(loading) return <Container marginTop={3}>
+                              <ActivityIndicator size={width(8)} color={AppColors.green}/>
+                          </Container> 
+                        return <React.Fragment></React.Fragment>
+                      }}
+                    />
+                {
+                  buttonTitle && addNewHandler ? <Container horizontalAlignment='center'>
+                    <Button title={buttonTitle} onPress={submitHandler}
+                      containerStyle={styles.addNewButton}
+                      textStyle={styles.addNewText}
+                    />
+                  </Container> : null
+                }
+            </SafeAreaView>
+          ) : <SafeAreaView style={{flex : 1}}>
+                <KeyboardAvoidingView
+                  behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                  style={{justifyContent : "flex-end",flex : 1,backgroundColor : AppColors.black2}}
+                >
+                  <Container 
+                    borderTopLeftRadius={width(6)}
+                    borderTopRightRadius={width(6)}
+                    backgroundColor={AppColors.white}
+                    paddingVertical={3}
+                  >
+                    <Container width={90} alignSelf="center">
+                      <H1 color={AppColors.black1} textAlign="center" marginBottom={2}>{buttonTitle}</H1>
+                      {error ?  <P color={AppColors.red}>{error}</P> : null }
+                        <React.Fragment>
+                          <CustomInput 
+                            value={text}
+                            placeholder={type === "Contact" ? "First Name" : type ?  Capitalize(type.toString().replace("_", " ")) : ""}
+                            onChangeData={(value : string)=>{
+                              setText(value)
+                              if(setError) setError("")
+                            }}
+                          />
+                        </React.Fragment>
+                    </Container>
+                    <Container alignSelf="center" width={90} marginTop={10}>
+                      <Button title={"Save"} onPress={submitHandler}
+                        containerStyle={styles.addNewButton}
+                        textStyle={styles.addNewText}
+                        isLoading={saving}
+                        loaderColor={AppColors.green}
+                      />
+                      {
+                        !saving ? <TouchableWrapper onPress={()=>setAdd(false)}
+                        isText
+                        width={90}
+                      >
+                        <H1 color={AppColors.green}>Close</H1>
+                      </TouchableWrapper> : null
+                      }
+                    </Container> 
+                  </Container>
+                </KeyboardAvoidingView>
+          </SafeAreaView>
+        }
+    </Modal>
+  )
+}
+
 export const Container = (props) => (
   <View
     style={[
@@ -204,7 +382,7 @@ export const Container = (props) => (
         marginLeft: props.marginLeft ? width(props.marginLeft) : 0,
         paddingTop: props.paddingTop ? height(props.paddingTop) : 0,
         paddingBottom: props.paddingBottom ? height(props.paddingBottom) : null,
-        paddingVertical: props.paddingVertical ? height(props.paddingVertical) : height(0),
+        paddingVertical: props.paddingVertical ? height(props.paddingVertical) : undefined,
         paddingRight: props.paddingRight ? width(props.paddingRight) : 0,
         paddingLeft: props.paddingLeft ? width(props.paddingLeft) : 0,
         marginRight: props.marginRight ? width(props.marginRight) : 0,
@@ -213,7 +391,7 @@ export const Container = (props) => (
         borderTopWidth: props.borderTopWidth,
         borderBottomWidth: props.borderBottomWidth,
         borderRadius: props.borderRadius,
-        alignSelf: props.alignSelf,
+        alignSelf: props.alignSelf
         //...props.style
       }, props.style
     ]}

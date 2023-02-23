@@ -80,7 +80,7 @@ export default function Profile({navigation}) {
     const {
       data : bankData,
       isLoading : loadingBank
-    } = useFetchBanking(about?.id)
+    } = useFetchBanking()
 
 
     useFocusEffect(useCallback(()=>{
