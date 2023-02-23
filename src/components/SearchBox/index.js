@@ -10,7 +10,7 @@ import styles from './styles';
 
 
 
-export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
+export default function SearchBox({ title, containerStyle, onSubmitEditing,...inputProps }) {
     
     const dispatch = useDispatch();
     useEffect(() => {
@@ -33,6 +33,7 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing }) {
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
+                {...inputProps}
             />
 
         </View>

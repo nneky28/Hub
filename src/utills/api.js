@@ -92,9 +92,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz.business_id}/employees/${id}/update-next-of-kin/`, fd)
   },
-  update_pension: async (fd, id) => {
+  update_pension: async (fd) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/employees/${id}/update_pension_bank_account/`, fd)
+    return postAPIs(`/c/${biz.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
   about_me: async (biz_id = null) => {
     let biz = {}
@@ -435,12 +435,13 @@ export const useFetchEmergency = (employee_id) => {
 }
 
 export const useFetchBanking = (employee_id) => {
-  return useQuery(["banks", employee_id], () => APIFunction.banks(employee_id), {
-    enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== ""
-    )
-  })
+  return useQuery("banks",APIFunction.banks)
 }
+
+export const useFetchProviders = () => {
+  return useQuery("pension_providers",APIFunction.pension_providers)
+}
+
 export const useFetchOnboarding = () => {
   return useQuery(["get_onboarding",], () => APIFunction.get_onboarding()
   )
@@ -631,6 +632,7 @@ export const getAPIs = async (path) => {
         resolve(result.data);
       })
       .catch(error => {
+        console.log("getAPIsERROR",path,error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -660,6 +662,7 @@ export const postAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
+        console.log("postAPIsERROR",path,error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"

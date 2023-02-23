@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
   },
   header: {
     width: width(100),
-    paddingHorizontal: width(5),
+    paddingRight : width(5),
     marginTop: height(2),
     marginBottom: height(1.5),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent : "center"
+    justifyContent : "space-between"
   },
   leftIcon: {
     width: width(5),
