@@ -48,7 +48,7 @@ import { AppState, Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible, setSecurityVisible } from '../Redux/Actions/Config';
-import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
+import { focusManager, QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
@@ -64,15 +64,17 @@ import UsePassword from '../screens/Security/UsePassword';
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      cacheTime: 1000 * 250 * 60, //cache expires in 250 minutes
-      staleTime: 1000 * 250 * 60 //fetch new records every 250 minutes for stale records.
+const queryClient = new QueryClient(
+  {
+    defaultOptions: {
+      queries: {
+        //refetchOnWindowFocus: false,
+        cacheTime: 1000 * 5 * 60, //cache expires in 5 minutes
+        staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
+      },
     },
-  },
-})
+  }
+)
 const inAppUpdates = new SpInAppUpdates(
   false // isDebug
 );
@@ -128,7 +130,8 @@ const Routes = () => {
       if (nextAppState === "active" && auth?.route === "main") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
-        if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
+        focusManager.setFocused(true)
+        if (!token || !moment().isAfter(moment(res).add(5, "minute"))) return
         dispatch(setSecurityVisible(true))
       }
     })
@@ -167,7 +170,7 @@ const Routes = () => {
   }
 
   useEffect(() => {
-    //inAppUpdatesCheck()
+    inAppUpdatesCheck()
     Crashes.setListener({
       shouldProcess: function (report) {
         return true; // return true if the crash report should be processed, otherwise false.
@@ -219,7 +222,8 @@ const Routes = () => {
                           tabBar={(props) => <TabBar {...props} />}
                           screenOptions={{
                             headerShown: false,
-                            tabBarHideOnKeyboard: true
+                            tabBarHideOnKeyboard: true,
+                            unmountOnBlur : true
                           }}
                         >
                           <Tab.Screen name="Home">
@@ -231,7 +235,6 @@ const Routes = () => {
                                 <Stack.Screen name="Todos" component={Todos} />
                                 <Stack.Screen name="People" component={People} />
                                 <Stack.Screen name="MemberProfile" component={MemberProfile} />
-                                <Stack.Screen name="Time off" component={TimeOff} />
                                 <Stack.Screen name="Notifications" component={Notifications} />
                               </Stack.Navigator>
                             )}
@@ -254,8 +257,6 @@ const Routes = () => {
                                 <Stack.Screen name="CreateTask" component={CreateTask} />
                                 <Stack.Screen name="search" component={SearchScreen} />
                                 <Stack.Screen name="profile" component={TeamProfile} />
-
-
 
                               </Stack.Navigator>
                             )}

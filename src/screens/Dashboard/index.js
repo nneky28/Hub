@@ -31,12 +31,14 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
 
   const {
     data: activeBD,
-    isLoading: activeBDLoading
+    isLoading: activeBDLoading,
+    isFetching : activeBDFetching
   } = useFetchBirthdays("active")
 
   const {
     data: activeANN,
-    isLoading: activeANNLoading
+    isLoading: activeANNLoading,
+    isFetching : activeANNFetching
   } = useFetchAnniversary("active")
 
   const navigation = useNavigation()
@@ -75,42 +77,42 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
 
   const {
     data: upcomingBD,
-    isLoading: upcomingBDLoading
+    isFetching : upcomingBDFetching
   } = useFetchBirthdays("upcoming")
 
   const {
     data: assets,
-    isLoading: assetLoading
+    isFetching : assetFetching
   } = useFetchAssets(employee_pk)
 
   const {
     data: benefits,
-    isLoading: benefitLoading
+    isFetching : benefitFetching
   } = useFetchBenefits(employee_pk)
 
   const {
     data : timeoffData,
-    isLoading : loadingTimeoff
+    isFetching : fetchingTimeoff
   } = useFetchEmployeeTimeOff(employee_pk)
 
   const {
     data : activeData,
-    isLoading : loadingActive
+    isFetching : fetchingActive
   } = useFetchEmployeeTimeOffTaken(employee_pk,"active")
 
   const {
     data : upcomingData,
-    isLoading : loadingUpcoming
+    isFetching : fetchingUpcoming
   } = useFetchEmployeeTimeOffTaken(employee_pk,"upcoming")
 
   const {
     data : historyData,
-    isLoading : loadingHistory
+    isFetching : fetchingHistory
   } = useFetchEmployeeTimeOffTaken(employee_pk,"history")
 
   const {
     data : reqData,
-    isLoading : loadingReq
+    isFetching : fetchingReq
   } = useFetchEmployeeTimeOffReqs(employee_pk)
 
   const {
@@ -144,11 +146,13 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   }, [taskData])
 
   useEffect(() => {
-    if (assetLoading || benefitLoading || activeBDLoading ||
-      upcomingBDLoading || activeANNLoading ||
-      loadingTimeoff || loadingActive ||
-      loadingHistory || loadingReq ||
-      loadingUpcoming
+    if (
+        assetFetching || benefitFetching || activeBDFetching ||
+        upcomingBDFetching ||
+        activeANNFetching ||
+        fetchingTimeoff || fetchingActive ||
+        fetchingHistory || fetchingReq ||
+        fetchingUpcoming
       ) {
       dispatch(setLoaderVisible(true))
       return setLoading(true)
@@ -156,12 +160,12 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     dispatch(setLoaderVisible(false))
     setLoading(false)
   }, [
-    assetLoading, benefitLoading, activeBDLoading,
-    upcomingBDLoading,
-    activeANNLoading, loading,
-    loadingTimeoff,loadingActive,
-    loadingHistory,loadingReq,
-    loadingUpcoming
+    assetFetching, benefitFetching, activeBDFetching,
+    upcomingBDFetching,
+    activeANNFetching,
+    fetchingTimeoff,fetchingActive,
+    fetchingHistory,fetchingReq,
+    fetchingUpcoming
   ])
 
 
@@ -285,8 +289,6 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   useEffect(()=>{
     timeoffResponseHandler()
   },[timeoffData,activeData,reqData,historyData])
-
-  
 
   return (
     <ScreenWrapper scrollEnabled={false}

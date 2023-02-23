@@ -43,27 +43,27 @@ export default function TimeOff({navigation}) {
 
     const {
         data : timeoffData,
-        isLoading : loadingTimeoff
+        isFetching : fetchingTimeoff
       } = useFetchEmployeeTimeOff(employee_pk)
     
       const {
         data : activeData,
-        isLoading : loadingActive
+        isFetching : fetchingActive
       } = useFetchEmployeeTimeOffTaken(employee_pk,"active")
     
       const {
         data : upcomingData,
-        isLoading : loadingUpcoming
+        isFetching : fetchingUpcoming
       } = useFetchEmployeeTimeOffTaken(employee_pk,"upcoming")
     
       const {
         data : historyData,
-        isLoading : loadingHistory
+        isFetching : fetchingHistory
       } = useFetchEmployeeTimeOffTaken(employee_pk,"history")
     
       const {
         data : reqData,
-        isLoading : loadingReq
+        isFetching : fetchingReq
       } = useFetchEmployeeTimeOffReqs(employee_pk)
 
     const getUserInfo = async () => {
@@ -146,9 +146,9 @@ export default function TimeOff({navigation}) {
             <View style={styles.line} />
             {
                     (
-                        loadingActive || loadingHistory
-                        || loadingReq || loadingUpcoming || loadingTimeoff    
-                    ) && tabs && Array.isArray(tabs) && tabs.length === 0 ? (
+                        fetchingActive || fetchingHistory
+                        || fetchingReq || fetchingUpcoming || fetchingTimeoff   
+                    ) ? (
                         <PageLoader />
                     ) : (
                         <View
@@ -178,7 +178,7 @@ export default function TimeOff({navigation}) {
                                 showsVerticalScrollIndicator={false}
                                 refreshControl={<CustomRefreshControl 
                                     onRefresh={refreshHandler}
-                                    loading={loadingActive}
+                                    loading={fetchingActive}
                                 />}
                             >
 
