@@ -17,6 +17,7 @@ export type LottieIconProps = {
     size? : number
 }
 
+
 export type PTagProps = {
     fontSize? : number,
     textAlign? : 'flex-start' | 'flex-end' | 'center',
@@ -83,32 +84,32 @@ export type DateModeProps = "text-field" | "calendar"
     isLoading : boolean
   }
 
-export type ItemListModalProps = {
-    setOpen : () => void,
-    loading : boolean,
-    data : readonly any[],
-    open : boolean,
-    onPressHandler : (param : any) => void,
-    header_1 : string,
-    header_2 : string,
-    sub_text : string,
-    getMore : boolean,
-    setPage : (param : number) => void,
-    page : number,
-    saving : boolean,
-    type? : string,
-    buttonTitle : string,
-    addNewHandler? : (param : {
-        type : string,
-        text : string
-      }) => void,
-    handleSearch? : (param : {
-        type : string,
-        text : string
-      }) => void,
-    error : string,
-    setError : (param : string) => void
- }
+ export type ItemListModalProps = {
+  setOpen : () => void,
+  loading : boolean,
+  data : readonly any[],
+  open : boolean,
+  onPressHandler : (param : any) => void,
+  header_1 : string,
+  header_2 : string,
+  sub_text : string,
+  getMore : boolean,
+  setPage : (param : number) => void,
+  page : number,
+  saving? : boolean,
+  type? : string,
+  buttonTitle? : string,
+  addNewHandler? : (param : {
+      type : string,
+      text : string
+    }) => void,
+  handleSearch? : (param : {
+      type : string,
+      text : string
+    }) => void,
+  error? : string,
+  setError? : (param : string) => void
+}
 
  export type PeopleListModalProps = {
     setOpen : () => void,
