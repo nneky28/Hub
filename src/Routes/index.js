@@ -69,7 +69,7 @@ const queryClient = new QueryClient(
     defaultOptions: {
       queries: {
         //refetchOnWindowFocus: false,
-        cacheTime: 1000 * 5 * 60, //cache expires in 5 minutes
+        cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
         staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
       },
     },
