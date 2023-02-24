@@ -65,23 +65,23 @@ import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 
 
-const Routes = () => {
-
-  const queryClient = new QueryClient(
-    {
-      defaultOptions: {
-        queries: {
-          refetchOnWindowFocus : "always",
-          //cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
-          staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
-        },
+const queryClient = new QueryClient(
+  {
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus : true,
+        //cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
+        staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
       },
-    }
-  )
+    },
+  }
+)
+const queryCache = new QueryCache()
+
+const Routes = () => {
   const inAppUpdates = new SpInAppUpdates(
     false // isDebug
   );
-  const queryCache = new QueryCache()
   const Stack = createStackNavigator();
   const DrawerStack = createDrawerNavigator();
   const Tab = createBottomTabNavigator();
