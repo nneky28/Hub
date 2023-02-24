@@ -644,14 +644,7 @@ export const CloseHandler = ({ onPress }:BackHandlerProps) => {
       }}
       style={{
         alignItems: "center",
-        //backgroundColor : AppColors.yellow
       }}>
-      {/* <ImageWrap
-        url={Images.Close}
-        fit={"contain"}
-        height={4}
-        width={4}
-      /> */}
       <Ionicons name="close-outline" size={25} />
     </TouchableWrapper>
   )

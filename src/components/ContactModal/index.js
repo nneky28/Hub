@@ -597,7 +597,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{ margin: 0 }}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
 
       <View style={styles.container1}>
@@ -614,7 +614,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
         </TouchableOpacity>
         <View style={styles.line} />
         <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
-          <P>Delete Task</P>
+          <P color={AppColors.red}>Delete Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
       </View>
@@ -632,6 +632,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
 const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
   const [showForm, setShowForm] = useState(false)
   const [employee, setEmployee] = useState({})
+  const [showDetails, setShowDetails] = useState(false)
 
   const getUser = async () => {
     let user = await getData("about_me")
@@ -643,6 +644,10 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
     }
   }
 
+  const handleView = () => {
+    setShowDetails(true)
+    item
+  }
   useEffect(() => {
     getUser()
   }, [])
@@ -659,21 +664,26 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container1}>
         <React.Fragment>
-          <TouchableOpacity onPress={() => { setShowForm(true), item }}
+          <TouchableOpacity onPress={handleView}
+            style={styles.textCon}>
+            <P>View Task</P>
+          </TouchableOpacity>
+          <View style={styles.line} />
+          <TouchableOpacity onPress={() => { setShowForm(true), item, onHide() }}
             style={styles.textCon}
             disabled={(employee?.id !== item?.created_by?.id)}
           >
-            <P style={styles.text1}>Edit Task</P>
+            <P>Edit Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
           <TouchableOpacity style={[styles.textCon]}
             onPress={() => deleteHandler()}
-            disabled={(employee?.id !== item?.created_by?.id)}
-          >
-            <P style={styles.text1}>Delete task</P>
+            disabled={(employee?.id !== item?.created_by?.id)}>
+            <P color={AppColors.red}>Delete task</P>
           </TouchableOpacity>
         </React.Fragment>
       </View>
@@ -683,6 +693,7 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
         onHide={() => setShowForm(false)}
         item={item}
       />
+      <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
     </Modal>
   );
 };
@@ -705,7 +716,7 @@ const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
       swipeThreshold={0.3}
       style={{ margin: 0 }}
       isVisible={isVisible}>
-      <View style={styles.container1}>
+      <View style={styles.conBox}>
         <TouchableWrapper style={styles.textCon} onPress={() => onPressHandle('In-progress')}>
           <Text style={styles.progress}>Undo completed</Text>
         </TouchableWrapper>

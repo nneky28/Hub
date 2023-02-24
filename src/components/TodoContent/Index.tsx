@@ -3,6 +3,7 @@ import {
     Image,
     Text,
     TouchableOpacity,
+    Platform
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { H1, P, } from '../../utills/components'
@@ -13,24 +14,34 @@ import { ActionModal, UnCompletedModal, SentActionModal } from '../ContactModal'
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { storeData, getData, Capitalize } from '../../utills/Methods';
+import { storeData, Capitalize } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
 
-const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => {
+interface TaskProps {
+    item: any;
+    index: number;
+    title: string;
+    __flattenArr: () => void;
+    isSent: boolean;
+    allTasks: any[];
+    user: any;
+    onPressHandle: () => void;
+}
+
+const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => {
     const queryClient = useQueryClient()
-    const [modal, setModal] = useState(false)
-    const [display, setDisplay] = useState(false)
-    const [subTask, setSubTask] = useState(false)
-    const [completed, setCompleted] = useState(false)
-    const [watch, setWatch] = useState(false)
-    const [sentModal, setSent] = useState(false)
-    const navigation = useNavigation()
+    const [modal, setModal] = useState <boolean>(false)
+    const [display, setDisplay] = useState<boolean>(false)
+    // const [subTask, setSubTask] = useState<boolean>(false)
+    const [completed, setCompleted] = useState<boolean>(false)
+    const [watch, setWatch] = useState<boolean>(false)
+    const [sentModal, setSent] = useState<boolean>(false)
+    // const navigation = useNavigation()
 
     const {
         mutateAsync,
@@ -39,7 +50,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
 
     const deleteTask = useMutation(APIFunction.delete_task)
 
-    const onPressHandler = async (action) => {
+    const onPressHandler = async (action:string) => {
         try {
             let fd = {
                 status: action,
@@ -53,7 +64,13 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                 setModal(false)
                 setCompleted(false)
                 setSent(false)
-                showFlashMessage({ title: `status changed` })
+                showFlashMessage({
+                    title: `Task moved to ${action.toUpperCase()}`,
+                    duration: 4600,
+                    type: 'info',
+                    statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null
+                })
+               
                 setWatch(!watch)
             }
 
@@ -62,9 +79,9 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
         }
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id:number) => {
         try {
-            let res = await deleteTask.mutateAsync(id)
+             await deleteTask.mutateAsync(id)
             queryClient.invalidateQueries()
             showFlashMessage({ title: `Task deleted` })
             setModal(false)
@@ -78,6 +95,8 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
     useEffect(() => {
         __flattenArr()
     }, [allTasks]);
+    
+    // console.log('FD',item)
 
 
     const overDue = moment(item?.due_date).isBefore(new Date())
@@ -108,7 +127,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                                         onPressHandler('In-progress')
                                     }}
                                     style={styles.button}>
-                                    <Text numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</Text>
+                                    <H1 numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</H1>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
@@ -159,7 +178,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
 
             <View style={styles.subTaskRow}>
                 {
-                    item?.sub_tasks_tasksapp?.title === "" ? null :
+                    !item?.sub_tasks_tasksapp?.title ? null :
                         item?.sub_tasks_tasksapp?.length > 0 ?
                             <FlatList
                                 data={Object.values(item?.sub_tasks_tasksapp)}
@@ -170,7 +189,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                                             style={styles.sub}>{item.title}</Text>
                                     </View>
                                 }
-                                keyExtractor={(item, index) => index.toString()}
+                                keyExtractor={(index) => index.toString()}
                             />
                             : null
                 }
@@ -181,10 +200,11 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                 deleteHandler={() => handleDelete(item.id)}
                 loading={isLoading} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-            <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item}
-                onPressHandle={onPressHandler}
+
+            <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item} onPressHandle={onPressHandler} 
                 deleteHandler={() => handleDelete(item.id)}
                 loading={isLoading} />
+            
             <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
 
         </View>

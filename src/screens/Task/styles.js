@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(3)
 
     },
-    mainContainer: { borderWidth: 0.5, width: width(28), borderRadius: width(3.5), borderColor: AppColors.transparent, },
+    mainContainer: { borderWidth: 0.5, borderRadius: width(3.5), borderColor: AppColors.transparent, },
     clipped: { height: height(8.5), resizeMode: 'contain' },
     count: {
         position: 'absolute',

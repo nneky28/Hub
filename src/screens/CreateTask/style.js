@@ -8,15 +8,27 @@ const styles = StyleSheet.create({
     mainViewContainer: {
         backgroundColor: AppColors.white,
         paddingHorizontal: width(5),
-        marginTop: height(10),
+        marginTop: height(20),
         flex: 1,
         borderTopRightRadius: width(5),
-        borderTopLeftRadius: width(5)
+        borderTopLeftRadius: width(5),
+
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: height(5)
+    },
+    formRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: height(5)
+    },
+    line: {
+        width: width(90),
+        height: 1,
+        backgroundColor: AppColors.blackgray,
+        // elevation: 0,
     },
 
     button: {
@@ -128,18 +140,21 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         borderRadius: width(3),
-        backgroundColor: '#EAF8FA'
+        backgroundColor: '#EAF8FA',
+        width: width(90),
+        paddingVertical: height(1.8)
     },
     buttonStyle1: {
-        borderRadius: width(2),
-        borderWidth: 1,
+        borderRadius: width(3),
         borderColor: AppColors.transparent,
         width: width(90),
-        paddingVertical: height(1.5),
-        marginTop: height(2)
+        marginTop: height(2),
+        paddingVertical: height(1.8)
     },
     buttonText: {
         color: AppColors.green,
+        fontFamily: FontFamily.BlackSansBold,
+        fontSize: width(3.5)
     },
     buttonText1: {
         color: AppColors.white,

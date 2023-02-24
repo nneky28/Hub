@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
         margin: 0,
-        marginTop: height(10),
+        marginTop: height(22),
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
+        height: height(3)
     },
 
     title: {
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     row1: {
         alignItems: 'center',
         flexDirection: 'row',
+        paddingHorizontal: width(1),
     },
     line: {
         width: width(100),
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
         marginBottom: height(2),
     },
     subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4) },
-    descriptionCon: { marginTop: height(2) },
+    descriptionCon: { marginTop: height(2), },
     con: {
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
@@ -160,13 +162,32 @@ const styles = StyleSheet.create({
         height: width(3.5),
     },
     newBtn: {
-        alignSelf: 'flex-end',
-        paddingVertical: height(1)
+        marginTop: height(2),
+
     },
     stickyDate: {
         paddingHorizontal: width(5),
         marginTop: height(2),
+    },
+    buttonStyle: {
+        borderWidth: 1,
+        borderColor: AppColors.blackgray,
+        backgroundColor: AppColors.transparent,
+        borderRadius: width(5),
+        width: width(30),
+        alignSelf: 'flex-start',
+        height: width(8),
+    },
+    buttonText: {
+        color: AppColors.black1,
+        fontSize: width(3.1)
+    },
+    subTaskRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: width(4)
     }
+
 
 });
 export default styles;

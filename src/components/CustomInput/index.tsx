@@ -26,7 +26,8 @@ interface Props {
   secureTextEntry?: boolean,
   value?: string,
   autoFocus?: boolean,
-  label? : string
+  label?: string,
+  style:any[]
 }
 
 const CustomInput = (props: Props) => {
@@ -48,7 +49,7 @@ const CustomInput = (props: Props) => {
           {
             backgroundColor: AppColors.gray,
             width: props?.inputWidth ? width(props.inputWidth) : width(90),
-            justifyContent: 'center',
+            // justifyContent: 'center',
             alignSelf: 'center',
             marginTop: props?.inputMarginTop ? height(props.inputMarginTop) : height(1.5),
             height: height(props.height || 5.5),
@@ -57,7 +58,7 @@ const CustomInput = (props: Props) => {
           props.minHeight !== undefined ? {
             minHeight: height(props.minHeight),
             height: undefined
-          } : {}
+          } : {},props.style
         ]}
         theme={
           {

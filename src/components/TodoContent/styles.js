@@ -29,21 +29,18 @@ const styles = StyleSheet.create({
     },
     btn: { flexDirection: 'row', marginTop: height(1) },
     button: {
-        // backgroundColor: '#D9D9D9',
-        backgroundColor: AppColors.white,
+        backgroundColor: '#D9D9D9',
         width: width(25),
         borderTopLeftRadius: width(6),
         borderBottomLeftRadius: width(6),
         borderRightWidth: width(0.5),
-        borderRightColor: '#D9D9D9',
+        borderRightColor: AppColors.white,
         alignItems: 'center',
         padding: height(1),
-        // borderColor: AppColors.green,
-        // borderWidth: width(0.15)
+
     },
     btnPart: {
-        // backgroundColor: '#D9D9D9',
-        backgroundColor: AppColors.white,
+        backgroundColor: '#D9D9D9',
         width: width(6),
         alignItems: 'center',
         justifyContent: 'center',
@@ -61,8 +58,7 @@ const styles = StyleSheet.create({
     },
     by: {
         paddingHorizontal: width(6),
-        paddingVertical: height(0.5)
-
+        // paddingVertical: height(0.5),
     },
     date: {
         color: AppColors.black3,

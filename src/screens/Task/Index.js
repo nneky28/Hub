@@ -338,21 +338,21 @@ const Index = ({ navigation }) => {
                                             {
                                                 selected: "To-Do",
                                                 colorUp: AppColors.newBlue,
-                                                image: Images.clippedPart,
+                                                image: Images.clippedBlue,
                                                 count: statistics ? numeral(statistics?.todo_count).format("0,0") : 0,
                                             },
 
                                             {
                                                 selected: "In Progress",
                                                 colorUp: AppColors.yellow,
-                                                image: Images.clippedPart,
+                                                image: Images.clippedYellow,
                                                 count: statistics ? numeral(statistics?.inprogress_count).format("0,0") : 0,
 
                                             },
                                             {
                                                 selected: "Completed",
                                                 colorUp: AppColors.green,
-                                                image: Images.clippedPart,
+                                                image: Images.clippedGreen,
                                                 count: statistics ? numeral(statistics?.completed_count).format("0,0") : 0,
 
                                             }
@@ -364,6 +364,8 @@ const Index = ({ navigation }) => {
                                         }}>
                                             <Container
                                                 backgroundColor={item.colorUp}
+                                                height={130}
+                                                width={28}
                                                 style={styles.mainContainer}>
                                                 <View>
                                                     <View style={styles.titleCon}>
@@ -371,7 +373,7 @@ const Index = ({ navigation }) => {
                                                         {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
                                                     </View>
                                                     <View>
-                                                        <Image source={{ uri: Images.clippedPart }} style={styles.clipped} />
+                                                        {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
                                                         <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
                                                     </View>
                                                 </View>
@@ -623,21 +625,21 @@ const Index = ({ navigation }) => {
                                         {
                                             selected: "To-Do",
                                             colorUp: AppColors.newBlue,
-                                            image: Images.clippedPart,
+                                            image: Images.clippedBlue,
                                             count: sentStatistics ? numeral(sentStatistics?.todo_count).format("0,0") : 0,
                                         },
 
                                         {
                                             selected: "In Progress",
                                             colorUp: AppColors.yellow,
-                                            image: Images.clippedPart,
+                                            image: Images.clippedYellow,
                                             count: sentStatistics ? numeral(sentStatistics?.inprogress_count).format("0,0") : 0,
 
                                         },
                                         {
                                             selected: "Completed",
                                             colorUp: AppColors.green,
-                                            image: Images.clippedPart,
+                                            image: Images.clippedGreen,
                                             count: sentStatistics ? numeral(sentStatistics?.completed_count).format("0,0") : 0,
 
                                         }
@@ -649,6 +651,8 @@ const Index = ({ navigation }) => {
                                     }}>
                                         <Container
                                             backgroundColor={item.colorUp}
+                                            height={130}
+                                            width={28}
                                             style={styles.mainContainer}>
                                             <View>
                                                 <View style={styles.titleCon}>
@@ -656,7 +660,7 @@ const Index = ({ navigation }) => {
                                                     {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
                                                 </View>
                                                 <View>
-                                                    <Image source={{ uri: Images.clippedPart }} style={styles.clipped} />
+                                                    {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
                                                     <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
                                                 </View>
                                             </View>
@@ -929,21 +933,21 @@ const Index = ({ navigation }) => {
                                         {
                                             selected: "To-Do",
                                             colorUp: AppColors.newBlue,
-                                            image: Images.clippedPart,
+                                            image: Images.clippedBlue,
                                             count: teamCount ? numeral(teamCount?.todo_count).format("0,0") : 0,
                                         },
 
                                         {
                                             selected: "In Progress",
                                             colorUp: AppColors.yellow,
-                                            image: Images.clippedPart,
+                                            image: Images.clippedYellow,
                                             count: teamCount ? numeral(teamCount?.inprogress_count).format("0,0") : 0,
 
                                         },
                                         {
                                             selected: "Completed",
                                             colorUp: AppColors.green,
-                                            image: Images.clippedPart,
+                                            image: Images.clippedGreen,
                                             count: teamCount ? numeral(teamCount?.completed_count).format("0,0") : 0,
 
                                         }
@@ -955,6 +959,8 @@ const Index = ({ navigation }) => {
                                     }}>
                                         <Container
                                             backgroundColor={item.colorUp}
+                                            height={130}
+                                            width={28}
                                             style={styles.mainContainer}>
                                             <View>
                                                 <View style={styles.titleCon}>
@@ -962,7 +968,7 @@ const Index = ({ navigation }) => {
                                                     {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
                                                 </View>
                                                 <View>
-                                                    <Image source={{ uri: Images.clippedPart }} style={styles.clipped} />
+                                                    {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
                                                     <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
                                                 </View>
                                             </View>

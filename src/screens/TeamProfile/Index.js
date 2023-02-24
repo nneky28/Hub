@@ -134,21 +134,21 @@ const Index = ({ route }) => {
                                 {
                                     selected: "To-Do",
                                     colorUp: AppColors.newBlue,
-                                    image: Images.clippedPart,
+                                    image: Images.clippedBlue,
                                     count: counts ? numeral(counts?.todo_count).format("0,0") : 0,
                                 },
 
                                 {
                                     selected: "In Progress",
                                     colorUp: AppColors.yellow,
-                                    image: Images.clippedPart,
+                                    image: Images.clippedYellow,
                                     count: counts ? numeral(counts?.inprogress_count).format("0,0") : 0,
 
                                 },
                                 {
                                     selected: "Completed",
                                     colorUp: AppColors.green,
-                                    image: Images.clippedPart,
+                                    image: Images.clippedGreen,
                                     count: counts ? numeral(counts?.completed_count).format("0,0") : 0,
 
                                 }
@@ -160,6 +160,8 @@ const Index = ({ route }) => {
                             }}>
                                 <Container
                                     backgroundColor={item.colorUp}
+                                    height={130}
+                                    width={28}
                                     style={styles.mainContainer}>
                                     <View>
                                         <View style={styles.titleCon}>
@@ -167,7 +169,7 @@ const Index = ({ route }) => {
                                             {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
                                         </View>
                                         <View>
-                                            <Image source={{ uri: Images.clippedPart }} style={styles.clipped} />
+                                            {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
                                             <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
                                         </View>
                                     </View>

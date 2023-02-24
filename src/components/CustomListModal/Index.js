@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ColorList } from '../../utills/AppColors';
-import { CloseHandler, Container, H1, P, Rounded } from '../../utills/components'
+import { CloseHandler, Container, H1, P, Rounded, ImgPlaceholder } from '../../utills/components'
 import { FlatList, Modal, View, Image, Text } from 'react-native';
 import PersonListComp, { DeptListComp } from '../PersonListComp/index';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
@@ -66,6 +66,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         data: departmentData,
         isFetching: fetchingDepartments,
         isFetchingNextPage: fetchingNextDepartments,
+        loading: loadingDept
     } = useFetchDepartments(deptPage, searchDeptTerm)
 
     const __flattenArr = (param) => {
@@ -102,19 +103,16 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         )
 
     }
-    const RenderItems = ({ item, index }) => {
+    const RenderItems = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => setSelected(index, item)}>
-                <Rounded
-                    marginRight={3}
-                    backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
-                    <H1 fontSize={5} style={styles.team}>
-                        {item}
-                    </H1>
-                </Rounded>
+            <TouchableOpacity onPress={() => setSelected(item)}>
+                <ImgPlaceholder text={item}
+                    size={15} />
             </TouchableOpacity>
         )
     }
+    const alpha = Array.from(Array(26)).map((e, i) => i + 65);
+    const alphabet = alpha.map((x) => String.fromCharCode(x));
 
     useEffect(() => {
         __flattenArr('employee')
@@ -181,9 +179,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                             <Image source={{ uri: Images.SearchIcon }} style={styles.searchBoxStyle} />
                         </TouchableOpacity>
                         <FlatList
-                            data={
-                                ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-                            }
+                            data={alphabet}
                             horizontal
                             renderItem={RenderItems}
                             ItemSeparatorComponent={() => <View style={[CommonStyles.marginRight_3]} />}
@@ -193,6 +189,9 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                         />
                     </View>
                 </Container>
+                {
+                    loadingDept || empLoading && <ActivityIndicator size={width(10)} color={AppColors.green} />
+                }
 
                 <Container>
                     {tab === "Employees" &&
@@ -256,4 +255,4 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
 
 
-export default React.memo(CustomListModal)
+export default CustomListModal;

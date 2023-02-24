@@ -218,7 +218,7 @@ const PeopleList = ({ navigation, route }) => {
             }
 
             {
-                loading && <ActivityIndicator size={width(10)} color={AppColors.green} />
+                loading || loadingTeam && <ActivityIndicator size={width(10)} color={AppColors.green} />
             }
 
 

@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react'
 import styles from './style'
-import { Container, P, CustomCalender, KeyboardAwareWrapper } from '../../utills/components'
+import { Container, P, CustomCalender, KeyboardAwareWrapper, CloseHandler, H1 } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button'
 import { Field, Formik } from 'formik';
@@ -81,14 +81,16 @@ const Index = ({ visible, onHide, item }) => {
 
             let employee = await getData("about_me")
 
+        // moment().format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ')
+            console.log('due dste',data?.due_date)
+
             let fd = {
                 ...data,
-                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data?.due_date).toISOString(true),
+                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data.due_date).toISOString(true),
                 created_by: employee?.id,
                 assigned_to: assignTo?.type === "Employee" ? assignTo.id : assignTo?.type === "Departments" ? assignTo.id : employee.id,
                 department: assignTo?.type === "Departments" ? assignTo.id : null,
                 status: "To-do",
-                // due_date: data?.due_date === "No Date" ? " " : null,
                 sub_tasks: Object.values(subData).map(item => {
                     return {
                         title: item,
@@ -101,7 +103,6 @@ const Index = ({ visible, onHide, item }) => {
             if (item) {
                 fd["id"] = item?.id;
                 let res = await editHandler(fd)
-                //console.log('res', res)
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
@@ -110,6 +111,7 @@ const Index = ({ visible, onHide, item }) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
+                console.log('fd',res)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
@@ -118,6 +120,7 @@ const Index = ({ visible, onHide, item }) => {
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
+            console.log('err',err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -135,11 +138,17 @@ const Index = ({ visible, onHide, item }) => {
         setData({ ...data, due_date: item?.due_date })
     }, [item])
 
+
     return (
         <Modal
             onBackButtonPress={onHide}
             onModalHide={onHide}
-            onBackdropPress={() => setShowDiscard(true)}
+            onBackdropPress={() => {
+                if (data?.title || data?.description ) {    
+                    return  setShowDiscard(true) 
+                }
+                onHide()    
+            }}
             animationInTiming={500}
             animationOutTiming={10}
             backdropOpacity={0.8}
@@ -166,6 +175,11 @@ const Index = ({ visible, onHide, item }) => {
                     />
                 </View> :
                     <View style={styles.mainViewContainer}>
+                        <View style={styles.formRow}>
+                            <H1 marginTop={2}>Create New Task</H1>
+                            <CloseHandler position={'center'} onPress={onHide} />
+                        </View>
+                        <View style={ styles.line} />
                         <KeyboardAwareWrapper
                             showsVerticalScrollIndicator={false}
                             style={{ marginBottom: height(10) }}
@@ -186,6 +200,7 @@ const Index = ({ visible, onHide, item }) => {
                                             name="title"
                                             placeholder="Enter Task Title"
                                             keyboardType={'default'}
+                                            inputMarginTop={3}
                                             autoFocus={true}
                                             value={data.title}
                                             onChangeData={(value) => {
@@ -294,7 +309,7 @@ const Index = ({ visible, onHide, item }) => {
                                 </TouchableOpacity>
                             </Container>
                             <Button
-                                title="Send"
+                                title="Create Task"
                                 containerStyle={styles.buttonStyle1}
                                 textStyle={styles.buttonText1}
                                 onPress={submitHandler}
