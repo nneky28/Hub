@@ -48,7 +48,7 @@ import { AppState, Linking, Platform } from 'react-native';
 import { BASE_URL } from '../utills/Constants';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible, setSecurityVisible } from '../Redux/Actions/Config';
-import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
+import { focusManager, QueryCache, QueryClient, QueryClientProvider } from 'react-query';
 import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
@@ -64,19 +64,23 @@ import UsePassword from '../screens/Security/UsePassword';
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      cacheTime: 1000 * 250 * 60, //cache expires in 250 minutes
-      staleTime: 1000 * 250 * 60 //fetch new records every 250 minutes for stale records.
+
+const queryClient = new QueryClient(
+  {
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus : true,
+        //cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
+        staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
+      },
     },
-  },
-})
+  }
+)
+const queryCache = new QueryCache()
+
 const inAppUpdates = new SpInAppUpdates(
   false // isDebug
 );
-const queryCache = new QueryCache()
 const Stack = createStackNavigator();
 const DrawerStack = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -125,19 +129,21 @@ const Routes = () => {
   let subscription;
   const AppStateListener = () => {
     subscription = AppState.addEventListener("change", async nextAppState => {
-      if (nextAppState === "active") {
+      if (nextAppState === "active" && auth?.route === "main") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
+        focusManager.setFocused(true)
         if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
-        let userInfo = await getData("about_me")
         dispatch(setSecurityVisible(true))
-        //dispatch(login({ ...auth, user: userInfo, route: "security" }))
       }
     })
   }
 
-  useEffect(() => {
+  useEffect(()=>{
     AppStateListener()
+  },[route])
+
+  useEffect(() => {
     getDeepLinkInfo()
     deepLinkListener()
     return () => {
@@ -178,6 +184,7 @@ const Routes = () => {
       // Default values are used if a method with return parameter isn't defined.
     });
   }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary FallbackComponent={CustomFallBackScreen}>
@@ -220,7 +227,8 @@ const Routes = () => {
                           tabBar={(props) => <TabBar {...props} />}
                           screenOptions={{
                             headerShown: false,
-                            tabBarHideOnKeyboard: true
+                            tabBarHideOnKeyboard: true,
+                            unmountOnBlur : true
                           }}
                         >
                           <Tab.Screen name="Home">
@@ -232,7 +240,6 @@ const Routes = () => {
                                 <Stack.Screen name="Todos" component={Todos} />
                                 <Stack.Screen name="People" component={People} />
                                 <Stack.Screen name="MemberProfile" component={MemberProfile} />
-                                <Stack.Screen name="Time off" component={TimeOff} />
                                 <Stack.Screen name="Notifications" component={Notifications} />
                               </Stack.Navigator>
                             )}
@@ -255,8 +262,6 @@ const Routes = () => {
                                 <Stack.Screen name="CreateTask" component={CreateTask} />
                                 <Stack.Screen name="search" component={SearchScreen} />
                                 <Stack.Screen name="profile" component={TeamProfile} />
-
-
 
                               </Stack.Navigator>
                             )}

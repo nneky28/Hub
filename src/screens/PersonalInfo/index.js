@@ -96,6 +96,7 @@ export default function PersonalInfo({ navigation }) {
         mobileNumber2: "",
         state: "",
         city: "",
+        country: "",
         postal_code: ''
     })
     const [show, setShow] = React.useState(false)
@@ -114,24 +115,21 @@ export default function PersonalInfo({ navigation }) {
                         birth_date: profile.about.birth_date,
                         marital_status: profile.about.marital_status,
                         email: profile.about.email,
-                        address: profile.about.address && profile.about.address.address1 ?
-                            profile.about.address.address1 : "",
-                        address2: profile.about.address && profile.about.address.address2 ?
-                            profile.about.address.address2 : "",
-                        phone_number: profile.about.phone_number1,
-                        mobileNumber2: profile.about.phone_number2,
-                        city: profile.about.address && profile.about.address.address1 ?
-                            profile.about.address.city : "",
-                        state: profile.about.address && profile.about.address.address1 ?
-                            profile.about.address.state : "",
-                        postal_code: profile.about.address && profile.about.address.address1 ?
-                            profile.about.address.postal_code : ""
+                        address: profile?.about?.address?.address1 || "",
+                        address2: profile?.about?.address?.address2 || "",
+                        phone_number: profile?.about?.phone_number1 || "",
+                        mobileNumber2: profile?.about?.phone_number2 || "",
+                        city: profile?.about?.address?.city || "",
+                        state: profile?.about?.address?.state || "",
+                        country: profile?.about?.address?.country_display || "",
+                        postal_code: profile?.about?.address?.postal_code || ""
                     }
                 )
             }
         } catch (err) {
         }
     }
+
     useEffect(() => {
         getProfile()
     }, [])
@@ -238,8 +236,7 @@ export default function PersonalInfo({ navigation }) {
                                 name="maritalStatus"
                                 placeholder="Marital Status"
                                 component={CustomModalDropdown}
-                                // value={data.marital_status}
-                                defaultValue={data.marital_status === "Single" ? "Single" : data.marital_status === "Married" ? "Married" : data.marital_status === "Divorced" ? "Divorced" : "Marital Status"}
+                                defaultValue={data.marital_status}
                                 onChangeData={(value) => setData({ ...data, marital_status: value })}
                                 color={AppColors.black}
                                 options={["Single", "Married", "Divorced"]}
@@ -310,8 +307,7 @@ export default function PersonalInfo({ navigation }) {
                                 name="country"
                                 placeholder="Country"
                                 component={CustomModalDropdown}
-                                // value={data.country}
-                                defaultValue={data.country}
+                                defaultValue={data.country || "Country"}
                                 onChangeData={(value) => setData({ ...data, country: value })}
                                 color={AppColors.black}
                                 options={["Nigeria"]}

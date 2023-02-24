@@ -55,6 +55,18 @@ export const APIFunction = {
   timeoff_reqs: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id, id, status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff: (business_id, id, timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  employee_timeoff: async (id) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff/`)
+  },
+  employee_timeoff_taken: async (id,status) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
+  },
+  employee_timeoff_reqs: async (id) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_requests/`)
+  },
   job_anniversary: async (status, page = 1) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
@@ -80,9 +92,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz.business_id}/employees/${id}/update-next-of-kin/`, fd)
   },
-  update_pension: async (fd, id) => {
+  update_pension: async (fd) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/employees/${id}/update_pension_bank_account/`, fd)
+    return postAPIs(`/c/${biz.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
   about_me: async (biz_id = null) => {
     let biz = {}
@@ -177,7 +189,6 @@ export const APIFunction = {
   get_onboarding: async () => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
-    // console.log('here', id)
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
   },
@@ -198,7 +209,6 @@ export const APIFunction = {
     return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
   },
   delete_task: async (fd) => {
-    // console.log('id', fd)
     let biz = await getStoredBusiness()
     return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
   },
@@ -324,6 +334,24 @@ export const APIFunction = {
 
 }
 
+export const useFetchEmployeeTimeOff = (id) => {
+  return useQuery(["employee_timeoff",id],()=>APIFunction.employee_timeoff(id),{
+    enabled : !!id
+  })
+}
+
+export const useFetchEmployeeTimeOffTaken = (id,status) => {
+  return useQuery(["employee_timeoff_taken",id,status],()=>APIFunction.employee_timeoff_taken(id,status),{
+    enabled : !!id && !!status
+  })
+}
+
+export const useFetchEmployeeTimeOffReqs = (id) => {
+  return useQuery(["employee_timeoff_reqs",id],()=>APIFunction.employee_timeoff_reqs(id),{
+    enabled : !!id
+  })
+}
+
 export const useFetchPayrollYears = () => {
   return useQuery("payroll_years", APIFunction.payroll_years)
 }
@@ -407,12 +435,13 @@ export const useFetchEmergency = (employee_id) => {
 }
 
 export const useFetchBanking = (employee_id) => {
-  return useQuery(["banks", employee_id], () => APIFunction.banks(employee_id), {
-    enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== ""
-    )
-  })
+  return useQuery("banks",APIFunction.banks)
 }
+
+export const useFetchProviders = () => {
+  return useQuery("pension_providers",APIFunction.pension_providers)
+}
+
 export const useFetchOnboarding = () => {
   return useQuery(["get_onboarding",], () => APIFunction.get_onboarding()
   )

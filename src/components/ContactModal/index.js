@@ -240,9 +240,8 @@ const __TimeoffModal = ({ isVisible, onHide, timeoff_id, closeAndRefresh }) => {
         ...data, timeoff: timeoff_id
       }
       await postAPIs(timeoff_url, fd);
-      let res = await getTimeOffsFunction();
       storeData("curr_timeoff", null)
-      closeAndRefresh(res)
+      closeAndRefresh()
       setLoading(false)
       dispatch(setLoaderVisible(false));
       showFlashMessage({ title: "Request has been submitted for processing" })

@@ -159,7 +159,7 @@ const CommonStyles = StyleSheet.create({
     },
     flatList: {
         paddingHorizontal: width(5),
-        // paddingVertical: height(2),
+        paddingVertical: height(2),
     },
 });
 export default CommonStyles;

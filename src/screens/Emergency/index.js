@@ -79,7 +79,8 @@ export default function NextKin({navigation,route}) {
         const {emergency} = route.params;
         setData({
             ...data,
-           ...emergency
+           ...emergency,
+           country : emergency?.country_display || ""
         })
     }
     useEffect(()=>{
@@ -210,7 +211,7 @@ export default function NextKin({navigation,route}) {
                             name="country" 
                             placeholder="Country"
                             component={CustomModalDropdown}
-                            value={data.country}
+                            defaultValue={data.country || "Country"}
                             onChangeData={(value)=>setData({...data,country : value})}
                             color={AppColors.black}
                             options={["Nigeria"]}

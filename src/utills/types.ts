@@ -104,87 +104,6 @@ export type ContainerProps = {
   children?: React.ReactNode;
 }
 
-export type CustomCalenderModalProps = CustomCalenderProps & {
-  onHide : () => void
-  show : boolean
-}
-export type RoundedProps= {
-  backgroundColor?: any;
-  size?: number;
-  radius?: number;
-  position?: "absolute" | "relative";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-  elevation?: number;
-  children?: React.ReactNode;
-}
-export type ImageWrapProps ={
-  overflow?: string;
-  source?: any;
-  url?: any;
-  height?: number;
-  width?: number;
-  widthPercent?: any;
-  backgroundColor?: any;
-  borderRadius?: number;
-  borderTopLeftRadius?: number;
-  borderBottomLeftRadius?: number;
-  margin?: number;
-  marginVertical?: number;
-  marginHorizontal?: number;
-  marginRight?: number;
-  marginLeft?: number;
-  marginBottom?: number;
-  marginTop?: number;
-  padding?: number;
-  position?: "absolute" | "relative";
-  fit?: "contain" | "cover" | "stretch" | "repeat" | "center";
-  children?: React.ReactNode;
-}
-export type CustomFallBackScreenProps = {
-  error : Error
-  resetError: () => void,
-}
-export type UserPINComponentProps = {
-  action : UserPINActionType,
-  hasPIN : boolean,
-  auth : {
-      user : {
-          firstName : string,
-          lastName : string
-      }
-  },
-  holder : string,
-  setHolder : (param : string) => void,
-  validatePIN : ((param : string) => void) | ((param : string) => Promise<void>),
-  error : string
-  setError : (param : string) => void
-}
-export type EmptyStateWrapperProps = {
-  marginTop? : number
-  marginBottom? : number
-  backgroundColor? : string
-  icon? : string
-  height? : number
-  header_1? : string
-  header_2? : string
-  sub_text?: string,
-  spacing?:number
-}
-export type TouchableWrapperProps = {
-  onPress : (param? : any) => void
-  rippleColor? : string,
-  isText? : boolean,
-  height? : number,
-  width? : number
-  size? : number,
-  style? : ViewStyle | ViewStyle[],
-  disabled? : boolean
-  onLayout? : (event : LayoutChangeEvent) => void,
-  children : React.ReactNode
-}
 export type PTagProps = {
     fontSize? : number,
     textAlign? : 'flex-start' | 'flex-end' | 'center',
@@ -252,32 +171,32 @@ export type DateModeProps = "text-field" | "calendar"
     isLoading : boolean
   }
 
-export type ItemListModalProps = {
-    setOpen : () => void,
-    loading : boolean,
-    data : readonly any[],
-    open : boolean,
-    onPressHandler : (param : any) => void,
-    header_1 : string,
-    header_2 : string,
-    sub_text : string,
-    getMore : boolean,
-    setPage : (param : number) => void,
-    page : number,
-    saving : boolean,
-    type? : string,
-    buttonTitle : string,
-    addNewHandler? : (param : {
-        type : string,
-        text : string
-      }) => void,
-    handleSearch? : (param : {
-        type : string,
-        text : string
-      }) => void,
-    error : string,
-    setError : (param : string) => void
- }
+ export type ItemListModalProps = {
+  setOpen : () => void,
+  loading : boolean,
+  data : readonly any[],
+  open : boolean,
+  onPressHandler : (param : any) => void,
+  header_1 : string,
+  header_2 : string,
+  sub_text : string,
+  getMore : boolean,
+  setPage : (param : number) => void,
+  page : number,
+  saving? : boolean,
+  type? : string,
+  buttonTitle? : string,
+  addNewHandler? : (param : {
+      type : string,
+      text : string
+    }) => void,
+  handleSearch? : (param : {
+      type : string,
+      text : string
+    }) => void,
+  error? : string,
+  setError? : (param : string) => void
+}
 
  export type PeopleListModalProps = {
     setOpen : () => void,
@@ -295,4 +214,21 @@ export type ItemListModalProps = {
      index : number, 
      item : any,
      onPress : () => void
- }
+}
+export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
+
+export type UserPINComponentProps = {
+  action : UserPINActionType,
+  hasPIN : boolean,
+  auth : {
+      user? : {
+          first_name? : string,
+          last_name? : string
+      }
+  },
+  holder : string,
+  setHolder : (param : string) => void,
+  validatePIN : ((param : string) => void) | ((param : string) => Promise<void>),
+  error : string
+  setError : (param : string) => void
+}

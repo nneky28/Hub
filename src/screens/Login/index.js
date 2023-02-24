@@ -80,7 +80,6 @@ export default function Dashboard(props) {
       ToastSuccess("Login was successful")
       return dispatch(login({ ...auth, user: { userName: "Joe", ...about_me }, route: about_me.completed_user_onboarding ? "main" : "onboard", isLogin: true }));
     } catch (err) {
-
       dispatch(setLoaderVisible(false));
       let msg = "";
       if (err.msg && err.msg.code === "invalid_credentials") {
