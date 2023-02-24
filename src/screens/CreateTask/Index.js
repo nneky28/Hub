@@ -86,7 +86,7 @@ const Index = ({ visible, onHide, item }) => {
 
             let fd = {
                 ...data,
-                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data.due_date).toISOString(true),
+                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ'),
                 created_by: employee?.id,
                 assigned_to: assignTo?.type === "Employee" ? assignTo.id : assignTo?.type === "Departments" ? assignTo.id : employee.id,
                 department: assignTo?.type === "Departments" ? assignTo.id : null,

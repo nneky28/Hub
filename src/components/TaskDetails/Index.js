@@ -32,6 +32,7 @@ import { downIcon, } from '../../assets/images';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../ScreenWrapper/index';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import CreateTask from '../../screens/CreateTask/Index';
 
 
 const Index = ({ isVisible, onHide, item, title, navigation }) => {
@@ -51,6 +52,9 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
     const [comment, setComment] = useState([])
     const [checked, setChecked] = useState(false)
     const [text, setText] = useState("")
+    const [addctrlBtn, setAddCtrlBtn] = useState(true)
+    const [subContainer, setSubContainer] = useState(false)
+    const [showForm, setShowForm] = useState(false)
 
 
     const {
@@ -134,6 +138,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
             }
             let res = await mutateAsync(fd)
             queryClient.invalidateQueries()
+            setSubContainer(false)
             setText("")
             showFlashMessage({ title: "sub Task successfully assigned" })
         } catch (err) {
@@ -174,6 +179,7 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
         let text = "task" + count
         setSubtask([...subTask, text])
         setCount(count + 1)
+
     }
     const handleDelete = (index) => {
         let arr = [...subTask]
@@ -227,9 +233,10 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                             title="Edit task"
                             containerStyle={styles.buttonStyle}
                             textStyle={styles.buttonText}
-                        // onPress={pressHandler}
+                            onPress={() => alert("hello")}
                         />
                         <View style={styles.line} />
+                        {console.log('hello', setShowForm)}
 
                         <View style={styles.descriptionCon}>
                             <H1 color={AppColors.black1}>Task Description</H1>
@@ -270,95 +277,148 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                         <P color={AppColors.green}>Add subtask</P>
                                     </TouchableOpacity>
                                 </View> :
-                                <View style={styles.addSubtask}>
-                                    <TouchableOpacity
-                                        onPress={_subTask}
-                                        style={styles.addBtn}>
-                                        <Ionicons name='add' size={15} color={AppColors.green} />
-                                        <P color={AppColors.green}>Add subtask</P>
-                                    </TouchableOpacity>
+                                <View>
+                                    {addctrlBtn &&
+                                        <View style={styles.addSubtask}>
+
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setAddCtrlBtn(false)
+                                                    setSubContainer(true)
+
+                                                }}
+                                                style={styles.addBtn}>
+                                                <Ionicons name='add' size={15} color={AppColors.green} />
+                                                <P color={AppColors.green}>Add subtask</P>
+                                            </TouchableOpacity>
+                                        </View>
+                                    }
+                                </View>
+
+                            }
+
+
+
+                            {
+                                item?.sub_tasks_tasksapp?.length !== 0 &&
+                                <View style={styles.subTaskContainer}>
+                                    <View style={CommonStyles.row}>
+                                        <FlatList
+                                            data={Object.values(item?.sub_tasks_tasksapp)}
+                                            renderItem={({ item, index }) =>
+                                                <>
+                                                    <View style={CommonStyles.row}>
+                                                        {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
+                                                            <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
+                                                        </TouchableOpacity> :
+                                                            <TouchableOpacity onPress={() => handleChecked(item)}>
+                                                                {/* <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /> */}
+                                                                <Image
+                                                                    source={{ uri: Images.SubTaskBox }}
+                                                                    style={styles.leftIcon} />
+                                                            </TouchableOpacity>}
+
+                                                        <Text
+                                                            numberOfLines={1}
+                                                            style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
+                                                    </View>
+                                                    {index <= 10 ? <View style={styles.line1} /> : null}
+                                                </>
+                                            }
+                                            keyExtractor={(item, index) => index.toString()}
+                                        />
+                                    </View>
+
+                                    {
+                                        subTask ?
+                                            <KeyboardAvoidingScrollView>
+                                                <Formik>
+                                                    {({ }) => (
+                                                        <FlatList
+                                                            data={subTask}
+                                                            keyExtractor={(item, index) => index.toString()}
+                                                            renderItem={({ item, index }) =>
+                                                                <View style={styles.subTaskRow}>
+                                                                    <Field
+                                                                        component={CustomInput}
+                                                                        placeholder="Add subtasks here"
+                                                                        multiline={true}
+                                                                        minHeight={5}
+                                                                        inputWidth={70}
+                                                                        autoFocus={true}
+                                                                        style={{ marginRight: width(5), }}
+                                                                        value={text}
+                                                                        onChangeData={(text) => {
+                                                                            setText(text)
+                                                                        }}
+                                                                        right={<TextInput.Icon name={"close"}
+                                                                            style={CommonStyles.marginTop_1}
+                                                                            color={AppColors.darkGray}
+                                                                            onPress={() => handleDelete(index)}
+                                                                        />}
+                                                                    />
+                                                                    {text !== "" ? <TouchableOpacity
+                                                                        style={styles.newBtn}
+                                                                        onPress={submitHandler}>
+                                                                        <Ionicons name='send' size={15} color={AppColors.green} />
+                                                                    </TouchableOpacity> : null}
+                                                                </View>
+                                                            }
+                                                            showsVerticalScrollIndicator={false}
+                                                            showsHorizontalScrollIndicator={false}
+                                                        />
+                                                    )}
+                                                </Formik>
+                                            </KeyboardAvoidingScrollView>
+                                            : null
+                                    }
+
                                 </View>
                             }
 
-                            <View style={styles.subTaskContainer}>
-                                <View style={CommonStyles.row}>
-                                    <FlatList
-                                        data={Object.values(item?.sub_tasks_tasksapp)}
-                                        renderItem={({ item, index }) =>
-                                            <>
-                                                <View style={CommonStyles.row}>
-                                                    {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
-                                                        <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
-                                                    </TouchableOpacity> :
-                                                        <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                            {/* <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /> */}
-                                                            <Image
-                                                                source={{ uri: Images.SubTaskBox }}
-                                                                style={styles.leftIcon} />
-                                                        </TouchableOpacity>}
 
-                                                    <Text
-                                                        numberOfLines={1}
-                                                        style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
-                                                </View>
-                                                {index <= 10 ? <View style={styles.line1} /> : null}
-                                            </>
-                                        }
-                                        keyExtractor={(item, index) => index.toString()}
-                                    />
-                                </View>
+                            {
+                                subContainer &&
+                                <View style={[styles.subTaskContainer, CommonStyles.marginTop_3]}>
+                                    <KeyboardAvoidingScrollView>
+                                        <Formik>
+                                            {({ }) => (
 
-                                {
-                                    subTask ?
-
-                                        <KeyboardAvoidingScrollView>
-
-                                            <Formik>
-                                                {({ }) => (
-
-                                                    <FlatList
-                                                        data={subTask}
-                                                        keyExtractor={(item, index) => index.toString()}
-                                                        renderItem={({ item, index }) =>
-                                                            <View style={styles.subTaskRow}>
-                                                                <Field
-                                                                    component={CustomInput}
-                                                                    placeholder="Add subtasks here"
-                                                                    multiline={true}
-                                                                    minHeight={5}
-                                                                    inputWidth={70}
-                                                                    autoFocus={true}
-                                                                    style={{ marginRight: width(5), }}
-                                                                    value={text}
-                                                                    onChangeData={(text) => {
-                                                                        setText(text)
-                                                                    }}
-                                                                    right={<TextInput.Icon name={"close"}
-                                                                        style={CommonStyles.marginTop_1}
-                                                                        color={AppColors.darkGray}
-                                                                        onPress={() => handleDelete(index)}
-                                                                    />}
-                                                                />
-                                                                {text !== "" ? <TouchableOpacity
-                                                                    style={styles.newBtn}
-                                                                    onPress={submitHandler}>
-                                                                    <Ionicons name='send' size={15} color={AppColors.green} />
-                                                                </TouchableOpacity> : null}
-                                                            </View>
-                                                        }
-                                                        showsVerticalScrollIndicator={false}
-                                                        showsHorizontalScrollIndicator={false}
+                                                <View style={styles.subTaskRow}>
+                                                    <Field
+                                                        component={CustomInput}
+                                                        placeholder="Add subtasks here"
+                                                        multiline={true}
+                                                        minHeight={5}
+                                                        inputWidth={70}
+                                                        autoFocus={true}
+                                                        style={{ marginRight: width(5), }}
+                                                        value={text}
+                                                        onChangeData={(text) => {
+                                                            setText(text)
+                                                        }}
+                                                        right={<TextInput.Icon name={"close"}
+                                                            style={CommonStyles.marginTop_1}
+                                                            color={AppColors.darkGray}
+                                                            onPress={() => handleDelete(index)}
+                                                        />}
                                                     />
-                                                )}
-                                            </Formik>
+                                                    {text !== "" ? <TouchableOpacity
+                                                        style={styles.newBtn}
+                                                        onPress={submitHandler}>
+                                                        <Ionicons name='send' size={15} color={AppColors.green} />
+                                                    </TouchableOpacity> : null}
+                                                </View>
 
 
 
-                                        </KeyboardAvoidingScrollView>
-                                        : null
-                                }
+                                            )}
+                                        </Formik>
+                                    </KeyboardAvoidingScrollView>
 
-                            </View>
+                                </View>
+                            }
+
 
                         </View>
                         <View style={styles.descriptionCon}>
@@ -400,6 +460,11 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                     </View>
                 }
             </ScreenWrapper>
+            <CreateTask
+                visible={showForm}
+                onHide={() => setShowForm(false)}
+                item={item}
+            />
         </Modal>
 
 
