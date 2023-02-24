@@ -5,6 +5,7 @@ import { FontFamily } from '../../utills/FontFamily';
 import DropDown from '../PaperDropdown';
 import { Container } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
+import { Keyboard } from 'react-native';
 
 
 type optionType = {label : string, value : string }
@@ -52,6 +53,7 @@ const CustomModalDropdown = (props : DropDownProps) => {
           mode={"outlined"}
           visible={showDropDown}
           showDropDown={() => {
+            Keyboard.dismiss()
             if(props.setOpen) return props.setOpen(true)
             setShowDropDown(true)
           }}

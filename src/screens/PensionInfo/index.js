@@ -33,17 +33,15 @@ export default function PensionInfo({navigation}) {
     // const [bankHolder,setBankHolder] = useState([]);
     // const [provHolder,setProvHolder] = useState([]);
     const [disabled,setDisabled] = useState(false)
-    //const [verifying,setVerifying] = useState(false)
     const auth = useSelector(state=>state.Auth)
 
 
     const [visible,setVisible]  = React.useState(false)
     const [open,setOpen]  = React.useState(false)
     const [reload,setReload] = React.useState("")
-    const [reloadTerm] = useDebounce(reload,200)
+    const reloadTerm = useDebounce(reload,200)
     const queryClient = useQueryClient()
     const storedEmployee = useSelector(state=>state.Employee)
-    const [loading,setLoading] = React.useState(false)
 
     const {
         mutateAsync : updatePension,
@@ -85,7 +83,6 @@ export default function PensionInfo({navigation}) {
                     msg = `${Capitalize(req.replace("_"," "))} is required`
                 }
             }
-
             //CHECK FOR ONDEBOUNCE SUBMISSION
             if((failed && param === "reload") || (reloadTerm === "" && param === "reload")) return
             if(param === "reload" && data.account_number.length < 10) return
@@ -98,7 +95,6 @@ export default function PensionInfo({navigation}) {
             if(required.length && required.includes("account_number") && data.account_number.length < 10){
                 return ToastError("Please provide a valid account number.")
             }
-            setLoading(true)
             if(required.length && required.includes("account_number") && disabled){
                 let fd = {
                     bank_code : data.bank_code,
@@ -106,8 +102,7 @@ export default function PensionInfo({navigation}) {
                 }
                 let res = await bankVerify(fd)
                 setDisabled(false)
-                setData({...data,account_name : res.account_name})
-                return setLoading(false)
+                return setData({...data,account_name : res.account_name})
             }
             let fd  = {is_pension_applicable : false}
             if(data.bank){
@@ -128,13 +123,11 @@ export default function PensionInfo({navigation}) {
             storeData("about_me",res)
             storeData("profile",{...profile,about : res})
             ToastSuccess("Record has been saved");
-            setLoading(false)
             if(auth.route !== "main"){
                 return navigation.navigate("EditPhoto")
             }
             return navigation.goBack()
         }catch(err){
-            setLoading(false)
             ToastError(err.msg)
         }
     }
@@ -177,9 +170,10 @@ export default function PensionInfo({navigation}) {
                 </View>
                 <TouchableOpacity
                     onPress={handleSubmit}
+                    disabled={verifying || isLoading}
                 >
                    {
-                       loading ? <ActivityIndicator size={width(6)} color={AppColors.green} /> :  <H1 color={AppColors.green}>Save</H1>
+                       verifying || isLoading ? <ActivityIndicator size={width(6)} color={AppColors.green} /> :  <H1 color={AppColors.green}>Save</H1>
                    }
                 </TouchableOpacity>
             </View>
