@@ -65,6 +65,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [tasks, setTasks] = React.useState([])
   const [task, setTask] = React.useState(null)
   const auth = useSelector(state => state.Auth)
+  const isSecurityVisible = useSelector(state=>state.Config.isSecurityVisible)
   const [processing, setProcessing] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
   const [employee_pk, setEmployeePK] = React.useState(null)
@@ -353,7 +354,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
               <View style={styles.line} />
             </Container>
             {
-              loading ? (
+              loading && !isSecurityVisible ? (
                 <PageLoader />
               ) : (
                 <ScrollView

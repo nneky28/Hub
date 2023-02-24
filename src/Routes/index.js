@@ -64,27 +64,28 @@ import UsePassword from '../screens/Security/UsePassword';
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 
+
 const queryClient = new QueryClient(
   {
     defaultOptions: {
       queries: {
-        //refetchOnWindowFocus: false,
-        cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
+        refetchOnWindowFocus : true,
+        //cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
         staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
       },
     },
   }
 )
-const inAppUpdates = new SpInAppUpdates(
-  false // isDebug
-);
 const queryCache = new QueryCache()
-const Stack = createStackNavigator();
-const DrawerStack = createDrawerNavigator();
-const Tab = createBottomTabNavigator();
-
 
 const Routes = () => {
+  const inAppUpdates = new SpInAppUpdates(
+    false // isDebug
+  );
+  const Stack = createStackNavigator();
+  const DrawerStack = createDrawerNavigator();
+  const Tab = createBottomTabNavigator();
+
   const route = useSelector((state) => state.Auth.route);
   const auth = useSelector((state) => state.Auth)
   const dispatch = useDispatch();
@@ -131,14 +132,17 @@ const Routes = () => {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
         focusManager.setFocused(true)
-        if (!token || !moment().isAfter(moment(res).add(5, "minute"))) return
+        if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
         dispatch(setSecurityVisible(true))
       }
     })
   }
 
-  useEffect(() => {
+  useEffect(()=>{
     AppStateListener()
+  },[route])
+
+  useEffect(() => {
     getDeepLinkInfo()
     deepLinkListener()
     return () => {
