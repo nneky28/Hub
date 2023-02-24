@@ -78,14 +78,15 @@ const queryClient = new QueryClient(
 )
 const queryCache = new QueryCache()
 
-const Routes = () => {
-  const inAppUpdates = new SpInAppUpdates(
-    false // isDebug
-  );
-  const Stack = createStackNavigator();
-  const DrawerStack = createDrawerNavigator();
-  const Tab = createBottomTabNavigator();
+const inAppUpdates = new SpInAppUpdates(
+  false // isDebug
+);
+const Stack = createStackNavigator();
+const DrawerStack = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
+
+const Routes = () => {
   const route = useSelector((state) => state.Auth.route);
   const auth = useSelector((state) => state.Auth)
   const dispatch = useDispatch();
