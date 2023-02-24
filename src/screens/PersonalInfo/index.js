@@ -236,7 +236,7 @@ export default function PersonalInfo({ navigation }) {
                                 name="maritalStatus"
                                 placeholder="Marital Status"
                                 component={CustomModalDropdown}
-                                value={data.marital_status}
+                                defaultValue={data.marital_status}
                                 onChangeData={(value) => setData({ ...data, marital_status: value })}
                                 color={AppColors.black}
                                 options={["Single", "Married", "Divorced"]}
