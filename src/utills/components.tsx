@@ -1331,4 +1331,3 @@ const ComponentStyles = StyleSheet.create({
     marginBottom: height(0.3)
   }
 })
-
