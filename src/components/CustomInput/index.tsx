@@ -23,7 +23,8 @@ interface Props{
   secureTextEntry? : boolean
   right? : React.ReactNode,
   maxLength? : number,
-  editable? : boolean
+  editable?: boolean,
+  style:any[],
 }
 
 const CustomInput: React.FC<Props> = (props) => {
@@ -50,7 +51,7 @@ const CustomInput: React.FC<Props> = (props) => {
               props.minHeight !== undefined ? {
                 minHeight: height(props.minHeight),
                 height: undefined
-              } : {}
+              } : {},props.style
             ]}
             theme={{
               colors: {
