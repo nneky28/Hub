@@ -1,4 +1,3 @@
-<img src="https://github.com/develotechnologies/ReactNativeBoilerPlate/blob/master/src/assets/images/develoITSolutions.png"/>
 
 # ReactNativeBoilerPlate
 Follow the steps below to run the project
@@ -80,4 +79,4 @@ Following Scripts added
         <li>For ios, change the codepush key in info.plist</li>
     </ul>
 
-
+[![Build status](https://build.appcenter.ms/v0.1/apps/f08a04e5-4b41-4af6-a57d-1a9ae3da19c1/branches/myEdge/badge)](https://appcenter.ms)
