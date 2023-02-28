@@ -44,9 +44,9 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
 
 
 
-  // const {
-  //   data,
-  // } = useFetchOnboarding()
+  const {
+    data,
+  } = useFetchOnboarding()
 
 
   return (
@@ -76,13 +76,13 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
         </View>
-        {/* <View style={styles.line} />
+        <View style={styles.line} />
         <View style={styles.row}>
           {
             data && data.length > 0 || null ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> :
               <TextWithIcon text="TaskOnboarding" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
           }
-        </View> */}
+        </View>
       </View>
     </Modal>
   );

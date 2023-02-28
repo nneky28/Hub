@@ -118,8 +118,8 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
                                 <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
                             </TouchableOpacity> :
                             <View style={styles.btn}>
+                                
                                 <TouchableOpacity
-
                                     onPress={() => {
                                         if (title === 'In Progress') {
                                             onPressHandler("Completed")

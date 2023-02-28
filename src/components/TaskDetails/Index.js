@@ -233,10 +233,10 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                             title="Edit task"
                             containerStyle={styles.buttonStyle}
                             textStyle={styles.buttonText}
-                            onPress={() => alert("hello")}
+                            onPress={() => { setShowForm(true), item }}
                         />
                         <View style={styles.line} />
-                        {console.log('hello', setShowForm)}
+
 
                         <View style={styles.descriptionCon}>
                             <H1 color={AppColors.black1}>Task Description</H1>

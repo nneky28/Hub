@@ -1311,91 +1311,40 @@ export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => 
       </KeyboardAwareScrollView>
   )
 }
+// generating dates in iso 
 
-// const areEqual = (prevProps, nextProps) => {
-//   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
-// }
+// for length of the number structure
+export const padStart = ({ value, maxLength, fillingValue }:
+  { value: string | number, maxLength: number, fillingValue: string | number }) => {
+  return `${value}`.padStart(maxLength,`${fillingValue}`.trim())
+}
+export const rawDate = ({ date }: { date?: string | number | Date; }={}) :Date=> {
+  return date ? new Date(date) : new Date();
+}
 
+export const rawDateObject = ({ date }: { date?: string | number | Date; } = {}):
+  { year: string, month: string; day: string; weekDay: string; hour: string; minutes: string; seconds: string; milliseconds: string; } => {
+  
+  const now = rawDate({ date });
+  const year = now.getFullYear().toString();
+  const month = padStart({ value: now.getMonth() +1,maxLength:2,fillingValue:0 })
+  const day = padStart({ value: now.getDate(), maxLength: 2, fillingValue: 0 })
+  const weekDay = padStart({ value: now.getDay(), maxLength: 2, fillingValue: 0 })
+  const hour = padStart({ value: now.getHours(), maxLength: 2, fillingValue: 0 })
+  const minutes = padStart({ value: now.getMinutes(), maxLength: 2, fillingValue: 0 })
+  const seconds = padStart({ value: now.getSeconds(), maxLength: 2, fillingValue: 0 })
+  const milliseconds = padStart({ value: now.getMilliseconds(),maxLength:3,fillingValue:0 })
+  return {year,month,day,weekDay,hour,minutes,seconds,milliseconds} 
+}
 
-//export const Rounded = React.memo(_Rounded, areEqual);
-
-export const ListComponent = ({index, item,onPress} : ListComponentProps) => {
-  let name = ""
-  if (item.title) {
-    name = item.title
-  }
-  if (item.name) {
-    name = item.name
-  }
-  if (item.first_name || item.last_name) {
-    name = `${item.first_name} ${item.last_name}`.trim()
-  }
-  if (item.account_name) {
-    name = item.account_name
-  }
-
-  return (
-    <TouchableWrapper
-      style={{justifyContent:'center',alignItems:'center'}}
-      onPress={() => {
-      if (!onPress) {
-        return
-      }
-      onPress()
-    }} key={index}>
-      <Container paddingVertical={1}
-        verticalAlignment='center'
-        borderBottomWidth={0.6}
-        borderColor={AppColors.grayBorder}
-        width={90}
-        marginTop={1}
-      >
-        {/* <P color={AppColors.black1}>{name ? Capitalize(name) : ""}</P> */}
-        <P color={AppColors.black1}>{item}</P>
-      </Container>
-    </TouchableWrapper>
-  )
+export const GenerateIsoDates = ({ date }: { date?: string | number | Date; }={}) :string=> {
+  const { year, month, day, hour, minutes, seconds, milliseconds } = rawDateObject({ date });
+  return `${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${milliseconds}Z`;
 }
 
 
-export const ItemListModal = ({data, open, onPressHandler,
-  header_1,
-  header_2, sub_text,
-  getMore,
-  setPage,
-  page,
 
-} : ItemListModalProps) => {
- 
-  return (
-    <Modal visible={open}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <Container marginBottom={2}>
-              <CloseHandler  position={'center'} />
-            </Container>
-            <FlatList
-              data={data}
-              ItemSeparatorComponent={() => <View />}
-              keyExtractor={(item, i) => i.toString()}
-              contentContainerStyle={CommonStyles.flatList}
-              renderItem={({ item, index }) => <ListComponent item={item} index={index}
-                onPress={() => onPressHandler(item)}
-              />}
-              ListEmptyComponent={<EmptyStateWrapper icon={Images.EmptyDoc}
-                header_1={header_1}
-                header_2={header_2}
-                sub_text={sub_text}
-              />}
-              onEndReachedThreshold={0.1}
-              onEndReached={() => {
-                if (!getMore) return
-                setPage(page + 1)
-              }}
-        />
-        </SafeAreaView>   
-    </Modal>
-  )
-}
+
 
 const ComponentStyles = StyleSheet.create({
   attendance_tab: {

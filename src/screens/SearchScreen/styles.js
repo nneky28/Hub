@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     listItemContainer: {
         backgroundColor: AppColors.white,
         paddingVertical: height(1),
-        marginTop: height(5),
+        marginTop: height(1),
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: width(4),

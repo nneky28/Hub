@@ -576,6 +576,19 @@ const Index = ({ navigation }) => {
                                         />
                                     ) : null
                                 }
+                                {
+                                    (
+                                        (index === 0 && tab === "No Date") && no_date && Array.isArray(no_date) &&
+                                        no_date.length === 0 && !loadingAllTask
+                                    ) ? (
+                                        <EmptyStateWrapper
+                                            icon={Images.EmptyTeams}
+                                            header_1={"No task here"}
+                                            sub_text={"When you have, they will show up here."}
+                                            backgroundColor={'#F5F5F5'}
+                                        />
+                                    ) : null
+                                }
 
 
                                 <View>
@@ -771,6 +784,19 @@ const Index = ({ navigation }) => {
                                 (
                                     (index === 1 && tab === "Overdue") && sentOverdueItem && Array.isArray(sentOverdueItem) &&
                                     sentOverdueItem.length === 0 && !loadingAllSentOverdue
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 1 && tab === "No Date") && no_date_sent && Array.isArray(no_date_sent) &&
+                                    no_date_sent.length === 0 && !loadingAllSentTask
                                 ) ? (
                                     <EmptyStateWrapper
                                         icon={Images.EmptyTeams}
@@ -1067,6 +1093,19 @@ const Index = ({ navigation }) => {
                                 (
                                     (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
                                     team_overdue.length === 0 && !loadingOverdue
+                                ) ? (
+                                    <EmptyStateWrapper
+                                        icon={Images.EmptyTeams}
+                                        header_1={"No task here"}
+                                        sub_text={"When you have, they will show up here."}
+                                        backgroundColor={'#F5F5F5'}
+                                    />
+                                ) : null
+                            }
+                            {
+                                (
+                                    (index === 2 && tab === "No Date") && no_date_team && Array.isArray(no_date_team) &&
+                                    no_date_team.length === 0 && !loadingAllTeamTask
                                 ) ? (
                                     <EmptyStateWrapper
                                         icon={Images.EmptyTeams}

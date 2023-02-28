@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
     },
     by: {
         paddingHorizontal: width(6),
-        // paddingVertical: height(0.5),
+        height: height(2),
+        bottom: height(0.1)
     },
     date: {
         color: AppColors.black3,
@@ -86,7 +87,8 @@ const styles = StyleSheet.create({
         fontSize: width(3.4),
         color: AppColors.black1,
         marginTop: height(1),
-        width: width(50)
+        width: width(50),
+
     },
 
     dots: {

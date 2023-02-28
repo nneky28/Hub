@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
 
     },
     mainContainer: { borderWidth: 0.5, borderRadius: width(4), borderColor: AppColors.transparent, },
-    clipped: { height: height(9), resizeMode: 'contain', width: width(28) },
+    clipped: { height: height(8.5), resizeMode: 'contain', width: width(28) },
     count: {
         position: 'absolute',
         left: width(19),

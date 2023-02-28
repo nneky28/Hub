@@ -102,7 +102,7 @@ const HomeScreen = () => {
                         setVideo(false)
                         showFlashMessage({
                             title: "There are no people in your company.  Adding people will enable you assign tasks directly to people or department",
-                            duration: 4600,
+                            duration: 5000,
                             type: 'info',
                             statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null
                         })

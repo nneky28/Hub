@@ -59,7 +59,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff/`)
   },
-  employee_timeoff_taken: async (id,status) => {
+  employee_timeoff_taken: async (id, status) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
   },
@@ -335,20 +335,20 @@ export const APIFunction = {
 }
 
 export const useFetchEmployeeTimeOff = (id) => {
-  return useQuery(["employee_timeoff",id],()=>APIFunction.employee_timeoff(id),{
-    enabled : !!id
+  return useQuery(["employee_timeoff", id], () => APIFunction.employee_timeoff(id), {
+    enabled: !!id
   })
 }
 
-export const useFetchEmployeeTimeOffTaken = (id,status) => {
-  return useQuery(["employee_timeoff_taken",id,status],()=>APIFunction.employee_timeoff_taken(id,status),{
-    enabled : !!id && !!status
+export const useFetchEmployeeTimeOffTaken = (id, status) => {
+  return useQuery(["employee_timeoff_taken", id, status], () => APIFunction.employee_timeoff_taken(id, status), {
+    enabled: !!id && !!status
   })
 }
 
 export const useFetchEmployeeTimeOffReqs = (id) => {
-  return useQuery(["employee_timeoff_reqs",id],()=>APIFunction.employee_timeoff_reqs(id),{
-    enabled : !!id
+  return useQuery(["employee_timeoff_reqs", id], () => APIFunction.employee_timeoff_reqs(id), {
+    enabled: !!id
   })
 }
 
@@ -435,11 +435,11 @@ export const useFetchEmergency = (employee_id) => {
 }
 
 export const useFetchBanking = (employee_id) => {
-  return useQuery("banks",APIFunction.banks)
+  return useQuery("banks", APIFunction.banks)
 }
 
 export const useFetchProviders = () => {
-  return useQuery("pension_providers",APIFunction.pension_providers)
+  return useQuery("pension_providers", APIFunction.pension_providers)
 }
 
 export const useFetchOnboarding = () => {

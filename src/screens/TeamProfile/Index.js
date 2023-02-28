@@ -183,7 +183,6 @@ const Index = ({ route }) => {
                         })
                         </H1>
                     </View>
-
                     {/* empty states  */}
 
                     {
@@ -237,7 +236,7 @@ const Index = ({ route }) => {
                     }
                     {
                         (
-                            (actionTitle === "To-Do") && data && Array.isArray(data) &&
+                            (actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
                             data.length === 0 && !loadingAllTask
                         ) ? (
                             <EmptyStateWrapper
@@ -250,7 +249,7 @@ const Index = ({ route }) => {
                     }
                     {
                         (
-                            (tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
+                            (actionTitle === "To-Do" && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
                             dueItems.length === 0 && !loadingDue
                         ) ? (
                             <EmptyStateWrapper
@@ -288,7 +287,19 @@ const Index = ({ route }) => {
                         ) : null
                     }
 
-
+                    {
+                        (
+                            (tab === "No Date") && no_date && Array.isArray(no_date) &&
+                            no_date.length === 0 && !loadingOverdue
+                        ) ? (
+                            <EmptyStateWrapper
+                                icon={Images.EmptyTeams}
+                                header_1={"No task here"}
+                                sub_text={"When you have, they will show up here."}
+                                backgroundColor={'#F2F2F2'}
+                            />
+                        ) : null
+                    }
                     {
                         loadingAllTask || loadingDue || loadingOverdue || loadingUpcoming ? <PageLoader /> : null
                     }

@@ -13,10 +13,7 @@ import { Images } from '../../component2/image/Image';
 
 
 
-
-
 const CustomListModal = ({ open, setOpen, onPressHandler }) => {
-
     const [options, setOptions] = useState(true)
     const [deptPage, setDeptPage] = useState(1)
     const [empPage, setEmpPage] = useState(1)
@@ -27,19 +24,19 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     const [employeeList, setEmployeeList] = useState(false)
     const [deptList, setDeptList] = useState(false)
     const [tab, setTab] = useState('Employees');
-    const [selected, setSelected] = useState('')
+
+
 
     const RenderItem = ({ item }) => {
         return (
-
             <PersonListComp item={item}
                 onPressHandle={() => {
                     onPressHandler({ ...item, type: "Employee" })
                 }}
             />
-
         )
     }
+
     const RenderDept = ({ item }) => {
         return (
             <DeptListComp item={item}
@@ -50,11 +47,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         )
     }
 
-    const handleSearch = (text) => {
-        setSearchEmp(text)
-        setEmpPage(1)
 
-    }
     const {
         data: employeeData,
         hasNextPage: hasNextEmployees,
@@ -105,7 +98,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     }
     const RenderItems = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => setSelected(item)}>
+            <TouchableOpacity onPress={() => setSearchEmp(item)}>
                 <ImgPlaceholder text={item}
                     size={15} />
             </TouchableOpacity>
@@ -174,8 +167,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                     </View>
 
                     <View style={styles.search}>
-                        <TouchableOpacity style={styles.searchView}
-                            onPress={handleSearch} >
+                        <TouchableOpacity style={styles.searchView}>
                             <Image source={{ uri: Images.SearchIcon }} style={styles.searchBoxStyle} />
                         </TouchableOpacity>
                         <FlatList

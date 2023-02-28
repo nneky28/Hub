@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import moment from 'moment';
 import React, { useState, useEffect } from 'react'
 import styles from './style'
-import { Container, P, CustomCalender, KeyboardAwareWrapper, CloseHandler, H1 } from '../../utills/components'
+import { Container, P, CustomCalender, KeyboardAwareWrapper, CloseHandler, H1, GenerateIsoDates } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button'
 import { Field, Formik } from 'formik';
@@ -48,6 +48,7 @@ const Index = ({ visible, onHide, item }) => {
     const { mutateAsync } = useMutation(APIFunction.post_task)
     const { mutateAsync: editHandler } = useMutation(APIFunction.update_status)
 
+
     const _subTask = () => {
         let text = "task" + count
         setSubtask([...subTask, text])
@@ -78,15 +79,16 @@ const Index = ({ visible, onHide, item }) => {
                 })
             }
             dispatch(setLoaderVisible(true));
-
-            let employee = await getData("about_me")
+            let employee = await getData("about_me");
 
         // moment().format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ')
+        // moment(data?.due_date).toISOString(true)
+        // GenerateIsoDates(data?.due_date)
             console.log('due dste',data?.due_date)
 
             let fd = {
                 ...data,
-                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ'),
+                due_date: data?.due_date === 'Today' ? moment().toISOString(true):moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
                 created_by: employee?.id,
                 assigned_to: assignTo?.type === "Employee" ? assignTo.id : assignTo?.type === "Departments" ? assignTo.id : employee.id,
                 department: assignTo?.type === "Departments" ? assignTo.id : null,

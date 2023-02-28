@@ -269,7 +269,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(3)
 
     },
-    mainContainer: { borderWidth: 0.5, borderRadius: width(3.5), borderColor: AppColors.transparent, },
+    mainContainer: {
+        borderWidth: 0.5, borderRadius: width(3.5), borderColor: AppColors.transparent,
+        shadowColor: '#FFFFFF',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        elevation: width(1),
+    },
     clipped: { height: height(8.5), resizeMode: 'contain' },
     count: {
         position: 'absolute',

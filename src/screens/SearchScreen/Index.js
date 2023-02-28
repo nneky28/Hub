@@ -177,7 +177,7 @@ const PeopleList = ({ navigation, route }) => {
                     </View>
 
 
-                    <View style={CommonStyles.marginTop_1}>
+                    <View style={[CommonStyles.marginTop_1, CommonStyles.marginBottom_3]}>
                         {
                             Platform.OS === 'android' ?
                                 <>
@@ -274,7 +274,6 @@ const PeopleList = ({ navigation, route }) => {
                         style={styles.team}
                     />
                 </View>
-
 
                 <View>
                     <View style={styles.container}>

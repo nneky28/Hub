@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         borderRadius: width(5),
         width: width(30),
         alignSelf: 'flex-start',
-        height: width(8),
+        height: width(8.9),
     },
     buttonText: {
         color: AppColors.black1,
