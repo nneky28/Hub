@@ -317,7 +317,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                     }
                   </TouchableOpacity>
                   <Text numberOfLines={1} style={styles.text1}>
-                    {business && business.business_name ? business.business_name : ""}
+                    {business && business.business_name ? Capitalize(business.business_name) : ""}
                   </Text>
                 </View>
                 <TouchableOpacity
