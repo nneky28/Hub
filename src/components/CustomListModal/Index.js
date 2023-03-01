@@ -16,11 +16,11 @@ import { Images } from '../../component2/image/Image';
 const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     const [options, setOptions] = useState(true)
     const [deptPage, setDeptPage] = useState(1)
-    const [empPage, setEmpPage] = useState(1)
+    const [page, setPage] = useState(1)
     const [searchDeptTerm, setSearchDeptTerm] = useState('')
     const [employees, setEmployees] = useState([])
     const [departments, setDepartments] = useState([])
-    const [searchEmp, setSearchEmp] = useState("")
+    const [search, setSearch] = useState('')
     const [employeeList, setEmployeeList] = useState(false)
     const [deptList, setDeptList] = useState(false)
     const [tab, setTab] = useState('Employees');
@@ -53,7 +53,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         hasNextPage: hasNextEmployees,
         isFetchingNextPage: fetchingNextEmployees,
         loading: empLoading
-    } = useFetchEmployees(empPage, searchEmp)
+    } = useFetchEmployees(page, search)
 
     const {
         data: departmentData,
@@ -77,7 +77,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         let arr = flattenArr.flat()
 
         if (param === "employee")
-            empPage > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
+            page > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
 
         if (param === "departments")
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
@@ -86,7 +86,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
     const loadMore = () => {
         if (hasNextEmployees && !empLoading)
-            setEmpPage(empPage + 1)
+            setPage(page + 1)
     }
     const footerLoader = () => {
         return (
@@ -97,13 +97,15 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
     }
     const RenderItems = ({ item }) => {
+
         return (
-            <TouchableOpacity onPress={() => setSearchEmp(item)}>
+            <TouchableOpacity onPress={() => setSearch(item)}>
                 <ImgPlaceholder text={item}
                     size={15} />
             </TouchableOpacity>
         )
     }
+    console.log('search', search)
     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
     const alphabet = alpha.map((x) => String.fromCharCode(x));
 
@@ -190,7 +192,10 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                         <>
                             <View style={styles.containerA}>
                                 <H1 fontSize={3.3} color={'#878787'}>Recent Searches</H1>
-                                <TouchableOpacity onPress={() => setEmpPage(1)}>
+                                <TouchableOpacity onPress={() => {
+                                    setSearch('')
+                                    setPage(1)
+                                }}>
                                     <P style={styles.btnText}>Clear</P>
                                 </TouchableOpacity>
                             </View>
