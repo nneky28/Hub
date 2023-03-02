@@ -311,7 +311,8 @@ const Index = ({ visible, onHide, item }) => {
                                 </TouchableOpacity>
                             </Container>
                             <Button
-                                title="Create Task"
+                                // title="Create Task"
+                                title={item ? "Save" :"Create Task"}
                                 containerStyle={styles.buttonStyle1}
                                 textStyle={styles.buttonText1}
                                 onPress={submitHandler}

@@ -21,6 +21,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
+import { height,width } from 'react-native-dimension';
 
 interface TaskProps {
     item: any;
@@ -105,6 +106,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
+                <>  
                 <TouchableOpacity onPress={() => setDisplay(true)}>
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
                 </TouchableOpacity>
@@ -140,7 +142,8 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
                                 </TouchableOpacity>
                             </View>
 
-                }
+                    }
+                     </>
 
             </View>
             <View style={styles.by}>

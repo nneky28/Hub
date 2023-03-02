@@ -147,13 +147,6 @@ const PeopleList = ({ navigation, route }) => {
     const RenderItems = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => setSearch(item)} >
-                {/* <Rounded
-                    marginRight={3}
-                    backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
-                    <H1 style={styles.team}>
-                        {item}
-                    </H1>
-                </Rounded> */}
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
@@ -186,6 +179,7 @@ const PeopleList = ({ navigation, route }) => {
                                             title="Search by name "
                                             containerStyle={styles.searchBox}
                                             onSubmitEditing={handleSearch}
+                                            autoFocus={true}
                                         />
                                         <TouchableOpacity style={styles.filterIconContainer}>
                                             <Image resizeMode="contain" source={{ uri: Images.FilterArrow }} style={styles.filterIcon} />
@@ -197,6 +191,7 @@ const PeopleList = ({ navigation, route }) => {
                                             title="Search by name "
                                             containerStyle={styles.searchBox}
                                             onSubmitEditing={handleSearch}
+                                            autoFocus={true}
                                         />
                                         <TouchableOpacity style={styles.filterIconContainerIOS}>
                                             <Image resizeMode="contain" source={{ uri: Images.FilterArrow }} style={styles.filterIconIOS} />
@@ -211,7 +206,7 @@ const PeopleList = ({ navigation, route }) => {
                         ItemSeparatorComponent={() => <View style={styles.line} />}
                         showsVerticalScrollIndicator={false}
                         nestedScrollEnabled={true}
-                        contentContainerStyle={[CommonStyles.marginTop_1]}
+                        contentContainerStyle={[CommonStyles.marginTop_1, { paddingBottom: height(40) }]}
                     />
 
                 </React.Fragment>
@@ -240,6 +235,7 @@ const PeopleList = ({ navigation, route }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
+                                autoFocus={true}
                             />
                         </View>
                     ) : Platform.OS === 'ios' ? (
@@ -249,6 +245,7 @@ const PeopleList = ({ navigation, route }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
+                                autoFocus={true}
                             />
 
                         </View>

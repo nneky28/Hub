@@ -304,7 +304,7 @@ const Index = ({ navigation }) => {
                     <View style={styles.line} />
                 </View>
                 <ScrollView
-                    style={[styles.scroll, CommonStyles.paddingBottom_8]}
+                    style={[styles.scroll, CommonStyles.paddingBottom_10]}
                     showsVerticalScrollIndicator={false}>
 
                     <View style={styles.threeButtonCont}>

@@ -57,7 +57,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
         //console.log('res', res)
         await storeData('task claim', res)
         queryClient.invalidateQueries()
-        showFlashMessage({ title: `task updated` })
+        showFlashMessage({ title: `Task claimed successfully` })
         setWatch(!watch)
         setCompleted(false)
 
@@ -73,30 +73,34 @@ const Index = ({ __flattenArr, item, title, team }) => {
     }, [watch]);
 
 
+
+
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
                 <View style={CommonStyles.row}>
                     {
                         item?.department !== item?.assigned_to?.id ?
-                            <ImgPlaceholder text={item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""} size={12} />
-                            :
-                            (
-                                // <Rounded backgroundColor='#E1E1E1' size={12}>
-                                //     <H1 color={AppColors.black1}>?</H1>
-                                // </Rounded>
-                                <ImgPlaceholder text={'?'} size={12} />
-                            )
+                            <Image
+                                source={{ uri: item?.assigned_to?.photo }}
+                                style={styles.avatarStyle}
+                            /> :
+                            item?.department !== item?.assigned_to?.id && !item?.assigned_to?.photo ?
+                                <ImgPlaceholder text={item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""} size={12} />
+                                :
+                                (
+                                    <ImgPlaceholder text={'?'} size={12} />
+                                )
 
                     }
 
-                    <View style={{ marginLeft: width(3), marginTop: height(0.5) }}>
+                    <View style={{ marginLeft: width(1), marginTop: height(0.5) }}>
                         <TouchableOpacity onPress={() => setShow(true)}>
                             <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
                         </TouchableOpacity>
                         <P fontSize={3} style={styles.author}>
                             {item?.department === item?.assigned_to?.id ? `To: ${item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} `
-                                : `Claimed by: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
+                                : `Claimed: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
                             }
                         </P>
                         <View>

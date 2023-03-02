@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
 const styles = StyleSheet.create({
-    wrapper: { backgroundColor: '#F5F5F5', paddingBottom: height(9) },
+    wrapper: { backgroundColor: '#F5F5F5', paddingBottom: height(3) },
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(6),
+        paddingHorizontal: width(4.5),
     },
     date: {
         marginRight: width(2),
@@ -145,6 +145,12 @@ const styles = StyleSheet.create({
         marginLeft: width(2),
         fontSize: width(3.1)
     },
+    avatarStyle: {
+        height: height(5),
+        width: height(5),
+        borderRadius: height(4.75),
+    },
+
 
 })
 

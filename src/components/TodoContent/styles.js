@@ -5,13 +5,12 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
 const styles = StyleSheet.create({
-    wrapper: { marginTop: height(1.5), },
+    wrapper: { backgroundColor: '#F5F5F5', paddingBottom: height(2) },
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(2),
-        paddingHorizontal: width(5),
-
+        marginTop: height(3),
+        paddingHorizontal: width(5)
     },
     line: {
         width: width(100),
@@ -54,12 +53,14 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(6),
+        paddingHorizontal: width(5),
     },
+
     by: {
-        paddingHorizontal: width(6),
+        paddingHorizontal: width(5.2),
         height: height(2),
-        bottom: height(0.1)
+        // bottom: height(0.1),
+        fontSize: width(3.2),
     },
     date: {
         color: AppColors.black3,
@@ -88,9 +89,7 @@ const styles = StyleSheet.create({
         color: AppColors.black1,
         marginTop: height(1),
         width: width(50),
-
     },
-
     dots: {
         color: AppColors.darkGray,
     },

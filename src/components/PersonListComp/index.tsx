@@ -73,13 +73,13 @@ export const DeptListComp: React.FC<DeptListCompProps> = ({
       onPress={onPressHandle}>
       <View style={CommonStyles.rowJustifySpaceBtw}>
         <ImgPlaceholder
-          text={item.name && item.name.length > 0 ? Capitalize([...item.name][0]) : ''}
+          text={item?.name && item?.name.length > 0 ? Capitalize([...item?.name][0]) : ''}
           size={12}
         />
 
         <View style={styles.textContainer1}>
           <H1 style={styles.titleText}>
-            {item.name ? Capitalize(item.name) : ''}{' '}
+            {item?.name ? Capitalize(item?.name) : ''}{' '}
           </H1>
         </View>
       </View>

@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
         borderColor: AppColors.grayBorder,
         marginTop: height(1.5),
         borderRadius: width(2),
-        height: height(13),
+        // min-height: height(13),
+        minHeight: height(13),
         paddingHorizontal: width(3),
     },
     button: {
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
         color: AppColors.black1,
         paddingVertical: height(1),
         lineHeight: 18,
-        paddingHorizontal: width(1)
+
     },
 
     sections: {

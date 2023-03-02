@@ -129,6 +129,9 @@ const CommonStyles = StyleSheet.create({
     paddingBottom_8: {
         paddingBottom: height(8)
     },
+    paddingBottom_10: {
+        paddingBottom: height(40)
+    },
     row: {
         flexDirection: 'row',
 

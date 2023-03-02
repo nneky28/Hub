@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 
     },
     scrollViewContainer: {
-        marginTop: height(3),
+        marginTop: height(2),
         justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
-        marginLeft: width(4.5)
+        marginLeft: width(4.5),
+        marginBottom: height(1)
 
     },
     threeButtonCont: {
@@ -181,7 +182,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: height(2.5),
-        paddingHorizontal: width(5)
+        paddingHorizontal: width(5),
+        // paddingVertical: height(1)
     },
 
     downIcon: {
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
     },
     scroll: {
         backgroundColor: '#F5F5F5',
-        paddingBottom: height(5),
+        paddingBottom: height(50),
 
     },
     emptyCon: {

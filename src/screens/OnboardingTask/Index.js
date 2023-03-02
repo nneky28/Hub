@@ -100,6 +100,19 @@ const Index = ({ navigation }) => {
     const dispatch = useDispatch();
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
 
+    const handleNavigation = async () => {
+        let employee_id = await getData("about_me")
+        let fd = {
+            type: 'Task',
+            employee: employee_id.id,
+            has_completed_mobile_navigation: true,
+            has_completed_mobile_onboarding: false
+        }
+        let res = await mutateAsync(fd)
+        await storeData('onboard navigation', res)
+        navigation.navigate("onBoardHome")
+
+    }
     const handleCompletion = async () => {
         let employee_id = await getData("about_me")
         let fd = {
@@ -108,13 +121,16 @@ const Index = ({ navigation }) => {
             has_completed_mobile_navigation: true,
             has_completed_mobile_onboarding: true
         }
-
         let res = await mutateAsync(fd)
-        await storeData('onboard', res)
+        await storeData('onboard completion', res)
         navigation.navigate("onBoardHome")
 
     }
+    // if (swiperRef?.current?.state?.index === 2) {
+    //     handleCompletion
+    // }
 
+    // console.log('scale', swiperRef?.current?.state?.index)
     return (
         <ScreenWrapper
             scrollEnabled={false}>
@@ -172,13 +188,18 @@ const Index = ({ navigation }) => {
                     title="Continue"
                     textStyle={styles.buttonText}
                     containerStyle={styles.button}
-                    onPress={() => swiperRef.current.scrollBy(1)}
+                    onPress={() => {
+                        if (swiperRef?.current?.state?.index === 2) {
+                            return handleCompletion()
+                        }
+                        swiperRef.current.scrollBy(1)
+                    }}
                 />
-                < Button
+                <Button
                     title="Skip"
                     textStyle={styles.btnText}
                     containerStyle={styles.btn}
-                    onPress={handleCompletion}
+                    onPress={() => navigation.navigate("onBoardHome")}
                 />
             </View>
         </ScreenWrapper>

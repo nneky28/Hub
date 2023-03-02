@@ -186,11 +186,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/app_onboarding/`, fd)
   },
-  get_onboarding: async () => {
+  get_onboarding: async (type) => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
+    return getAPIs(`/c/${biz.business_id}/app_onboarding/?${type}&employee_id=${id}`)
   },
   post_task: async (fd) => {
     let biz = await getStoredBusiness();
@@ -218,6 +218,7 @@ export const APIFunction = {
   },
   get_to_dos: async () => {
     let biz = await getStoredBusiness()
+    console.log("Biz", biz.business_id)
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
   },
   get_duetoday: async () => {
@@ -235,6 +236,7 @@ export const APIFunction = {
   get_team_tasks: async () => {
     let biz = await getStoredBusiness()
     const user = await getData("about_me")
+    console.log('ID', user)
     return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
   },
 
@@ -314,6 +316,7 @@ export const APIFunction = {
   //   let biz = await getStoredBusiness()
   //   return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
   // },
+  // return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}&has_employees=true`)
   departments: async (page, search) => {
     const user = await getData('user')
     const business_id = user?.employee_user_memberships?.[0]?.business_id
@@ -442,8 +445,11 @@ export const useFetchProviders = () => {
   return useQuery("pension_providers", APIFunction.pension_providers)
 }
 
-export const useFetchOnboarding = () => {
-  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding()
+export const useFetchOnboarding = (type) => {
+  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding(type), {
+    enabled: !!type
+  }
+
   )
 }
 export const useFetchEmployees = (page, search) => {
@@ -642,6 +648,7 @@ export const postAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
+
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"

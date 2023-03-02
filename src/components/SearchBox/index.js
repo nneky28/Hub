@@ -10,8 +10,8 @@ import styles from './styles';
 
 
 
-export default function SearchBox({ title, containerStyle, onSubmitEditing,...inputProps }) {
-    
+export default function SearchBox({ title, containerStyle, onSubmitEditing, autoFocus, ...inputProps }) {
+
     const dispatch = useDispatch();
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
@@ -28,20 +28,21 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing,...in
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={(value)=>{
-                    if(typeof(value) === "object") return
+                onSubmitEditing={(value) => {
+                    if (typeof (value) === "object") return
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
                 {...inputProps}
+                autoFocus={autoFocus}
             />
 
         </View>
     );
 }
 
-export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
-    
+export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing, autoFocus }) => {
+
     const dispatch = useDispatch();
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
@@ -58,18 +59,19 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing }) => {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={(value)=>{
-                    if(typeof(value) === "object") return
+                onSubmitEditing={(value) => {
+                    if (typeof (value) === "object") return
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
+                autoFocus={autoFocus}
             />
 
         </View>
     );
 }
-export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) => {
-   
+export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing, autoFocus }) => {
+
     const dispatch = useDispatch();
     useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => dispatch(setBottomTabBarVisible(false)));
@@ -85,18 +87,19 @@ export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing }) 
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={(value)=>{
-                    if(typeof(value) === "object") return
+                onSubmitEditing={(value) => {
+                    if (typeof (value) === "object") return
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
+                autoFocus={autoFocus}
             />
 
         </View>
     );
 }
 
-export function SearchBoxWithout({ title, containerStyle, onSubmitEditing }) {
+export function SearchBoxWithout({ title, containerStyle, onSubmitEditing, autoFocus }) {
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -113,11 +116,12 @@ export function SearchBoxWithout({ title, containerStyle, onSubmitEditing }) {
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
                 onChangeText={onSubmitEditing}
-                onSubmitEditing={(value)=>{
-                    if(typeof(value) === "object") return
+                onSubmitEditing={(value) => {
+                    if (typeof (value) === "object") return
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
+                autoFocus={autoFocus}
             />
 
         </View>

@@ -25,12 +25,7 @@ const Index: FC<Props> = ({item}) => {
             style={styles.avatarStyle}
           />
         ) : (
-          //   <Rounded backgroundColor={AppColors.lightPink} size={12}>
-          //     <H1>
-          //       {item.logged_by?.first_name[0]}
-          //       {item.logged_by?.last_name[0]}
-          //     </H1>
-          //               </Rounded>
+      
           <ImgPlaceholder
             text={`${item.logged_by ? item.logged_by?.first_name[0] : ''} ${
               item.logged_by ? item.logged_by?.last_name[0] : ''
