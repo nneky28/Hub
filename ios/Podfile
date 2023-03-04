@@ -33,14 +33,11 @@ target 'ReactNativeBoilerPlaceHermes' do
   if not IS_CI
     use_flipper!()
   end
-  # ...
-  post_install do |installer|
-      if not IS_CI
-        use_flipper!
-      end
-  end
 
   post_install do |installer|
+    if not IS_CI
+      use_flipper!
+    end
     react_native_post_install(installer)
   end
 end
