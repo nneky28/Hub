@@ -31,7 +31,7 @@ target 'ReactNativeBoilerPlaceHermes' do
   IS_CI = ENV['APPCENTER_BUILD_ID']
   # ...
   if not IS_CI
-    use_flipper! ( { ... } )
+    use_flipper!()
   end
   # ...
   post_install do |installer|
