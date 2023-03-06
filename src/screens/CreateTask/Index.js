@@ -116,6 +116,7 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                 if (assignTo?.type === "Employee" || assignTo?.type==="Departments") {    
                     setButtons(1)
                 }
+                setButtons(0)
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task created successfully` })
             }
