@@ -103,6 +103,7 @@ const Index = ({ route }) => {
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
     const no_date = Object.values(data).filter((item) => item?.due_date === null);
 
+    console.log('data', data)
 
     useEffect(() => {
         __flattenArr()

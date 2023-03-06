@@ -41,11 +41,12 @@ import CreateTask from '../CreateTask/Index'
 import AnimatedView from '../../components/AnimatedView';
 
 
-const Index = ({ navigation }) => {
+const Index = ({ navigation, setMoveTo }) => {
     const [index, setIndex] = useState(0);
     const [tab, setTab] = useState("All");
     const [count, setCount] = useState(0);
     const [actionTitle, setActionTitle] = useState("To-Do");
+    const [moveTask, setMoveTask] = useState("My Tasks")
     const [data, setData] = useState([])
     const [taskpage, setTaskPage] = useState(1)
     const [dueTodayPage, setDueTodayPage] = useState(1)
@@ -60,6 +61,7 @@ const Index = ({ navigation }) => {
     const [sentUpcomingItem, setSentUpcomingItems] = useState([])
     const [sentOverdueItem, setSentOverdueItems] = useState([])
     const [people, setPeople] = useState(true)
+    const [focus, setFocus] = useState(true)
     const [margin, setMargin] = useState(0.1);
     const [visible, setVisible] = useState(false);
     const [teamData, setTeamData] = useState([])
@@ -70,6 +72,8 @@ const Index = ({ navigation }) => {
     const [teamUpcomingPage, setTeamUpcomingPage] = useState(1)
     const [teamOverdueData, setTeamOverdueData] = useState([])
     const [teamOverduePage, setTeamOverduePage] = useState(1)
+
+
 
     const setButtons = (i) => {
         setIndex(i);
@@ -247,6 +251,8 @@ const Index = ({ navigation }) => {
     const team_completed = Object.values(teamData).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const no_date_team = Object.values(teamData).filter((item) => item?.due_date === null);
 
+    // console.log("Killer", team_todos)
+
     const AddButton = ({ onPress, style }) => (
         <TouchableOpacity
             style={style}
@@ -277,6 +283,9 @@ const Index = ({ navigation }) => {
         __flattenArr()
     }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
 
+    // useEffect((param) => {
+    //     handleIndex(param)
+    // }, [])
 
     return (
         <React.Fragment>
@@ -286,6 +295,7 @@ const Index = ({ navigation }) => {
                         <AddButton
                             style={styles.addButton}
                             onPress={() => setVisible(true)}
+
                         />
 
                     )
@@ -315,6 +325,7 @@ const Index = ({ navigation }) => {
                                         setButtons(i)
                                         setActionTitle("To-Do")
                                         setTab("All")
+
                                     }}
                                     style={styles.button}
                                     activeOpacity={0.8}
@@ -325,7 +336,7 @@ const Index = ({ navigation }) => {
                                 </TouchableOpacity>
                             ))
                         }
-                        <AnimatedView marginLeft={margin} styles={styles.animatedView} />
+                        <AnimatedView marginLeft={margin} styles={[styles.animatedView]} />
                     </View>
 
 
@@ -589,8 +600,6 @@ const Index = ({ navigation }) => {
                                         />
                                     ) : null
                                 }
-
-
                                 <View>
                                     {
                                         index === 0 && actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
@@ -922,16 +931,14 @@ const Index = ({ navigation }) => {
                     {
                         index === 2 &&
                         <React.Fragment>
-
                             <View><Text numberOfLines={1} style={styles.headerTitle}>Find People</Text></View>
 
                             <View style={styles.search}>
 
                                 <TouchableOpacity style={styles.searchView}
-                                    onPress={() => navigation.navigate('search', { people })} >
+                                    onPress={() => navigation.navigate('search', { people, focus })} >
                                     <Image source={{ uri: Images.SearchIcon }} style={styles.searchBoxStyle} />
                                 </TouchableOpacity>
-
                                 <FlatList
                                     data={alphabet}
                                     horizontal
@@ -942,7 +949,6 @@ const Index = ({ navigation }) => {
                                     style={styles.team}
                                 />
                             </View>
-
 
                             <View>
                                 <MyTeamCard />
@@ -1050,8 +1056,8 @@ const Index = ({ navigation }) => {
                             {/* empty state  for all team tabs */}
                             {
                                 (
-                                    (index === 2 && actionTitle === "To-Do" && tab === "All") && teamData && Array.isArray(teamData) &&
-                                    teamData.length === 0 && !loadingAllTeamTask
+                                    (index === 2 && actionTitle === "To-Do" && tab === "All") && team_todos && Array.isArray(team_todos) &&
+                                    team_todos.length === 0 && !loadingAllTeamTask
                                 ) ? (
                                     <EmptyStateWrapper
                                         icon={Images.EmptyTeams}
@@ -1183,8 +1189,6 @@ const Index = ({ navigation }) => {
                                         )) : null
                                     }
                                 </View>
-
-
                             </View>
                             <View >
                                 {
@@ -1212,13 +1216,8 @@ const Index = ({ navigation }) => {
                                     )) : null
                                 }
                             </View>
-
-
                         </React.Fragment>
-
                     }
-
-
                 </ScrollView>
             </ScreenWrapper>
 
@@ -1227,6 +1226,7 @@ const Index = ({ navigation }) => {
                 <CreateTask
                     visible={visible}
                     onHide={() => setVisible(false)}
+                    setButtons={setButtons}
                 />
             }
 

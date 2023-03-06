@@ -18,13 +18,15 @@ import { Images } from '../../component2/image/Image';
 
 
 const PeopleList = ({ navigation, route }) => {
-    const { team, people } = route.params
+    const { team, people, focus } = route.params
+    // console.log('here', focus)
     const [item, setItem] = useState([])
     const [teamItem, setTeamItem] = useState([])
     const [page, setPage] = useState(1)
+    const [search, setSearch] = useState('')
     const [teampage, setTeamPage] = useState(1)
     const [id, setId] = useState(false)
-    const [search, setSearch] = useState('')
+
 
     const {
         data: data,
@@ -32,6 +34,7 @@ const PeopleList = ({ navigation, route }) => {
         loading: loading,
         isFetchingNextPage: isFetchingNextPage
     } = useFetchEmployees(page, search)
+
 
     const {
         data: teamData,
@@ -219,6 +222,7 @@ const PeopleList = ({ navigation, route }) => {
 
             {people && <View style={styles.containerView}>
 
+                {/* {console.log("autofocus", focus)} */}
                 <View style={styles.header}>
                     <CloseHandler onPress={() => navigation.goBack()} />
 
@@ -235,7 +239,7 @@ const PeopleList = ({ navigation, route }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
-                                autoFocus={true}
+                                autoFocus={focus ? true : false}
                             />
                         </View>
                     ) : Platform.OS === 'ios' ? (
@@ -245,7 +249,7 @@ const PeopleList = ({ navigation, route }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
-                                autoFocus={true}
+                                autoFocus={focus ? true : false}
                             />
 
                         </View>

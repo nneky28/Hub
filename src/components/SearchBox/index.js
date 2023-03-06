@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Keyboard, TextInput, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { searchIcon } from '../../assets/images';
@@ -11,6 +11,7 @@ import styles from './styles';
 
 
 export default function SearchBox({ title, containerStyle, onSubmitEditing, autoFocus, ...inputProps }) {
+    const [focus, setFocus] = useState(true)
 
     const dispatch = useDispatch();
     useEffect(() => {

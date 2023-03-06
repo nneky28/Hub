@@ -25,7 +25,8 @@ import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useNavigation } from '@react-navigation/native';
 
 
-const Index = ({ visible, onHide, item }) => {
+const Index = ({ visible, onHide, item,setButtons}) => {
+    
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const queryClient = useQueryClient()  
@@ -60,7 +61,7 @@ const Index = ({ visible, onHide, item }) => {
         arr.splice(index, 1)
         setSubtask(arr)
     }
-
+   
     const submitHandler = async () => {
         try {
             Keyboard.dismiss()
@@ -80,11 +81,6 @@ const Index = ({ visible, onHide, item }) => {
             }
             dispatch(setLoaderVisible(true));
             let employee = await getData("about_me");
-
-        // moment().format('YYYY-MM-DD[T]HH:mm:ss.SSSZZ')
-        // moment(data?.due_date).toISOString(true)
-        // GenerateIsoDates(data?.due_date)
-            console.log('due dste',data?.due_date)
 
             let fd = {
                 ...data,
@@ -113,11 +109,13 @@ const Index = ({ visible, onHide, item }) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
-                console.log('fd',res)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
                 onHide()
+                if (assignTo?.type === "Employee" || assignTo?.type==="Departments") {    
+                    setButtons(1)
+                }
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task created successfully` })
             }

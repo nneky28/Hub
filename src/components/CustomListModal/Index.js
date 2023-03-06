@@ -17,10 +17,10 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     const [options, setOptions] = useState(true)
     const [deptPage, setDeptPage] = useState(1)
     const [page, setPage] = useState(1)
+    const [search, setSearch] = useState('')
     const [searchDeptTerm, setSearchDeptTerm] = useState('')
     const [employees, setEmployees] = useState([])
     const [departments, setDepartments] = useState([])
-    const [search, setSearch] = useState('')
     const [employeeList, setEmployeeList] = useState(false)
     const [deptList, setDeptList] = useState(false)
     const [tab, setTab] = useState('Employees');
@@ -44,15 +44,13 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
             />
         )
     }
-
     const {
-        data: employeeData,
-        hasNextPage: hasNextEmployees,
-        isFetchingNextPage: fetchingNextEmployees,
-        loading,
+        data: data,
+        hasNextPage: hasNextPage,
+        loading: loading,
+        isFetchingNextPage: isFetchingNextPage
     } = useFetchEmployees(page, search)
 
-    console.log("Loading", loading)
 
     const {
         data: departmentData,
@@ -61,12 +59,12 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         loading: loadingDept
     } = useFetchDepartments(deptPage, searchDeptTerm)
 
-    console.log("dept", departmentData)
+    console.log('search', search)
 
     const __flattenArr = (param) => {
         let flattenedArr = []
-        if (param === "employee" && employeeData && employeeData?.pages && Array.isArray(employeeData?.pages)) {
-            flattenedArr = employeeData?.pages
+        if (param === "people" && data && data?.pages && Array.isArray(data?.pages)) {
+            flattenedArr = data?.pages
         }
         if (param === "departments" && departmentData && departmentData?.pages && Array.isArray(departmentData?.pages)) {
             flattenedArr = departmentData?.pages
@@ -77,7 +75,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         })
         let arr = flattenArr.flat()
 
-        if (param === "employee")
+        if (param === "people")
             page > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
 
         if (param === "departments")
@@ -85,31 +83,33 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     }
 
     const loadMore = () => {
-        if (hasNextEmployees && !loading)
+        if (hasNextPage && !loading)
             setPage(page + 1)
     }
     const footerLoader = () => {
         return (
-            <Container marginTop={3}>
-                <ActivityIndicator size={width(20)} color={ColorList[Math.floor(Math.random() * 4)]} />
+            <Container
+                alignSelf={'center'}
+                width={30} marginTop={3}>
+                <ActivityIndicator size={width(10)} color={AppColors.green} />
             </Container>
         )
     }
-    const RenderItems = ({ item }) => {
-        return (
-            <TouchableOpacity onPress={() => alert("hello", search)}>
-                <ImgPlaceholder text={item}
-                    size={15} />
-            </TouchableOpacity>
-        )
-    }
+
 
     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
     const alphabet = alpha.map((x) => String.fromCharCode(x));
 
+    const RenderItems = ({ item }) => {
+        return (
+            <TouchableOpacity onPress={() => setSearch(item)} >
+                <ImgPlaceholder text={item} size={15} />
+            </TouchableOpacity>
+        )
+    }
     useEffect(() => {
-        __flattenArr('employee')
-    }, [employeeData])
+        __flattenArr('people')
+    }, [data])
 
     useEffect(() => {
         __flattenArr('departments')
@@ -179,7 +179,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                     </View>
                 </Container>
                 {
-                    loadingDept || loading && <ActivityIndicator size={width(20)} color={AppColors.green} />
+                    loading && <ActivityIndicator size={width(20)} color={AppColors.green} />
                 }
 
                 <Container>
@@ -214,7 +214,11 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                                     onEndReachedThreshold={0.1}
                                     onEndReached={loadMore}
                                     refreshing={false}
-                                    ListFooterComponent={fetchingNextEmployees || hasNextEmployees ? footerLoader : null}
+                                    onRefresh={async () => {
+                                        await storePage("page", 1)
+
+                                    }}
+                                    ListFooterComponent={isFetchingNextPage || hasNextPage ? footerLoader : null}
                                 />
                             </React.Fragment>)
                             :
