@@ -192,7 +192,6 @@ const Index = ({ navigation }) => {
                     onPress={() => {
                         if (swiperRef?.current?.state?.index === 2) {
                             return handleCompletion()
-
                         }
                         swiperRef.current.scrollBy(1)
                     }}

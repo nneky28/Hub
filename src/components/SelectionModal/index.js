@@ -23,7 +23,6 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
     data: onboarding,
   } = useFetchOnboarding(Task_Name)
 
-  console.log("CHECK", onboarding)
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
     return (
       <TouchableOpacity
@@ -36,7 +35,6 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
             onHide()
             return navigation.navigate("Menu", { screen: "TaskOnboarding" })
           }
-
           setSelected(text)
           navigation.navigate('Menu', { screen: text })
           //navigation.navigate(text)

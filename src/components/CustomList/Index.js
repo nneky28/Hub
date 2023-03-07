@@ -52,8 +52,6 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
         loading
     } = useFetchEmployees(page, search)
 
-
-
     const {
         data: departmentData,
         isFetching: fetchingDepartments,
@@ -103,11 +101,9 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
         return (
             <TouchableOpacity
                 onPress={() => {
-                    // console.log("item", item)
                     setPage(1)
                     setSearch(item)
-                }
-                } >
+                }}>
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
@@ -230,7 +226,7 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
                                         await storePage("page", 1)
 
                                     }}
-                                    ListFooterComponent={isFetchingNextPage || hasNextPage ? footerLoader : null}
+                                    ListFooterComponent={isFetchingNextPage || hasNextPage || loading ? footerLoader : null}
                                 />
                             </React.Fragment>)
                             :
