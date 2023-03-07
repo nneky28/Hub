@@ -11,7 +11,7 @@ import CustomInput from '../../components/CustomInput/index';
 import { validationSchema } from '../../utills/validationSchema';
 import { Capitalize, getData, storeData } from '../../utills/Methods';
 import { showFlashMessage } from '../../components/SuccessFlash';
-import CustomListModal from '../../components/CustomListModal/Index'
+import CustomList from '../../components/CustomList/Index'
 import { APIFunction, } from '../../utills/api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useMutation, useQueryClient } from 'react-query';
@@ -116,7 +116,7 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                 if (assignTo?.type === "Employee" || assignTo?.type==="Departments") {    
                     setButtons(1)
                 }
-                setButtons(0)
+                // setButtons(0)
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task created successfully` })
             }
@@ -324,7 +324,7 @@ const Index = ({ visible, onHide, item,setButtons}) => {
 
             {
                 open ?
-                    <CustomListModal
+                    <CustomList
                         setOpen={setOpen}
                         open={open}
                         onPressHandler={(item) => {

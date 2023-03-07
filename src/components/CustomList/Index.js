@@ -12,18 +12,19 @@ import { Images } from '../../component2/image/Image';
 
 
 
-const CustomListModal = ({ open, setOpen, onPressHandler }) => {
+const CustomList = ({ open, setOpen, onPressHandler }) => {
 
+    const [tab, setTab] = useState('Employees');
     const [options, setOptions] = useState(true)
     const [deptPage, setDeptPage] = useState(1)
     const [page, setPage] = useState(1)
-    const [search, setSearch] = useState('')
+    const [search, setSearch] = useState("")
     const [searchDeptTerm, setSearchDeptTerm] = useState('')
     const [employees, setEmployees] = useState([])
     const [departments, setDepartments] = useState([])
     const [employeeList, setEmployeeList] = useState(false)
     const [deptList, setDeptList] = useState(false)
-    const [tab, setTab] = useState('Employees');
+
 
 
     const RenderItem = ({ item }) => {
@@ -47,19 +48,17 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     const {
         data: data,
         hasNextPage: hasNextPage,
-        loading: loading,
-        isFetchingNextPage: isFetchingNextPage
+        isFetchingNextPage: isFetchingNextPage,
+        loading
     } = useFetchEmployees(page, search)
+
 
 
     const {
         data: departmentData,
         isFetching: fetchingDepartments,
         isFetchingNextPage: fetchingNextDepartments,
-        loading: loadingDept
     } = useFetchDepartments(deptPage, searchDeptTerm)
-
-    console.log('search', search)
 
     const __flattenArr = (param) => {
         let flattenedArr = []
@@ -102,7 +101,13 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
     const RenderItems = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => setSearch(item)} >
+            <TouchableOpacity
+                onPress={() => {
+                    // console.log("item", item)
+                    setPage(1)
+                    setSearch(item)
+                }
+                } >
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
@@ -112,12 +117,17 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
     }, [data])
 
     useEffect(() => {
+        setPage(1)
+        setSearch("")
+    }, [tab])
+
+    useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
 
+
     return (
-        <Modal
-            visible={open}>
+        <Modal visible={open}>
             <Container style={styles.container}>
                 <View style={styles.close}>
                     <CloseHandler
@@ -178,9 +188,7 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                         />
                     </View>
                 </Container>
-                {
-                    loading && <ActivityIndicator size={width(20)} color={AppColors.green} />
-                }
+
 
                 <Container>
                     {tab === "Employees" &&
@@ -200,6 +208,10 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                 </Container>
                 <ScrollView>
                     <P style={styles.people}>People</P>
+
+                    {
+                        loading && <ActivityIndicator size={width(20)} color={AppColors.green} />
+                    }
                     {
                         tab === 'Employees' ?
                             (<React.Fragment>
@@ -246,4 +258,4 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
 
 
-export default CustomListModal;
+export default CustomList;

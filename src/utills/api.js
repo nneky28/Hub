@@ -454,7 +454,6 @@ export const useFetchOnboarding = (type) => {
 }
 export const useFetchEmployees = (page, search) => {
   return useInfiniteQuery(['get_users', page, search], () => APIFunction.get_users(page, search), {
-
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next
     }
@@ -603,6 +602,7 @@ export const useFetchComments = (id) => {
 export const getAPIs = async (path) => {
   let _token = await getData("token");
   console.log('token', _token)
+  console.log("PATH", path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

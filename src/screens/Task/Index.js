@@ -600,7 +600,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         />
                                     ) : null
                                 }
-                                <View>
+                                <View style={CommonStyles.marginTop_2}>
                                     {
                                         index === 0 && actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
                                             <TodoContent
@@ -615,7 +615,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     }
                                 </View>
 
-                                <View>
+                                <View style={CommonStyles.marginTop_2}>
                                     {
                                         index === 0 && actionTitle === "Completed" ? only_completed.map((item, i) => (
                                             <TodoContent
@@ -892,7 +892,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     )) : null
                                 }
                             </View>
-                            <View>
+                            <View style={CommonStyles.marginTop_2}>
                                 {
                                     index === 1 && actionTitle === 'In Progress' && !loadingAllSentTask ? sent_inProgress.map((item, i) => (
                                         <TodoContent
@@ -907,7 +907,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     )) : null
                                 }
                             </View>
-                            <View>
+                            <View style={CommonStyles.marginTop_2}>
                                 {
                                     index === 1 && actionTitle === 'Completed' && !loadingAllSentTask ? sent_completed.map((item, i) => (
                                         <TodoContent
@@ -955,7 +955,7 @@ const Index = ({ navigation, setMoveTo }) => {
                             </View>
 
                             <View style={styles.container}>
-                                <H1 color={AppColors.black1}>Team Tasks{' '}({total})
+                                <H1 color={AppColors.black1}>Team Tasks{' '}({total ? total : 0})
                                 </H1>
                             </View>
 

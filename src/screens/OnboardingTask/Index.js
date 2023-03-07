@@ -15,6 +15,7 @@ import { APIFunction } from '../../utills/api';
 import { getData, storeData } from '../../utills/Methods';
 
 
+
 const styles = {
     wrapper: {
         backgroundColor: AppColors.white,
@@ -98,6 +99,7 @@ const Index = ({ navigation }) => {
 
     const swiperRef = useRef(null);
     const dispatch = useDispatch();
+    const queryClient = useQueryClient()
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
 
     const handleNavigation = async () => {
@@ -109,6 +111,8 @@ const Index = ({ navigation }) => {
             has_completed_mobile_onboarding: false
         }
         let res = await mutateAsync(fd)
+        queryClient.invalidateQueries("get_onboarding")
+        console.log("res", res)
         await storeData('onboard navigation', res)
         navigation.navigate("onBoardHome")
 
@@ -122,15 +126,12 @@ const Index = ({ navigation }) => {
             has_completed_mobile_onboarding: true
         }
         let res = await mutateAsync(fd)
+        queryClient.invalidateQueries("get_onboarding")
         await storeData('onboard completion', res)
         navigation.navigate("onBoardHome")
 
     }
-    // if (swiperRef?.current?.state?.index === 2) {
-    //     handleCompletion
-    // }
 
-    // console.log('scale', swiperRef?.current?.state?.index)
     return (
         <ScreenWrapper
             scrollEnabled={false}>
@@ -191,6 +192,7 @@ const Index = ({ navigation }) => {
                     onPress={() => {
                         if (swiperRef?.current?.state?.index === 2) {
                             return handleCompletion()
+
                         }
                         swiperRef.current.scrollBy(1)
                     }}
@@ -199,7 +201,7 @@ const Index = ({ navigation }) => {
                     title="Skip"
                     textStyle={styles.btnText}
                     containerStyle={styles.btn}
-                    onPress={() => navigation.navigate("onBoardHome")}
+                    onPress={handleNavigation}
                 />
             </View>
         </ScreenWrapper>

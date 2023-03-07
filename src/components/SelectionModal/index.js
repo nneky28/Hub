@@ -22,19 +22,21 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const {
     data: onboarding,
   } = useFetchOnboarding(Task_Name)
-  const onboarded = onboarding?.[0]?.has_completed_mobile_onboarding
 
-  // console.log('check', onboarding)
-
+  console.log("CHECK", onboarding)
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (text === "Task" && onboarded?.[0]?.has_completed_mobile_onboarding) {
+          if (text === "Task" && onboarding?.[0]?.has_completed_mobile_onboarding) {
             onHide();
-            return navigation.navigate("Task")
+            return navigation.navigate("Menu", { screen: "Task" })
           }
-          navigation.navigate("TaskOnboarding")
+          if (text === "Task" && !onboarding?.[0]?.has_completed_mobile_onboarding) {
+            onHide()
+            return navigation.navigate("Menu", { screen: "TaskOnboarding" })
+          }
+
           setSelected(text)
           navigation.navigate('Menu', { screen: text })
           //navigation.navigate(text)
