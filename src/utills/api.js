@@ -218,7 +218,7 @@ export const APIFunction = {
   },
   get_to_dos: async () => {
     let biz = await getStoredBusiness()
-    console.log("Biz", biz.business_id)
+    // console.log("Biz", biz.business_id)
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
   },
   get_duetoday: async () => {
@@ -236,7 +236,7 @@ export const APIFunction = {
   get_team_tasks: async () => {
     let biz = await getStoredBusiness()
     const user = await getData("about_me")
-    console.log('ID', user)
+    // console.log('ID', user)
     return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
   },
 
@@ -601,8 +601,8 @@ export const useFetchComments = (id) => {
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");
-  console.log('token', _token)
-  console.log("PATH", path)
+  // console.log('token', _token)
+  // console.log("PATH", path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

@@ -112,7 +112,7 @@ const Index = ({ navigation }) => {
         }
         let res = await mutateAsync(fd)
         queryClient.invalidateQueries("get_onboarding")
-        console.log("res", res)
+        // console.log("res", res)
         await storeData('onboard navigation', res)
         navigation.navigate("onBoardHome")
 
