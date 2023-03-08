@@ -375,7 +375,6 @@ const Index = ({ navigation, setMoveTo }) => {
                                         }}>
                                             <Container
                                                 backgroundColor={item.colorUp}
-                                                height={130}
                                                 width={28}
                                                 style={styles.mainContainer}>
                                                 <View>
@@ -673,7 +672,6 @@ const Index = ({ navigation, setMoveTo }) => {
                                     }}>
                                         <Container
                                             backgroundColor={item.colorUp}
-                                            height={130}
                                             width={28}
                                             style={styles.mainContainer}>
                                             <View>
@@ -991,7 +989,6 @@ const Index = ({ navigation, setMoveTo }) => {
                                     }}>
                                         <Container
                                             backgroundColor={item.colorUp}
-                                            height={130}
                                             width={28}
                                             style={styles.mainContainer}>
                                             <View>
