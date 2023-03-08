@@ -343,7 +343,6 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                                                         component={CustomInput}
                                                                         placeholder="Add subtasks here"
                                                                         multiline={true}
-                                                                        minHeight={5}
                                                                         inputWidth={70}
                                                                         autoFocus={true}
                                                                         style={{ marginRight: width(5), }}
