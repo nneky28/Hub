@@ -102,21 +102,12 @@ const Index = ({ navigation }) => {
     const queryClient = useQueryClient()
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
 
-    const handleNavigation = async () => {
-        let employee_id = await getData("about_me")
-        let fd = {
-            type: 'Task',
-            employee: employee_id.id,
-            has_completed_mobile_navigation: true,
-            has_completed_mobile_onboarding: false
-        }
-        let res = await mutateAsync(fd)
-        queryClient.invalidateQueries("get_onboarding")
-        // console.log("res", res)
-        await storeData('onboard navigation', res)
-        navigation.navigate("onBoardHome")
 
+
+    const handleNavigation = async () => {
+        navigation.navigate("onBoardHome")
     }
+
     const handleCompletion = async () => {
         let employee_id = await getData("about_me")
         let fd = {
@@ -125,6 +116,7 @@ const Index = ({ navigation }) => {
             has_completed_mobile_navigation: true,
             has_completed_mobile_onboarding: true
         }
+
         let res = await mutateAsync(fd)
         queryClient.invalidateQueries("get_onboarding")
         await storeData('onboard completion', res)

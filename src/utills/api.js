@@ -186,6 +186,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/app_onboarding/`, fd)
   },
+  update_onboarding: async (fd) => {
+    console.log("fd", fd)
+    let biz = await getStoredBusiness()
+    return putAPIs(`/c/${biz.business_id}/app_onboarding/${fd.id}/`, fd)
+  },
   get_onboarding: async (type) => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
@@ -601,7 +606,7 @@ export const useFetchComments = (id) => {
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");
-  // console.log('token', _token)
+  console.log('token', _token)
   // console.log("PATH", path)
   return new Promise((resolve, reject) => {
     axios
@@ -713,6 +718,7 @@ export const putAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
+        console.log('error', error)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
