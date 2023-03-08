@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 2,
         elevation: width(1),
-        height: height(14)
+        height: height(14.5)
     },
     clipped: { height: height(8.5), resizeMode: 'contain' },
     count: {
