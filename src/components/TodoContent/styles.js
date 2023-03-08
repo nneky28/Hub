@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.4),
         color: AppColors.black1,
-        marginTop: height(1),
+        paddingVertical: height(1),
         width: width(50),
     },
     dots: {

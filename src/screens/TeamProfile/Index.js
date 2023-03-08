@@ -50,6 +50,7 @@ const Index = ({ route }) => {
         isLoading: loadingDue
     } = useFetchPersonalDue(tab, item.id)
 
+    console.log("due item", dueTask)
     const {
         data: upcomingTask,
         isLoading: loadingUpcoming
@@ -102,8 +103,10 @@ const Index = ({ route }) => {
     const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
     const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
     const no_date = Object.values(data).filter((item) => item?.due_date === null);
+    const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
 
-    // console.log('data', data)
+    console.log('data', only_Todos)
+    console.log("only overdue", only_overdue)
 
     useEffect(() => {
         __flattenArr()
@@ -249,8 +252,8 @@ const Index = ({ route }) => {
                     }
                     {
                         (
-                            (actionTitle === "To-Do" && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
-                            dueItems.length === 0 && !loadingDue
+                            (actionTitle === "To-Do" && tab === "Due Today") && only_duetoday && Array.isArray(only_duetoday) &&
+                            only_duetoday.length === 0 && !loadingDue
                         ) ? (
                             <EmptyStateWrapper
                                 icon={Images.EmptyTeams}
@@ -275,8 +278,8 @@ const Index = ({ route }) => {
                     }
                     {
                         (
-                            (tab === "Overdue") && overdueItems && Array.isArray(overdueItems) &&
-                            overdueItems.length === 0 && !loadingOverdue
+                            (tab === "Overdue") && only_overdue && Array.isArray(only_overdue) &&
+                            only_overdue.length === 0 && !loadingOverdue
                         ) ? (
                             <EmptyStateWrapper
                                 icon={Images.EmptyTeams}
@@ -319,7 +322,7 @@ const Index = ({ route }) => {
                     }
                     <View>
                         {
-                            actionTitle === 'To-Do' && tab === "Due Today" && !loadingDue ? dueItems.map((item, i) => (
+                            actionTitle === 'To-Do' && tab === "Due Today" && !loadingDue ? only_duetoday.map((item, i) => (
                                 <TodoContent
                                     key={i}
                                     count={count}
