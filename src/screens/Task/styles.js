@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
         elevation: width(1),
         height: height(14.3)
     },
-    clipped: { height: height(8.5), resizeMode: 'contain' },
+    clipped: { height: height(8.9), resizeMode: 'contain' },
     count: {
         position: 'absolute',
         left: width(19),
