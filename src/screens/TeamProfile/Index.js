@@ -376,35 +376,38 @@ const Index = ({ route }) => {
                         }
                     </View>
 
+                    <View style={CommonStyles.marginTop_2}>
+                        {
+                            actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
+                                <TodoContent
+                                    key={i}
+                                    show={show}
+                                    title={actionTitle}
+                                    count={count}
+                                    item={item}
+                                    user
+                                    __flattenArr={__flattenArr}
+                                />
+                            )) : null
+                        }
+                    </View>
 
-                    {
-                        actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
-                            <TodoContent
-                                key={i}
-                                show={show}
-                                title={actionTitle}
-                                count={count}
-                                item={item}
-                                __flattenArr={__flattenArr}
-                            />
-                        )) : null
-                    }
+                    <View style={CommonStyles.marginTop_2}>
 
-                    {
-                        actionTitle === "Completed" ? only_completed.map((item, i) => (
-                            <TodoContent
-                                key={i}
-                                show={show}
-                                title={actionTitle}
-                                count={count}
-                                item={item}
-                                __flattenArr={__flattenArr}
-                            />
-                        )) : null
-                    }
-
-
-
+                        {
+                            actionTitle === "Completed" ? only_completed.map((item, i) => (
+                                <TodoContent
+                                    key={i}
+                                    show={show}
+                                    title={actionTitle}
+                                    count={count}
+                                    item={item}
+                                    user
+                                    __flattenArr={__flattenArr}
+                                />
+                            )) : null
+                        }
+                    </View>
                 </ScrollView>
             </View>
         </ScreenWrapper>

@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     by: {
         paddingHorizontal: width(5.2),
         height: height(2),
-        // bottom: height(0.1),
         fontSize: width(3.2),
     },
     date: {
