@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
+    RefreshControl
 } from 'react-native'
 import React, { useState, useEffect, } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
@@ -36,13 +37,16 @@ import {
     useFetchAllSentOverdue
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { __flatten, } from '../../utills/Methods';
+import { __flatten, getData, getStoredBusiness } from '../../utills/Methods';
 import CreateTask from '../CreateTask/Index'
 import AnimatedView from '../../components/AnimatedView';
+import { useQueryClient } from 'react-query';
 
 
 const Index = ({ navigation, setMoveTo }) => {
     const [index, setIndex] = useState(0);
+    const [employee_pk, setEmployeePK] = useState(null)
+    const [business, setBusiness] = useState(null)
     const [tab, setTab] = useState("All");
     const [count, setCount] = useState(0);
     const [actionTitle, setActionTitle] = useState("To-Do");
@@ -72,7 +76,7 @@ const Index = ({ navigation, setMoveTo }) => {
     const [teamUpcomingPage, setTeamUpcomingPage] = useState(1)
     const [teamOverdueData, setTeamOverdueData] = useState([])
     const [teamOverduePage, setTeamOverduePage] = useState(1)
-
+    const queryClient = useQueryClient()
 
 
     const setButtons = (i) => {
@@ -283,9 +287,21 @@ const Index = ({ navigation, setMoveTo }) => {
         __flattenArr()
     }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
 
-    // useEffect((param) => {
-    //     handleIndex(param)
-    // }, [])
+
+    const reloadScreen = async () => {
+        try {
+            let about_me = await getData("about_me");
+            setEmployeePK(about_me?.id)
+            let biz = await getStoredBusiness();
+            setBusiness(biz);
+        } catch (err) {
+
+        }
+    }
+    const refreshTask = () => {
+        reloadScreen()
+        queryClient.invalidateQueries("")
+    }
 
     return (
         <React.Fragment>
@@ -315,6 +331,12 @@ const Index = ({ navigation, setMoveTo }) => {
                 </View>
                 <ScrollView
                     style={[styles.scroll, CommonStyles.paddingBottom_10]}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={false}
+                            onRefresh={refreshTask}
+                        />
+                    }
                     showsVerticalScrollIndicator={false}>
 
                     <View style={styles.threeButtonCont}>
