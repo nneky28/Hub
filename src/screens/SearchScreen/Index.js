@@ -182,7 +182,7 @@ const PeopleList = ({ navigation, route }) => {
                                             title="Search by name "
                                             containerStyle={styles.searchBox}
                                             onSubmitEditing={handleSearch}
-                                            autoFocus={true}
+
                                         />
                                         <TouchableOpacity style={styles.filterIconContainer}>
                                             <Image resizeMode="contain" source={{ uri: Images.FilterArrow }} style={styles.filterIcon} />
@@ -194,7 +194,7 @@ const PeopleList = ({ navigation, route }) => {
                                             title="Search by name "
                                             containerStyle={styles.searchBox}
                                             onSubmitEditing={handleSearch}
-                                            autoFocus={true}
+
                                         />
                                         <TouchableOpacity style={styles.filterIconContainerIOS}>
                                             <Image resizeMode="contain" source={{ uri: Images.FilterArrow }} style={styles.filterIconIOS} />
