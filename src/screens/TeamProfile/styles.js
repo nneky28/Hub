@@ -213,6 +213,13 @@ const styles = StyleSheet.create({
         marginLeft: width(4.5)
 
     },
+    emptyState: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        marginTop: height(15),
+
+    },
 
 });
 export default styles;

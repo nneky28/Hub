@@ -241,7 +241,7 @@ export const APIFunction = {
   get_team_tasks: async () => {
     let biz = await getStoredBusiness()
     const user = await getData("about_me")
-    // console.log('ID', user)
+    console.log('ID', user)
     return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
   },
 

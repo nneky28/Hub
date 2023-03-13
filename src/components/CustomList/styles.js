@@ -146,6 +146,14 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansRegular,
         color: AppColors.green,
     },
+
+    emptyState: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        marginTop: height(15),
+
+    },
     // search: { flexDirection: 'row', paddingHorizontal: width(5) },
     // searchView: {
     //     justifyContent: "center",

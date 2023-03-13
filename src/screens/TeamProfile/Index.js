@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import { H1, BackHandler, Container, TouchableWrapper, PageLoader, EmptyStateWrapper } from '../../utills/components'
+import { H1, BackHandler, Container, TouchableWrapper, PageLoader, P } from '../../utills/components'
 import { height, width } from 'react-native-dimension';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index'
@@ -50,7 +50,7 @@ const Index = ({ route }) => {
         isLoading: loadingDue
     } = useFetchPersonalDue(tab, item.id)
 
-    console.log("due item", dueTask)
+    // console.log("due item", dueTask)
     const {
         data: upcomingTask,
         isLoading: loadingUpcoming
@@ -105,15 +105,22 @@ const Index = ({ route }) => {
     const no_date = Object.values(data).filter((item) => item?.due_date === null);
     const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
 
-    console.log('data', only_Todos)
-    console.log("only overdue", only_overdue)
+    // console.log('data', only_Todos)
+    // console.log("only overdue", only_overdue)
 
     useEffect(() => {
         __flattenArr()
     }, [allEmployeeTask, dueTask, upcomingTask, overdueTask]);
 
 
-
+    const EmptyState = () => {
+        return (
+            <View style={styles.emptyState}>
+                <P color="#A8A8A8">You have no tasks</P>
+                <P color="#A8A8A8">yet.</P>
+            </View>
+        )
+    }
 
 
     return (
@@ -193,12 +200,7 @@ const Index = ({ route }) => {
                             (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
                             only_inProgress.length === 0 && !loadingAllTask
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
                     {
@@ -206,12 +208,7 @@ const Index = ({ route }) => {
                             (actionTitle === "Completed") && only_completed && Array.isArray(only_completed) &&
                             only_completed.length === 0 && !loadingAllTask
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
 
@@ -242,12 +239,7 @@ const Index = ({ route }) => {
                             (actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
                             data.length === 0 && !loadingAllTask
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
                     {
@@ -255,12 +247,7 @@ const Index = ({ route }) => {
                             (actionTitle === "To-Do" && tab === "Due Today") && only_duetoday && Array.isArray(only_duetoday) &&
                             only_duetoday.length === 0 && !loadingDue
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
                     {
@@ -268,12 +255,7 @@ const Index = ({ route }) => {
                             (tab === "Upcoming") && upcomingItems && Array.isArray(upcomingItems) &&
                             upcomingItems.length === 0 && !loadingUpcoming
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
                     {
@@ -281,12 +263,7 @@ const Index = ({ route }) => {
                             (tab === "Overdue") && only_overdue && Array.isArray(only_overdue) &&
                             only_overdue.length === 0 && !loadingOverdue
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
 
@@ -295,12 +272,7 @@ const Index = ({ route }) => {
                             (tab === "No Date") && no_date && Array.isArray(no_date) &&
                             no_date.length === 0 && !loadingOverdue
                         ) ? (
-                            <EmptyStateWrapper
-                                icon={Images.EmptyTeams}
-                                header_1={"No task here"}
-                                sub_text={"When you have, they will show up here."}
-                                backgroundColor={'#F2F2F2'}
-                            />
+                            <EmptyState />
                         ) : null
                     }
                     {

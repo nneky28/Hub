@@ -136,19 +136,7 @@ const styles = StyleSheet.create({
         color: '#1E727B',
         fontFamily: FontFamily.BlackSansRegular
     },
-    emptyState: {
-        height: height(8),
-        width: height(8),
-        borderRadius: height(10),
-        backgroundColor: '#ADE5EB',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: height(30),
-        left: width(40),
-        borderWidth: 0.1,
-        borderColor: '#ADE5EB'
-    },
+
     logoBox: { backgroundColor: '#FDEDCE', padding: width(1.5), borderRadius: width(1.5) },
     logo: { width: width(4.5), height: height(2), borderRadius: 50, alignSelf: 'center', },
 
@@ -285,7 +273,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: width(19),
         top: height(4)
-    }
+    },
+
+
+    emptyState: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        marginTop: height(15),
+
+    },
 
 });
 export default styles;

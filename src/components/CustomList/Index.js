@@ -9,6 +9,7 @@ import styles from './styles'
 import CommonStyles from '../../utills/CommonStyles';
 import { useFetchDepartments, useFetchEmployees } from '../../utills/api';
 import { Images } from '../../component2/image/Image';
+import { showFlashMessage } from '../SuccessFlash/index';
 
 
 
@@ -98,11 +99,17 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
     const alphabet = alpha.map((x) => String.fromCharCode(x));
 
     const RenderItems = ({ item }) => {
+
         return (
             <TouchableOpacity
                 onPress={() => {
                     setPage(1)
                     setSearch(item)
+
+                    if (!search && !loading) {
+                        setPage(1)
+
+                    }
                 }}>
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
@@ -203,11 +210,30 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
                     }
                 </Container>
                 <ScrollView>
-                    <P style={styles.people}>People</P>
+                    {tab === "Employees" ?
+                        <P style={styles.people}>People</P> :
+                        <P style={styles.people}>Departments</P>
+                    }
 
                     {
                         loading && <ActivityIndicator size={width(20)} color={AppColors.green} />
                     }
+
+
+
+                    {data && Array.isArray(data) &&
+                        data.length === 0 && !loading ?
+                        <View style={styles.emptyState}>
+                            <P>
+                                There are no people in your company.
+                            </P>
+                            <P>
+                                Adding people will enable you assign tasks directly to people or department
+                            </P>
+                        </View>
+                        : null
+                    }
+
                     {
                         tab === 'Employees' ?
                             (<React.Fragment>

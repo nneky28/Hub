@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Platform, Image } from 'react-native'
 import React, { useState } from 'react'
 import OnboardingVideos from '../../components/OnboardingVideos/Index'
 import { showFlashMessage } from '../../components/SuccessFlash/index';
@@ -9,28 +9,28 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
 import { NotifyHandler } from '../../utills/components';
 import AnimatedView from '../../components/AnimatedView/index';
+import { Images } from '../../component2/image/Image';
 
 
 const HomeScreen = () => {
+    const [index, setIndex] = useState(0);
     const [empty, setEmpty] = useState(true)
     const [video, setVideo] = useState(true)
     const [tab, setTab] = useState('Date');
-    const [index, setIndex] = useState('Task To-do');
     const [margin, setMargin] = useState(0.1);
     const [visible, setVisible] = useState(false)
 
+
     const setButtons = (i) => {
         setIndex(i);
-        var margin = i * 45;
+        var margin = i * 30;
         if (margin == 0) margin = 0.1;
         setMargin(width(margin));
     };
     const AddButton = ({ onPress, style }) => (
         <TouchableOpacity
             style={style}
-            onPress={onPress}
-
-        >
+            onPress={onPress} >
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
     );
@@ -48,54 +48,47 @@ const HomeScreen = () => {
             }}>
             <View style={styles.mainViewContainer}>
                 <View style={styles.header}>
+                    <View style={styles.logoBox}>
+                        <Image source={{ uri: Images.TaskLogo }} style={styles.logo} />
+                    </View>
                     <Text numberOfLines={1} style={styles.screenTitle}>
                         Tasks
                     </Text>
-                    <NotifyHandler />
-                </View>
-                <View style={styles.line} />
-                <View style={styles.threeButtonCont}>
-                    {
-                        ['Task To-do', 'Sent Task'].map((item, i) => (
-                            <TouchableOpacity
-                                onPress={() => setButtons(i)}
-                                style={styles.button}
-                                activeOpacity={0.8}
-                                key={i}
-                            >
-                                <Text style={[styles.buttonText, index == i && styles.buttonText1]}>
-                                    {item}
-                                </Text>
-                            </TouchableOpacity>
-                        ))
-                    }
-                    <AnimatedView marginLeft={margin} styles={styles.animatedView} />
 
                 </View>
-                <View style={styles.twoButtonCont}>
+                <View style={styles.line} />
+            </View>
+
+
+            <View style={styles.scroll}>
+                <View style={styles.threeButtonCont}>
                     {
-                        ['Date', 'Status'].map((item, i) => (
+                        ['My Tasks', 'Sent Tasks', 'My Team'].map((item, i) => (
                             <TouchableOpacity
-                                onPress={() => setTab(item)}
-                                style={styles.button3}
+                                onPress={() => {
+                                    setButtons(i)
+
+                                }}
+                                style={styles.button}
                                 activeOpacity={0.8}
-                                key={i}
-                            >
-                                <Text style={[styles.buttonText2, tab == item && styles.buttonText3]}>
+                                key={i}>
+                                <Text style={[styles.buttonText, index === i && styles.buttonText1]}>
                                     {item}
                                 </Text>
-                                {tab == item && <View style={styles.animatedView3} />}
                             </TouchableOpacity>
                         ))
                     }
+                    <AnimatedView marginLeft={margin} styles={[styles.animatedView]} />
                 </View>
+
                 <View style={styles.emptyCon}>
                     <Text style={styles.emptyText}>You have no tasks yet. Click the add  (+) icon to create your first task</Text>
                 </View>
-
             </View>
 
-            {video ?
+
+
+            {/* {video ?
                 <OnboardingVideos
                     visible={video}
                     onHide={() => {
@@ -110,7 +103,7 @@ const HomeScreen = () => {
 
                     }
                 /> : null
-            }
+            }  */}
             {
                 visible &&
                 <CreateTask
@@ -142,11 +135,16 @@ const styles = StyleSheet.create({
     mainViewContainer: {
         backgroundColor: AppColors.white,
     },
+    scroll: {
+        backgroundColor: '#F5F5F5',
+        paddingBottom: height(50),
+
+    },
     line: {
         width: '100%',
         height: 1,
         backgroundColor: AppColors.gray1,
-        marginTop: height(1),
+        marginTop: height(1.5),
         elevation: 0,
     },
     header: {
@@ -156,80 +154,57 @@ const styles = StyleSheet.create({
         marginBottom: height(0.5),
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        // justifyContent: 'space-between'
     },
     screenTitle: {
         fontSize: width(5),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
+        paddingHorizontal: width(2)
 
     },
+    logoBox: { backgroundColor: '#FDEDCE', padding: width(1.5), borderRadius: width(1.5) },
+    logo: { width: width(4.5), height: height(2), borderRadius: 50, alignSelf: 'center', },
     threeButtonCont: {
         width: width(90),
         alignSelf: 'center',
         marginTop: height(4),
         borderWidth: 1,
         borderColor: AppColors.grayBorder,
-        borderRadius: 7,
+        borderRadius: width(15),
         flexDirection: 'row',
         justifyContent: 'space-around',
         height: height(4.5),
         alignItems: 'center',
+        backgroundColor: AppColors.whiteBase
     },
 
     animatedView: {
         position: 'absolute',
-        width: '49%',
-        backgroundColor: AppColors.lightGreen,
-        height: '90%',
-        borderRadius: 5,
-        left: 0,
+        width: width(27),
+        backgroundColor: AppColors.white,
+        height: height(3),
+        borderRadius: width(15),
         zIndex: -1,
-        marginLeft: width(0.5)
+
     },
+
     button: {
-        width: '90%',
-        height: height(3.5),
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    buttonText1: {
-        fontSize: width(3.3),
-        color: AppColors.green,
-        fontFamily: FontFamily.BlackSansBold
-    },
-    buttonText2: {
-        fontSize: width(3.3),
-        color: AppColors.black,
-        fontFamily: FontFamily.BlackSansRegular
-    },
-
-
-    buttonText3: {
-        fontSize: width(3.3),
-        color: AppColors.green,
-        fontFamily: FontFamily.BlackSansRegular
-    },
-
-    twoButtonCont: {
-        width: width(40),
-        alignSelf: 'flex-end',
-        marginTop: height(3),
-        borderWidth: 1,
-        borderColor: AppColors.grayBorder,
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        height: height(4),
-        alignItems: 'center',
-        marginRight: width(4)
-    },
-    button3: {
-        width: '35%',
+        width: '30%',
         height: height(3),
         alignItems: "center",
         justifyContent: "center"
     },
+    buttonText: {
+        fontSize: width(3.3),
+        color: AppColors.black,
+        fontFamily: FontFamily.BlackSansRegular
+    },
+    buttonText1: {
+        color: AppColors.black,
+        fontFamily: FontFamily.BlackSansBold
+    },
+
     emptyCon: {
         paddingHorizontal: width(18),
         marginTop: height(15)

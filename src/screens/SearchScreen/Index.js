@@ -294,6 +294,21 @@ const PeopleList = ({ navigation, route }) => {
                         <P color={'#A8A8A8'}>People</P>
                     </View>
                 </View>
+
+
+                {data && Array.isArray(data) &&
+                    data.length === 0 && !loading ?
+                    <View style={styles.emptyState}>
+                        <P>
+                            There are no people in your company.
+                        </P>
+                        <P>
+                            Adding people will enable you assign tasks directly to people or department
+                        </P>
+                    </View>
+                    : null
+                }
+
                 <FlatList
                     data={item}
                     keyExtractor={(item, index) => index.toString()}

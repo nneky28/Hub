@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import React, { useState, useEffect, } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import { H1, Container, Rounded, PageLoader, TouchableWrapper, EmptyStateWrapper, ImgPlaceholder } from '../../utills/components'
+import { H1, Container, Rounded, PageLoader, TouchableWrapper, ImgPlaceholder, P } from '../../utills/components'
 import { width } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
 import MyTeamCard from '../../components/MyTeamCard/Index'
@@ -302,6 +302,14 @@ const Index = ({ navigation, setMoveTo }) => {
         reloadScreen()
         queryClient.invalidateQueries("")
     }
+    const EmptyState = () => {
+        return (
+            <View style={styles.emptyState}>
+                <P color="#A8A8A8">You have no tasks</P>
+                <P color="#A8A8A8">yet.</P>
+            </View>
+        )
+    }
 
     return (
         <React.Fragment>
@@ -415,7 +423,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                 </View>
                                 <View style={styles.container}>
                                     <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                                        actionTitle === 'To-Do' ? statistics?.todo_count : actionTitle === 'In Progress' ? statistics?.inprogress_count : actionTitle === 'Completed' ? statistics?.completed_count : null
+                                        actionTitle === 'To-Do' ? statistics?.todo_count : actionTitle === 'In Progress' ? statistics?.inprogress_count : actionTitle === 'Completed' ? statistics?.completed_count : 0
                                     })
                                     </H1>
                                 </View>
@@ -425,12 +433,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
                                         only_inProgress.length === 0 && !loadingAllTask
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
                                 {
@@ -438,12 +441,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (actionTitle === "Completed") && only_completed && Array.isArray(only_completed) &&
                                         only_completed.length === 0 && !loadingAllTask
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
 
@@ -559,12 +557,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (index === 0 && actionTitle === 'To-Do' && tab === "All") && only_Todos && Array.isArray(only_Todos) &&
                                         only_Todos.length === 0 && !loadingAllTask
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
                                 {
@@ -572,13 +565,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (index === 0 && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
                                         dueItems.length === 0 && !loadingDueTask
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
                                 {
@@ -586,13 +573,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (index === 0 && tab === "Upcoming") && upcomingItems && Array.isArray(upcomingItems) &&
                                         upcomingItems.length === 0 && !loadingUpcoming
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
                                 {
@@ -600,12 +581,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (index === 0 && tab === "Overdue") && only_overdue && Array.isArray(only_overdue) &&
                                         only_overdue.length === 0 && !loadingOverdue
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
                                 {
@@ -613,12 +589,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                         (index === 0 && tab === "No Date") && no_date && Array.isArray(no_date) &&
                                         no_date.length === 0 && !loadingAllTask
                                     ) ? (
-                                        <EmptyStateWrapper
-                                            icon={Images.EmptyTeams}
-                                            header_1={"No task here"}
-                                            sub_text={"When you have, they will show up here."}
-                                            backgroundColor={'#F5F5F5'}
-                                        />
+                                        <EmptyState />
                                     ) : null
                                 }
                                 <View style={CommonStyles.marginTop_2}>
@@ -722,12 +693,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && actionTitle === "In Progress") && sent_inProgress && Array.isArray(sent_inProgress) &&
                                     sent_inProgress.length === 0 && !loadingAllSentTask
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -735,12 +701,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && actionTitle === "Completed") && sent_completed && Array.isArray(sent_completed) &&
                                     sent_completed.length === 0 && !loadingAllTeamTask
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
 
@@ -771,13 +732,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && actionTitle === "To-Do" && tab === "All") && sentItems && Array.isArray(sentItems) &&
                                     sentItems.length === 0 && !loadingAllSentTask
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        marginTop={1}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -786,13 +741,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && tab === "Due Today") && sentDueItem && Array.isArray(sentDueItem) &&
                                     sentDueItem.length === 0 && !loadingAllSentDues
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -800,13 +749,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && tab === "Upcoming") && sentUpcomingItem && Array.isArray(sentUpcomingItem) &&
                                     sentUpcomingItem.length === 0 && !loadingAllSentUpcoming
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -814,12 +757,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && tab === "Overdue") && sentOverdueItem && Array.isArray(sentOverdueItem) &&
                                     sentOverdueItem.length === 0 && !loadingAllSentOverdue
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -827,12 +765,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 1 && tab === "No Date") && no_date_sent && Array.isArray(no_date_sent) &&
                                     no_date_sent.length === 0 && !loadingAllSentTask
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
 
@@ -970,14 +903,10 @@ const Index = ({ navigation, setMoveTo }) => {
                                 />
                             </View>
 
-                            <View>
+                            {/* <View>
                                 <MyTeamCard />
-                            </View>
+                            </View> */}
 
-                            <View style={styles.container}>
-                                <H1 color={AppColors.black1}>Team Tasks{' '}({total ? total : 0})
-                                </H1>
-                            </View>
 
                             <View style={styles.boxContainer}>
                                 {
@@ -1027,6 +956,10 @@ const Index = ({ navigation, setMoveTo }) => {
                                     </TouchableOpacity>)
                                 }
                             </View>
+                            <View style={styles.container}>
+                                <H1 color={AppColors.black1}>Team Tasks{' '}({total ? total : 0})
+                                </H1>
+                            </View>
                             {
                                 index === 2 && actionTitle === "To-Do" ? null :
                                     <View style={styles.container}>
@@ -1041,13 +974,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 2 && actionTitle === "Completed") && team_completed && Array.isArray(team_completed) &&
                                     team_completed.length === 0 && !loadingAllSentDues
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -1078,13 +1005,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 2 && actionTitle === "To-Do" && tab === "All") && team_todos && Array.isArray(team_todos) &&
                                     team_todos.length === 0 && !loadingAllTeamTask
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        marginTop={1}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -1092,13 +1013,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 2 && tab === "Due Today") && teamDueData && Array.isArray(teamDueData) &&
                                     teamDueData.length === 0 && !loadingAllTeamDue
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -1106,12 +1021,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 2 && tab === "Upcoming") && teamUpcomingData && Array.isArray(teamUpcomingData) &&
                                     teamUpcomingData.length === 0 && !loadingAllTeamUpcoming
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -1119,12 +1029,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
                                     team_overdue.length === 0 && !loadingOverdue
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             {
@@ -1132,12 +1037,7 @@ const Index = ({ navigation, setMoveTo }) => {
                                     (index === 2 && tab === "No Date") && no_date_team && Array.isArray(no_date_team) &&
                                     no_date_team.length === 0 && !loadingAllTeamTask
                                 ) ? (
-                                    <EmptyStateWrapper
-                                        icon={Images.EmptyTeams}
-                                        header_1={"No task here"}
-                                        sub_text={"When you have, they will show up here."}
-                                        backgroundColor={'#F5F5F5'}
-                                    />
+                                    <EmptyState />
                                 ) : null
                             }
                             <View style={CommonStyles.marginTop_2}>

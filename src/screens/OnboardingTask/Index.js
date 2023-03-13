@@ -11,7 +11,7 @@ import Button from '../../components/Button'
 import { useMutation, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
-import { APIFunction } from '../../utills/api';
+import { APIFunction, useFetchOnboarding } from '../../utills/api';
 import { getData, storeData } from '../../utills/Methods';
 
 
@@ -99,14 +99,17 @@ const Index = ({ navigation }) => {
 
     const swiperRef = useRef(null);
     const dispatch = useDispatch();
+    const Task_Name = "Task"
     const queryClient = useQueryClient()
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
+    const { mutateAsync: editHandler } = useMutation(APIFunction.update_onboarding)
 
 
+    const {
+        data: onboarding,
+    } = useFetchOnboarding(Task_Name)
 
-    const handleNavigation = async () => {
-        navigation.navigate("onBoardHome")
-    }
+
 
     const handleCompletion = async () => {
         let employee_id = await getData("about_me")
@@ -116,11 +119,18 @@ const Index = ({ navigation }) => {
             has_completed_mobile_navigation: true,
             has_completed_mobile_onboarding: true
         }
-
-        let res = await mutateAsync(fd)
-        queryClient.invalidateQueries("get_onboarding")
-        await storeData('onboard completion', res)
-        navigation.navigate("onBoardHome")
+        if (onboarding) {
+            fd["id"] = onboarding[0]?.id;
+            let res = await editHandler(fd)
+            await storeData('onboard completion', res)
+            queryClient.invalidateQueries()
+            navigation.navigate("onBoardHome")
+        } else {
+            let res = await mutateAsync(fd)
+            queryClient.invalidateQueries("get_onboarding")
+            await storeData('onboard completion', res)
+            navigation.navigate("onBoardHome")
+        }
 
     }
 
@@ -192,7 +202,7 @@ const Index = ({ navigation }) => {
                     title="Skip"
                     textStyle={styles.btnText}
                     containerStyle={styles.btn}
-                    onPress={handleNavigation}
+                    onPress={handleCompletion}
                 />
             </View>
         </ScreenWrapper>
