@@ -907,6 +907,10 @@ const Index = ({ navigation, setMoveTo }) => {
                                 <MyTeamCard />
                             </View> */}
 
+                            <View style={styles.container}>
+                                <H1 color={AppColors.black1}>Team Tasks{' '}({total ? total : 0})
+                                </H1>
+                            </View>
 
                             <View style={styles.boxContainer}>
                                 {
@@ -955,10 +959,6 @@ const Index = ({ navigation, setMoveTo }) => {
                                         </Container>
                                     </TouchableOpacity>)
                                 }
-                            </View>
-                            <View style={styles.container}>
-                                <H1 color={AppColors.black1}>Team Tasks{' '}({total ? total : 0})
-                                </H1>
                             </View>
                             {
                                 index === 2 && actionTitle === "To-Do" ? null :
