@@ -250,6 +250,7 @@ const Index = ({ navigation, setMoveTo }) => {
 
     //team card
     const team_todos = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
+    const team_duetoday = Object.values(teamDuePage).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
     const team_overdue = Object.values(teamOverdueData).filter((item) => item.status !== "In-progress");
     const team_inProgress = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "To-do")
     const team_completed = Object.values(teamData).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
@@ -1010,8 +1011,8 @@ const Index = ({ navigation, setMoveTo }) => {
                             }
                             {
                                 (
-                                    (index === 2 && tab === "Due Today") && teamDueData && Array.isArray(teamDueData) &&
-                                    teamDueData.length === 0 && !loadingAllTeamDue
+                                    (index === 2 && tab === "Due Today") && team_duetoday && Array.isArray(team_duetoday) &&
+                                    team_duetoday.length === 0 && !loadingAllTeamDue
                                 ) ? (
                                     <EmptyState />
                                 ) : null
@@ -1055,7 +1056,7 @@ const Index = ({ navigation, setMoveTo }) => {
 
                                 <View>
                                     {
-                                        index === 2 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllTeamDue ? teamDueData.map((item, i) => (
+                                        index === 2 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllTeamDue ? team_duetoday.map((item, i) => (
                                             <TeamTodoContent
                                                 key={i}
                                                 count={count}

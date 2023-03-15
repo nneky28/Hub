@@ -187,7 +187,7 @@ export const APIFunction = {
     return postAPIs(`/c/${biz.business_id}/app_onboarding/`, fd)
   },
   update_onboarding: async (fd) => {
-    console.log("fd", fd)
+    console.log("fd", fd.id)
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz.business_id}/app_onboarding/${fd.id}/`, fd)
   },
@@ -240,8 +240,9 @@ export const APIFunction = {
   },
   get_team_tasks: async () => {
     let biz = await getStoredBusiness()
+    console.log("biz", biz)
     const user = await getData("about_me")
-    console.log('ID', user)
+    // console.log('ID', user)
     return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
   },
 

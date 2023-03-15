@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, useFetchOnboarding } from '../../utills/api';
 import { getData, storeData } from '../../utills/Methods';
+import { showFlashMessage } from '../../components/SuccessFlash/index';
 
 
 
@@ -111,25 +112,53 @@ const Index = ({ navigation }) => {
 
 
 
+    // const handleOnboarding = async () => {
+    //     let employee_id = await getData("about_me")
+    //     let fd = {
+    //         type: 'Task',
+    //         employee: employee_id.id,
+    //         has_completed_mobile_navigation: true,
+    //         has_completed_mobile_onboarding: true
+    //     }
+    //     let res = await mutateAsync(fd)
+    //     console.log('res', res)
+    //     queryClient.invalidateQueries()
+    //     await storeData('onboard completion', res)
+    //     navigation.navigate("onBoardHome")
+    // }
+
+
     const handleCompletion = async () => {
-        let employee_id = await getData("about_me")
-        let fd = {
-            type: 'Task',
-            employee: employee_id.id,
-            has_completed_mobile_navigation: true,
-            has_completed_mobile_onboarding: true
-        }
-        if (onboarding) {
-            fd["id"] = onboarding[0]?.id;
-            let res = await editHandler(fd)
-            await storeData('onboard completion', res)
-            queryClient.invalidateQueries()
-            navigation.navigate("onBoardHome")
-        } else {
-            let res = await mutateAsync(fd)
-            queryClient.invalidateQueries("get_onboarding")
-            await storeData('onboard completion', res)
-            navigation.navigate("onBoardHome")
+        try {
+            let employee_id = await getData("about_me")
+
+            let fd = {
+                type: 'Task',
+                employee: employee_id.id,
+                has_completed_mobile_navigation: true,
+                has_completed_mobile_onboarding: true
+            }
+
+            if (!onboarding) {
+                fd["id"] = onboarding[0]?.id;
+                let res = await editHandler(fd)
+                console.log('res', res)
+                await storeData('onboard completion', res)
+                queryClient.invalidateQueries("get_onboarding")
+                navigation.navigate("onBoardHome")
+            } else {
+                let res = await mutateAsync(fd)
+                console.log('res', res)
+                queryClient.invalidateQueries()
+                await storeData('onboard completion', res)
+                navigation.navigate("onBoardHome")
+            }
+        } catch (error) {
+            console.log('err', error)
+            showFlashMessage({
+                title: "Something went wrong. Please retry",
+                type: 'error'
+            })
         }
 
     }

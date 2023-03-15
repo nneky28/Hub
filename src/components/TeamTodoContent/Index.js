@@ -73,7 +73,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
     }, [watch]);
 
 
-
+    // console.log('Claimed', item)
 
     return (
         <View style={styles.wrapper}>
