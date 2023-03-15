@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         borderRadius: width(15),
         flexDirection: 'row',
         justifyContent: 'space-around',
-        height: height(4.5),
+        height: height(5.5),
         alignItems: 'center',
         backgroundColor: AppColors.whiteBase
     },
@@ -82,9 +82,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: width(27),
         backgroundColor: AppColors.white,
-        height: height(3),
+        height: height(4.4),
         borderRadius: width(15),
         zIndex: -1,
+        ...AppColors.smallShadow,
 
     },
     currentTab: {
