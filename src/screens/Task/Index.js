@@ -120,7 +120,7 @@ const Index = ({ navigation, route }) => {
         data: teamCount
     } = useFetchTeamStatistics(employee_pk);
 
-
+    console.log("Team", teamCount)
     const {
         data: sentStatistics
     } = useFetchSentStatistics();
