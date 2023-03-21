@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     defaultTab: {
         marginRight: width(5),
         alignSelf: "center",
-        paddingHorizontal: width(4),
+        // paddingHorizontal: width(1),
     },
     selectedTab: {
         fontFamily: FontFamily.BlackSansBold,
@@ -281,9 +281,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 2,
         elevation: width(1),
-        height: height(14)
+        height: height(14),
+        width: width(28)
     },
-    clipped: { height: height(8), resizeMode: 'contain' },
+    clipped: { height: height(8), resizeMode: 'contain', width: width(28) },
     count: {
         position: 'absolute',
         left: width(19),

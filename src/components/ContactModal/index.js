@@ -608,6 +608,10 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
           <P>Mark task as complete</P>
         </TouchableOpacity>
         <View style={styles.line} />
+        <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("To-do")}>
+          <P>Mark task as not started</P>
+        </TouchableOpacity>
+        <View style={styles.line} />
         <TouchableOpacity style={styles.textCon} onPress={() => { setShowForm(true), item }}>
           <P>Edit Task</P>
         </TouchableOpacity>

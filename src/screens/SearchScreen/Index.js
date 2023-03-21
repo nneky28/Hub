@@ -63,9 +63,10 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         setMyTeam(details)
     }
 
-    const TeamDetails = () => {
+    const TeamDetails = ({ item }) => {
         return (
-            <View
+            <TouchableOpacity
+                onPress={() => navigation.navigate("profile", { item, departments })}
                 style={styles.listContainer}>
                 <View style={CommonStyles.rowJustifySpaceBtw}>
 
@@ -81,7 +82,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                 </View>
 
 
-            </View>
+            </TouchableOpacity>
         )
     }
 

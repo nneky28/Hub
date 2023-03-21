@@ -25,11 +25,11 @@ import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useNavigation } from '@react-navigation/native';
 
 
-const Index = ({ visible, onHide,item,setButtons}) => {
-    
+const Index = ({ visible, onHide, item, setButtons }) => {
+
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const queryClient = useQueryClient()  
+    const queryClient = useQueryClient()
     const [show, setShow] = useState(false)
     const [open, setOpen] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -46,8 +46,8 @@ const Index = ({ visible, onHide,item,setButtons}) => {
         due_date: "Today",
     })
 
-    const { mutateAsync ,isLoading} = useMutation(APIFunction.post_task)
-    const { mutateAsync: editHandler,isLoading:isLoadingEdit} = useMutation(APIFunction.update_status)
+    const { mutateAsync, isLoading } = useMutation(APIFunction.post_task)
+    const { mutateAsync: editHandler, isLoading: isLoadingEdit } = useMutation(APIFunction.update_status)
 
 
     const _subTask = () => {
@@ -61,8 +61,8 @@ const Index = ({ visible, onHide,item,setButtons}) => {
         setSubtask(arr)
     }
 
-  console.log("ITEM",item)
-    
+    console.log("ITEM", item)
+
     const submitHandler = async () => {
         try {
             Keyboard.dismiss()
@@ -86,11 +86,11 @@ const Index = ({ visible, onHide,item,setButtons}) => {
             console.log("ASSIGN", assignTo)
             let fd = {
                 ...data,
-                due_date: data?.due_date === 'Today' ? moment().toISOString(true):moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
-                created_by:item?.created_by?.id|| employee?.id,
-                assigned_to:assignTo?.id && assignTo?.type === "Employee" ?  assignTo?.assigned_to_id :assignTo?.id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id  : employee?.id,
-                department: assignTo?.id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id  : null,
-                status:"To-do",
+                due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
+                created_by: item?.created_by?.id || employee?.id,
+                assigned_to: assignTo?.id && assignTo?.type === "Employee" ? assignTo?.id : assignTo?.id && assignTo?.type === "Departments" ? assignTo?.id : employee?.id,
+                department: assignTo?.id && assignTo?.type === "Departments" ? assignTo?.id : null,
+                status: "To-do",
                 sub_tasks: Object.values(subData).map(item => {
                     return {
                         title: item,
@@ -98,18 +98,17 @@ const Index = ({ visible, onHide,item,setButtons}) => {
                     }
                 })
             }
-           
-        //    return console.log("FD",fd)
-            if (data?.due_date === "No Date" || item) delete fd["due_date"]
             if (assignTo?.type === "deparments") delete fd["assigned_to"]
+            if (data?.due_date === "No Date" || item) delete fd["due_date"]
+            // return console.log("FD", fd)
+
 
             if (item) delete fd["status"]
 
-                
             if (item) {
                 fd["id"] = item?.id;
                 let res = await editHandler(fd)
-                console.log("RES Edit",res)
+                console.log("RES Edit", res)
                 setDisabled(false)
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
@@ -124,14 +123,14 @@ const Index = ({ visible, onHide,item,setButtons}) => {
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
                 onHide()
-                if (assignTo?.type === "Employee" || assignTo?.type==="Departments") {    
+                if (assignTo?.type === "Employee" || assignTo?.type === "Departments") {
                     setButtons(1)
-                } 
+                }
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
-            console.log('err',err)
+            // console.log('err',err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -148,7 +147,7 @@ const Index = ({ visible, onHide,item,setButtons}) => {
         setAssignTo({
             id: item.id, type: item?.department?.id ? "Departments" : "Employees",
             name: item?.assigned_to?.first_name,
-            assigned_to_id: item?.department?.id || item?.assigned_to?.id
+            // assignedTo: item?.department?.id || item?.assigned_to?.id
         })
         setData({ ...data, due_date: item?.due_date })
     }, [item])
@@ -159,10 +158,10 @@ const Index = ({ visible, onHide,item,setButtons}) => {
             onBackButtonPress={onHide}
             onModalHide={onHide}
             onBackdropPress={() => {
-                if (data?.title || data?.description ) {    
-                    return  setShowDiscard(true) 
+                if (data?.title || data?.description) {
+                    return setShowDiscard(true)
                 }
-                onHide()    
+                onHide()
             }}
             animationInTiming={500}
             animationOutTiming={10}
@@ -191,15 +190,18 @@ const Index = ({ visible, onHide,item,setButtons}) => {
                 </View> :
                     <View style={styles.mainViewContainer}>
                         <View style={styles.formRow}>
-                            <H1 marginTop={2}>Create New Task</H1>
+                            {
+                                item ? <H1 marginTop={2}>Edit Task</H1> :
+                                    <H1 marginTop={2}>Create New Task</H1>
+                            }
                             <CloseHandler position={'center'} onPress={() => {
-                                  if (data?.title || data?.description ) {    
-                                    return  setShowDiscard(true) 
-                                  }
-                                  onHide()  
+                                if (data?.title || data?.description) {
+                                    return setShowDiscard(true)
+                                }
+                                onHide()
                             }} />
                         </View>
-                        <View style={ styles.line} />
+                        <View style={styles.line} />
                         <KeyboardAwareWrapper
                             showsVerticalScrollIndicator={false}
                             style={{ marginBottom: height(10) }}
@@ -263,7 +265,10 @@ const Index = ({ visible, onHide,item,setButtons}) => {
                                     <P color={AppColors.black3}>Due Date</P>
                                     <View style={CommonStyles.row}>
                                         <TouchableOpacity
-                                            onPress={() => setShow(true)}
+                                            onPress={() => {
+                                                Keyboard.dismiss()
+                                                setShow(true)
+                                            }}
                                             style={styles.button1}>
                                             <Text numberOfLines={1} style={styles.date}>
                                                 {data?.due_date === "No Date" ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("ddd D, MMM YYYY")}
@@ -305,7 +310,7 @@ const Index = ({ visible, onHide,item,setButtons}) => {
                                                             setSubdata({ ...subData, [item]: value })
                                                         }}
                                                         right={<TextInput.Icon name={"close"}
-                                                            style={[CommonStyles.marginTop_1,CommonStyles.marginRight_8]}
+                                                            style={[CommonStyles.marginTop_1, CommonStyles.marginRight_8]}
                                                             color={AppColors.darkGray}
                                                             onPress={() => handleDelete(index)}
                                                         />}
@@ -330,11 +335,11 @@ const Index = ({ visible, onHide,item,setButtons}) => {
                             </Container>
                             <Button
                                 // title="Create Task"
-                                title={item ? "Save" :"Create Task"}
+                                title={item ? "Save" : "Create Task"}
                                 containerStyle={styles.buttonStyle1}
                                 textStyle={styles.buttonText1}
                                 onPress={submitHandler}
-                                disabled={isLoading||isLoadingEdit}
+                                disabled={isLoading || isLoadingEdit}
                             />
                         </KeyboardAwareWrapper>
 
@@ -394,21 +399,3 @@ const Index = ({ visible, onHide,item,setButtons}) => {
 export default Index
 
 
-
- 
-
-// const calcTip = (bill) => {
-//     return bill >=50 && bill <=300 ? bill * 2 :bill * 1
-// }
- 
-// const bills = [22, 295, 176, 440, 37, 105, 10, 1100, 86, 52]
-// const tips=[]
-// const totals = []
-
-// for (let i = 0; i < bills.length; i++){
-//     const tip = calcTip(bills[i])
-//     tips.push(tip)
-//     totals.push(tips+ tip[i])
-// }
-
-// console.log(tips,bills,totals)

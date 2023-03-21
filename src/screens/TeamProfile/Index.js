@@ -115,14 +115,34 @@ const Index = ({ route }) => {
         );
     };
 
+
     const EmptyState = () => {
         return (
             <View style={styles.emptyState}>
-                <P color="#A8A8A8">You have no tasks</P>
-                <P color="#A8A8A8">yet.</P>
+                <View>
+                    <View>
+                        {
+                            actionTitle === "Completed" ?
+                                <>
+                                    <P color="#A8A8A8" >{departments ? item?.name : item?.first_name}</P>
+                                    <P color="#A8A8A8">has no Completed Task</P>
+                                </> :
+
+                                <>
+                                    <P color="#A8A8A8">{departments ? item?.name : item?.first_name}</P>
+                                    <P color="#A8A8A8">has no Open Task</P>
+                                </>
+
+                        }
+                    </View>
+                    <View>
+
+                    </View>
+
+                </View>
             </View>
-        )
-    }
+        );
+    };
 
     const __flattenArr = () => {
         let flattenedArr = []

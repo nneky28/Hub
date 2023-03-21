@@ -87,6 +87,7 @@ const Index = ({ navigation, route }) => {
     const queryClient = useQueryClient();
     const [tasks, setTasks] = useState([]);
     const [teamTask, setTeamTask] = useState([]);
+    const [me, setMe] = useState(null)
 
     const setButtons = (i) => {
         setIndex(i);
@@ -126,10 +127,27 @@ const Index = ({ navigation, route }) => {
     const EmptyState = () => {
         return (
             <View style={styles.emptyState}>
-                <>
-                    <P color="#A8A8A8">You have no tasks</P>
-                    <P color="#A8A8A8">yet.</P>
-                </>
+                <View>
+                    <View>
+                        {
+                            actionTitle === "Completed" ?
+                                <>
+                                    <P color="#A8A8A8" style={CommonStyles.justifyCenter}>{index === 2 ? me?.department?.name : me?.first_name}</P>
+                                    <P color="#A8A8A8">has no Completed Task</P>
+                                </> :
+
+                                <>
+                                    <P color="#A8A8A8" style={CommonStyles.marginLeft_5}>{index === 2 ? me?.department?.name : me?.first_name}</P>
+                                    <P color="#A8A8A8">has no Open Task</P>
+                                </>
+
+                        }
+                    </View>
+                    <View>
+
+                    </View>
+
+                </View>
             </View>
         );
     };
@@ -476,7 +494,7 @@ const Index = ({ navigation, route }) => {
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'To-Do' && tab === 'Due Today') {
-            let arr = Object.values(teamDueData).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
+            let arr = Object.values(teamDueData).filter((item) => item.status !== 'Completed');
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'To-Do' && tab === 'Upcoming') {
@@ -514,14 +532,13 @@ const Index = ({ navigation, route }) => {
         try {
             let about_me = await getData('about_me');
             setEmployeePK(about_me?.department?.id);
+            setMe(about_me)
         } catch (err) { }
     };
-    const refreshTask = () => {
-        reloadScreen();
-        queryClient.invalidateQueries(
-
-        );
-    };
+    // const refreshTask = () => {
+    //     reloadScreen();
+    //     queryClient.invalidateQueries()
+    // };
 
     useEffect(() => {
         getInfo()
@@ -554,7 +571,7 @@ const Index = ({ navigation, route }) => {
                     style={[styles.scroll, CommonStyles.paddingBottom_10]}
                     refreshControl={
                         <RefreshControl refreshing={false}
-                            onRefresh={refreshTask}
+                        // onRefresh={refreshTask}
                         />
                     }
                     showsVerticalScrollIndicator={false}>
@@ -674,7 +691,7 @@ const Index = ({ navigation, route }) => {
                                 }}>
                                 <Container
                                     backgroundColor={item.colorUp}
-                                    width={28}
+                                    // width={28}
                                     border
                                     borderWidth={
                                         item.selected === actionTitle ? item.borderWidth : null
@@ -805,7 +822,7 @@ const Index = ({ navigation, route }) => {
                             nestedScrollEnabled={true}
                             contentContainerStyle={[
                                 CommonStyles.marginTop_3,
-                                { paddingBottom: height(100) },
+                                { paddingBottom: height(10) },
                             ]}
                             onEndReachedThreshold={0.1}
                             refreshing={false}
@@ -826,7 +843,7 @@ const Index = ({ navigation, route }) => {
                             nestedScrollEnabled={true}
                             contentContainerStyle={[
                                 CommonStyles.marginTop_3,
-                                { paddingBottom: height(100) },
+                                { paddingBottom: height(10) },
                             ]}
                             onEndReachedThreshold={0.1}
                             refreshing={false}

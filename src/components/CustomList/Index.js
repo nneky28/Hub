@@ -194,20 +194,7 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
 
 
                 <Container>
-                    {tab === "Employees" &&
-                        <>
-                            <View style={styles.containerA}>
-                                <H1 fontSize={3.3} color={'#878787'}>Recent Searches</H1>
-                                <TouchableOpacity onPress={() => {
-                                    setSearch('')
-                                    setPage(1)
-                                }}>
-                                    <P style={styles.btnText}>Clear</P>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.line} />
-                        </>
-                    }
+
                 </Container>
                 <ScrollView>
                     {tab === "Employees" ?
