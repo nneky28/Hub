@@ -27,7 +27,17 @@ target 'ReactNativeBoilerPlaceHermes' do
   # you should disable the next line.
   #use_flipper!()
 
+  # Detect AppCenter CI build
+  IS_CI = ENV['APPCENTER_BUILD_ID']
+  # ...
+  if not IS_CI
+    use_flipper!()
+  end
+
   post_install do |installer|
+    if not IS_CI
+      use_flipper!
+    end
     react_native_post_install(installer)
   end
 end
