@@ -176,20 +176,17 @@ const styles = StyleSheet.create({
     },
     currentTab: {
         backgroundColor: AppColors.white,
-        borderRadius: width(10),
-        marginRight: width(8),
-        // ...AppColors.smallShadow,
-        paddingVertical: height(1),
-        paddingHorizontal: width(4),
+        borderRadius: width(8),
+        marginRight: width(3.5),
+        height: height(3.5),
+        ...AppColors.smallShadow,
+        alignSelf: 'center'
     },
-
     defaultTab: {
-        marginRight: width(5),
-        alignSelf: "center",
-        paddingHorizontal: width(4),
+        marginRight: width(3.5)
     },
     selectedTab: {
-        fontFamily: FontFamily.BlackSansBold,
+        fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.green,
     },
     tab: {
@@ -203,23 +200,6 @@ const styles = StyleSheet.create({
 
 
     },
-
-    // scrollViewContainer: {
-    //     marginTop: height(2),
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-around',
-    //     borderWidth: 0.5,
-    //     borderColor: AppColors.grayBorder,
-    //     borderRadius: width(15),
-    //     backgroundColor: '#F2F2F2',
-    //     paddingHorizontal: width(1),
-    //     marginLeft: width(5),
-    //     alignSelf: 'center',
-    //     alignItems: 'center',
-    //     height: height(4.5),
-    //     // marginBottom: height(1),
-
-    // },
     scrollViewCon: {
         marginTop: height(3),
         justifyContent: 'space-evenly',
@@ -230,10 +210,8 @@ const styles = StyleSheet.create({
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
-        marginLeft: width(4.5),
-        height: height(4.5),
-        alignSelf: 'center',
-        alignItems: 'center',
+        marginLeft: width(4.5)
+
     },
     emptyState: {
         justifyContent: 'center',

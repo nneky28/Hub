@@ -50,6 +50,9 @@ const styles = StyleSheet.create({
 
 
     },
+    scrollRow: {
+        alignSelf: 'center',
+    },
     scrollViewContainer: {
         marginTop: height(2),
         flexDirection: 'row',
@@ -66,15 +69,13 @@ const styles = StyleSheet.create({
         // marginBottom: height(1),
 
     },
-    scrollRow: {
-        alignSelf: 'center',
-        // paddingVertical: height(1)
-    },
+
     threeButtonCont: {
         width: width(90),
         alignSelf: 'center',
         marginTop: height(4),
         borderWidth: 1,
+        // position: 'absolute',
         borderColor: AppColors.grayBorder,
         borderRadius: width(15),
         flexDirection: 'row',
@@ -85,12 +86,13 @@ const styles = StyleSheet.create({
     },
 
     animatedView: {
-        position: 'absolute',
-        width: width(27),
+        // position: 'absolute',
+        width: width(28),
         backgroundColor: AppColors.white,
-        height: height(4.4),
+        // height: height(4.4),
         borderRadius: width(15),
-        zIndex: -1,
+        // zIndex: -1,
+        paddingVertical: height(1.5),
         ...AppColors.smallShadow,
 
     },
@@ -216,7 +218,9 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: width(3.3),
         color: AppColors.black,
-        fontFamily: FontFamily.BlackSansRegular
+        fontFamily: FontFamily.BlackSansRegular,
+        alignSelf: 'center',
+
     },
     buttonText1: {
         color: AppColors.black,

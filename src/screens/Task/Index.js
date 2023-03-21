@@ -518,7 +518,9 @@ const Index = ({ navigation, route }) => {
     };
     const refreshTask = () => {
         reloadScreen();
-        queryClient.invalidateQueries('');
+        queryClient.invalidateQueries(
+
+        );
     };
 
     useEffect(() => {
@@ -556,6 +558,7 @@ const Index = ({ navigation, route }) => {
                         />
                     }
                     showsVerticalScrollIndicator={false}>
+
                     <View style={styles.threeButtonCont}>
                         {['My Tasks', 'Sent Tasks', 'My Team'].map((item, i) => (
                             <TouchableOpacity
@@ -564,7 +567,7 @@ const Index = ({ navigation, route }) => {
                                     setActionTitle('To-Do');
                                     setTab('All');
                                 }}
-                                style={styles.button}
+                                style={index == i ? styles.animatedView : styles.button}
                                 activeOpacity={0.8}
                                 key={i}>
                                 <Text
@@ -576,7 +579,7 @@ const Index = ({ navigation, route }) => {
                                 </Text>
                             </TouchableOpacity>
                         ))}
-                        <AnimatedView marginLeft={margin} styles={[styles.animatedView]} />
+                        {/* <AnimatedView marginLeft={margin} styles={[styles.animatedView]} /> */}
                     </View>
 
                     {index === 2 ? (
@@ -589,7 +592,7 @@ const Index = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.searchView}
                                     onPress={() =>
-                                        navigation.navigate('search', { people, focus })
+                                        navigation.navigate('search', { people })
                                     }>
                                     <Image
                                         source={{ uri: Images.SearchIcon }}

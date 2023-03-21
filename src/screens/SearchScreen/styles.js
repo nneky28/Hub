@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: width(100),
         paddingVertical: height(2),
-        paddingHorizontal: width(2),
+        paddingHorizontal: width(4.5),
         // marginTop: height(1)
     },
     btnText: {

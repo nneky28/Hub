@@ -250,7 +250,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                     showsVerticalScrollIndicator={false}
                                     nestedScrollEnabled={true}
                                     contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(5) }]}
-                                    ListEmptyComponent={listEmptyState}
+                                // ListEmptyComponent={listEmptyState}
                                 />
                             </View>
 
@@ -276,7 +276,9 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Your Team</H1>
                                 <TeamDetails />
-
+                            </View>
+                            <View style={styles.container}>
+                                <H1 fontSize={3.3}>Department</H1>
                             </View>
 
                             <FlatList
@@ -288,9 +290,6 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 nestedScrollEnabled={true}
                                 contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(100) }]}
                                 onEndReachedThreshold={0.1}
-                                ListHeaderComponent={() => <View style={styles.container}>
-                                    <H1 fontSize={3.3}>Department</H1>
-                                </View>}
 
                             />
                         </React.Fragment>)

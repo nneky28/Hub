@@ -311,12 +311,13 @@ const Index = ({ route }) => {
                                 showsHorizontalScrollIndicator={false}>
                                 {
                                     ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                        <TouchableOpacity
+                                        <TouchableWrapper
+                                            isText
                                             onPress={() => setTab(item)}
                                             style={tab === item ? styles.currentTab : styles.defaultTab}
                                             key={i}>
                                             <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                        </TouchableOpacity>
+                                        </TouchableWrapper>
                                     ))
                                 }
                             </ScrollView>
