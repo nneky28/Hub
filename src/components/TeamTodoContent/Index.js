@@ -66,18 +66,18 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
 
     }
 
-    // const handleDelete = async (id) => {
-    //     try {
-    //         await deleteTask.mutateAsync(id)
-    //         queryClient.invalidateQueries()
-    //         showFlashMessage({ title: `Task deleted` })
-    //         setModal(false)
-    //         setSent(false)
-    //     } catch (error) {
-    //         //console.log('err', error)
-    //     }
+    const handleDelete = async (id) => {
+        try {
+            await deleteTask.mutateAsync(id)
+            queryClient.invalidateQueries()
+            showFlashMessage({ title: `Task deleted` })
+            setModal(false)
+            setSent(false)
+        } catch (error) {
+            //console.log('err', error)
+        }
 
-    // }
+    }
 
 
     const overDue = moment(item?.due_date).isBefore(new Date())
@@ -202,7 +202,8 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
             </View>
             <View style={styles.line1} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-            <TaskDetails isVisible={show} onHide={() => setShow(false)} item={item} title={title} />
+            <TaskDetails isVisible={show}
+                onHide={() => setShow(false)} item={item} title={title} />
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}
