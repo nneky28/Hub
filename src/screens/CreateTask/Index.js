@@ -107,6 +107,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
 
             if (item) {
                 fd["id"] = item?.id;
+                fd['assigned_to'] = assigned_to_id
                 let res = await editHandler(fd)
                 console.log("RES Edit", res)
                 setDisabled(false)
@@ -145,9 +146,9 @@ const Index = ({ visible, onHide, item, setButtons }) => {
     useEffect(() => {
         if (!item?.id) return
         setAssignTo({
-            id: item.id, type: item?.department?.id ? "Departments" : "Employees",
+            id: item?.id, type: item?.department?.id ? "Departments" : "Employees",
             name: item?.assigned_to?.first_name,
-            // assignedTo: item?.department?.id || item?.assigned_to?.id
+            assigned_to_id: item?.department?.id || item?.assigned_to?.id
         })
         setData({ ...data, due_date: item?.due_date })
     }, [item])

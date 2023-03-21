@@ -122,7 +122,7 @@ const Index = ({ navigation }) => {
                 has_completed_mobile_onboarding: true
             }
 
-            if (onboarding) {
+            if (!onboarding) {
                 fd["id"] = onboarding[0]?.id;
                 let res = await editHandler(fd)
                 await storeData('onboard completion', res)
@@ -135,7 +135,7 @@ const Index = ({ navigation }) => {
                 navigation.navigate("Task", { toCheck })
             }
         } catch (error) {
-            // console.log('err', error)
+            console.log('err', error)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'

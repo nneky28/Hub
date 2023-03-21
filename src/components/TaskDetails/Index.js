@@ -142,7 +142,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
             setText("")
             showFlashMessage({ title: "sub Task successfully assigned" })
         } catch (err) {
-            // console.log('err', err)
+            console.log('err', err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -300,39 +300,8 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
                             }
 
-
-
-                            {
-                                item?.sub_tasks_tasksapp?.length !== 0 &&
-                                <View style={styles.subTaskContainer}>
-                                    <View style={CommonStyles.row}>
-                                        <FlatList
-                                            data={Object.values(item?.sub_tasks_tasksapp)}
-                                            renderItem={({ item, index }) =>
-                                                <>
-                                                    <View style={CommonStyles.row}>
-                                                        {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
-                                                            <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
-                                                        </TouchableOpacity> :
-                                                            <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                                {/* <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /> */}
-                                                                <Image
-                                                                    source={{ uri: Images.SubTaskBox }}
-                                                                    style={styles.leftIcon} />
-                                                            </TouchableOpacity>}
-
-                                                        <Text
-                                                            numberOfLines={1}
-                                                            style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
-                                                    </View>
-                                                    {index <= 10 ? <View style={styles.line1} /> : null}
-                                                </>
-                                            }
-                                            keyExtractor={(item, index) => index.toString()}
-                                        />
-                                    </View>
-
-                                    {
+                            {/* 
+{
                                         subTask ?
                                             <KeyboardAvoidingScrollView>
                                                 <Formik>
@@ -373,13 +342,46 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                                 </Formik>
                                             </KeyboardAvoidingScrollView>
                                             : null
-                                    }
+                                    } */}
+
+
+
+                            {
+                                item?.sub_tasks_tasksapp?.length !== 0 &&
+                                <View style={styles.subTaskContainer}>
+                                    <View style={CommonStyles.row}>
+                                        <FlatList
+                                            data={Object.values(item?.sub_tasks_tasksapp)}
+                                            renderItem={({ item, index }) =>
+                                                <>
+                                                    <View style={CommonStyles.row}>
+                                                        {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
+                                                            <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
+                                                        </TouchableOpacity> :
+                                                            <TouchableOpacity onPress={() => handleChecked(item)}>
+                                                                {/* <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /> */}
+                                                                <Image
+                                                                    source={{ uri: Images.SubTaskBox }}
+                                                                    style={styles.leftIcon} />
+                                                            </TouchableOpacity>}
+
+                                                        <Text
+                                                            numberOfLines={1}
+                                                            style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
+                                                    </View>
+                                                    {index <= 10 ? <View style={styles.line1} /> : null}
+                                                </>
+                                            }
+                                            keyExtractor={(item, index) => index.toString()}
+                                        />
+                                    </View>
+
 
                                 </View>
                             }
 
 
-                            {
+                            {/* {
                                 subContainer &&
                                 <View style={[styles.subTaskContainer, CommonStyles.marginTop_3]}>
                                     <KeyboardAvoidingScrollView>
@@ -419,7 +421,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                     </KeyboardAvoidingScrollView>
 
                                 </View>
-                            }
+                            } */}
 
 
                         </View>

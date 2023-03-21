@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
         margin: 0,
-        marginTop: height(22),
+        marginTop: height(10),
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
