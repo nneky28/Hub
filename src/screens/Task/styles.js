@@ -33,11 +33,11 @@ const styles = StyleSheet.create({
         fontSize: width(5),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
-        paddingHorizontal: width(2)
+        paddingHorizontal: width(2.5)
 
     },
     headerTitle: {
-        fontSize: width(4.5),
+        fontSize: width(4),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
         paddingHorizontal: width(6),
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer: {
         marginTop: height(2),
-        justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',
         borderWidth: 0.5,
@@ -60,9 +59,16 @@ const styles = StyleSheet.create({
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
-        marginLeft: width(4.5),
-        marginBottom: height(1)
+        marginLeft: width(5),
+        alignSelf: 'center',
+        alignItems: 'center',
+        height: height(4.5),
+        // marginBottom: height(1),
 
+    },
+    scrollRow: {
+        alignSelf: 'center',
+        // paddingVertical: height(1)
     },
     threeButtonCont: {
         width: width(90),
@@ -90,26 +96,28 @@ const styles = StyleSheet.create({
     },
     currentTab: {
         backgroundColor: AppColors.white,
-        borderRadius: width(8),
-        marginRight: width(3.5),
-        height: height(3.5),
-        ...AppColors.smallShadow,
-        alignSelf: 'center'
+        borderRadius: width(10),
+        marginRight: width(8),
+        // ...AppColors.smallShadow,
+        paddingVertical: height(1),
+        paddingHorizontal: width(4),
     },
+
     defaultTab: {
-        marginRight: width(3.5)
+        marginRight: width(5),
+        alignSelf: "center",
+        paddingHorizontal: width(4),
     },
     selectedTab: {
-        fontFamily: FontFamily.BlackSansSemiBold,
+        fontFamily: FontFamily.BlackSansBold,
         color: AppColors.green,
     },
     tab: {
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.black1,
-        fontSize: width(3.3)
+        fontSize: width(3.3),
+        alignSelf: "center",
     },
-
-
     button: {
         width: '30%',
         height: height(3),
@@ -231,7 +239,9 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: width(3.3), color: AppColors.white,
+        fontSize: width(3.1),
+        color: AppColors.black1,
+        marginRight: width(2)
     },
     titleCon: {
         flexDirection: 'row',
@@ -253,35 +263,46 @@ const styles = StyleSheet.create({
         color: '#545454'
     },
     boxContainer: {
-        elevation: 3,
         flexDirection: 'row',
         marginTop: height(2),
+        marginBottom: height(1),
         justifyContent: 'space-evenly',
         paddingHorizontal: width(3)
 
     },
     mainContainer: {
-        borderWidth: 0.5, borderRadius: width(3.5), borderColor: AppColors.transparent,
+        borderRadius: width(3.5),
         shadowColor: '#FFFFFF',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.5,
         shadowRadius: 2,
         elevation: width(1),
-        height: height(14.3)
+        height: height(13.6)
     },
-    clipped: { height: height(8.9), resizeMode: 'contain' },
+    clipped: { height: height(8), resizeMode: 'contain' },
     count: {
         position: 'absolute',
         left: width(19),
         top: height(4)
     },
-
-
     emptyState: {
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
-        marginTop: height(15),
+        marginTop: height(12),
+
+    },
+    searchBox: {
+        width: width(90),
+        alignSelf: 'center',
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: AppColors.grayBorder,
+        borderRadius: width(3),
+        alignItems: 'center',
+        backgroundColor: AppColors.whiteBase,
+        paddingVertical: height(1),
+        height: height(5),
 
     },
 

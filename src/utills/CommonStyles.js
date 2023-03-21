@@ -33,6 +33,9 @@ const CommonStyles = StyleSheet.create({
     marginRight_5: {
         marginRight: width(5)
     },
+    marginRight_8: {
+        marginRight: width(8)
+    },
     marginTop_05: {
         marginTop: height(0.5)
     },

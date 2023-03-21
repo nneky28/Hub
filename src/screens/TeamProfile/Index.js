@@ -1,5 +1,5 @@
 import {
-    View, Text, TouchableOpacity, Image, ScrollView,
+    View, Text, TouchableOpacity, Image, ScrollView, FlatList
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import ScreenWrapper from '../../components/ScreenWrapper'
@@ -8,7 +8,18 @@ import { height, width } from 'react-native-dimension';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index'
 import AppColors from '../../utills/AppColors';
-import { useFetchPeopleStatics, useFetchPersonalTask, useFetchPersonalDue, useFetchPersonalUpcoming, useFetchPersonalOverdue } from '../../utills/api';
+import {
+    useFetchPeopleStatics,
+    useFetchPersonalTask,
+    useFetchPersonalDue,
+    useFetchPersonalUpcoming,
+    useFetchPersonalOverdue,
+    useFetchTeamTask,
+    useFetchTeamStatistics,
+    useFetchTeamDuetoday,
+    useFetchMyTeamOverdue,
+    useFetchMyTeamUpcoming
+} from '../../utills/api';
 import { Capitalize } from '../../utills/Methods';
 import numeral from 'numeral'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,8 +30,7 @@ import CommonStyles from '../../utills/CommonStyles';
 
 
 const Index = ({ route }) => {
-
-    const { item } = route.params
+    const { item, departments } = route.params
     const [tab, setTab] = useState('All');
     const [show, setShow] = useState(false);
     const [count, setCount] = useState(0);
@@ -33,37 +43,90 @@ const Index = ({ route }) => {
     const [overdueItems, setOverdueItems] = useState([])
     const [page, setPage] = useState(1)
     const [data, setData] = useState([])
-
+    const [tasks, setTasks] = useState([])
+    const [teamData, setTeamData] = useState([]);
+    const [teamPage, setTeamPage] = useState(1);
 
     const {
         data: counts
-    } = useFetchPeopleStatics(item.id)
+    } = useFetchPeopleStatics(item?.id)
 
+    const {
+        data: teamCount
+    } = useFetchTeamStatistics(item?.id);
+
+    const {
+        data: allTeamData,
+        isLoading: loadingAllTeamTask
+    } = useFetchTeamTask(tab, item?.id);
+
+    const {
+        data: allTeamDue,
+        isLoading: loadingAllTeamDue
+    } = useFetchTeamDuetoday(tab, item?.id);
+
+    const {
+        data: allTeamUpcoming,
+        isLoading: loadingAllTeamUpcoming
+    } = useFetchMyTeamUpcoming(tab, item?.id);
+
+
+    const { data: allTeamOverdue,
+        isLoading: loadingAllTeamOverdue
+    } = useFetchMyTeamOverdue(tab, item?.id);
 
     const {
         data: allEmployeeTask,
         isLoading: loadingAllTask,
-    } = useFetchPersonalTask(tab, item.id)
+        isFetchingNextPage,
+        hasNextPage
+    } = useFetchPersonalTask(tab, item?.id)
 
     const {
         data: dueTask,
         isLoading: loadingDue
-    } = useFetchPersonalDue(tab, item.id)
+    } = useFetchPersonalDue(tab, item?.id)
 
-    // console.log("due item", dueTask)
     const {
         data: upcomingTask,
         isLoading: loadingUpcoming
-    } = useFetchPersonalUpcoming(tab, item.id)
+    } = useFetchPersonalUpcoming(tab, item?.id)
 
     const {
         data: overdueTask,
         isLoading: loadingOverdue
-    } = useFetchPersonalOverdue(tab, item.id)
+    } = useFetchPersonalOverdue(tab, item?.id)
+    const RenderItems = ({ item }) => {
+        return (
+            <TodoContent
+                item={item}
+                count={count}
+                title={actionTitle}
+                user
+            />
+        );
+    };
+
+    const footerLoader = () => {
+        return (
+            <Container alignSelf={'center'} width={30} marginTop={3}>
+                <ActivityIndicator size={width(10)} color={AppColors.green} />
+            </Container>
+        );
+    };
+
+    const EmptyState = () => {
+        return (
+            <View style={styles.emptyState}>
+                <P color="#A8A8A8">You have no tasks</P>
+                <P color="#A8A8A8">yet.</P>
+            </View>
+        )
+    }
 
     const __flattenArr = () => {
         let flattenedArr = []
-        if (tab === "All" && allEmployeeTask && allEmployeeTask?.pages && Array.isArray(allEmployeeTask?.pages)) {
+        if (allEmployeeTask && allEmployeeTask?.pages && Array.isArray(allEmployeeTask?.pages)) {
             flattenedArr = allEmployeeTask?.pages
         }
         if (actionTitle === "To-Do" && tab === "Due Today" && dueTask && dueTask?.pages && Array.isArray(dueTask?.pages)) {
@@ -75,61 +138,109 @@ const Index = ({ route }) => {
         if (actionTitle === "To-Do" && tab === "Overdue" && overdueTask && overdueTask?.pages && Array.isArray(overdueTask?.pages)) {
             flattenedArr = overdueTask?.pages
         }
-
+        if (departments && tab === "All" && allTeamData && allTeamData?.pages && Array.isArray(allTeamData?.pages)) {
+            flattenedArr = allTeamData?.pages
+        }
         flattenedArr = flattenedArr.map((res) => {
             if (!res) return {}
             return res.results
         })
-
         let arr = flattenedArr.flat()
-        if (actionTitle === "To-Do" && tab === "All")
-            return page > 1 ? setData([...data, ...arr]) : setData(arr)
+
+        const state = {
+            data: [],
+            dueItems: [],
+            upcomingItems: [],
+            overdueItems: [],
+            teamData: []
+        };
+
+        if (actionTitle === "To-Do")
+            state.data = page > 1 ? [...data, ...arr] : arr;
 
         if (actionTitle === "To-Do" && tab === "Due Today")
-            return dueTodayPage > 1 ? setDueItems([...dueItems, ...arr]) : setDueItems(arr)
+            state.dueItems = dueTodayPage > 1 ? [...dueItems, ...arr] : arr
 
         if (actionTitle === "To-Do" && tab === "Upcoming")
-            return upcomingPage > 1 ? setUpcomingItems([...upcomingItems, ...arr]) : setUpcomingItems(arr)
+            state.upcomingItems = upcomingPage > 1 ? [...upcomingItems, ...arr] : arr
 
         if (actionTitle === "To-Do" && tab === "Overdue")
-            return overduepage > 1 ? setOverdueItems([...overdueItems, ...arr]) : setOverdueItems(arr)
+            state.overdueItems = overduepage > 1 ? [...overdueItems, ...arr] : arr
 
+        if (departments && tab === 'All')
+            state.teamData = teamPage > 1 ? [...teamData, ...arr] : arr;
+        console.log("Arr", arr)
 
+        return state;
     }
 
+    const MapToState = ({ data, dueItems, upcomingItems, overdueItems, teamData, }) => {
+        // console.log("Team", teamData)
+        if (actionTitle === 'To-Do' && tab === 'All') {
+            let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
 
-    const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
-    const only_inProgress = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "To-do")
-    const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
-    const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
-    const no_date = Object.values(data).filter((item) => item?.due_date === null);
-    const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
+        if (actionTitle === 'To-Do' && tab === 'Due Today') {
+            let arr = Object.values(dueItems).filter((item) => item.status !== 'In-progress');
+            console.log('due today', arr)
+            return setTasks(arr);
+        }
+        if (actionTitle === 'To-Do' && tab === 'Upcoming') {
+            let arr = Object.values(upcomingItems).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (actionTitle === 'To-Do' && tab === 'Overdue') {
+            let arr = Object.values(overdueItems).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (actionTitle === 'To-Do' && tab === 'No Date') {
+            let arr = Object.values(data).filter((item) => item?.due_date === null);
+            return setTasks(arr);
+        }
+        if (actionTitle === 'In Progress') {
+            let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            return setTasks(arr);
+        }
+        if (actionTitle === 'Completed') {
+            let arr = Object.values(data).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
 
-    // console.log('data', only_Todos)
-    // console.log("only overdue", only_overdue)
+        if (departments && actionTitle === 'To-Do' && tab === 'No Date') {
+            let arr = Object.values(teamData).filter((item) => item?.due_date === null);
+            return setTasks(arr);
+        }
+        if (departments && actionTitle === 'In Progress') {
+            alert("hello")
+            let arr = Object.values(teamData).filter((item) => item.status == 'In-progress');
+            console.log("In progress", arr)
+            return setTasks(arr);
+        }
+        if (departments && actionTitle === 'Completed') {
+            let arr = Object.values(teamData).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+    }
+
 
     useEffect(() => {
-        __flattenArr()
-    }, [allEmployeeTask, dueTask, upcomingTask, overdueTask]);
+        MapToState(__flattenArr())
+    }, [actionTitle, tab, allEmployeeTask, dueTask, upcomingTask, overdueTask, allTeamData, departments])
 
-
-    const EmptyState = () => {
-        return (
-            <View style={styles.emptyState}>
-                <P color="#A8A8A8">You have no tasks</P>
-                <P color="#A8A8A8">yet.</P>
-            </View>
-        )
-    }
 
 
     return (
         <ScreenWrapper scrollEnabled={false} >
             <View style={styles.header}>
                 <BackHandler position={'center'} />
-                <Text numberOfLines={1} style={styles.screenTitle}>
-                    {Capitalize(`${item.first_name} ${item.last_name} `)}
-                </Text>
+                {
+                    departments ? <Text numberOfLines={1} style={styles.screenTitle}>
+                        {Capitalize(`${item?.name}  `)}
+                    </Text> : <Text numberOfLines={1} style={styles.screenTitle}>
+                        {Capitalize(`${item.first_name} ${item.last_name} `)}
+                    </Text>
+                }
                 <View style={{ width: width(5) }} />
             </View>
             <View style={styles.line} />
@@ -146,21 +257,21 @@ const Index = ({ route }) => {
                                     selected: "To-Do",
                                     colorUp: AppColors.newBlue,
                                     image: Images.clippedBlue,
-                                    count: counts ? numeral(counts?.todo_count).format("0,0") : 0,
+                                    count: departments && teamCount ? numeral(teamCount?.todo_count).format("0,0") : counts ? numeral(counts?.todo_count).format("0,0") : 0,
                                 },
 
                                 {
                                     selected: "In Progress",
                                     colorUp: AppColors.yellow,
                                     image: Images.clippedYellow,
-                                    count: counts ? numeral(counts?.inprogress_count).format("0,0") : 0,
+                                    count: departments && teamCount ? numeral(teamCount?.inprogress_count).format("0,0") : counts ? numeral(counts?.inprogress_count).format("0,0") : 0,
 
                                 },
                                 {
                                     selected: "Completed",
                                     colorUp: AppColors.green,
                                     image: Images.clippedGreen,
-                                    count: counts ? numeral(counts?.completed_count).format("0,0") : 0,
+                                    count: departments && teamCount ? numeral(teamCount?.completed_count).format("0,0") : counts ? numeral(counts?.completed_count).format("0,0") : 0,
 
                                 }
                             ].map((item, i) => <TouchableOpacity key={i} onPress={() => {
@@ -189,29 +300,11 @@ const Index = ({ route }) => {
                     </View>
                     <View style={styles.container}>
                         <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                            actionTitle === 'To-Do' ? counts?.todo_count : actionTitle === 'In Progress' ? counts?.inprogress_count : actionTitle === 'Completed' ? counts?.completed_count : null
+                            departments && actionTitle === 'To-Do' ? teamCount?.todo_count : actionTitle === 'In Progress' ? teamCount?.inprogress_count : actionTitle === 'Completed' ? teamCount?.completed_count :
+                                actionTitle === 'To-Do' ? counts?.todo_count : actionTitle === 'In Progress' ? counts?.inprogress_count : actionTitle === 'Completed' ? counts?.completed_count : 0
                         })
                         </H1>
                     </View>
-                    {/* empty states  */}
-
-                    {
-                        (
-                            (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
-                            only_inProgress.length === 0 && !loadingAllTask
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
-                    {
-                        (
-                            (actionTitle === "Completed") && only_completed && Array.isArray(only_completed) &&
-                            only_completed.length === 0 && !loadingAllTask
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
-
 
                     {
                         actionTitle === "To-Do" &&
@@ -234,155 +327,33 @@ const Index = ({ route }) => {
                             </ScrollView>
                         </View>
                     }
-                    {
-                        (
-                            (actionTitle === "To-Do" && tab === "All") && data && Array.isArray(data) &&
-                            data.length === 0 && !loadingAllTask
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
-                    {
-                        (
-                            (actionTitle === "To-Do" && tab === "Due Today") && only_duetoday && Array.isArray(only_duetoday) &&
-                            only_duetoday.length === 0 && !loadingDue
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
-                    {
-                        (
-                            (tab === "Upcoming") && upcomingItems && Array.isArray(upcomingItems) &&
-                            upcomingItems.length === 0 && !loadingUpcoming
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
-                    {
-                        (
-                            (tab === "Overdue") && only_overdue && Array.isArray(only_overdue) &&
-                            only_overdue.length === 0 && !loadingOverdue
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
 
                     {
-                        (
-                            (tab === "No Date") && no_date && Array.isArray(no_date) &&
-                            no_date.length === 0 && !loadingOverdue
-                        ) ? (
-                            <EmptyState />
-                        ) : null
-                    }
-                    {
-                        loadingAllTask || loadingDue || loadingOverdue || loadingUpcoming ? <PageLoader /> : null
+                        loadingAllTask || loadingAllTeamTask || loadingDue || loadingOverdue || loadingUpcoming ? <PageLoader /> : null
                     }
 
-                    {
-                        actionTitle === "To-Do" && tab === "All" ? only_Todos.map((item, i) => (
-                            <TodoContent
-                                key={i}
-                                show={show}
-                                title={actionTitle}
-                                count={count}
-                                item={item}
-                                user
-                                __flattenArr={__flattenArr}
-                            />
-                        )) : null
-                    }
-                    <View>
-                        {
-                            actionTitle === 'To-Do' && tab === "Due Today" && !loadingDue ? only_duetoday.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    user
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
+
+                    <FlatList
+                        data={tasks}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={RenderItems}
+                        ItemSeparatorComponent={() => <View style={styles.line} />}
+                        showsVerticalScrollIndicator={false}
+                        nestedScrollEnabled={true}
+                        contentContainerStyle={[
+                            CommonStyles.marginTop_3,
+                            { paddingBottom: height(100) },
+                        ]}
+                        onEndReachedThreshold={0.1}
+                        refreshing={false}
+                        onRefresh={async () => {
+                            await storePage('page', 1);
+                        }}
+                        ListEmptyComponent={EmptyState}
+                        ListFooterComponent={
+                            isFetchingNextPage || hasNextPage ? footerLoader : null
                         }
-                    </View>
-
-                    <View>
-                        {
-                            actionTitle === 'To-Do' && tab === "Upcoming" && !loadingUpcoming ? upcomingItems.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    user
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-
-                    <View>
-                        {
-                            actionTitle === 'To-Do' && tab === "Overdue" && !loadingOverdue ? only_overdue.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    user
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-                    <View>
-                        {
-                            actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTask ? no_date.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    count={count}
-                                    item={item}
-                                    title={actionTitle}
-                                    user
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-
-                    <View style={CommonStyles.marginTop_2}>
-                        {
-                            actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    show={show}
-                                    title={actionTitle}
-                                    count={count}
-                                    item={item}
-                                    user
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
-
-                    <View style={CommonStyles.marginTop_2}>
-
-                        {
-                            actionTitle === "Completed" ? only_completed.map((item, i) => (
-                                <TodoContent
-                                    key={i}
-                                    show={show}
-                                    title={actionTitle}
-                                    count={count}
-                                    item={item}
-                                    user
-                                    __flattenArr={__flattenArr}
-                                />
-                            )) : null
-                        }
-                    </View>
+                    />
                 </ScrollView>
             </View>
         </ScreenWrapper>

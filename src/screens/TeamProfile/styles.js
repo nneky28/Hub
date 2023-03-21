@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         fontSize: width(4.5),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
-        width: width(40)
+        width: width(43)
 
     },
     headerTitle: {

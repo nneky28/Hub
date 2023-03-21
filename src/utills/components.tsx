@@ -361,7 +361,7 @@ export const Container = (props) => (
     style={[
       {
         position: props.position,
-        borderColor: props.borderColor,
+        borderColor: props.borderColor?props.borderColor:AppColors.grayBorder,
         flex: props.flex || 0,
         flexDirection: props.direction,
         width: props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
@@ -1314,33 +1314,33 @@ export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => 
 // generating dates in iso 
 
 // for length of the number structure
-export const padStart = ({ value, maxLength, fillingValue }:
-  { value: string | number, maxLength: number, fillingValue: string | number }) => {
-  return `${value}`.padStart(maxLength,`${fillingValue}`.trim())
-}
-export const rawDate = ({ date }: { date?: string | number | Date; }={}) :Date=> {
-  return date ? new Date(date) : new Date();
-}
+// export const padStart = ({ value, maxLength, fillingValue }:
+//   { value: string | number, maxLength: number, fillingValue: string | number }) => {
+//   return `${value}`.padStart(maxLength,`${fillingValue}`.trim())
+// }
+// export const rawDate = ({ date }: { date?: string | number | Date; }={}) :Date=> {
+//   return date ? new Date(date) : new Date();
+// }
 
-export const rawDateObject = ({ date }: { date?: string | number | Date; } = {}):
-  { year: string, month: string; day: string; weekDay: string; hour: string; minutes: string; seconds: string; milliseconds: string; } => {
+// export const rawDateObject = ({ date }: { date?: string | number | Date; } = {}):
+//   { year: string, month: string; day: string; weekDay: string; hour: string; minutes: string; seconds: string; milliseconds: string; } => {
   
-  const now = rawDate({ date });
-  const year = now.getFullYear().toString();
-  const month = padStart({ value: now.getMonth() +1,maxLength:2,fillingValue:0 })
-  const day = padStart({ value: now.getDate(), maxLength: 2, fillingValue: 0 })
-  const weekDay = padStart({ value: now.getDay(), maxLength: 2, fillingValue: 0 })
-  const hour = padStart({ value: now.getHours(), maxLength: 2, fillingValue: 0 })
-  const minutes = padStart({ value: now.getMinutes(), maxLength: 2, fillingValue: 0 })
-  const seconds = padStart({ value: now.getSeconds(), maxLength: 2, fillingValue: 0 })
-  const milliseconds = padStart({ value: now.getMilliseconds(),maxLength:3,fillingValue:0 })
-  return {year,month,day,weekDay,hour,minutes,seconds,milliseconds} 
-}
+//   const now = rawDate({ date });
+//   const year = now.getFullYear().toString();
+//   const month = padStart({ value: now.getMonth() +1,maxLength:2,fillingValue:0 })
+//   const day = padStart({ value: now.getDate(), maxLength: 2, fillingValue: 0 })
+//   const weekDay = padStart({ value: now.getDay(), maxLength: 2, fillingValue: 0 })
+//   const hour = padStart({ value: now.getHours(), maxLength: 2, fillingValue: 0 })
+//   const minutes = padStart({ value: now.getMinutes(), maxLength: 2, fillingValue: 0 })
+//   const seconds = padStart({ value: now.getSeconds(), maxLength: 2, fillingValue: 0 })
+//   const milliseconds = padStart({ value: now.getMilliseconds(),maxLength:3,fillingValue:0 })
+//   return {year,month,day,weekDay,hour,minutes,seconds,milliseconds} 
+// }
 
-export const GenerateIsoDates = ({ date }: { date?: string | number | Date; }={}) :string=> {
-  const { year, month, day, hour, minutes, seconds, milliseconds } = rawDateObject({ date });
-  return `${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${milliseconds}Z`;
-}
+// export const GenerateIsoDates = ({ date }: { date?: string | number | Date; }={}) :string=> {
+//   const { year, month, day, hour, minutes, seconds, milliseconds } = rawDateObject({ date });
+//   return `${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${milliseconds}Z`;
+// }
 
 
 

@@ -104,28 +104,12 @@ const Index = ({ navigation }) => {
     const queryClient = useQueryClient()
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
     const { mutateAsync: editHandler } = useMutation(APIFunction.update_onboarding)
-
+    const [toCheck, setToCheck] = useState(true)
+    console.log("On", toCheck)
 
     const {
         data: onboarding,
     } = useFetchOnboarding(Task_Name)
-
-
-
-    // const handleOnboarding = async () => {
-    //     let employee_id = await getData("about_me")
-    //     let fd = {
-    //         type: 'Task',
-    //         employee: employee_id.id,
-    //         has_completed_mobile_navigation: true,
-    //         has_completed_mobile_onboarding: true
-    //     }
-    //     let res = await mutateAsync(fd)
-    //     console.log('res', res)
-    //     queryClient.invalidateQueries()
-    //     await storeData('onboard completion', res)
-    //     navigation.navigate("onBoardHome")
-    // }
 
 
     const handleCompletion = async () => {
@@ -139,22 +123,20 @@ const Index = ({ navigation }) => {
                 has_completed_mobile_onboarding: true
             }
 
-            if (!onboarding) {
+            if (onboarding) {
                 fd["id"] = onboarding[0]?.id;
                 let res = await editHandler(fd)
-                console.log('res', res)
                 await storeData('onboard completion', res)
                 queryClient.invalidateQueries("get_onboarding")
-                navigation.navigate("onBoardHome")
+                navigation.navigate("Task", { toCheck })
             } else {
                 let res = await mutateAsync(fd)
-                console.log('res', res)
                 queryClient.invalidateQueries()
                 await storeData('onboard completion', res)
-                navigation.navigate("onBoardHome")
+                navigation.navigate("Task", { toCheck })
             }
         } catch (error) {
-            console.log('err', error)
+            // console.log('err', error)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'

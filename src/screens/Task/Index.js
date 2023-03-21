@@ -5,19 +5,28 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
-    RefreshControl
-} from 'react-native'
-import React, { useState, useEffect, } from 'react'
-import ScreenWrapper from '../../components/ScreenWrapper'
-import { H1, Container, Rounded, PageLoader, TouchableWrapper, ImgPlaceholder, P } from '../../utills/components'
-import { width } from 'react-native-dimension';
+    RefreshControl,
+    ActivityIndicator,
+} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import ScreenWrapper from '../../components/ScreenWrapper';
+import {
+    H1,
+    Container,
+    Rounded,
+    PageLoader,
+    TouchableWrapper,
+    ImgPlaceholder,
+    P,
+} from '../../utills/components';
+import { width, height } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
-import MyTeamCard from '../../components/MyTeamCard/Index'
+import MyTeamCard from '../../components/MyTeamCard/Index';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index';
-import TeamTodoContent from '../../components/TeamTodoContent/Index'
-import { Images } from "../../component2/image/Image"
-import numeral from 'numeral'
+import TeamTodoContent from '../../components/TeamTodoContent/Index';
+import { Images } from '../../component2/image/Image';
+import numeral from 'numeral';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import {
     useFetchStatistics,
@@ -34,50 +43,52 @@ import {
     useFetchAllSent,
     useFetchAllSentDue,
     useFetchAllSentUpcoming,
-    useFetchAllSentOverdue
+    useFetchAllSentOverdue,
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { __flatten, getData, getStoredBusiness } from '../../utills/Methods';
-import CreateTask from '../CreateTask/Index'
+import CreateTask from '../CreateTask/Index';
 import AnimatedView from '../../components/AnimatedView';
 import { useQueryClient } from 'react-query';
 
-
-const Index = ({ navigation, setMoveTo }) => {
+const Index = ({ navigation, route }) => {
+    // const { toCheck } = route.params
+    // console.log("Here", toCheck)
     const [index, setIndex] = useState(0);
-    const [employee_pk, setEmployeePK] = useState(null)
-    const [business, setBusiness] = useState(null)
-    const [tab, setTab] = useState("All");
+    const [employee_pk, setEmployeePK] = useState(null);
+    const [business, setBusiness] = useState(null);
+    const [tab, setTab] = useState('All');
     const [count, setCount] = useState(0);
-    const [actionTitle, setActionTitle] = useState("To-Do");
-    const [moveTask, setMoveTask] = useState("My Tasks")
-    const [data, setData] = useState([])
-    const [taskpage, setTaskPage] = useState(1)
-    const [dueTodayPage, setDueTodayPage] = useState(1)
-    const [dueItems, setDueItems] = useState([])
-    const [upcomingPage, SetupcomingPage] = useState(1)
-    const [upcomingItems, setUpcomingItems] = useState([])
-    const [overduepage, setOverduePage] = useState(1)
-    const [overdueItems, setOverdueItems] = useState([])
-    const [sentItems, setSentItems] = useState([])
-    const [sentPage, setSentPage] = useState(1)
-    const [sentDueItem, setSentDueItems] = useState([])
-    const [sentUpcomingItem, setSentUpcomingItems] = useState([])
-    const [sentOverdueItem, setSentOverdueItems] = useState([])
-    const [people, setPeople] = useState(true)
-    const [focus, setFocus] = useState(true)
+    const [actionTitle, setActionTitle] = useState('To-Do');
+    const [moveTask, setMoveTask] = useState('My Tasks');
+    const [data, setData] = useState([]);
+    const [taskpage, setTaskPage] = useState(1);
+    const [dueTodayPage, setDueTodayPage] = useState(1);
+    const [dueItems, setDueItems] = useState([]);
+    const [upcomingPage, SetupcomingPage] = useState(1);
+    const [upcomingItems, setUpcomingItems] = useState([]);
+    const [overduepage, setOverduePage] = useState(1);
+    const [overdueItems, setOverdueItems] = useState([]);
+    const [sentItems, setSentItems] = useState([]);
+    const [sentPage, setSentPage] = useState(1);
+    const [sentDueItem, setSentDueItems] = useState([]);
+    const [sentUpcomingItem, setSentUpcomingItems] = useState([]);
+    const [sentOverdueItem, setSentOverdueItems] = useState([]);
+    const [people, setPeople] = useState(true);
+    const [focus, setFocus] = useState(true);
     const [margin, setMargin] = useState(0.1);
     const [visible, setVisible] = useState(false);
-    const [teamData, setTeamData] = useState([])
-    const [teamPage, setTeamPage] = useState(1)
-    const [teamDueData, setTeamDueData] = useState([])
-    const [teamDuePage, setTeamDuePage] = useState(1)
-    const [teamUpcomingData, setTeamUpcomingData] = useState([])
-    const [teamUpcomingPage, setTeamUpcomingPage] = useState(1)
-    const [teamOverdueData, setTeamOverdueData] = useState([])
-    const [teamOverduePage, setTeamOverduePage] = useState(1)
-    const queryClient = useQueryClient()
-
+    const [teamData, setTeamData] = useState([]);
+    const [teamPage, setTeamPage] = useState(1);
+    const [teamDueData, setTeamDueData] = useState([]);
+    const [teamDuePage, setTeamDuePage] = useState(1);
+    const [teamUpcomingData, setTeamUpcomingData] = useState([]);
+    const [teamUpcomingPage, setTeamUpcomingPage] = useState(1);
+    const [teamOverdueData, setTeamOverdueData] = useState([]);
+    const [teamOverduePage, setTeamOverduePage] = useState(1);
+    const queryClient = useQueryClient();
+    const [tasks, setTasks] = useState([]);
+    const [teamTask, setTeamTask] = useState([]);
 
     const setButtons = (i) => {
         setIndex(i);
@@ -86,246 +97,452 @@ const Index = ({ navigation, setMoveTo }) => {
         setMargin(width(margin));
     };
 
-    const {
-        data: statistics,
-    } = useFetchStatistics()
-
-    const {
-        data: teamCount,
-    } = useFetchTeamStatistics()
-    const total = teamCount?.todo_count + teamCount?.inprogress_count + teamCount?.completed_count
-
-    const {
-        data: sentStatistics,
-    } = useFetchSentStatistics()
-
-    // my task here 
-
-    const {
-        data: allTasks,
-        isLoading: loadingAllTask,
-    } = useFetchTodos(tab)
-
-    const {
-        data: dueTasks,
-        isLoading: loadingDueTask
-    } = useFetchDueToday(tab)
-
-    const {
-        data: upcomingTasks,
-        isLoading: loadingUpcoming
-    } = useFetchUpcoming(tab)
-
-    const {
-        data: overdueTasks,
-        isLoading: loadingOverdue
-    } = useFetchOverDue(tab)
-
-    // all sent here
-    const {
-        data: allSentTasks,
-        isLoading: loadingAllSentTask,
-    } = useFetchAllSent(tab, index)
-
-    const {
-        data: allSentDues,
-        isLoading: loadingAllSentDues,
-    } = useFetchAllSentDue(tab, index)
-    const {
-        data: allSentUpcoming,
-        isLoading: loadingAllSentUpcoming,
-    } = useFetchAllSentUpcoming(tab, index)
-    const {
-        data: allSentOverdue,
-        isLoading: loadingAllSentOverdue,
-    } = useFetchAllSentOverdue(tab, index)
-
-    // all team starts 
-    const {
-        data: allTeamData,
-        isLoading: loadingAllTeamTask,
-    } = useFetchTeamTask(tab, index)
-
-
-    const {
-        data: allTeamDue,
-        isLoading: loadingAllTeamDue,
-    } = useFetchTeamDuetoday(tab, index)
-
-    const {
-        data: allTeamUpcoming,
-        isLoading: loadingAllTeamUpcoming,
-    } = useFetchMyTeamUpcoming(tab, index)
-
-    const {
-        data: allTeamOverdue,
-        isLoading: loadingAllTeamOverdue,
-    } = useFetchMyTeamOverdue(tab, index)
-
-    // console.log('all', allTeamData)
-    const __flattenArr = () => {
-        let flattenedArr = []
-        if (index === 0 && allTasks && allTasks?.pages && Array.isArray(allTasks?.pages)) {
-            flattenedArr = allTasks?.pages
-        }
-        if (index === 0 && actionTitle === "To-Do" && tab === "Due Today" && dueTasks && dueTasks?.pages && Array.isArray(dueTasks?.pages)) {
-            flattenedArr = dueTasks?.pages
-        }
-        if (index === 0 && actionTitle === "To-Do" && tab === 'Upcoming' && upcomingTasks && upcomingTasks?.pages && Array.isArray(upcomingTasks?.pages)) {
-            flattenedArr = upcomingTasks?.pages
-        }
-        if (index === 0 && actionTitle === "To-Do" && tab === "Overdue" && overdueTasks && overdueTasks?.pages && Array.isArray(overdueTasks?.pages)) {
-            flattenedArr = overdueTasks?.pages
-        }
-        if (index === 0 && actionTitle === "To-Do" && tab === "Overdue" && overdueTasks && overdueTasks?.pages && Array.isArray(overdueTasks?.pages)) {
-            flattenedArr = overdueTasks?.pages
-        }
-        if (index === 1 && allSentTasks && allSentTasks?.pages && Array.isArray(allSentTasks?.pages)) {
-            flattenedArr = allSentTasks?.pages
-        }
-        if (index === 1 && actionTitle === "To-Do" && tab === "Due Today" && allSentDues && allSentDues?.pages && Array.isArray(allSentDues?.pages)) {
-            flattenedArr = allSentDues?.pages
-        }
-        if (index === 1 && actionTitle === "To-Do" && tab === "Upcoming" && allSentUpcoming && allSentUpcoming?.pages && Array.isArray(allSentUpcoming?.pages)) {
-            flattenedArr = allSentUpcoming?.pages
-        }
-        if (index === 1 && actionTitle === "To-Do" && tab === "Overdue" && allSentOverdue && allSentOverdue?.pages && Array.isArray(allSentOverdue?.pages)) {
-            flattenedArr = allSentOverdue?.pages
-        }
-        if (index === 2 && allTeamData && allTeamData?.pages && Array.isArray(allTeamData?.pages)) {
-            flattenedArr = allTeamData?.pages
-        }
-        if (index === 2 && actionTitle === "To-Do" && tab === "Due Today" && allTeamDue && allTeamDue?.pages && Array.isArray(allTeamDue?.pages)) {
-            flattenedArr = allTeamDue?.pages
-        }
-        if (index === 2 && actionTitle === "To-Do" && tab === "Upcoming" && allTeamUpcoming && allTeamUpcoming?.pages && Array.isArray(allTeamUpcoming?.pages)) {
-            flattenedArr = allTeamUpcoming?.pages
-        }
-        if (index === 2 && actionTitle === "To-Do" && tab === "Overdue" && allTeamOverdue && allTeamOverdue?.pages && Array.isArray(allTeamOverdue?.pages)) {
-            flattenedArr = allTeamOverdue?.pages
-        }
-        let arr = __flatten(flattenedArr)
-
-        if (index === 0 && tab === "All")
-            return taskpage > 1 ? setData([...data, ...arr]) : setData(arr)
-        if (index === 0 && actionTitle === "To-Do" && tab === "Due Today")
-            return dueTodayPage > 1 ? setDueItems([...dueItems, ...arr]) : setDueItems(arr)
-        if (index === 0 && actionTitle === "To-Do" && tab === "Upcoming")
-            return upcomingPage > 1 ? setUpcomingItems([...upcomingItems, ...arr]) : setUpcomingItems(arr)
-        if (index === 0 && actionTitle === "To-Do" && tab === "Overdue")
-            return overduepage > 1 ? setOverdueItems([...overdueItems, ...arr]) : setOverdueItems(arr)
-
-        if (index === 1 && tab === "All")
-            return sentPage > 1 ? setSentItems([...sentItems, ...arr]) : setSentItems(arr)
-        if (index === 1 && actionTitle === "To-Do" && tab === "Due Today")
-            return sentPage > 1 ? setSentDueItems([...sentDueItem, ...arr]) : setSentDueItems(arr)
-        if (index === 1 && actionTitle === "To-Do" && tab === "Upcoming")
-            return sentPage > 1 ? setSentUpcomingItems([...sentUpcomingItem, ...arr]) : setSentUpcomingItems(arr)
-        if (index === 1 && actionTitle === "To-Do" && tab === "Overdue")
-            return sentPage > 1 ? setSentOverdueItems([...sentOverdueItem, ...arr]) : setSentOverdueItems(arr)
-
-        if (index === 2 && tab === "All")
-            return teamPage > 1 ? setTeamData([...teamData, ...arr]) : setTeamData(arr)
-        if (index === 2 && actionTitle === "To-Do" && tab === "Due Today")
-            return teamDuePage > 1 ? setTeamDueData([...teamDueData, ...arr]) : setTeamDueData(arr)
-        if (index === 2 && actionTitle === "To-Do" && tab === "Upcoming")
-            return teamUpcomingPage > 1 ? setTeamUpcomingData([...teamUpcomingData, ...arr]) : setTeamUpcomingData(arr)
-        if (index === 2 && actionTitle === "To-Do" && tab === "Overdue")
-            return teamOverduePage > 1 ? setTeamOverdueData([...teamOverdueData, ...arr]) : setTeamOverdueData(arr)
-    }
-
-    const only_Todos = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
-    const only_inProgress = Object.values(data).filter((item) => item.status !== "Completed" && item.status !== "To-do")
-    const only_completed = Object.values(data).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
-    const only_overdue = Object.values(overdueItems).filter((item) => item.status !== "In-progress");
-    const only_duetoday = Object.values(dueItems).filter((item) => item.status !== "In-progress");
-    const no_date = Object.values(data).filter((item) => item?.due_date === null);
-
-    // sent tasks 
-    const sent_Todos = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
-    const sent_inProgress = Object.values(sentItems).filter((item) => item.status !== "Completed" && item.status !== "To-do")
-    const sent_completed = Object.values(sentItems).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
-    const sent_overdue = Object.values(sentOverdueItem).filter((item) => item.status !== "In-progress");
-    const no_date_sent = Object.values(sentItems).filter((item) => item?.due_date === null);
-
-    //team card
-    const team_todos = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
-    const team_duetoday = Object.values(teamDuePage).filter((item) => item.status !== "Completed" && item.status !== "In-progress");
-    const team_overdue = Object.values(teamOverdueData).filter((item) => item.status !== "In-progress");
-    const team_inProgress = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== "To-do")
-    const team_completed = Object.values(teamData).filter((item) => item.status !== "To-do" && item.status !== "In-progress")
-    const no_date_team = Object.values(teamData).filter((item) => item?.due_date === null);
-
-    // console.log("Killer", team_todos)
-
     const AddButton = ({ onPress, style }) => (
-        <TouchableOpacity
-            style={style}
-            onPress={onPress}>
+        <TouchableOpacity style={style} onPress={onPress}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
     );
     const RenderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('search', { people })} >
+            <TouchableOpacity onPress={() => navigation.navigate('search', { people })}>
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
-        )
-    }
+        );
+    };
     const alpha = Array.from(Array(26)).map((e, i) => i + 65);
     const alphabet = alpha.map((x) => String.fromCharCode(x));
 
+    const {
+        data: statistics
+    } = useFetchStatistics();
 
-    useEffect(() => {
-        __flattenArr()
-    }, [allTasks, upcomingTasks, dueTasks, overdueTasks]);
-
-    useEffect(() => {
-        __flattenArr()
-    }, [allTeamData, allTeamDue, allTeamUpcoming, allTeamOverdue]);
-
-    useEffect(() => {
-        __flattenArr()
-    }, [allSentTasks, allSentDues, allSentOverdue, allSentUpcoming]);
+    const {
+        data: teamCount
+    } = useFetchTeamStatistics(employee_pk);
 
 
-    const reloadScreen = async () => {
-        try {
-            let about_me = await getData("about_me");
-            setEmployeePK(about_me?.id)
-            let biz = await getStoredBusiness();
-            setBusiness(biz);
-        } catch (err) {
+    const {
+        data: sentStatistics
+    } = useFetchSentStatistics();
 
-        }
-    }
-    const refreshTask = () => {
-        reloadScreen()
-        queryClient.invalidateQueries("")
-    }
     const EmptyState = () => {
         return (
             <View style={styles.emptyState}>
-                <P color="#A8A8A8">You have no tasks</P>
-                <P color="#A8A8A8">yet.</P>
+                <>
+                    <P color="#A8A8A8">You have no tasks</P>
+                    <P color="#A8A8A8">yet.</P>
+                </>
             </View>
-        )
-    }
+        );
+    };
+    const RenderItems = ({ item }) => {
+        return (
+            <TodoContent
+                item={item}
+                count={count}
+                title={actionTitle}
+                allTasks={allTasks}
+                index={index}
+            />
+        );
+    };
+    const TeamRenderItem = ({ item }) => {
+        return (
+            <TeamTodoContent
+                count={count}
+                item={item}
+                title={actionTitle}
+                __flattenArr={__flattenArr}
+                index={index}
+                allTeamData
+            />
+        );
+    };
+    const footerLoader = () => {
+        return (
+            <Container alignSelf={'center'} width={30} marginTop={3}>
+                <ActivityIndicator size={width(10)} color={AppColors.green} />
+            </Container>
+        );
+    };
+
+
+    // my task here
+    const {
+        data: allTasks,
+        isLoading: loadingAllTask,
+        isFetchingNextPage,
+        hasNextPage,
+    } = useFetchTodos(tab, index);
+
+    const {
+        data: dueTasks,
+        isLoading: loadingDueTask
+    } = useFetchDueToday(tab, index);
+
+    const {
+        data: upcomingTasks,
+        isLoading: loadingUpcoming
+    } = useFetchUpcoming(tab, index);
+
+    const {
+        data: overdueTasks,
+        isLoading: loadingOverdue
+    } = useFetchOverDue(tab, index);
+
+    // all sent here
+    const {
+        data: allSentTasks,
+        isLoading: loadingAllSentTask
+    } = useFetchAllSent(tab, index, index);
+
+    const { data: allSentDues,
+        isLoading: loadingAllSentDues
+    } = useFetchAllSentDue(tab, index);
+
+    const {
+        data: allSentUpcoming,
+        isLoading: loadingAllSentUpcoming
+    } =
+        useFetchAllSentUpcoming(tab, index);
+
+    const {
+        data: allSentOverdue,
+        isLoading: loadingAllSentOverdue
+    } =
+        useFetchAllSentOverdue(tab, index);
+
+    // all team starts
+    const {
+        data: allTeamData,
+        isLoading: loadingAllTeamTask
+    } = useFetchTeamTask(tab, employee_pk);
+
+    const {
+        data: allTeamDue,
+        isLoading: loadingAllTeamDue
+    } = useFetchTeamDuetoday(tab, employee_pk);
+
+    const {
+        data: allTeamUpcoming,
+        isLoading: loadingAllTeamUpcoming
+    } = useFetchMyTeamUpcoming(tab, employee_pk);
+
+
+    const { data: allTeamOverdue,
+        isLoading: loadingAllTeamOverdue
+    } = useFetchMyTeamOverdue(tab, employee_pk);
+
+
+
+    const __flattenArr = () => {
+        let flattenedArr = [];
+        if (
+            index === 0 &&
+            allTasks &&
+            allTasks?.pages &&
+            Array.isArray(allTasks?.pages)
+        ) {
+            flattenedArr = allTasks?.pages;
+        }
+        if (
+            index === 0 &&
+            tab === 'Due Today' &&
+            dueTasks &&
+            dueTasks?.pages &&
+            Array.isArray(dueTasks?.pages)
+        ) {
+            flattenedArr = dueTasks?.pages;
+        }
+        if (
+            index === 0 &&
+            tab === 'Upcoming' &&
+            upcomingTasks &&
+            upcomingTasks?.pages &&
+            Array.isArray(upcomingTasks?.pages)
+        ) {
+            flattenedArr = upcomingTasks?.pages;
+        }
+        if (
+            index === 0 &&
+            tab === 'Overdue' &&
+            overdueTasks &&
+            overdueTasks?.pages &&
+            Array.isArray(overdueTasks?.pages)
+        ) {
+            flattenedArr = overdueTasks?.pages;
+        }
+        if (
+            index === 0 &&
+            tab === 'Upcoming' &&
+            upcomingTasks &&
+            upcomingTasks?.pages &&
+            Array.isArray(upcomingTasks?.pages)
+        ) {
+            flattenedArr = upcomingTasks?.pages;
+        }
+        if (
+            index === 1 &&
+            allSentTasks &&
+            allSentTasks?.pages &&
+            Array.isArray(allSentTasks?.pages)
+        ) {
+            flattenedArr = allSentTasks?.pages;
+        }
+        if (
+            index === 1 &&
+            tab === 'Due Today' &&
+            allSentDues &&
+            allSentDues?.pages &&
+            Array.isArray(allSentDues?.pages)
+        ) {
+            flattenedArr = allSentDues?.pages;
+        }
+        if (
+            index === 1 &&
+            tab === 'Upcoming' &&
+            allSentUpcoming &&
+            allSentUpcoming?.pages &&
+            Array.isArray(allSentUpcoming?.pages)
+        ) {
+            flattenedArr = allSentUpcoming?.pages;
+        }
+        if (
+            index === 1 &&
+            tab === 'Overdue' &&
+            allSentOverdue &&
+            allSentOverdue?.pages &&
+            Array.isArray(allSentOverdue?.pages)
+        ) {
+            flattenedArr = allSentOverdue?.pages;
+        }
+        if (
+            index === 2 &&
+            allTeamData &&
+            allTeamData?.pages &&
+            Array.isArray(allTeamData?.pages)
+        ) {
+            flattenedArr = allTeamData?.pages;
+        }
+        if (
+            index === 2 &&
+            tab === 'Due Today' &&
+            allTeamDue &&
+            allTeamDue?.pages &&
+            Array.isArray(allTeamDue?.pages)
+        ) {
+            flattenedArr = allTeamDue?.pages;
+        }
+        if (
+            index === 2 &&
+            tab === 'Upcoming' &&
+            allTeamUpcoming &&
+            allTeamUpcoming?.pages &&
+            Array.isArray(allTeamUpcoming?.pages)
+        ) {
+            flattenedArr = allTeamUpcoming?.pages;
+        }
+        if (
+            index === 2 &&
+            tab === 'Overdue' &&
+            allTeamOverdue &&
+            allTeamOverdue?.pages &&
+            Array.isArray(allTeamOverdue?.pages)
+        ) {
+            flattenedArr = allTeamOverdue?.pages;
+        }
+        let arr = __flatten(flattenedArr);
+
+        const state = {
+            data: [],
+            dueItems: [],
+            upcomingItems: [],
+            overdueItems: [],
+            sentItems: [],
+            sentDueItem: [],
+            sentUpcomingItem: [],
+            sentOverdueItem: [],
+            teamData: [],
+            teamDueData: [],
+            teamUpcomingData: [],
+            teamOverdueData: [],
+        };
+        if (index === 0)
+            state.data = taskpage > 1 ? [...data, ...arr] : arr;
+        if (index === 0 && tab === 'Due Today')
+            state.dueItems = dueTodayPage > 1 ? [...dueItems, ...arr] : arr;
+        if (index === 0 && tab === 'Upcoming')
+            state.upcomingItems = upcomingPage > 1 ? [...upcomingItems, ...arr] : arr;
+        if (index === 0 && tab === 'Overdue')
+            state.overdueItems = overduepage > 1 ? [...overdueItems, ...arr] : arr;
+
+        console.log("Tab", arr)
+        if (index === 1)
+            state.sentItems = sentPage > 1 ? [...sentItems, ...arr] : arr;
+        if (index === 1 && tab === 'Due Today')
+            state.sentDueItem = sentPage > 1 ? [...sentDueItem, ...arr] : arr;
+        if (index === 1 && tab === 'Upcoming')
+            state.sentUpcomingItem = sentPage > 1 ? [...sentUpcomingItem, ...arr] : arr;
+        if (index === 1 && tab === 'Overdue')
+            state.sentOverdueItem = sentPage > 1 ? [...sentOverdueItem, ...arr] : arr;
+
+
+        if (index === 2)
+            state.teamData = teamPage > 1 ? [...teamData, ...arr] : arr;
+        if (index === 2 && tab === 'Due Today')
+            state.teamDueData = teamDuePage > 1 ? [...teamDueData, ...arr] : arr;
+        if (index === 2 && tab === 'Upcoming')
+            state.teamUpcomingData = teamUpcomingPage > 1 ? [...teamUpcomingData, ...arr] : arr;
+        if (index === 2 && tab === 'Overdue')
+            state.teamOverdueData = teamOverduePage > 1 ? [...teamOverdueData, ...arr] : arr;
+
+        return state;
+    };
+
+    const mapToState = ({
+        data,
+        dueItems,
+        overdueItems,
+        upcomingItems,
+        sentItems,
+        sentDueItem,
+        sentUpcomingItem,
+        sentOverdueItem,
+        teamData,
+        teamDueData,
+        teamUpcomingData,
+        teamOverdueData,
+    }) => {
+
+        console.log("Upcoming", sentUpcomingItem)
+
+        if (index === 0 && actionTitle === 'To-Do' && tab === 'All') {
+            let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (index === 0 && actionTitle === 'To-Do' && tab === 'Due Today') {
+            let arr = Object.values(dueItems).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (index === 0 && actionTitle === 'To-Do' && tab === 'Upcoming') {
+            let arr = Object.values(upcomingItems).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (index === 0 && actionTitle === 'To-Do' && tab === 'Overdue') {
+            let arr = Object.values(overdueItems).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (index === 0 && actionTitle === 'To-Do' && tab === 'No Date') {
+            let arr = Object.values(data).filter((item) => !item?.due_date);
+            return setTasks(arr);
+        }
+        if (index === 0 && actionTitle === 'In Progress') {
+            let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            return setTasks(arr);
+        }
+        if (index === 0 && actionTitle === 'Completed') {
+            let arr = Object.values(data).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+
+        if (index === 1 && actionTitle === 'To-Do' && tab === 'All') {
+            let arr = Object.values(sentItems).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
+            // console.log("ALL today", arr)
+            return setTasks(arr);
+        }
+        if (index === 1 && actionTitle === 'To-Do' && tab === 'Due Today') {
+            let arr = Object.values(sentDueItem).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (index === 1 && actionTitle === 'To-Do' && tab === 'Upcoming') {
+            let arr = Object.values(sentUpcomingItem).filter((item) => item.status !== "In-progress");
+            console.log("Upcoming", sentUpcomingItem)
+            return setTasks(arr);
+        }
+        if (index === 1 && actionTitle === 'To-Do' && tab === 'Overdue') {
+            let arr = Object.values(sentOverdueItem).filter((item) => item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (index === 1 && actionTitle === 'To-Do' && tab === 'No Date') {
+            let arr = Object.values(sentItems).filter((item) => item?.due_date === null);
+            console.log('NO DATE', arr);
+            return setTasks(arr);
+        }
+        if (index === 1 && actionTitle === 'In Progress') {
+            let arr = Object.values(sentItems).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            return setTasks(arr);
+        }
+        if (index === 1 && actionTitle === 'Completed') {
+            let arr = Object.values(sentItems).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+
+        if (index === 2 && actionTitle === 'To-Do' && tab === 'All') {
+            let arr = Object.values(teamData).filter((item) => item.status !== 'Completed');
+            return setTeamTask(arr);
+        }
+        if (index === 2 && actionTitle === 'To-Do' && tab === 'Due Today') {
+            let arr = Object.values(teamDueData).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
+            return setTeamTask(arr);
+        }
+        if (index === 2 && actionTitle === 'To-Do' && tab === 'Upcoming') {
+            let arr = Object.values(teamUpcomingData).filter((item) => item.status !== 'In-progress');
+            return setTeamTask(arr);
+        }
+        if (index === 2 && actionTitle === 'To-Do' && tab === 'Overdue') {
+            let arr = Object.values(teamOverdueData).filter((item) => item.status !== 'In-progress');
+            return setTeamTask(arr);
+        }
+        if (index === 2 && actionTitle === 'To-Do' && tab === 'No Date') {
+            let arr = Object.values(teamData).filter((item) => item?.due_date === null);
+            return setTeamTask(arr);
+        }
+        if (index === 2 && actionTitle === 'In Progress') {
+            let arr = Object.values(teamData).filter(
+                (item) => item.status !== 'Completed' && item.status !== 'To-do',
+            );
+            return setTeamTask(arr);
+        }
+        if (index === 2 && actionTitle === 'Completed') {
+            let arr = Object.values(teamData).filter(
+                (item) => item.status !== 'To-do' && item.status !== 'In-progress',
+            );
+            return setTeamTask(arr);
+        }
+    };
+
+    useEffect(() => {
+        mapToState(__flattenArr());
+    }, [index, actionTitle, tab, allTasks, allSentTasks, allTeamData, data]);
+
+
+    const getInfo = async () => {
+        try {
+            let about_me = await getData('about_me');
+            setEmployeePK(about_me?.department?.id);
+        } catch (err) { console.log("err", err) }
+    };
+    const refreshTask = () => {
+        reloadScreen();
+        queryClient.invalidateQueries('');
+    };
+
+    useEffect(() => {
+        getInfo()
+    }, [])
 
     return (
         <React.Fragment>
-            <ScreenWrapper scrollEnabled={false}
+            <ScreenWrapper
+                scrollEnabled={false}
                 footerUnScrollable={() => {
                     return (
                         <AddButton
                             style={styles.addButton}
                             onPress={() => setVisible(true)}
-
                         />
-
-                    )
+                    );
                 }}>
-
                 <View style={styles.mainViewContainer}>
                     <View style={styles.header}>
                         <View style={styles.logoBox}>
@@ -334,830 +551,324 @@ const Index = ({ navigation, setMoveTo }) => {
                         <Text numberOfLines={1} style={styles.screenTitle}>
                             Tasks
                         </Text>
-
                     </View>
                     <View style={styles.line} />
                 </View>
                 <ScrollView
                     style={[styles.scroll, CommonStyles.paddingBottom_10]}
                     refreshControl={
-                        <RefreshControl
-                            refreshing={false}
+                        <RefreshControl refreshing={false}
                             onRefresh={refreshTask}
                         />
                     }
                     showsVerticalScrollIndicator={false}>
-
                     <View style={styles.threeButtonCont}>
-                        {
-                            ['My Tasks', 'Sent Tasks', 'My Team'].map((item, i) => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setButtons(i)
-                                        setActionTitle("To-Do")
-                                        setTab("All")
-
-                                    }}
-                                    style={styles.button}
-                                    activeOpacity={0.8}
-                                    key={i}>
-                                    <Text style={[styles.buttonText, index === i && styles.buttonText1]}>
-                                        {item}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))
-                        }
+                        {['My Tasks', 'Sent Tasks', 'My Team'].map((item, i) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setButtons(i);
+                                    setActionTitle('To-Do');
+                                    setTab('All');
+                                }}
+                                style={styles.button}
+                                activeOpacity={0.8}
+                                key={i}>
+                                <Text
+                                    style={[
+                                        styles.buttonText,
+                                        index === i && styles.buttonText1,
+                                    ]}>
+                                    {item}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
                         <AnimatedView marginLeft={margin} styles={[styles.animatedView]} />
                     </View>
 
-
-                    {
-                        index === 0 ?
-                            <React.Fragment>
-                                <View style={styles.boxContainer}>
-                                    {
-                                        [
-                                            {
-                                                selected: "To-Do",
-                                                colorUp: AppColors.newBlue,
-                                                image: Images.clippedBlue,
-                                                count: statistics ? numeral(statistics?.todo_count).format("0,0") : 0,
-                                            },
-
-                                            {
-                                                selected: "In Progress",
-                                                colorUp: AppColors.yellow,
-                                                image: Images.clippedYellow,
-                                                count: statistics ? numeral(statistics?.inprogress_count).format("0,0") : 0,
-
-                                            },
-                                            {
-                                                selected: "Completed",
-                                                colorUp: AppColors.green,
-                                                image: Images.clippedGreen,
-                                                count: statistics ? numeral(statistics?.completed_count).format("0,0") : 0,
-
-                                            }
-                                        ].map((item, i) => <TouchableOpacity key={i} onPress={() => {
-                                            setActionTitle(item.selected)
-                                            setCount(item.count)
-                                            setTab(tab)
-
-                                        }}>
-                                            <Container
-                                                backgroundColor={item.colorUp}
-                                                width={28}
-                                                style={styles.mainContainer}>
-                                                <View>
-                                                    <View style={styles.titleCon}>
-                                                        <H1 style={styles.title}>{item.selected}</H1>
-                                                        {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
-                                                    </View>
-                                                    <View>
-                                                        {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
-                                                        <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
-                                                    </View>
-                                                </View>
-                                            </Container>
-                                        </TouchableOpacity>)
-                                    }
-                                </View>
-                                <View style={styles.container}>
-                                    <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                                        actionTitle === 'To-Do' ? statistics?.todo_count : actionTitle === 'In Progress' ? statistics?.inprogress_count : actionTitle === 'Completed' ? statistics?.completed_count : 0
-                                    })
-                                    </H1>
-                                </View>
-
-                                {
-                                    (
-                                        (actionTitle === "In Progress") && only_inProgress && Array.isArray(only_inProgress) &&
-                                        only_inProgress.length === 0 && !loadingAllTask
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-                                {
-                                    (
-                                        (actionTitle === "Completed") && only_completed && Array.isArray(only_completed) &&
-                                        only_completed.length === 0 && !loadingAllTask
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-
-
-                                {
-                                    index === 0 && actionTitle === 'To-Do' ?
-
-                                        <React.Fragment>
-
-                                            <View style={styles.scrollViewContainer}>
-                                                <ScrollView
-                                                    horizontal
-                                                    showsHorizontalScrollIndicator={false}>
-                                                    {
-                                                        ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                                            <TouchableWrapper
-                                                                onPress={() => setTab(item)}
-                                                                isText
-                                                                width={25}
-                                                                style={tab === item ? styles.currentTab : styles.defaultTab}
-                                                                key={i}>
-                                                                <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                                            </TouchableWrapper>
-                                                        ))
-                                                    }
-                                                </ScrollView>
-                                            </View>
-                                            {/* loading state  for all tabs */}
-                                            {
-                                                loadingAllTask || loadingDueTask || loadingUpcoming || loadingOverdue || loadingAllTeamTask || loadingAllTeamDue || loadingAllTeamUpcoming || loadingAllTeamOverdue || loadingAllSentDues || loadingAllSentOverdue || loadingAllSentUpcoming || loadingAllSentTask ? <PageLoader /> : null
-                                            }
-                                            <View>
-                                                {
-                                                    index === 0 && actionTitle === 'To-Do' && tab === "All" && !loadingAllTask ? only_Todos.map((item, i) => (
-                                                        <TodoContent
-                                                            key={i}
-                                                            count={count}
-                                                            item={item}
-                                                            title={actionTitle}
-                                                            __flattenArr={__flattenArr}
-                                                            allTasks
-                                                        />
-                                                    )) : null
-                                                }
-                                            </View>
-
-                                            <View>
-                                                {
-                                                    index === 0 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingDueTask ? only_duetoday.map((item, i) => (
-                                                        <TodoContent
-                                                            key={i}
-                                                            count={count}
-                                                            item={item}
-                                                            title={actionTitle}
-                                                            __flattenArr={__flattenArr}
-                                                            allTasks
-                                                        />
-                                                    )) : null
-                                                }
-                                            </View>
-
-                                            <View>
-                                                {
-                                                    index === 0 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingUpcoming ? upcomingItems.map((item, i) => (
-                                                        <TodoContent
-                                                            key={i}
-                                                            count={count}
-                                                            item={item}
-                                                            title={actionTitle}
-                                                            __flattenArr={__flattenArr}
-                                                            allTasks
-                                                        />
-                                                    )) : null
-                                                }
-                                            </View>
-
-                                            <View>
-                                                {
-                                                    index === 0 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingOverdue ? only_overdue.map((item, i) => (
-                                                        <TodoContent
-                                                            key={i}
-                                                            count={count}
-                                                            item={item}
-                                                            title={actionTitle}
-                                                            __flattenArr={__flattenArr}
-                                                            allTasks
-                                                        />
-                                                    )) : null
-                                                }
-                                            </View>
-                                            <View>
-                                                {
-                                                    index === 0 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTask ? no_date.map((item, i) => (
-                                                        <TodoContent
-                                                            key={i}
-                                                            count={count}
-                                                            item={item}
-                                                            title={actionTitle}
-                                                            __flattenArr={__flattenArr}
-                                                            allTasks
-                                                        />
-                                                    )) : null
-                                                }
-                                            </View>
-                                        </React.Fragment>
-                                        : null
-                                }
-
-                                {/* empty state for other boxes  */}
-                                {/* empty state  for all tabs */}
-                                {
-                                    (
-                                        (index === 0 && actionTitle === 'To-Do' && tab === "All") && only_Todos && Array.isArray(only_Todos) &&
-                                        only_Todos.length === 0 && !loadingAllTask
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-                                {
-                                    (
-                                        (index === 0 && tab === "Due Today") && dueItems && Array.isArray(dueItems) &&
-                                        dueItems.length === 0 && !loadingDueTask
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-                                {
-                                    (
-                                        (index === 0 && tab === "Upcoming") && upcomingItems && Array.isArray(upcomingItems) &&
-                                        upcomingItems.length === 0 && !loadingUpcoming
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-                                {
-                                    (
-                                        (index === 0 && tab === "Overdue") && only_overdue && Array.isArray(only_overdue) &&
-                                        only_overdue.length === 0 && !loadingOverdue
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-                                {
-                                    (
-                                        (index === 0 && tab === "No Date") && no_date && Array.isArray(no_date) &&
-                                        no_date.length === 0 && !loadingAllTask
-                                    ) ? (
-                                        <EmptyState />
-                                    ) : null
-                                }
-                                <View style={CommonStyles.marginTop_2}>
-                                    {
-                                        index === 0 && actionTitle === "In Progress" ? only_inProgress.map((item, i) => (
-                                            <TodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                                allTasks
-                                            />
-                                        )) : null
-                                    }
-                                </View>
-
-                                <View style={CommonStyles.marginTop_2}>
-                                    {
-                                        index === 0 && actionTitle === "Completed" ? only_completed.map((item, i) => (
-                                            <TodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                                allTasks
-                                            />
-                                        )) : null
-                                    }
-                                </View>
-
-
-                            </React.Fragment>
-
-                            : null
-                    }
-
-
-                    {/* sent task starts here  */}
-                    {
-                        index === 1 &&
-                        <React.Fragment>
-                            <View style={styles.boxContainer}>
-                                {
-                                    [
-                                        {
-                                            selected: "To-Do",
-                                            colorUp: AppColors.newBlue,
-                                            image: Images.clippedBlue,
-                                            count: sentStatistics ? numeral(sentStatistics?.todo_count).format("0,0") : 0,
-                                        },
-
-                                        {
-                                            selected: "In Progress",
-                                            colorUp: AppColors.yellow,
-                                            image: Images.clippedYellow,
-                                            count: sentStatistics ? numeral(sentStatistics?.inprogress_count).format("0,0") : 0,
-
-                                        },
-                                        {
-                                            selected: "Completed",
-                                            colorUp: AppColors.green,
-                                            image: Images.clippedGreen,
-                                            count: sentStatistics ? numeral(sentStatistics?.completed_count).format("0,0") : 0,
-
-                                        }
-                                    ].map((item, i) => <TouchableOpacity key={i} onPress={() => {
-                                        setActionTitle(item.selected)
-                                        setCount(item.count)
-                                        setTab(tab)
-
-                                    }}>
-                                        <Container
-                                            backgroundColor={item.colorUp}
-                                            width={28}
-                                            style={styles.mainContainer}>
-                                            <View>
-                                                <View style={styles.titleCon}>
-                                                    <H1 style={styles.title}>{item.selected}</H1>
-                                                    {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
-                                                </View>
-                                                <View>
-                                                    {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
-                                                    <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
-                                                </View>
-                                            </View>
-                                        </Container>
-                                    </TouchableOpacity>)
-                                }
-                            </View>
-                            <View style={styles.container}>
-                                <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                                    actionTitle === 'To-Do' ? sentStatistics?.todo_count : actionTitle === 'In Progress' ? sentStatistics?.inprogress_count : actionTitle === 'Completed' ? sentStatistics?.completed_count : null
-                                })
-                                </H1>
-                            </View>
-
-                            {
-                                (
-                                    (index === 1 && actionTitle === "In Progress") && sent_inProgress && Array.isArray(sent_inProgress) &&
-                                    sent_inProgress.length === 0 && !loadingAllSentTask
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 1 && actionTitle === "Completed") && sent_completed && Array.isArray(sent_completed) &&
-                                    sent_completed.length === 0 && !loadingAllTeamTask
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-
-                            {
-                                index == 1 && actionTitle == "To-Do" ?
-                                    <View style={styles.scrollViewContainer}>
-                                        <ScrollView
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}>
-                                            {
-                                                ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                                    <TouchableWrapper
-                                                        onPress={() => setTab(item)}
-                                                        isText
-                                                        width={25}
-                                                        style={tab === item ? styles.currentTab : styles.defaultTab}
-                                                        key={i}>
-                                                        <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                                    </TouchableWrapper>
-                                                ))
-                                            }
-                                        </ScrollView>
-                                    </View> : null
-                            }
-                            {/* empty state  for all tabs */}
-                            {
-                                (
-                                    (index === 1 && actionTitle === "To-Do" && tab === "All") && sentItems && Array.isArray(sentItems) &&
-                                    sentItems.length === 0 && !loadingAllSentTask
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-
-                                (
-                                    (index === 1 && tab === "Due Today") && sentDueItem && Array.isArray(sentDueItem) &&
-                                    sentDueItem.length === 0 && !loadingAllSentDues
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 1 && tab === "Upcoming") && sentUpcomingItem && Array.isArray(sentUpcomingItem) &&
-                                    sentUpcomingItem.length === 0 && !loadingAllSentUpcoming
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 1 && tab === "Overdue") && sentOverdueItem && Array.isArray(sentOverdueItem) &&
-                                    sentOverdueItem.length === 0 && !loadingAllSentOverdue
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 1 && tab === "No Date") && no_date_sent && Array.isArray(no_date_sent) &&
-                                    no_date_sent.length === 0 && !loadingAllSentTask
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-
-
-                            <View>
-                                {
-                                    index === 1 && actionTitle === 'To-Do' && tab === "All" && !loadingAllSentTask ? sent_Todos.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            index={index}
-                                            isSent
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                            <View>
-                                {
-                                    index === 1 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllSentDues ? sentDueItem.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            index={index}
-                                            isSent
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                            <View>
-                                {
-                                    index === 1 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingAllSentUpcoming ? sentUpcomingItem.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            index={index}
-                                            isSent
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-
-                            <View>
-                                {
-                                    index === 1 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingAllSentOverdue ? sent_overdue.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            index={index}
-                                            isSent
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                            <View>
-                                {
-                                    index === 1 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllSentTask ? no_date_sent.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            __flattenArr={__flattenArr}
-                                            allTasks
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                            <View style={CommonStyles.marginTop_2}>
-                                {
-                                    index === 1 && actionTitle === 'In Progress' && !loadingAllSentTask ? sent_inProgress.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            index={index}
-                                            isSent
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                            <View style={CommonStyles.marginTop_2}>
-                                {
-                                    index === 1 && actionTitle === 'Completed' && !loadingAllSentTask ? sent_completed.map((item, i) => (
-                                        <TodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            index={index}
-                                            isSent
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                        </React.Fragment>
-
-                    }
-
-
-                    {/* Teams section starts here  */}
-                    {
-                        index === 2 &&
-                        <React.Fragment>
-                            <View><Text numberOfLines={1} style={styles.headerTitle}>Find People</Text></View>
+                    {index === 2 ? (
+                        <View style={CommonStyles.marginBottom_1}>
+                            <Text numberOfLines={1} style={styles.headerTitle}>
+                                Find People
+                            </Text>
 
                             <View style={styles.search}>
-
-                                <TouchableOpacity style={styles.searchView}
-                                    onPress={() => navigation.navigate('search', { people, focus })} >
-                                    <Image source={{ uri: Images.SearchIcon }} style={styles.searchBoxStyle} />
+                                <TouchableOpacity
+                                    style={styles.searchView}
+                                    onPress={() =>
+                                        navigation.navigate('search', { people, focus })
+                                    }>
+                                    <Image
+                                        source={{ uri: Images.SearchIcon }}
+                                        style={styles.searchBoxStyle}
+                                    />
                                 </TouchableOpacity>
                                 <FlatList
                                     data={alphabet}
                                     horizontal
                                     renderItem={RenderItem}
-                                    ItemSeparatorComponent={() => <View style={[CommonStyles.marginRight_3]} />}
+                                    ItemSeparatorComponent={() => (
+                                        <View style={[CommonStyles.marginRight_3]} />
+                                    )}
                                     showsHorizontalScrollIndicator={false}
                                     nestedScrollEnabled={true}
                                     style={styles.team}
                                 />
                             </View>
+                        </View>
+                    ) : null}
 
-                            {/* <View>
-                                <MyTeamCard />
-                            </View> */}
+                    <View style={styles.boxContainer}>
+                        {[
+                            {
+                                selected: 'To-Do',
+                                colorUp: AppColors.blue1,
+                                image: Images.clippedBlue,
+                                count:
+                                    index === 0 && statistics
+                                        ? numeral(statistics?.todo_count).format('0,0')
+                                        : index === 1 && sentStatistics
+                                            ? numeral(sentStatistics?.todo_count + sentStatistics?.duetoday_count).format('0,0')
+                                            : index === 2 && teamCount
+                                                ? numeral(
+                                                    teamCount?.todo_count + teamCount?.inprogress_count,
+                                                ).format('0,0')
+                                                : 0,
+                                borderWidth: 0.5,
+                                borderColor: '#5182F6',
+                            },
 
+                            {
+                                selected: 'In Progress',
+                                colorUp: AppColors.newYellow,
+                                image: Images.clippedYellow,
+                                count:
+                                    index === 0 && statistics
+                                        ? numeral(statistics?.inprogress_count).format('0,0')
+                                        : index === 1 && sentStatistics
+                                            ? numeral(sentStatistics?.inprogress_count).format('0,0')
+                                            : index === 2 && teamCount
+                                                ? numeral(teamCount?.inprogress_count).format('0,0')
+                                                : 0,
+                                borderWidth: 1,
+                                borderColor: '#FBBC3E',
+                            },
+                            {
+                                selected: 'Completed',
+                                colorUp: AppColors.lightGreen,
+                                image: Images.clippedGreen,
+                                count:
+                                    index === 0 && statistics
+                                        ? numeral(statistics?.completed_count).format('0,0')
+                                        : index === 1 && sentStatistics
+                                            ? numeral(sentStatistics?.completed_count).format('0,0')
+                                            : index === 2 && teamCount
+                                                ? numeral(teamCount?.completed_count).format('0,0')
+                                                : 0,
+                                borderWidth: 0.5,
+                                borderColor: '#2898A4',
+                            },
+                        ].map((item, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                onPress={() => {
+                                    setActionTitle(item.selected);
+                                    setCount(item.count);
+                                    setTab(tab);
+                                }}>
+                                <Container
+                                    backgroundColor={item.colorUp}
+                                    width={28}
+                                    border
+                                    borderWidth={
+                                        item.selected === actionTitle ? item.borderWidth : null
+                                    }
+                                    borderColor={
+                                        item.selected === actionTitle ? item.borderColor : null
+                                    }
+                                    style={styles.mainContainer}>
+                                    <View>
+                                        <View style={styles.titleCon}>
+                                            <H1 style={styles.title}>{item.selected}</H1>
+                                            {item.selected === actionTitle && (
+                                                <Ionicons
+                                                    name="checkbox"
+                                                    size={14}
+                                                    color={AppColors.black1}
+                                                />
+                                            )}
+                                        </View>
+                                        <View>
+                                            {item.selected === actionTitle && (
+                                                <Image
+                                                    source={{ uri: item.image }}
+                                                    style={styles.clipped}
+                                                />
+                                            )}
+                                            <H1
+                                                color={AppColors.black1}
+                                                fontSize={7}
+                                                style={styles.count}>
+                                                {item.count}
+                                            </H1>
+                                        </View>
+                                    </View>
+                                </Container>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+
+                    {index === 2 && actionTitle === 'To-Do' ? null : (
+                        <View style={styles.container}>
+                            {index === 0 ? (
+                                <H1 color={AppColors.black1}>
+                                    {actionTitle} (
+                                    {index === 0 && actionTitle === 'To-Do'
+                                        ? statistics?.todo_count
+                                        : actionTitle === 'In Progress'
+                                            ? statistics?.inprogress_count
+                                            : actionTitle === 'Completed'
+                                                ? statistics?.completed_count
+                                                : 0}
+                                    )
+                                </H1>
+                            ) : index === 1 ? (
+                                <H1 color={AppColors.black1}>
+                                    {actionTitle} (
+                                    {index === 1 && actionTitle === 'To-Do'
+                                        ? sentStatistics?.todo_count + sentStatistics?.duetoday_count
+                                        : actionTitle === 'In Progress'
+                                            ? sentStatistics?.inprogress_count
+                                            : actionTitle === 'Completed'
+                                                ? sentStatistics?.completed_count
+                                                : 0}
+                                    )
+                                </H1>
+                            ) : (
+                                <H1 color={AppColors.black1}>
+                                    {actionTitle} (
+                                    {index === 2 && actionTitle === 'In Progress'
+                                        ? teamCount?.inprogress_count
+                                        : actionTitle === 'Completed'
+                                            ? teamCount?.completed_count
+                                            : 0}
+                                    )
+                                </H1>
+                            )}
+                        </View>
+                    )}
+                    {/* {
+                        index === 2 && actionTitle === "To-Do" ? null :
                             <View style={styles.container}>
-                                <H1 color={AppColors.black1}>Team Tasks{' '}({total ? total : 0})
+                                <H1 color={AppColors.black1}>{actionTitle}{' '}({
+                                    index === 0 && actionTitle === 'To-Do' ? statistics?.todo_count : actionTitle === 'In Progress' ? statistics?.inprogress_count : actionTitle === 'Completed' ? statistics?.completed_count :
+                                        // index === 1 && actionTitle === 'To-Do' ? sentStatistics?.todo_count : actionTitle === 'In Progress' ? sentStatistics?.inprogress_count : actionTitle === 'Completed' ? sentStatistics?.completed_count : 0
+                                        index === 2 && actionTitle === 'To-Do' ? teamCount?.todo_count : actionTitle === 'In Progress' ? teamCount?.inprogress_count : actionTitle === 'Completed' ? teamCount?.completed_count : 0
+                                })
                                 </H1>
                             </View>
+                    } */}
 
-                            <View style={styles.boxContainer}>
-                                {
-                                    [
-                                        {
-                                            selected: "To-Do",
-                                            colorUp: AppColors.newBlue,
-                                            image: Images.clippedBlue,
-                                            count: teamCount ? numeral(teamCount?.todo_count).format("0,0") : 0,
-                                        },
-
-                                        {
-                                            selected: "In Progress",
-                                            colorUp: AppColors.yellow,
-                                            image: Images.clippedYellow,
-                                            count: teamCount ? numeral(teamCount?.inprogress_count).format("0,0") : 0,
-
-                                        },
-                                        {
-                                            selected: "Completed",
-                                            colorUp: AppColors.green,
-                                            image: Images.clippedGreen,
-                                            count: teamCount ? numeral(teamCount?.completed_count).format("0,0") : 0,
-
-                                        }
-                                    ].map((item, i) => <TouchableOpacity key={i} onPress={() => {
-                                        setActionTitle(item.selected)
-                                        setCount(item.count)
-                                        setTab(tab)
-
-                                    }}>
-                                        <Container
-                                            backgroundColor={item.colorUp}
-                                            width={28}
-                                            style={styles.mainContainer}>
-                                            <View>
-                                                <View style={styles.titleCon}>
-                                                    <H1 style={styles.title}>{item.selected}</H1>
-                                                    {item.selected === actionTitle && <Ionicons name="checkbox" size={12} color={AppColors.white} />}
-                                                </View>
-                                                <View>
-                                                    {item.selected === actionTitle && <Image source={{ uri: item.image }} style={styles.clipped} />}
-                                                    <H1 color={AppColors.white} fontSize={7} style={styles.count}>{item.count}</H1>
-                                                </View>
-                                            </View>
-                                        </Container>
-                                    </TouchableOpacity>)
-                                }
-                            </View>
-                            {
-                                index === 2 && actionTitle === "To-Do" ? null :
-                                    <View style={styles.container}>
-                                        <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                                            actionTitle === 'In Progress' ? teamCount?.inprogress_count : actionTitle === 'Completed' ? teamCount?.completed_count : null
-                                        })
-                                        </H1>
-                                    </View>
-                            }
-                            {
-                                (
-                                    (index === 2 && actionTitle === "Completed") && team_completed && Array.isArray(team_completed) &&
-                                    team_completed.length === 0 && !loadingAllSentDues
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                index === 2 && actionTitle === "To-Do" ?
-                                    <View style={styles.scrollViewContainer}>
-                                        <ScrollView
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}>
-                                            {
-                                                ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map((item, i) => (
-                                                    <TouchableWrapper
-                                                        onPress={() => setTab(item)}
-                                                        isText
-                                                        width={25}
-                                                        style={tab === item ? styles.currentTab : styles.defaultTab}
-                                                        key={i}>
-                                                        <H1 fontSize={3.3} style={tab === item ? styles.selectedTab : styles.tab}>{item}</H1>
-                                                    </TouchableWrapper>
-                                                ))
+                    {(index === 0 && actionTitle === 'To-Do') ||
+                        (index === 1 && actionTitle === 'To-Do') ||
+                        (index === 2 && actionTitle === 'To-Do') ? (
+                        <View style={styles.scrollViewContainer}>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map(
+                                    (item, i) => (
+                                        <TouchableOpacity
+                                            onPress={() => setTab(item)}
+                                            style={
+                                                tab === item ? styles.currentTab : styles.defaultTab
                                             }
-                                        </ScrollView>
-                                    </View> : null
+                                            key={i}>
+                                            <H1
+                                                fontSize={3.3}
+                                                style={tab === item ? styles.selectedTab : styles.tab}>
+                                                {item}
+                                            </H1>
+                                        </TouchableOpacity>
+                                    ),
+                                )}
+                            </ScrollView>
+                        </View>
+                    ) : null}
 
-                            }
-                            {/* empty state  for all team tabs */}
-                            {
-                                (
-                                    (index === 2 && actionTitle === "To-Do" && tab === "All") && team_todos && Array.isArray(team_todos) &&
-                                    team_todos.length === 0 && !loadingAllTeamTask
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 2 && tab === "Due Today") && team_duetoday && Array.isArray(team_duetoday) &&
-                                    team_duetoday.length === 0 && !loadingAllTeamDue
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 2 && tab === "Upcoming") && teamUpcomingData && Array.isArray(teamUpcomingData) &&
-                                    teamUpcomingData.length === 0 && !loadingAllTeamUpcoming
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 2 && tab === "Overdue") && team_overdue && Array.isArray(team_overdue) &&
-                                    team_overdue.length === 0 && !loadingOverdue
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            {
-                                (
-                                    (index === 2 && tab === "No Date") && no_date_team && Array.isArray(no_date_team) &&
-                                    no_date_team.length === 0 && !loadingAllTeamTask
-                                ) ? (
-                                    <EmptyState />
-                                ) : null
-                            }
-                            <View style={CommonStyles.marginTop_2}>
-                                {
-                                    index === 2 && actionTitle === 'To-Do' && tab === "All" ? team_todos.map((item, i) => (
-                                        <TeamTodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
+                    {loadingAllTask ||
+                        loadingDueTask ||
+                        loadingUpcoming ||
+                        loadingOverdue ||
+                        loadingAllTeamTask ||
+                        loadingAllTeamDue ||
+                        loadingAllTeamUpcoming ||
+                        loadingAllTeamOverdue ||
+                        loadingAllSentDues ||
+                        loadingAllSentOverdue ||
+                        loadingAllSentUpcoming ||
+                        loadingAllSentTask ? (
+                        <PageLoader />
+                    ) : null}
 
-                                <View>
-                                    {
-                                        index === 2 && actionTitle === 'To-Do' && tab === "Due Today" && !loadingAllTeamDue ? team_duetoday.map((item, i) => (
-                                            <TeamTodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                            />
-                                        )) : null
-                                    }
-                                </View>
+                    {index === 0 || index === 1 ? (
+                        <FlatList
+                            data={tasks}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            renderItem={RenderItems}
+                            ItemSeparatorComponent={() => <View style={styles.line} />}
+                            showsVerticalScrollIndicator={false}
+                            nestedScrollEnabled={true}
+                            contentContainerStyle={[
+                                CommonStyles.marginTop_3,
+                                { paddingBottom: height(100) },
+                            ]}
+                            onEndReachedThreshold={0.1}
+                            refreshing={false}
+                            onRefresh={async () => {
+                                await storePage('page', 1);
+                            }}
+                            ListEmptyComponent={EmptyState}
+                            ListFooterComponent={
+                                isFetchingNextPage || hasNextPage ? footerLoader : null
+                            }
+                        />
+                    ) : null}
 
-                                <View>
-                                    {
-                                        index === 2 && actionTitle === 'To-Do' && tab === "Upcoming" && !loadingAllTeamUpcoming ? teamUpcomingData.map((item, i) => (
-                                            <TeamTodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                            />
-                                        )) : null
-                                    }
-                                </View>
-
-                                <View>
-                                    {
-                                        index === 2 && actionTitle === 'To-Do' && tab === "Overdue" && !loadingAllTeamOverdue ? team_overdue.map((item, i) => (
-                                            <TeamTodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                            />
-                                        )) : null
-                                    }
-                                </View>
-                                <View>
-                                    {
-                                        index === 2 && actionTitle === 'To-Do' && tab === "No Date" && !loadingAllTeamTask ? no_date_team.map((item, i) => (
-                                            <TeamTodoContent
-                                                key={i}
-                                                count={count}
-                                                item={item}
-                                                title={actionTitle}
-                                                __flattenArr={__flattenArr}
-                                                allTasks
-                                            />
-                                        )) : null
-                                    }
-                                </View>
-                            </View>
-                            <View >
-                                {
-                                    index === 2 && actionTitle === "In Progress" ? team_inProgress.map((item, i) => (
-                                        <TeamTodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                            <View>
-                                {
-                                    index === 2 && actionTitle === "Completed" ? team_completed.map((item, i) => (
-                                        <TeamTodoContent
-                                            key={i}
-                                            count={count}
-                                            item={item}
-                                            title={actionTitle}
-                                            __flattenArr={__flattenArr}
-                                        />
-                                    )) : null
-                                }
-                            </View>
-                        </React.Fragment>
-                    }
+                    {index === 2 ? (
+                        <FlatList
+                            data={teamTask}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            renderItem={TeamRenderItem}
+                            ItemSeparatorComponent={() => <View style={styles.line} />}
+                            showsVerticalScrollIndicator={false}
+                            nestedScrollEnabled={true}
+                            contentContainerStyle={[
+                                CommonStyles.marginTop_3,
+                                { paddingBottom: height(100) },
+                            ]}
+                            onEndReachedThreshold={0.1}
+                            refreshing={false}
+                            onRefresh={async () => {
+                                await storePage('page', 1);
+                            }}
+                            ListEmptyComponent={EmptyState}
+                        />
+                    ) : null}
                 </ScrollView>
             </ScreenWrapper>
 
-            {
-                visible &&
+            {visible && (
                 <CreateTask
                     visible={visible}
                     onHide={() => setVisible(false)}
                     setButtons={setButtons}
                 />
-            }
-
-
+            )}
         </React.Fragment>
-    )
-}
+    );
+};
 export default Index;
 // git remote add myTasks https://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@github.com/Bizedge/myedge-mobile.git;
-// it pull myTasks dev  --allow-unrelated-histories   
+// it pull myTasks dev  --allow-unrelated-histories
 
 // npm install --save react-native-video --legacy-peer
 
-// git remote set - url origin https://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@github.com/Bizedge/myedge-mobile.git 
+// git remote set - url origin https://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@github.com/Bizedge/myedge-mobile.git

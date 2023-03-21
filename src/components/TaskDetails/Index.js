@@ -35,7 +35,7 @@ import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scrol
 import CreateTask from '../../screens/CreateTask/Index';
 
 
-const Index = ({ isVisible, onHide, item, title, navigation }) => {
+const Index = ({ isVisible, onHide, item, title }) => {
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
     const [addBtn, setAddBtn] = useState(true)
@@ -229,12 +229,15 @@ const Index = ({ isVisible, onHide, item, title, navigation }) => {
                                 <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
                             </React.Fragment>}
                         </View>
-                        <Button
-                            title="Edit task"
-                            containerStyle={styles.buttonStyle}
-                            textStyle={styles.buttonText}
-                            onPress={() => { setShowForm(true), item }}
-                        />
+                        {
+                            title === 'Completed' ? null :
+                                <Button
+                                    title="Edit task"
+                                    containerStyle={styles.buttonStyle}
+                                    textStyle={styles.buttonText}
+                                    onPress={() => { setShowForm(true), item }}
+                                />
+                        }
                         <View style={styles.line} />
 
 

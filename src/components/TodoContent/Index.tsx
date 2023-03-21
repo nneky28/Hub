@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     Platform
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState} from 'react'
 import { H1, P, } from '../../utills/components'
 import styles from './styles'
 import { Images } from '../../component2/image/Image';
@@ -21,28 +21,27 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
-import { height,width } from 'react-native-dimension';
+
 
 interface TaskProps {
     item: any;
     index: number;
     title: string;
-    __flattenArr: () => void;
     isSent: boolean;
+    user: boolean;
     allTasks: any[];
-    user: any;
     onPressHandle: () => void;
+  
 }
 
-const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => {
+const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
     const queryClient = useQueryClient()
     const [modal, setModal] = useState <boolean>(false)
     const [display, setDisplay] = useState<boolean>(false)
-    // const [subTask, setSubTask] = useState<boolean>(false)
     const [completed, setCompleted] = useState<boolean>(false)
     const [watch, setWatch] = useState<boolean>(false)
     const [sentModal, setSent] = useState<boolean>(false)
-    // const navigation = useNavigation()
+ 
 
     const {
         mutateAsync,
@@ -93,16 +92,10 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
 
     }
 
-    useEffect(() => {
-        __flattenArr()
-    }, [allTasks]);
-    
-    // console.log('FD',item)
-
-
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
+    
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
@@ -111,7 +104,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
                 </TouchableOpacity>
                 {
-                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" || user ? null :
+                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
                             <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => {
                                 title === "Completed" && setCompleted(true)
@@ -149,7 +142,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
             <View style={styles.by}>
                 <P color={AppColors.black3}>
                     {
-                        isSent || user ? 'To:' : 'By:'
+                        index === 1 ? 'To:' : 'By:'
                     }
                     {" "}
                     {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}
@@ -208,7 +201,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, __flattenArr, isSent, 
                 deleteHandler={() => handleDelete(item.id)}
                 loading={isLoading} />
             
-            <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
+            <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} title={title} />
 
         </View>
     )

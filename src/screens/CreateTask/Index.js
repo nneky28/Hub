@@ -25,7 +25,7 @@ import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useNavigation } from '@react-navigation/native';
 
 
-const Index = ({ visible, onHide, item,setButtons}) => {
+const Index = ({ visible, onHide,item,setButtons}) => {
     
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -38,7 +38,7 @@ const Index = ({ visible, onHide, item,setButtons}) => {
     const [count, setCount] = React.useState(0)
     const [showDiscard, setShowDiscard] = useState(false)
     const [assignTo, setAssignTo] = useState({})
-
+    const [disabled, setDisabled] = useState(false)
 
     const [data, setData] = useState({
         title: item?.title ?? '',
@@ -46,8 +46,8 @@ const Index = ({ visible, onHide, item,setButtons}) => {
         due_date: "Today",
     })
 
-    const { mutateAsync } = useMutation(APIFunction.post_task)
-    const { mutateAsync: editHandler } = useMutation(APIFunction.update_status)
+    const { mutateAsync ,isLoading} = useMutation(APIFunction.post_task)
+    const { mutateAsync: editHandler,isLoading:isLoadingEdit} = useMutation(APIFunction.update_status)
 
 
     const _subTask = () => {
@@ -57,11 +57,12 @@ const Index = ({ visible, onHide, item,setButtons}) => {
     }
     const handleDelete = (index) => {
         let arr = [...subTask]
-        // console.log('arr', index)
         arr.splice(index, 1)
         setSubtask(arr)
     }
-   
+
+  console.log("ITEM",item)
+    
     const submitHandler = async () => {
         try {
             Keyboard.dismiss()
@@ -82,13 +83,14 @@ const Index = ({ visible, onHide, item,setButtons}) => {
             dispatch(setLoaderVisible(true));
             let employee = await getData("about_me");
 
+            console.log("ASSIGN", assignTo)
             let fd = {
                 ...data,
                 due_date: data?.due_date === 'Today' ? moment().toISOString(true):moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
-                created_by: employee?.id,
-                assigned_to: assignTo?.type === "Employee" ? assignTo.id : assignTo?.type === "Departments" ? assignTo.id : employee.id,
-                department: assignTo?.type === "Departments" ? assignTo.id : null,
-                status: "To-do",
+                created_by:item?.created_by?.id|| employee?.id,
+                assigned_to:assignTo?.id && assignTo?.type === "Employee" ?  assignTo?.assigned_to_id :assignTo?.id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id  : employee?.id,
+                department: assignTo?.id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id  : null,
+                status:"To-do",
                 sub_tasks: Object.values(subData).map(item => {
                     return {
                         title: item,
@@ -96,11 +98,19 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                     }
                 })
             }
-            if (data?.due_date === "No Date") delete fd["due_date"]
+           
+        //    return console.log("FD",fd)
+            if (data?.due_date === "No Date" || item) delete fd["due_date"]
+            if (assignTo?.type === "deparments") delete fd["assigned_to"]
 
+            if (item) delete fd["status"]
+
+                
             if (item) {
                 fd["id"] = item?.id;
                 let res = await editHandler(fd)
+                console.log("RES Edit",res)
+                setDisabled(false)
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
@@ -109,18 +119,19 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
+                setDisabled(false)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
                 onHide()
                 if (assignTo?.type === "Employee" || assignTo?.type==="Departments") {    
                     setButtons(1)
-                }
+                } 
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
-            // console.log('err',err)
+            console.log('err',err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -134,7 +145,11 @@ const Index = ({ visible, onHide, item,setButtons}) => {
 
     useEffect(() => {
         if (!item?.id) return
-        setAssignTo({ id: item.id, name: item?.assigned_to?.first_name })
+        setAssignTo({
+            id: item.id, type: item?.department?.id ? "Departments" : "Employees",
+            name: item?.assigned_to?.first_name,
+            assigned_to_id: item?.department?.id || item?.assigned_to?.id
+        })
         setData({ ...data, due_date: item?.due_date })
     }, [item])
 
@@ -177,7 +192,12 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                     <View style={styles.mainViewContainer}>
                         <View style={styles.formRow}>
                             <H1 marginTop={2}>Create New Task</H1>
-                            <CloseHandler position={'center'} onPress={onHide} />
+                            <CloseHandler position={'center'} onPress={() => {
+                                  if (data?.title || data?.description ) {    
+                                    return  setShowDiscard(true) 
+                                  }
+                                  onHide()  
+                            }} />
                         </View>
                         <View style={ styles.line} />
                         <KeyboardAwareWrapper
@@ -285,7 +305,7 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                                                             setSubdata({ ...subData, [item]: value })
                                                         }}
                                                         right={<TextInput.Icon name={"close"}
-                                                            style={CommonStyles.marginTop_2}
+                                                            style={[CommonStyles.marginTop_1,CommonStyles.marginRight_8]}
                                                             color={AppColors.darkGray}
                                                             onPress={() => handleDelete(index)}
                                                         />}
@@ -314,6 +334,7 @@ const Index = ({ visible, onHide, item,setButtons}) => {
                                 containerStyle={styles.buttonStyle1}
                                 textStyle={styles.buttonText1}
                                 onPress={submitHandler}
+                                disabled={isLoading||isLoadingEdit}
                             />
                         </KeyboardAwareWrapper>
 

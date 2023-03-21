@@ -8,9 +8,45 @@ const styles = StyleSheet.create({
     wrapper: {
         backgroundColor: '#F5F5F5',
         flex: 1,
-        marginTop: height(10)
+        alignItems: 'center',
     },
 
+    twoButtonCont: {
+        width: width(90),
+        alignSelf: 'center',
+        borderWidth: 1,
+        borderColor: AppColors.grayBorder,
+        borderRadius: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        height: height(4.5),
+        alignItems: 'center',
+
+    },
+    button3: {
+        width: '64%',
+        height: height(3),
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    buttonText: {
+        fontSize: width(3.3),
+        fontFamily: FontFamily.BlackSansRegular,
+        color: AppColors.black1,
+    },
+    buttonText1: {
+        fontSize: width(3.3),
+        fontFamily: FontFamily.BlackSansRegular,
+        color: AppColors.green,
+    },
+    animatedView3: {
+        position: 'absolute',
+        width: width(40),
+        backgroundColor: AppColors.lightGreen,
+        height: height(4),
+        borderRadius: 20,
+        zIndex: -1,
+    },
     containerView: {
         width: width(100),
         paddingVertical: height(2),
@@ -44,10 +80,10 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(6),
-        marginTop: height(3.5),
         width: width(100),
-        marginBottom: height(3.5)
+        paddingVertical: height(2),
+        paddingHorizontal: width(5),
+        marginTop: height(1)
     },
     btnText: {
         textDecorationLine: 'underline',
@@ -62,7 +98,8 @@ const styles = StyleSheet.create({
     },
 
     team: {
-        paddingHorizontal: width(5),
+        height: height(30),
+        width: width(90)
 
     },
     searchBoxContainer: {
@@ -74,43 +111,11 @@ const styles = StyleSheet.create({
     },
     searchBoxStyle: {
         width: width(90),
-        alignSelf: 'flex-start'
-    },
-    filterIconContainer: {
-        backgroundColor: AppColors.white,
-        // paddingVertical: height(2.2),
-        paddingHorizontal: width(2.5),
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        borderRadius: 6,
-        marginTop: height(1.5),
-        marginLeft: width(3),
-        flexDirection: 'row'
+        alignSelf: 'flex-start',
+        backgroundColor: AppColors.transparent,
+        marginTop: height(3),
     },
 
-    filterIconContainerIOS: {
-        backgroundColor: AppColors.white,
-        paddingVertical: height(1),
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        borderRadius: 6,
-        marginTop: height(1.5),
-        marginLeft: width(3),
-        flexDirection: 'row',
-        paddingHorizontal: width(2.5),
-    },
-
-    filterIcon: {
-        width: width(5),
-        height: height(5),
-        resizeMode: 'contain'
-    },
-    filterIconIOS: {
-        width: width(5),
-        height: height(2.5),
-    },
     searchBox: {
         width: width(80),
         alignSelf: 'flex-start',
@@ -123,17 +128,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: width(3),
     },
-    textContainer: {
-        justifyContent: 'space-between',
-        height: height(4.5),
-        marginLeft: width(2),
-        marginTop: height(0.5)
-    },
-    subText: {
-        fontSize: width(2.5),
-        color: AppColors.black1,
-        fontFamily: FontFamily.BlackSansRegular,
-    },
     titleText: {
         fontSize: width(3.5),
         color: AppColors.black1,
@@ -141,6 +135,18 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansBold,
 
     },
+    textContainer: {
+        justifyContent: 'space-between',
+        height: height(4.5),
+        marginLeft: width(2),
+        marginTop: height(2)
+    },
+    subText: {
+        fontSize: width(2.5),
+        color: AppColors.black1,
+        fontFamily: FontFamily.BlackSansRegular,
+    },
+
     button: {
         backgroundColor: '#E1E1E1',
         width: width(25),
@@ -153,26 +159,15 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansBold,
         color: AppColors.black1,
     },
-    listItemContainer: {
-        backgroundColor: AppColors.white,
-        paddingVertical: height(1),
-        marginTop: height(1),
-        flexDirection: 'row',
+    listContainer: {
+        width: width(90),
         justifyContent: 'space-between',
-        paddingHorizontal: width(4),
-        borderWidth: width(0.5),
-        borderColor: AppColors.white,
-        shadowColor: AppColors.white,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
-        elevation: width(1),
+        paddingVertical: height(0.8),
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: height(2)
     },
-    rowPart: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
 
-    }
 
 });
 export default styles;

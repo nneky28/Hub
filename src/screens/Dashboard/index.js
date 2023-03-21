@@ -32,13 +32,13 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const {
     data: activeBD,
     isLoading: activeBDLoading,
-    isFetching : activeBDFetching
+    isFetching: activeBDFetching
   } = useFetchBirthdays("active")
 
   const {
     data: activeANN,
     isLoading: activeANNLoading,
-    isFetching : activeANNFetching
+    isFetching: activeANNFetching
   } = useFetchAnniversary("active")
 
   const navigation = useNavigation()
@@ -65,7 +65,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [tasks, setTasks] = React.useState([])
   const [task, setTask] = React.useState(null)
   const auth = useSelector(state => state.Auth)
-  const isSecurityVisible = useSelector(state=>state.Config.isSecurityVisible)
+  const isSecurityVisible = useSelector(state => state.Config.isSecurityVisible)
   const [processing, setProcessing] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
   const [employee_pk, setEmployeePK] = React.useState(null)
@@ -78,42 +78,42 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
 
   const {
     data: upcomingBD,
-    isFetching : upcomingBDFetching
+    isFetching: upcomingBDFetching
   } = useFetchBirthdays("upcoming")
 
   const {
     data: assets,
-    isFetching : assetFetching
+    isFetching: assetFetching
   } = useFetchAssets(employee_pk)
 
   const {
     data: benefits,
-    isFetching : benefitFetching
+    isFetching: benefitFetching
   } = useFetchBenefits(employee_pk)
 
   const {
-    data : timeoffData,
-    isFetching : fetchingTimeoff
+    data: timeoffData,
+    isFetching: fetchingTimeoff
   } = useFetchEmployeeTimeOff(employee_pk)
 
   const {
-    data : activeData,
-    isFetching : fetchingActive
-  } = useFetchEmployeeTimeOffTaken(employee_pk,"active")
+    data: activeData,
+    isFetching: fetchingActive
+  } = useFetchEmployeeTimeOffTaken(employee_pk, "active")
 
   const {
-    data : upcomingData,
-    isFetching : fetchingUpcoming
-  } = useFetchEmployeeTimeOffTaken(employee_pk,"upcoming")
+    data: upcomingData,
+    isFetching: fetchingUpcoming
+  } = useFetchEmployeeTimeOffTaken(employee_pk, "upcoming")
 
   const {
-    data : historyData,
-    isFetching : fetchingHistory
-  } = useFetchEmployeeTimeOffTaken(employee_pk,"history")
+    data: historyData,
+    isFetching: fetchingHistory
+  } = useFetchEmployeeTimeOffTaken(employee_pk, "history")
 
   const {
-    data : reqData,
-    isFetching : fetchingReq
+    data: reqData,
+    isFetching: fetchingReq
   } = useFetchEmployeeTimeOffReqs(employee_pk)
 
   const {
@@ -148,13 +148,13 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
 
   useEffect(() => {
     if (
-        assetFetching || benefitFetching || activeBDFetching ||
-        upcomingBDFetching ||
-        activeANNFetching ||
-        fetchingTimeoff || fetchingActive ||
-        fetchingHistory || fetchingReq ||
-        fetchingUpcoming
-      ) {
+      assetFetching || benefitFetching || activeBDFetching ||
+      upcomingBDFetching ||
+      activeANNFetching ||
+      fetchingTimeoff || fetchingActive ||
+      fetchingHistory || fetchingReq ||
+      fetchingUpcoming
+    ) {
       dispatch(setLoaderVisible(true))
       return setLoading(true)
     }
@@ -164,8 +164,8 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     assetFetching, benefitFetching, activeBDFetching,
     upcomingBDFetching,
     activeANNFetching,
-    fetchingTimeoff,fetchingActive,
-    fetchingHistory,fetchingReq,
+    fetchingTimeoff, fetchingActive,
+    fetchingHistory, fetchingReq,
     fetchingUpcoming
   ])
 
@@ -247,7 +247,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     queryClient.invalidateQueries("employee_timeoff_reqs")
   }
 
-  
+
 
   const refreshDashboard = () => {
     getInfo()
@@ -269,16 +269,16 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     setMargin(width(margin));
     setIndex(1)
     let arr = []
-    if(timeoffData?.results && Array.isArray(timeoffData?.results)){
+    if (timeoffData?.results && Array.isArray(timeoffData?.results)) {
       setAvailable(timeoffData?.results)
     }
-    if(activeData?.results && Array.isArray(activeData?.results)){
+    if (activeData?.results && Array.isArray(activeData?.results)) {
       arr = activeData?.results
     }
-    if(upcomingData?.results && Array.isArray(upcomingData?.results)){
-      arr = [...arr,...upcomingData?.results]
+    if (upcomingData?.results && Array.isArray(upcomingData?.results)) {
+      arr = [...arr, ...upcomingData?.results]
     }
-    if(reqData?.results && Array.isArray(reqData?.results)){
+    if (reqData?.results && Array.isArray(reqData?.results)) {
       setRequests(reqData?.results)
     }
     setActive(arr)
@@ -287,9 +287,9 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       setMargin(width(0.1))
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     timeoffResponseHandler()
-  },[timeoffData,activeData,reqData,historyData])
+  }, [timeoffData, activeData, reqData, historyData])
 
   return (
     <ScreenWrapper scrollEnabled={false}

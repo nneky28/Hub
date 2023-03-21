@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     mainViewContainer: {
         backgroundColor: AppColors.white,
         paddingHorizontal: width(5),
-        marginTop: height(20),
+        marginTop: height(7),
         flex: 1,
         borderTopRightRadius: width(5),
         borderTopLeftRadius: width(5),
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     },
 
     container: {
-        marginTop: height(2),
+        marginTop: height(1.5),
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(5),
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         height: height(3)
     },
     addSubtask: {
-        marginTop: height(2),
+        marginTop: height(1.5),
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(2),
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         borderRadius: width(3),
         borderColor: AppColors.transparent,
         width: width(90),
-        marginTop: height(2),
+        marginTop: height(1.5),
         paddingVertical: height(1.8)
     },
     buttonText: {

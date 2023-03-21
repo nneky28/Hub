@@ -26,6 +26,7 @@ const AppColors = {
   lightOrange: '#FCE2AF',
   lightMediumGreen: "#55C0CC",
   yellow: "#F8B636",
+  newYellow: "#FCE2AF",
   lightYellow: "#FCDC9C",
   whiteBase: "#E5E5E5",
   blackgray: "#C4C4C4",

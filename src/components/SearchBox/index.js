@@ -10,7 +10,7 @@ import styles from './styles';
 
 
 
-export default function SearchBox({ title, containerStyle, onSubmitEditing, autoFocus, ...inputProps }) {
+export default function SearchBox({ title, containerStyle, onSubmitEditing, autoFocus, onKeyPress, ...inputProps }) {
     const [focus, setFocus] = useState(true)
 
     const dispatch = useDispatch();
@@ -36,6 +36,7 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing, auto
                 color={AppColors.black}
                 {...inputProps}
                 autoFocus={autoFocus}
+                onKeyPress={onKeyPress}
             />
 
         </View>

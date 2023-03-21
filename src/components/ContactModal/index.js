@@ -628,7 +628,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
   );
 };
 
-const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
+const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle, loading }) => {
   const [showForm, setShowForm] = useState(false)
   const [employee, setEmployee] = useState({})
   const [showDetails, setShowDetails] = useState(false)
