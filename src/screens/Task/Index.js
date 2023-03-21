@@ -750,17 +750,7 @@ const Index = ({ navigation, route }) => {
                             )}
                         </View>
                     )}
-                    {/* {
-                        index === 2 && actionTitle === "To-Do" ? null :
-                            <View style={styles.container}>
-                                <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                                    index === 0 && actionTitle === 'To-Do' ? statistics?.todo_count : actionTitle === 'In Progress' ? statistics?.inprogress_count : actionTitle === 'Completed' ? statistics?.completed_count :
-                                        // index === 1 && actionTitle === 'To-Do' ? sentStatistics?.todo_count : actionTitle === 'In Progress' ? sentStatistics?.inprogress_count : actionTitle === 'Completed' ? sentStatistics?.completed_count : 0
-                                        index === 2 && actionTitle === 'To-Do' ? teamCount?.todo_count : actionTitle === 'In Progress' ? teamCount?.inprogress_count : actionTitle === 'Completed' ? teamCount?.completed_count : 0
-                                })
-                                </H1>
-                            </View>
-                    } */}
+
 
                     {(index === 0 && actionTitle === 'To-Do') ||
                         (index === 1 && actionTitle === 'To-Do') ||

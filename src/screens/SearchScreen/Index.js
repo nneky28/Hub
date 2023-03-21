@@ -249,7 +249,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                     ItemSeparatorComponent={() => <View style={styles.line} />}
                                     showsVerticalScrollIndicator={false}
                                     nestedScrollEnabled={true}
-                                    contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(10) }]}
+                                    contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(5) }]}
                                     ListEmptyComponent={listEmptyState}
                                 />
                             </View>

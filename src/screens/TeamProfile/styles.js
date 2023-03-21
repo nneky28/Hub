@@ -176,17 +176,20 @@ const styles = StyleSheet.create({
     },
     currentTab: {
         backgroundColor: AppColors.white,
-        borderRadius: width(8),
-        marginRight: width(3.5),
-        height: height(3.5),
-        ...AppColors.smallShadow,
-        alignSelf: 'center'
+        borderRadius: width(10),
+        marginRight: width(8),
+        // ...AppColors.smallShadow,
+        paddingVertical: height(1),
+        paddingHorizontal: width(4),
     },
+
     defaultTab: {
-        marginRight: width(3.5)
+        marginRight: width(5),
+        alignSelf: "center",
+        paddingHorizontal: width(4),
     },
     selectedTab: {
-        fontFamily: FontFamily.BlackSansSemiBold,
+        fontFamily: FontFamily.BlackSansBold,
         color: AppColors.green,
     },
     tab: {
