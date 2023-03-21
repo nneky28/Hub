@@ -268,10 +268,6 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 onEndReachedThreshold={0.1}
                                 onEndReached={loadMore}
                                 refreshing={false}
-                                onRefresh={async () => {
-                                    await storePage("page", 1)
-
-                                }}
                                 ListFooterComponent={isFetchingNextPage || hasNextPage ? footerLoader : null}
 
                             />

@@ -169,7 +169,7 @@ const Index = ({ route }) => {
 
         if (departments && tab === 'All')
             state.teamData = teamPage > 1 ? [...teamData, ...arr] : arr;
-        console.log("Arr", arr)
+
 
         return state;
     }
@@ -183,7 +183,6 @@ const Index = ({ route }) => {
 
         if (actionTitle === 'To-Do' && tab === 'Due Today') {
             let arr = Object.values(dueItems).filter((item) => item.status !== 'In-progress');
-            console.log('due today', arr)
             return setTasks(arr);
         }
         if (actionTitle === 'To-Do' && tab === 'Upcoming') {
@@ -212,9 +211,7 @@ const Index = ({ route }) => {
             return setTasks(arr);
         }
         if (departments && actionTitle === 'In Progress') {
-            alert("hello")
             let arr = Object.values(teamData).filter((item) => item.status == 'In-progress');
-            console.log("In progress", arr)
             return setTasks(arr);
         }
         if (departments && actionTitle === 'Completed') {
@@ -346,9 +343,6 @@ const Index = ({ route }) => {
                         ]}
                         onEndReachedThreshold={0.1}
                         refreshing={false}
-                        onRefresh={async () => {
-                            await storePage('page', 1);
-                        }}
                         ListEmptyComponent={EmptyState}
                         ListFooterComponent={
                             isFetchingNextPage || hasNextPage ? footerLoader : null

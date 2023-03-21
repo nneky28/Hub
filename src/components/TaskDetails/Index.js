@@ -142,7 +142,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
             setText("")
             showFlashMessage({ title: "sub Task successfully assigned" })
         } catch (err) {
-            console.log('err', err)
+            // console.log('err', err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'

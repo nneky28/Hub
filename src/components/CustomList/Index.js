@@ -248,10 +248,6 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
                                     onEndReachedThreshold={0.1}
                                     onEndReached={loadMore}
                                     refreshing={false}
-                                    onRefresh={async () => {
-                                        await storePage("page", 1)
-
-                                    }}
                                     ListFooterComponent={isFetchingNextPage || hasNextPage || loading ? footerLoader : null}
                                 />
                             </React.Fragment>)

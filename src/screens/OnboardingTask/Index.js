@@ -105,7 +105,6 @@ const Index = ({ navigation }) => {
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
     const { mutateAsync: editHandler } = useMutation(APIFunction.update_onboarding)
     const [toCheck, setToCheck] = useState(true)
-    console.log("On", toCheck)
 
     const {
         data: onboarding,

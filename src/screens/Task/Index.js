@@ -52,8 +52,6 @@ import AnimatedView from '../../components/AnimatedView';
 import { useQueryClient } from 'react-query';
 
 const Index = ({ navigation, route }) => {
-    // const { toCheck } = route.params
-    // console.log("Here", toCheck)
     const [index, setIndex] = useState(0);
     const [employee_pk, setEmployeePK] = useState(null);
     const [business, setBusiness] = useState(null);
@@ -120,7 +118,7 @@ const Index = ({ navigation, route }) => {
         data: teamCount
     } = useFetchTeamStatistics(employee_pk);
 
-    console.log("Team", teamCount)
+
     const {
         data: sentStatistics
     } = useFetchSentStatistics();
@@ -376,7 +374,7 @@ const Index = ({ navigation, route }) => {
         if (index === 0 && tab === 'Overdue')
             state.overdueItems = overduepage > 1 ? [...overdueItems, ...arr] : arr;
 
-        console.log("Tab", arr)
+
         if (index === 1)
             state.sentItems = sentPage > 1 ? [...sentItems, ...arr] : arr;
         if (index === 1 && tab === 'Due Today')
@@ -414,7 +412,6 @@ const Index = ({ navigation, route }) => {
         teamOverdueData,
     }) => {
 
-        console.log("Upcoming", sentUpcomingItem)
 
         if (index === 0 && actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
@@ -447,7 +444,6 @@ const Index = ({ navigation, route }) => {
 
         if (index === 1 && actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(sentItems).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
-            // console.log("ALL today", arr)
             return setTasks(arr);
         }
         if (index === 1 && actionTitle === 'To-Do' && tab === 'Due Today') {
@@ -456,7 +452,6 @@ const Index = ({ navigation, route }) => {
         }
         if (index === 1 && actionTitle === 'To-Do' && tab === 'Upcoming') {
             let arr = Object.values(sentUpcomingItem).filter((item) => item.status !== "In-progress");
-            console.log("Upcoming", sentUpcomingItem)
             return setTasks(arr);
         }
         if (index === 1 && actionTitle === 'To-Do' && tab === 'Overdue') {
@@ -465,7 +460,6 @@ const Index = ({ navigation, route }) => {
         }
         if (index === 1 && actionTitle === 'To-Do' && tab === 'No Date') {
             let arr = Object.values(sentItems).filter((item) => item?.due_date === null);
-            console.log('NO DATE', arr);
             return setTasks(arr);
         }
         if (index === 1 && actionTitle === 'In Progress') {
@@ -520,7 +514,7 @@ const Index = ({ navigation, route }) => {
         try {
             let about_me = await getData('about_me');
             setEmployeePK(about_me?.department?.id);
-        } catch (err) { console.log("err", err) }
+        } catch (err) { }
     };
     const refreshTask = () => {
         reloadScreen();
@@ -822,9 +816,6 @@ const Index = ({ navigation, route }) => {
                             ]}
                             onEndReachedThreshold={0.1}
                             refreshing={false}
-                            onRefresh={async () => {
-                                await storePage('page', 1);
-                            }}
                             ListEmptyComponent={EmptyState}
                             ListFooterComponent={
                                 isFetchingNextPage || hasNextPage ? footerLoader : null
@@ -846,9 +837,6 @@ const Index = ({ navigation, route }) => {
                             ]}
                             onEndReachedThreshold={0.1}
                             refreshing={false}
-                            onRefresh={async () => {
-                                await storePage('page', 1);
-                            }}
                             ListEmptyComponent={EmptyState}
                         />
                     ) : null}
@@ -866,9 +854,3 @@ const Index = ({ navigation, route }) => {
     );
 };
 export default Index;
-// git remote add myTasks https://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@github.com/Bizedge/myedge-mobile.git;
-// it pull myTasks dev  --allow-unrelated-histories
-
-// npm install --save react-native-video --legacy-peer
-
-// git remote set - url origin https://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@github.com/Bizedge/myedge-mobile.git
