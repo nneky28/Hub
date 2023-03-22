@@ -61,7 +61,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
         setSubtask(arr)
     }
 
-    // console.log("ITEM", item)
+
 
     const submitHandler = async () => {
         try {
@@ -83,7 +83,6 @@ const Index = ({ visible, onHide, item, setButtons }) => {
             dispatch(setLoaderVisible(true));
             let employee = await getData("about_me");
 
-            console.log("ASSIGN", assignTo)
             let fd = {
                 ...data,
                 due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
@@ -107,7 +106,6 @@ const Index = ({ visible, onHide, item, setButtons }) => {
             if (item) {
                 fd["id"] = item?.id;
                 let res = await editHandler(fd)
-                console.log("RES Edit", res)
                 setDisabled(false)
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
@@ -129,7 +127,6 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
-            // console.log('err',err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -353,7 +350,6 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                         setOpen={setOpen}
                         open={open}
                         onPressHandler={(item) => {
-                            // console.log("ITEM", item)
                             if (item.type === "Departments") {
                                 setAssignTo({ ...item, name: `${item.name ? Capitalize(item.name) : null}` })
                                 return setOpen(false)
