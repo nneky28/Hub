@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
         margin: 0,
-        marginTop: height(10),
+        marginTop: height(5),
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -65,15 +65,10 @@ const styles = StyleSheet.create({
         marginBottom: height(2),
     },
     subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4) },
-    descriptionCon: { marginTop: height(2), },
+    descriptionCon: { marginTop: height(1), },
     con: {
-        borderWidth: width(0.3),
-        borderColor: AppColors.grayBorder,
-        marginTop: height(1.5),
-        borderRadius: width(2),
-        // min-height: height(13),
-        minHeight: height(13),
-        paddingHorizontal: width(3),
+        marginTop: height(1),
+        paddingHorizontal: width(1),
     },
     button: {
         width: width(50),
@@ -101,7 +96,7 @@ const styles = StyleSheet.create({
 
     },
     container1: {
-        marginTop: height(2),
+        marginTop: height(1),
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(2),
@@ -187,8 +182,38 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: width(4)
-    }
+    },
 
+    textContainer1: {
+        justifyContent: 'space-between',
+        height: height(4.5),
+        marginLeft: width(2),
+    },
+    listContainer1: {
+        width: width(90),
+        justifyContent: 'space-between',
+        marginLeft: width(4),
+        paddingVertical: height(1),
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    rowSection: {
+        justifyContent: 'space-between',
+        marginLeft: width(4),
+        paddingVertical: height(1),
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    Input: {
+        width: width(80),
+        backgroundColor: AppColors.transparent
+    },
+    avatarStyle: {
+        height: height(5),
+        width: height(5),
+        borderRadius: height(4.75),
+    },
 
 });
 export default styles;

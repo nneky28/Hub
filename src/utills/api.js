@@ -289,7 +289,7 @@ export const APIFunction = {
 
   get_employee_statistics: async (id) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?employee_id=${id}`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
   },
 
   get_team_tasks: async (id) => {
@@ -317,11 +317,12 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
   },
-  // get_comments: async (id) => {
-  //   let biz = await getStoredBusiness()
-  //   return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
-  // },
-  // return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}&has_employees=true`)
+  get_comments: async () => {
+    let biz = await getStoredBusiness()
+    // https://coolowo.com/c/5fa2b5d8-be7b-4665-82fb-27a08b461529/tasks_app_comments/
+    return getAPIs(`/c/${biz.business_id}/tasks_app_comments/`)
+  },
+
   departments: async (page, search) => {
     const user = await getData('user')
     const business_id = user?.employee_user_memberships?.[0]?.business_id
@@ -591,19 +592,14 @@ export const useFetchActivities = (id) => {
     }
   })
 }
-export const useFetchComments = (id) => {
-  return useInfiniteQuery(["get_comments", id], () => APIFunction.get_comments(id), {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next
-    }
-  })
+export const useFetchComments = () => {
+  return useQuery("get_comments", APIFunction.get_comments)
 }
 
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");
-  // console.log('token', _token)
-  // console.log("PATH", path)
+  console.log("TOKEN", _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

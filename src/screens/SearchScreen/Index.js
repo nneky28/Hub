@@ -54,7 +54,6 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         return (
             <PersonListComp item={item}
                 onPressHandle={() => navigation.navigate("profile", { item })}
-            // onPressHandle={() => navigation.navigate("Menu", { screen: " profile" }, { item })}
             />
         )
     }
@@ -66,7 +65,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
     const TeamDetails = ({ item }) => {
         return (
             <TouchableOpacity
-                onPress={() => navigation.navigate("profile", { item, departments })}
+                // onPress={() => navigation.navigate("profile", { item, departments })}
                 style={styles.listContainer}>
                 <View style={CommonStyles.rowJustifySpaceBtw}>
 

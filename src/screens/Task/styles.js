@@ -47,27 +47,23 @@ const styles = StyleSheet.create({
     team: {
         paddingHorizontal: width(5),
         marginTop: height(0.2),
-
-
     },
     scrollRow: {
         alignSelf: 'center',
     },
+
     scrollViewContainer: {
         marginTop: height(2),
+        justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: AppColors.grayBorder,
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
-        marginLeft: width(5),
-        alignSelf: 'center',
-        alignItems: 'center',
-        height: height(4.5),
-        // marginBottom: height(1),
-
+        marginLeft: width(4.5),
+        height: height(4.5)
     },
 
     threeButtonCont: {
@@ -98,17 +94,19 @@ const styles = StyleSheet.create({
     },
     currentTab: {
         backgroundColor: AppColors.white,
-        borderRadius: width(10),
-        marginRight: width(8),
-        // ...AppColors.smallShadow,
-        paddingVertical: height(1),
+        borderRadius: width(8),
+        marginRight: width(5),
+        height: height(3.5),
+        ...AppColors.smallShadow,
+        alignSelf: 'center',
         paddingHorizontal: width(4),
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     defaultTab: {
         marginRight: width(5),
         alignSelf: "center",
-        // paddingHorizontal: width(1),
     },
     selectedTab: {
         fontFamily: FontFamily.BlackSansBold,
@@ -180,7 +178,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(2.5),
+        marginTop: height(2),
         paddingHorizontal: width(5),
         // paddingVertical: height(1)
     },
@@ -245,13 +243,14 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.1),
         color: AppColors.black1,
-        marginRight: width(2)
+        // marginRight: width(5)
+        alignItems: 'flex-start'
     },
     titleCon: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(3),
         paddingVertical: height(2),
+        paddingHorizontal: width(2)
     },
     scroll: {
         backgroundColor: '#F5F5F5',
@@ -262,17 +261,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(18),
         marginTop: height(15)
     },
-    emptyText: {
-        textAlign: 'center',
-        color: '#545454'
-    },
+
     boxContainer: {
         flexDirection: 'row',
-        marginTop: height(2),
-        marginBottom: height(1),
         justifyContent: 'space-evenly',
         paddingHorizontal: width(3)
-
     },
     mainContainer: {
         borderRadius: width(3.5),
@@ -284,18 +277,21 @@ const styles = StyleSheet.create({
         height: height(14),
         width: width(28)
     },
-    clipped: { height: height(8), resizeMode: 'contain', width: width(28) },
+    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1.2) },
     count: {
         position: 'absolute',
         left: width(19),
         top: height(4)
     },
     emptyState: {
-        justifyContent: 'center',
-        alignItems: 'center',
         flex: 1,
         marginTop: height(12),
 
+    },
+    emptyText: {
+        color: "#A8A8A8",
+        textAlign: "center",
+        fontSize: width(4.5)
     },
     searchBox: {
         width: width(90),
@@ -310,6 +306,8 @@ const styles = StyleSheet.create({
         height: height(5),
 
     },
+    imageStyle: {
 
+    },
 });
 export default styles;

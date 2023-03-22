@@ -565,7 +565,7 @@ const FilterModal = ({ isVisible, onHide, onPressHandle }) => {
     </Modal>
   );
 };
-const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler }) => {
+const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler, title }) => {
   const [showDetails, setShowDetails] = useState(false)
   const [showForm, setShowForm] = useState(false)
 
@@ -607,10 +607,15 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
         <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
           <P>Mark task as complete</P>
         </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("To-do")}>
-          <P>Mark task as not started</P>
-        </TouchableOpacity>
+        {
+          title === "To-Do" ? null :
+            <>
+              <View style={styles.line} />
+              <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("To-do")}>
+                <P>Mark task as not started</P>
+              </TouchableOpacity>
+            </>
+        }
         <View style={styles.line} />
         <TouchableOpacity style={styles.textCon} onPress={() => { setShowForm(true), item }}>
           <P>Edit Task</P>
@@ -641,11 +646,11 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
     let user = await getData("about_me")
     setEmployee(user)
   }
-  const disabled = () => {
-    if (employee?.id !== item?.created_by?.id) {
-      Alert('You can not delete this task')
-    }
-  }
+  // const disabled = () => {
+  //   if (employee?.id !== item?.created_by?.id) {
+  //     Alert('You can not delete this task')
+  //   }
+  // }
 
   const handleView = () => {
     setShowDetails(true)
@@ -677,9 +682,7 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
           </TouchableOpacity>
           <View style={styles.line} />
           <TouchableOpacity onPress={() => { setShowForm(true), item, onHide() }}
-            style={styles.textCon}
-            disabled={(employee?.id !== item?.created_by?.id)}
-          >
+            style={styles.textCon}>
             <P>Edit Task</P>
           </TouchableOpacity>
           <View style={styles.line} />

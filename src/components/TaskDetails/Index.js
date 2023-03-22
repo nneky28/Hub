@@ -8,7 +8,7 @@ import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
 import Button from '../../components/Button'
-import { P, H1, Container, Rounded, CloseHandler } from '../../utills/components';
+import { P, H1, Container, Rounded, CloseHandler, ImgPlaceholder } from '../../utills/components';
 import { Images } from '../../component2/image/Image';
 import { CompletedModal, SubTaskActionModal } from '../ContactModal';
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
@@ -31,7 +31,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { downIcon, } from '../../assets/images';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../ScreenWrapper/index';
-import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import CreateTask from '../../screens/CreateTask/Index';
 
 
@@ -49,26 +49,31 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const [action, setAction] = useState(false)
     const queryClient = useQueryClient()
     const [pag, setPag] = useState(1)
-    const [comment, setComment] = useState([])
+    const [comment, setComment] = useState('')
     const [checked, setChecked] = useState(false)
-    const [text, setText] = useState("")
+    const [data, setData] = useState([])
     const [addctrlBtn, setAddCtrlBtn] = useState(true)
     const [subContainer, setSubContainer] = useState(false)
     const [showForm, setShowForm] = useState(false)
-
+    const [employee_pk, setEmployeePK] = useState(null);
 
     const {
         data: logs,
         isLoading: loading
     } = useFetchActivities(item.id)
 
+    const {
+        data: allComments,
+        isLoading: loadingComments
+    } = useFetchComments()
+
+    console.log("COMMENTS", item)
 
     const __flattenArr = () => {
         let flattenedArr = []
         if (logs && logs?.pages && Array.isArray(logs?.pages)) {
             flattenedArr = logs?.pages
         }
-
         flattenedArr = flattenedArr.map((res) => {
             if (!res) return {}
             return res.results
@@ -80,8 +85,14 @@ const Index = ({ isVisible, onHide, item, title }) => {
             }
         })
         setLog(flattenedArr)
-
     }
+
+
+    const mapToState = () => {
+        let comments = allComments?.results
+        setData(comments)
+    }
+
     const hide = () => {
         setShow((show) => {
             if (show) {
@@ -118,29 +129,32 @@ const Index = ({ isVisible, onHide, item, title }) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     };
 
+    const RenderItem = ({ item }) => {
+        return (
+            <View>
+                <ActivityCard item={item} />
+            </View>
+        )
+    }
     const {
         mutateAsync,
         isLoading,
-    } = useMutation(APIFunction.post_sub_Task)
+    } = useMutation(APIFunction.post_comment)
 
-
-    const submitHandler = async () => {
-
+    const handleSubmit = async () => {
         try {
             Keyboard.dismiss()
             let employee = await getData("about_me")
             let fd = {
-                title: text,
-                assigned_by: employee?.id,
-                sub_assigned_to: employee?.id,
+                comment: comment,
+                comment_by: employee?.id,
                 task: item?.id,
                 due_date: moment().toISOString(true)
             }
             let res = await mutateAsync(fd)
             queryClient.invalidateQueries()
-            setSubContainer(false)
-            setText("")
-            showFlashMessage({ title: "sub Task successfully assigned" })
+            setComment("")
+            showFlashMessage({ title: "comment sent" })
         } catch (err) {
             console.log('err', err)
             showFlashMessage({
@@ -148,20 +162,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
                 type: 'error'
             })
         }
-    }
-
-
-
-    useEffect(() => {
-        __flattenArr()
-    }, [logs]);
-
-    const RenderItem = ({ item }) => {
-        return (
-            <View>
-                <ActivityCard item={item} />
-            </View>
-        )
     }
 
 
@@ -188,6 +188,53 @@ const Index = ({ isVisible, onHide, item, title }) => {
     }
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
+
+    const renderItem = ({ item }) => {
+        return (
+            <View style={styles.rowSection}>
+                <View style={CommonStyles.rowJustifySpaceBtw}>
+                    {item.comment_by?.photo ? (
+                        <Image
+                            source={{ uri: item.comment_by.photo }}
+                            style={styles.avatarStyle}
+                        />
+                    ) : (
+                        <ImgPlaceholder
+                            text={`${item.logged_by ? item.comment_by?.first_name[0] : ''} ${item.logged_by ? item.comment_by?.last_name[0] : ''
+                                }`}
+                            size={12}
+                        />
+                    )}
+
+                    <View style={styles.textContainer1}>
+                        <P numberOfLines={1} style={styles.titleText}>
+                            {item && item?.comment}
+                        </P>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+    const getInfo = async () => {
+        try {
+            let about_me = await getData('about_me');
+            setEmployeePK(about_me);
+        } catch (err) { }
+    };
+
+    console.log("about me", employee_pk?.first_name)
+    useEffect(() => {
+        getInfo()
+    }, [])
+
+    useEffect(() => {
+        __flattenArr()
+    }, [logs]);
+
+
+    useEffect(() => {
+        mapToState()
+    }, [allComments]);
 
     return (
 
@@ -279,71 +326,10 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                         <Ionicons name='add' size={15} color={AppColors.green} />
                                         <P color={AppColors.green}>Add subtask</P>
                                     </TouchableOpacity>
-                                </View> :
-                                <View>
-                                    {addctrlBtn &&
-                                        <View style={styles.addSubtask}>
+                                </View> : null
 
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    setAddCtrlBtn(false)
-                                                    setSubContainer(true)
-
-                                                }}
-                                                style={styles.addBtn}>
-                                                <Ionicons name='add' size={15} color={AppColors.green} />
-                                                <P color={AppColors.green}>Add subtask</P>
-                                            </TouchableOpacity>
-                                        </View>
-                                    }
-                                </View>
 
                             }
-
-                            {/* 
-{
-                                        subTask ?
-                                            <KeyboardAvoidingScrollView>
-                                                <Formik>
-                                                    {({ }) => (
-                                                        <FlatList
-                                                            data={subTask}
-                                                            keyExtractor={(item, index) => index.toString()}
-                                                            renderItem={({ item, index }) =>
-                                                                <View style={styles.subTaskRow}>
-                                                                    <Field
-                                                                        component={CustomInput}
-                                                                        placeholder="Add subtasks here"
-                                                                        multiline={true}
-                                                                        inputWidth={70}
-                                                                        autoFocus={true}
-                                                                        style={{ marginRight: width(5), }}
-                                                                        value={text}
-                                                                        onChangeData={(text) => {
-                                                                            setText(text)
-                                                                        }}
-                                                                        right={<TextInput.Icon name={"close"}
-                                                                            style={CommonStyles.marginTop_1}
-                                                                            color={AppColors.darkGray}
-                                                                            onPress={() => handleDelete(index)}
-                                                                        />}
-                                                                    />
-                                                                    {text !== "" ? <TouchableOpacity
-                                                                        style={styles.newBtn}
-                                                                        onPress={submitHandler}>
-                                                                        <Ionicons name='send' size={15} color={AppColors.green} />
-                                                                    </TouchableOpacity> : null}
-                                                                </View>
-                                                            }
-                                                            showsVerticalScrollIndicator={false}
-                                                            showsHorizontalScrollIndicator={false}
-                                                        />
-                                                    )}
-                                                </Formik>
-                                            </KeyboardAvoidingScrollView>
-                                            : null
-                                    } */}
-
 
 
                             {
@@ -369,7 +355,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                                             numberOfLines={1}
                                                             style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
                                                     </View>
-                                                    {index <= 10 ? <View style={styles.line1} /> : null}
+                                                    {index <= 15 ? <View style={styles.line1} /> : null}
                                                 </>
                                             }
                                             keyExtractor={(item, index) => index.toString()}
@@ -379,51 +365,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
                                 </View>
                             }
-
-
-                            {/* {
-                                subContainer &&
-                                <View style={[styles.subTaskContainer, CommonStyles.marginTop_3]}>
-                                    <KeyboardAvoidingScrollView>
-                                        <Formik>
-                                            {({ }) => (
-
-                                                <View style={styles.subTaskRow}>
-                                                    <Field
-                                                        component={CustomInput}
-                                                        placeholder="Add subtasks here"
-                                                        multiline={true}
-                                                        minHeight={5}
-                                                        inputWidth={70}
-                                                        autoFocus={true}
-                                                        style={{ marginRight: width(5), }}
-                                                        value={text}
-                                                        onChangeData={(text) => {
-                                                            setText(text)
-                                                        }}
-                                                        right={<TextInput.Icon name={"close"}
-                                                            style={CommonStyles.marginTop_1}
-                                                            color={AppColors.darkGray}
-                                                            onPress={() => handleDelete(index)}
-                                                        />}
-                                                    />
-                                                    {text !== "" ? <TouchableOpacity
-                                                        style={styles.newBtn}
-                                                        onPress={submitHandler}>
-                                                        <Ionicons name='send' size={15} color={AppColors.green} />
-                                                    </TouchableOpacity> : null}
-                                                </View>
-
-
-
-                                            )}
-                                        </Formik>
-                                    </KeyboardAvoidingScrollView>
-
-                                </View>
-                            } */}
-
-
                         </View>
                         <View style={styles.descriptionCon}>
                             <H1 color={AppColors.black1}>Created By</H1>
@@ -431,9 +372,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                 {item?.created_by?.first_name ? item?.created_by?.first_name : ""} {item?.created_by?.last_name ? item?.created_by?.last_name : ''}
                             </Text>
                         </View>
-
                     </View>
-
                 </View>
 
                 <TouchableOpacity onPress={hide} style={styles.sections}>
@@ -447,6 +386,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                 {
                     show &&
                     <View>
+
                         <SectionList
                             sections={log}
                             renderItem={RenderItem}
@@ -461,6 +401,53 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                     </H1>
                                 )
                             }} />
+
+                        <SectionList
+                            sections={data}
+                            renderItem={RenderItem}
+                            keyExtractor={item => item.id}
+                            renderSectionHeader={({ section: { created_at } }) => {
+                                return (
+                                    <H1 style={styles.stickyDate}>
+                                        {moment(title).calendar().split(" at")[0]}
+                                        <P style={styles.point}>.</P>
+                                        <P style={styles.day}> {(moment(created_at).format('dddd, '))} </P>
+                                        <P style={styles.day}>{(moment(created_at).format("MMMM Do"))}</P>
+                                    </H1>
+                                )
+                            }} />
+
+
+
+                        <KeyboardAwareScrollView
+                            extraScrollHeight={8}>
+                            <View style={styles.listContainer1}>
+                                <View style={CommonStyles.rowJustifySpaceBtw}>
+                                    {employee_pk?.photo ? (
+                                        <Image
+                                            source={{ uri: employee_pk?.photo }}
+                                            style={styles.avatarStyle}
+                                        />
+                                    ) : (
+                                        <ImgPlaceholder
+                                            text={`${employee_pk ? employee_pk?.first_name[0] : 'q'} ${employee_pk ? employee_pk?.last_name[0] : 'He'
+                                                }`}
+                                            size={12}
+                                        />
+                                    )}
+
+                                    <View style={styles.textContainer1}>
+                                        <TextInput
+                                            style={styles.Input}
+                                            placeholder="Add a comment"
+                                            value={comment}
+                                            onSubmitEditing={handleSubmit}
+                                            onChangeText={text => setComment(text)}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+                        </KeyboardAwareScrollView>
                     </View>
                 }
             </ScreenWrapper>

@@ -47,13 +47,12 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
     const onPressHandler = async (action) => {
 
         let employee = await getData("about_me")
-        console.log('Dept', employee)
+
         let fd = {
             assigned_to: employee?.id,
             id: item.id,
             due_date: moment().toISOString(true),
             status: action,
-            // department: department?.id
         }
 
         let res = await mutateAsync(fd)
@@ -84,12 +83,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
 
-    useEffect(() => {
-        __flattenArr()
-    }, [watch]);
 
-
-    // console.log('Claimed', item)
 
     return (
         <View style={styles.wrapper}>
@@ -207,7 +201,9 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading} />
+                loading={isLoading}
+                title={title}
+            />
 
         </View>
 

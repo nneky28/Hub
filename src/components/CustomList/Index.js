@@ -32,7 +32,7 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
         return (
             <PersonListComp item={item}
                 onPressHandle={() => {
-                    onPressHandler({ ...item, type: "Employee" })
+                    onPressHandler({ ...item, type: "Employee", assigned_to: item.id })
                 }}
             />
         )
@@ -41,7 +41,7 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
         return (
             <DeptListComp item={item}
                 onPressHandle={() => {
-                    onPressHandler({ ...item, type: "Departments" })
+                    onPressHandler({ ...item, type: "Departments", assigned_to: item.id })
                 }}
             />
         )

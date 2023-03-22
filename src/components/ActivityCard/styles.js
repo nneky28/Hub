@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
+import { Input } from 'native-base';
 
 const styles = StyleSheet.create({
     listItemContainer: {
@@ -43,19 +44,29 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         height: height(4.5),
         marginLeft: width(2),
-        marginTop: height(1)
+        marginTop: height(1.5),
     },
     listContainer1: {
+        width: width(90),
+        justifyContent: 'space-between',
+        marginLeft: width(4),
+        paddingVertical: height(1),
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    rowSection: {
         backgroundColor: AppColors.white,
         width: width(90),
         justifyContent: 'space-between',
         marginLeft: width(4),
         borderBottomWidth: 1,
         borderBottomColor: AppColors.gray1,
-        paddingVertical: height(2),
+        borderTopWidth: 1,
+        borderTopColor: AppColors.gray1,
+        paddingVertical: height(1),
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: height(1)
     },
 });
 

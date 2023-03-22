@@ -7,6 +7,7 @@ import {
     ScrollView,
     RefreshControl,
     ActivityIndicator,
+    ImageBackground,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import ScreenWrapper from '../../components/ScreenWrapper';
@@ -50,6 +51,7 @@ import { __flatten, getData, getStoredBusiness } from '../../utills/Methods';
 import CreateTask from '../CreateTask/Index';
 import AnimatedView from '../../components/AnimatedView';
 import { useQueryClient } from 'react-query';
+
 
 const Index = ({ navigation, route }) => {
     const [index, setIndex] = useState(0);
@@ -124,29 +126,13 @@ const Index = ({ navigation, route }) => {
         data: sentStatistics
     } = useFetchSentStatistics();
 
+
     const EmptyState = () => {
         return (
             <View style={styles.emptyState}>
                 <View>
-                    <View>
-                        {
-                            actionTitle === "Completed" ?
-                                <>
-                                    <P color="#A8A8A8" style={CommonStyles.justifyCenter}>{index === 2 ? me?.department?.name : me?.first_name}</P>
-                                    <P color="#A8A8A8">has no Completed Task</P>
-                                </> :
-
-                                <>
-                                    <P color="#A8A8A8" style={CommonStyles.marginLeft_5}>{index === 2 ? me?.department?.name : me?.first_name}</P>
-                                    <P color="#A8A8A8">has no Open Task</P>
-                                </>
-
-                        }
-                    </View>
-                    <View>
-
-                    </View>
-
+                    <P style={styles.emptyText}>{index === 2 ? (`${me?.department?.name} department`) : me?.first_name}</P>
+                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab ? (`task ${tab}`) : (`${actionTitle} Task`)}</P>
                 </View>
             </View>
         );
@@ -157,7 +143,6 @@ const Index = ({ navigation, route }) => {
                 item={item}
                 count={count}
                 title={actionTitle}
-                allTasks={allTasks}
                 index={index}
             />
         );
@@ -170,7 +155,6 @@ const Index = ({ navigation, route }) => {
                 title={actionTitle}
                 __flattenArr={__flattenArr}
                 index={index}
-                allTeamData
             />
         );
     };
@@ -430,7 +414,6 @@ const Index = ({ navigation, route }) => {
         teamOverdueData,
     }) => {
 
-
         if (index === 0 && actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
             return setTasks(arr);
@@ -510,15 +493,11 @@ const Index = ({ navigation, route }) => {
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'In Progress') {
-            let arr = Object.values(teamData).filter(
-                (item) => item.status !== 'Completed' && item.status !== 'To-do',
-            );
+            let arr = Object.values(teamData).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'Completed') {
-            let arr = Object.values(teamData).filter(
-                (item) => item.status !== 'To-do' && item.status !== 'In-progress',
-            );
+            let arr = Object.values(teamData).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
             return setTeamTask(arr);
         }
     };
@@ -531,14 +510,12 @@ const Index = ({ navigation, route }) => {
     const getInfo = async () => {
         try {
             let about_me = await getData('about_me');
+            // console.log("ID", about_me)
             setEmployeePK(about_me?.department?.id);
             setMe(about_me)
         } catch (err) { }
     };
-    // const refreshTask = () => {
-    //     reloadScreen();
-    //     queryClient.invalidateQueries()
-    // };
+
 
     useEffect(() => {
         getInfo()
@@ -558,9 +535,11 @@ const Index = ({ navigation, route }) => {
                 }}>
                 <View style={styles.mainViewContainer}>
                     <View style={styles.header}>
-                        <View style={styles.logoBox}>
+                        <TouchableOpacity
+                            onPress={() => navigation.toggleDrawer()}
+                            style={styles.logoBox}>
                             <Image source={{ uri: Images.TaskLogo }} style={styles.logo} />
-                        </View>
+                        </TouchableOpacity>
                         <Text numberOfLines={1} style={styles.screenTitle}>
                             Tasks
                         </Text>
@@ -600,7 +579,7 @@ const Index = ({ navigation, route }) => {
                     </View>
 
                     {index === 2 ? (
-                        <View style={CommonStyles.marginBottom_1}>
+                        <View>
                             <Text numberOfLines={1} style={styles.headerTitle}>
                                 Find People
                             </Text>
@@ -635,13 +614,14 @@ const Index = ({ navigation, route }) => {
                         {[
                             {
                                 selected: 'To-Do',
-                                colorUp: AppColors.blue1,
-                                image: Images.clippedBlue,
+                                // colorUp: AppColors.blue1,
+                                selected_image: Images.clippedBlue,
+                                image: Images.blueBox,
                                 count:
                                     index === 0 && statistics
                                         ? numeral(statistics?.todo_count).format('0,0')
                                         : index === 1 && sentStatistics
-                                            ? numeral(sentStatistics?.todo_count + sentStatistics?.duetoday_count).format('0,0')
+                                            ? numeral(sentStatistics?.todo_count).format('0,0')
                                             : index === 2 && teamCount
                                                 ? numeral(
                                                     teamCount?.todo_count + teamCount?.inprogress_count,
@@ -653,8 +633,9 @@ const Index = ({ navigation, route }) => {
 
                             {
                                 selected: 'In Progress',
-                                colorUp: AppColors.newYellow,
-                                image: Images.clippedYellow,
+                                image: Images.yellowBox,
+                                // colorUp: AppColors.newYellow,
+                                selected_image: Images.clippedYellow,
                                 count:
                                     index === 0 && statistics
                                         ? numeral(statistics?.inprogress_count).format('0,0')
@@ -668,8 +649,9 @@ const Index = ({ navigation, route }) => {
                             },
                             {
                                 selected: 'Completed',
-                                colorUp: AppColors.lightGreen,
-                                image: Images.clippedGreen,
+                                image: Images.greenBox,
+                                // colorUp: AppColors.lightGreen,
+                                selected_image: Images.clippedGreen,
                                 count:
                                     index === 0 && statistics
                                         ? numeral(statistics?.completed_count).format('0,0')
@@ -689,17 +671,19 @@ const Index = ({ navigation, route }) => {
                                     setCount(item.count);
                                     setTab(tab);
                                 }}>
-                                <Container
-                                    backgroundColor={item.colorUp}
-                                    // width={28}
-                                    border
-                                    borderWidth={
-                                        item.selected === actionTitle ? item.borderWidth : null
-                                    }
-                                    borderColor={
-                                        item.selected === actionTitle ? item.borderColor : null
-                                    }
-                                    style={styles.mainContainer}>
+                                <ImageBackground
+                                    source={{ uri: item.image }}
+                                    resizeMode='cover'
+                                    imageStyle={{
+                                        borderRadius: width(3),
+                                        borderWidth: item.selected === actionTitle ? item.borderWidth : null,
+                                        borderColor: item.selected === actionTitle ? item.borderColor : null,
+                                    }}
+                                    style={{
+                                        width: width(28),
+                                        height: height(15),
+                                        marginTop: height(2),
+                                    }}>
                                     <View>
                                         <View style={styles.titleCon}>
                                             <H1 style={styles.title}>{item.selected}</H1>
@@ -713,8 +697,8 @@ const Index = ({ navigation, route }) => {
                                         </View>
                                         <View>
                                             {item.selected === actionTitle && (
-                                                <Image
-                                                    source={{ uri: item.image }}
+                                                <ImageBackground
+                                                    source={{ uri: item.selected_image }}
                                                     style={styles.clipped}
                                                 />
                                             )}
@@ -726,7 +710,7 @@ const Index = ({ navigation, route }) => {
                                             </H1>
                                         </View>
                                     </View>
-                                </Container>
+                                </ImageBackground>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -749,7 +733,7 @@ const Index = ({ navigation, route }) => {
                                 <H1 color={AppColors.black1}>
                                     {actionTitle} (
                                     {index === 1 && actionTitle === 'To-Do'
-                                        ? sentStatistics?.todo_count + sentStatistics?.duetoday_count
+                                        ? sentStatistics?.todo_count
                                         : actionTitle === 'In Progress'
                                             ? sentStatistics?.inprogress_count
                                             : actionTitle === 'Completed'

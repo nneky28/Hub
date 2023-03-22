@@ -106,9 +106,12 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                 {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
-                            <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => {
-                                title === "Completed" && setCompleted(true)
-                                index === 1 && setSent(true)
+                                <TouchableOpacity style={CommonStyles.marginTop_1}
+                                    onPress={() => {
+                                        if ( title === "Completed") {
+                                       return setCompleted(true)
+                                    }
+                               setSent(true)
                             }}>
                                 <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
                             </TouchableOpacity> :
@@ -194,7 +197,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading} />
+                loading={isLoading} title={title} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
 
             <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item} onPressHandle={onPressHandler} 

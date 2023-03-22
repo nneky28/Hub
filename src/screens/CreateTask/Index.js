@@ -61,7 +61,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
         setSubtask(arr)
     }
 
-    console.log("ITEM", item)
+    // console.log("ITEM", item)
 
     const submitHandler = async () => {
         try {
@@ -88,8 +88,10 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                 ...data,
                 due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
                 created_by: item?.created_by?.id || employee?.id,
-                assigned_to: assignTo?.id && assignTo?.type === "Employee" ? assignTo?.id : assignTo?.id && assignTo?.type === "Departments" ? assignTo?.id : employee?.id,
-                department: assignTo?.id && assignTo?.type === "Departments" ? assignTo?.id : null,
+                assigned_to: assignTo?.type === "Employee" ? assignTo?.assigned_to : null,
+                department: assignTo?.type === "Departments" ? assignTo?.assigned_to : null,
+                // assigned_to: !assignTo?.assigned_to_id && assignTo?.type === "Employee" ? assignTo?.id : assignTo?.assigned_to_id && assignTo?.type === "Employee" ? assignTo?.assigned_to_id : assignTo?.assigned_to_id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id : employee?.id,
+                // department: assignTo?.assigned_to_id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id : null,
                 status: "To-do",
                 sub_tasks: Object.values(subData).map(item => {
                     return {
@@ -98,16 +100,12 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                     }
                 })
             }
-            if (assignTo?.type === "deparments") delete fd["assigned_to"]
+            if (assignTo?.type === "Deparments") delete fd["assigned_to"]
             if (data?.due_date === "No Date" || item) delete fd["due_date"]
-            // return console.log("FD", fd)
-
-
             if (item) delete fd["status"]
 
             if (item) {
                 fd["id"] = item?.id;
-                fd['assigned_to'] = assigned_to_id
                 let res = await editHandler(fd)
                 console.log("RES Edit", res)
                 setDisabled(false)
@@ -146,9 +144,10 @@ const Index = ({ visible, onHide, item, setButtons }) => {
     useEffect(() => {
         if (!item?.id) return
         setAssignTo({
-            id: item?.id, type: item?.department?.id ? "Departments" : "Employees",
+            id: item?.id,
+            type: item?.department?.id ? "Departments" : "Employee",
             name: item?.assigned_to?.first_name,
-            assigned_to_id: item?.department?.id || item?.assigned_to?.id
+            assigned_to: item?.department?.id || item?.assigned_to?.id
         })
         setData({ ...data, due_date: item?.due_date })
     }, [item])
@@ -354,6 +353,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                         setOpen={setOpen}
                         open={open}
                         onPressHandler={(item) => {
+                            // console.log("ITEM", item)
                             if (item.type === "Departments") {
                                 setAssignTo({ ...item, name: `${item.name ? Capitalize(item.name) : null}` })
                                 return setOpen(false)

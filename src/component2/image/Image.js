@@ -102,7 +102,10 @@ export const Images = {
   Attach: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(16).png",
   FilterArrow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/arrows.png",
   ArrowDown: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/down.png",
-  SubTaskBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/RectangleGrey.png"
+  SubTaskBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/RectangleGrey.png",
+  blueBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026+2.png",
+  yellowBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4028.png",
+  greenBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026.png"
 
 }
 
