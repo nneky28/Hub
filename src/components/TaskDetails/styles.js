@@ -186,9 +186,8 @@ const styles = StyleSheet.create({
 
     textContainer1: {
         justifyContent: 'space-between',
-        height: height(4.5),
+        height: height(4),
         marginLeft: width(2),
-
     },
     textCon: {
         justifyContent: 'space-between',

@@ -315,10 +315,10 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
   },
-  get_comments: async () => {
+  get_comments: async (id) => {
     let biz = await getStoredBusiness()
     // https://coolowo.com/c/5fa2b5d8-be7b-4665-82fb-27a08b461529/tasks_app_comments/
-    return getAPIs(`/c/${biz.business_id}/tasks_app_comments/`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app_comments/?${id}`)
   },
 
   departments: async (page, search) => {
@@ -590,8 +590,8 @@ export const useFetchActivities = (id) => {
     }
   })
 }
-export const useFetchComments = () => {
-  return useQuery("get_comments", APIFunction.get_comments)
+export const useFetchComments = (id) => {
+  return useQuery("get_comments", APIFunction.get_comments(id))
 }
 
 
