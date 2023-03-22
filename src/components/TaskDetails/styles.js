@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#E0EEF0',
         paddingVertical: height(1),
         width: width(100),
-        marginTop: height(2),
+        marginTop: height(1),
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingHorizontal: width(5),
