@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4) },
     descriptionCon: { marginTop: height(1), },
     con: {
-        marginTop: height(1),
+
         paddingHorizontal: width(1),
     },
     button: {
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(4),
         paddingVertical: height(1.8),
         width: width(90),
+        marginTop: height(2),
     },
     name: {
         color: AppColors.black1,
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
     },
     stickyDate: {
         paddingHorizontal: width(5),
-        marginTop: height(2),
+        marginTop: height(1),
     },
     buttonStyle: {
         borderWidth: 1,

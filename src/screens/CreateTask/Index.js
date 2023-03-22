@@ -87,7 +87,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                 ...data,
                 due_date: data?.due_date === 'Today' ? moment().toISOString(true) : moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS'),
                 created_by: item?.created_by?.id || employee?.id,
-                assigned_to: assignTo?.type === "Employee" ? assignTo?.assigned_to : null,
+                assigned_to: assignTo?.type === "Employee" ? assignTo?.assigned_to : employee?.id,
                 department: assignTo?.type === "Departments" ? assignTo?.assigned_to : null,
                 // assigned_to: !assignTo?.assigned_to_id && assignTo?.type === "Employee" ? assignTo?.id : assignTo?.assigned_to_id && assignTo?.type === "Employee" ? assignTo?.assigned_to_id : assignTo?.assigned_to_id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id : employee?.id,
                 // department: assignTo?.assigned_to_id && assignTo?.type === "Departments" ? assignTo?.assigned_to_id : null,
@@ -99,9 +99,10 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                     }
                 })
             }
-            if (assignTo?.type === "Deparments") delete fd["assigned_to"]
+            if (assignTo?.type === "Departments") delete fd["assigned_to"]
             if (data?.due_date === "No Date" || item) delete fd["due_date"]
             if (item) delete fd["status"]
+
 
             if (item) {
                 fd["id"] = item?.id;

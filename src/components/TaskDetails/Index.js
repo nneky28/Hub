@@ -67,29 +67,30 @@ const Index = ({ isVisible, onHide, item, title }) => {
         isLoading: loadingComments
     } = useFetchComments(item.id)
 
-    const __flattenArr = () => {
-        let flattenedArr = []
-        if (logs && logs?.pages && Array.isArray(logs?.pages)) {
-            flattenedArr = logs?.pages
+
+
+
+    const flattenAndMapData = (data) => {
+        let flattenedArr = [];
+        if (data && data.pages && Array.isArray(data.pages)) {
+            flattenedArr = data.pages;
         }
-        flattenedArr = flattenedArr.map((res) => {
-            if (!res) return {}
-            return res.results
-        }).map((item, i) => {
-            return {
-                key: i,
-                title: Object.keys(item)?.[0],
-                data: Object.values(item)?.[0]
-            }
-        })
-        setLog(flattenedArr)
-    }
+        flattenedArr = flattenedArr
+            .map((res) => {
+                if (!res) return {};
+                return res.results;
+            })
+            .map((item, i) => {
+                return {
+                    key: i,
+                    title: Object.keys(item)?.[0],
+                    data: Object.values(item)?.[0],
+                };
+            });
+        return flattenedArr;
+    };
 
 
-    const mapToState = () => {
-        let comments = allComments?.results
-        setData(comments)
-    }
 
     const hide = () => {
         setShow((show) => {
@@ -186,7 +187,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item, index }) => {
         return (
             <View style={styles.rowSection}>
                 <View style={CommonStyles.rowJustifySpaceBtw}>
@@ -223,13 +224,34 @@ const Index = ({ isVisible, onHide, item, title }) => {
         getInfo()
     }, [])
 
+
+
+    const formattedTitle = (title) => {
+        const momentTitle = moment(title);
+        const date = momentTitle.calendar().split(" at")[0];
+        const dayOfWeek = momentTitle.format('dddd, ');
+        const monthDay = momentTitle.format("MMMM Do");
+        return (
+            <Text>
+                {date}
+                <Text style={styles.point}>.</Text>
+                <Text style={styles.day}> {dayOfWeek} </Text>
+                <Text style={styles.day}>{monthDay}</Text>
+            </Text>
+        );
+
+    }
+
     useEffect(() => {
-        __flattenArr()
+        const flattenedLogs = flattenAndMapData(logs);
+        setLog(flattenedLogs);
     }, [logs]);
 
     useEffect(() => {
-        mapToState()
+        const flattenedComments = flattenAndMapData(allComments);
+        setData(flattenedComments);
     }, [allComments]);
+
 
     return (
         <Modal
@@ -285,9 +307,9 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         <View style={styles.descriptionCon}>
                             <H1 color={AppColors.black1}>Task Description</H1>
                             <View style={styles.con}>
-                                <Text style={styles.description}>
+                                <P style={styles.description}>
                                     {item.description}
-                                </Text>
+                                </P>
                             </View>
                         </View>
                         <View
@@ -309,23 +331,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
                         <View>
 
-
-                            {item?.sub_tasks_tasksapp?.length !== 0 ?
-
-                                <View style={[CommonStyles.rowJustifySpaceBtw, { paddingVertical: height(2) }]}>
-                                    <H1 color={AppColors.black1}>Subtasks</H1>
-                                    <TouchableOpacity
-                                        onPress={_subTask}
-                                        style={styles.addBtn}>
-                                        <Ionicons name='add' size={15} color={AppColors.green} />
-                                        <P color={AppColors.green}>Add subtask</P>
-                                    </TouchableOpacity>
-                                </View> : null
-
-
-                            }
-
-
                             {
                                 item?.sub_tasks_tasksapp?.length !== 0 &&
                                 <View style={styles.subTaskContainer}>
@@ -339,7 +344,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                                             <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
                                                         </TouchableOpacity> :
                                                             <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                                {/* <Ionicons name="tablet-portrait-outline" size={18} color={AppColors.black} /> */}
                                                                 <Image
                                                                     source={{ uri: Images.SubTaskBox }}
                                                                     style={styles.leftIcon} />
@@ -388,49 +392,45 @@ const Index = ({ isVisible, onHide, item, title }) => {
                             renderSectionHeader={({ section: { title } }) => {
                                 return (
                                     <H1 style={styles.stickyDate}>
-                                        {moment(title).calendar().split(" at")[0]}
-                                        <P style={styles.point}>.</P>
-                                        <P style={styles.day}> {(moment(title).format('dddd, '))} </P>
-                                        <P style={styles.day}>{(moment(title).format("MMMM Do"))}</P>
+                                        {formattedTitle(title)}
                                     </H1>
                                 )
                             }} />
 
-                        <FlatList
-                            data={data}
-                            horizontal
-                            renderItem={renderItem}
-                            ItemSeparatorComponent={() => (
-                                <View style={[CommonStyles.marginRight_3]} />
-                            )}
-                            showsHorizontalScrollIndicator={false}
-                            nestedScrollEnabled={true}
-                        // style={styles.team}
-                        />
-
-
+                        {data && data.length > 0 && (
+                            <SectionList
+                                sections={data}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => item + index}
+                                renderSectionHeader={({ section: { title } }) => {
+                                    return (
+                                        <H1 style={styles.stickyDate}>
+                                            {formattedTitle(title)}
+                                        </H1>
+                                    )
+                                }}
+                            />
+                        )}
 
                         <KeyboardAwareScrollView
                             extraScrollHeight={8}>
                             <View style={styles.listContainer1}>
                                 <View style={CommonStyles.rowJustifySpaceBtw}>
-                                    {/* {employee_pk?.photo ? (
-                                        <Image
-                                            source={{ uri: employee_pk?.photo }}
-                                            style={styles.avatarStyle}
-                                        />
-                                    ) : (
-                                        <ImgPlaceholder
-                                            text={`${employee_pk ? employee_pk?.first_name[0] : ''} ${employee_pk ? employee_pk?.last_name[0] : ''
-                                                }`}
-                                            size={12}
-                                        />
-                                    )} */}
-                                    <ImgPlaceholder
-                                        text={`${employee_pk ? employee_pk?.first_name[0] : ''}${employee_pk ? employee_pk?.last_name[0] : ''
-                                            }`}
-                                        size={12}
-                                    />
+                                    <View>
+                                        {employee_pk?.job?.photo ? (
+                                            <Image
+                                                source={{ uri: employee_pk?.photo }}
+                                                style={styles.avatarStyle}
+                                            />
+                                        ) : (
+                                            <ImgPlaceholder
+                                                text={`${employee_pk ? employee_pk?.first_name[0] : ''}${employee_pk ? employee_pk?.last_name[0] : ''
+                                                    }`}
+                                                size={12}
+                                            />
+                                        )}
+                                    </View>
+
                                     <View style={styles.textContainer1}>
                                         <TextInput
                                             style={styles.Input}

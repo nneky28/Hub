@@ -547,11 +547,6 @@ const Index = ({ navigation, route }) => {
                 </View>
                 <ScrollView
                     style={[styles.scroll, CommonStyles.paddingBottom_10]}
-                    refreshControl={
-                        <RefreshControl refreshing={false}
-                        // onRefresh={refreshTask}
-                        />
-                    }
                     showsVerticalScrollIndicator={false}>
 
                     <View style={styles.threeButtonCont}>

@@ -6,7 +6,7 @@ import {
     Platform
 } from 'react-native'
 import React, { useState} from 'react'
-import { H1, P, } from '../../utills/components'
+import { H1, P, TouchableWrapper, } from '../../utills/components'
 import styles from './styles'
 import { Images } from '../../component2/image/Image';
 import AppColors from '../../utills/AppColors';
@@ -21,6 +21,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
 import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
+
 
 
 interface TaskProps {
@@ -92,6 +93,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
 
     }
 
+    console.log("Items",item)
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
@@ -106,7 +108,9 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                 {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
-                                <TouchableOpacity style={CommonStyles.marginTop_1}
+                                <TouchableWrapper
+                                    width={5}
+                                    style={CommonStyles.marginTop_1}
                                     onPress={() => {
                                         if ( title === "Completed") {
                                        return setCompleted(true)
@@ -114,10 +118,10 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                                setSent(true)
                             }}>
                                 <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
-                            </TouchableOpacity> :
+                            </TouchableWrapper> :
                             <View style={styles.btn}>
                                 
-                                <TouchableOpacity
+                                    <TouchableOpacity   
                                     onPress={() => {
                                         if (title === 'In Progress') {
                                             onPressHandler("Completed")
@@ -148,7 +152,10 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                         index === 1 ? 'To:' : 'By:'
                     }
                     {" "}
-                    {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}
+                    {
+                        !item?.assigned_to ? item?.department?.name:item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''
+                    }
+               
                 </P>
             </View>
 
