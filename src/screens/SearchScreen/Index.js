@@ -252,8 +252,8 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Your Team</H1>
 
-                                <DeptListComp item={departments?.name}
-                                    onPressHandle={() => navigation.navigate("profile", { item, departments })}
+                                <DeptListComp item={myTeam?.department}
+                                // onPressHandle={() => navigation.navigate("profile", { item, departments })}
                                 />
 
                             </View>
