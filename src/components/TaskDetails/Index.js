@@ -67,8 +67,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
         isLoading: loadingComments
     } = useFetchComments()
 
-    console.log("COMMENTS", item)
-
     const __flattenArr = () => {
         let flattenedArr = []
         if (logs && logs?.pages && Array.isArray(logs?.pages)) {
@@ -156,7 +154,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
             setComment("")
             showFlashMessage({ title: "comment sent" })
         } catch (err) {
-            console.log('err', err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -222,7 +219,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
         } catch (err) { }
     };
 
-    console.log("about me", employee_pk?.first_name)
     useEffect(() => {
         getInfo()
     }, [])

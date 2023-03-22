@@ -187,7 +187,6 @@ export const APIFunction = {
     return postAPIs(`/c/${biz.business_id}/app_onboarding/`, fd)
   },
   update_onboarding: async (fd) => {
-    // console.log("fd", fd.id)
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz.business_id}/app_onboarding/${fd.id}/`, fd)
   },
@@ -223,7 +222,6 @@ export const APIFunction = {
   },
   get_to_dos: async () => {
     let biz = await getStoredBusiness()
-    // console.log("Biz", biz.business_id)
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
   },
   get_duetoday: async () => {
@@ -599,7 +597,6 @@ export const useFetchComments = () => {
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");
-  console.log("TOKEN", _token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -645,7 +642,6 @@ export const postAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
-        // console.log("post err", error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -710,7 +706,6 @@ export const putAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
-        // console.log('error', error)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"

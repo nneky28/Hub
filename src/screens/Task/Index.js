@@ -510,7 +510,6 @@ const Index = ({ navigation, route }) => {
     const getInfo = async () => {
         try {
             let about_me = await getData('about_me');
-            // console.log("ID", about_me)
             setEmployeePK(about_me?.department?.id);
             setMe(about_me)
         } catch (err) { }

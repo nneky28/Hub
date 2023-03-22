@@ -51,8 +51,6 @@ const Index = ({ route }) => {
         data: counts
     } = useFetchPeopleStatics(item?.id)
 
-    console.log("Counts", counts)
-
     const {
         data: teamCount
     } = useFetchTeamStatistics(item?.id);
@@ -180,7 +178,6 @@ const Index = ({ route }) => {
     }
 
     const MapToState = ({ data, dueItems, upcomingItems, overdueItems, teamData, }) => {
-        // console.log("Team", teamData)
         if (actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
             return setTasks(arr);
