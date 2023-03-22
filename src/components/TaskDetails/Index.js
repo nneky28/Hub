@@ -3,7 +3,6 @@ import {
     Animated,
     Easing,
     LayoutAnimation,
-    KeyboardAvoidingView,
 } from 'react-native'
 import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
@@ -32,7 +31,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { downIcon, } from '../../assets/images';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../ScreenWrapper/index';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import CreateTask from '../../screens/CreateTask/Index';
 
 
@@ -411,7 +410,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
 
 
-                        <KeyboardAvoidingView
+                        <KeyboardAwareScrollView
                             extraScrollHeight={8}>
                             <View style={styles.listContainer1}>
                                 <View style={CommonStyles.rowJustifySpaceBtw}>
@@ -443,7 +442,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                     </View>
                                 </View>
                             </View>
-                        </KeyboardAvoidingView>
+                        </KeyboardAwareScrollView>
                     </View>
                 }
             </ScreenWrapper>
