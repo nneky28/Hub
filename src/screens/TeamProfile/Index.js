@@ -47,6 +47,8 @@ const Index = ({ route }) => {
     const [teamData, setTeamData] = useState([]);
     const [teamPage, setTeamPage] = useState(1);
 
+    // console.log("coming", departments)
+
     const {
         data: counts
     } = useFetchPeopleStatics(item?.id)
@@ -118,8 +120,8 @@ const Index = ({ route }) => {
         return (
             <View style={styles.emptyState}>
                 <View>
-                    <P style={styles.emptyText}>{departments ? (`${departments?.name} department`) : item?.first_name}</P>
-                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab ? (`task ${tab}`) : (`${actionTitle} Task`)}</P>
+                    <P style={styles.emptyText}>{departments ? (`${item?.name} department`) : item?.first_name}</P>
+                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab === 'All' ? 'To do.' : actionTitle === "To-Do" && tab ? (`task ${tab}`) : (actionTitle === "In Progress" ? "task In Progress." : `${actionTitle} Task.`)}</P>
                 </View>
             </View>
         );

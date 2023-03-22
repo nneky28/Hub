@@ -29,7 +29,7 @@ import { storeData } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { downIcon, } from '../../assets/images';
-import { height, width } from 'react-native-dimension';
+import { height, width, totalSize } from 'react-native-dimension';
 import ScreenWrapper from '../ScreenWrapper/index';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import CreateTask from '../../screens/CreateTask/Index';
@@ -51,11 +51,12 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const [pag, setPag] = useState(1)
     const [comment, setComment] = useState('')
     const [checked, setChecked] = useState(false)
-    const [data, setData] = useState([])
+    const [data, setData] = useState(null)
     const [addctrlBtn, setAddCtrlBtn] = useState(true)
     const [subContainer, setSubContainer] = useState(false)
     const [showForm, setShowForm] = useState(false)
     const [employee_pk, setEmployeePK] = useState(null);
+    const [myComment, setMyComment] = useState(null)
 
     const {
         data: logs,
@@ -68,29 +69,25 @@ const Index = ({ isVisible, onHide, item, title }) => {
     } = useFetchComments(item.id)
 
 
-
-
     const flattenAndMapData = (data) => {
+        console.log({ data })
         let flattenedArr = [];
         if (data && data.pages && Array.isArray(data.pages)) {
             flattenedArr = data.pages;
         }
-        flattenedArr = flattenedArr
-            .map((res) => {
-                if (!res) return {};
-                return res.results;
-            })
+        flattenedArr = flattenedArr.map((res) => {
+            if (!res) return {};
+            return res.results;
+        })
             .map((item, i) => {
                 return {
                     key: i,
-                    title: Object.keys(item)?.[0],
-                    data: Object.values(item)?.[0],
+                    title: Object.keys(item)?.[0] ?? [],
+                    data: Object.values(item)?.[0] ?? [],
                 };
             });
         return flattenedArr;
     };
-
-
 
     const hide = () => {
         setShow((show) => {
@@ -187,23 +184,23 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
 
+
     const renderItem = ({ item, index }) => {
         return (
             <View style={styles.rowSection}>
                 <View style={CommonStyles.rowJustifySpaceBtw}>
-                    {item.comment_by?.photo ? (
+                    {item?.comment_by?.photo ? (
                         <Image
-                            source={{ uri: item.comment_by.photo }}
+                            source={{ uri: item?.comment_by?.photo }}
                             style={styles.avatarStyle}
                         />
                     ) : (
                         <ImgPlaceholder
-                            text={`${item.logged_by ? item.comment_by?.first_name[0] : ''} ${item.logged_by ? item.comment_by?.last_name[0] : ''
+                            text={`${item ? item.comment_by?.first_name[0] : ''} ${item ? item.comment_by?.last_name[0] : ''
                                 }`}
                             size={12}
                         />
                     )}
-
                     <View style={styles.textCon}>
                         <P numberOfLines={1} style={styles.titleText}>
                             {item && item?.comment}
@@ -227,20 +224,25 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
 
     const formattedTitle = (title) => {
+        if (!title) {
+            return '';
+        }
+
         const momentTitle = moment(title);
         const date = momentTitle.calendar().split(" at")[0];
         const dayOfWeek = momentTitle.format('dddd, ');
         const monthDay = momentTitle.format("MMMM Do");
+
         return (
             <Text>
                 {date}
                 <Text style={styles.point}>.</Text>
-                <Text style={styles.day}> {dayOfWeek} </Text>
-                <Text style={styles.day}>{monthDay}</Text>
+                <P style={styles.day}> {dayOfWeek} </P>
+                <P style={styles.day}>{monthDay}</P>
             </Text>
         );
+    };
 
-    }
 
     useEffect(() => {
         const flattenedLogs = flattenAndMapData(logs);
@@ -384,7 +386,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
                 {
                     show &&
                     <View>
-
                         <SectionList
                             sections={log}
                             renderItem={RenderItem}
@@ -397,20 +398,18 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                 )
                             }} />
 
-                        {data && data.length > 0 && (
+                        {data && Array.isArray(data) && !loadingComments ? (
                             <SectionList
                                 sections={data}
                                 renderItem={renderItem}
-                                keyExtractor={(item, index) => item + index}
-                                renderSectionHeader={({ section: { title } }) => {
-                                    return (
-                                        <H1 style={styles.stickyDate}>
-                                            {formattedTitle(title)}
-                                        </H1>
-                                    )
-                                }}
+                                renderSectionHeader={({ section: { title } }) => (
+                                    data[0]?.title ? (
+                                        <H1 style={styles.stickyDate}>{formattedTitle(data[0].title)}</H1>
+                                    ) : null
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
                             />
-                        )}
+                        ) : null}
 
                         <KeyboardAwareScrollView
                             extraScrollHeight={8}>

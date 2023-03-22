@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
         paddingVertical: height(1),
         width: width(100),
         marginTop: height(1),
+        marginBottom: height(1),
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingHorizontal: width(5),
@@ -164,7 +165,8 @@ const styles = StyleSheet.create({
     },
     stickyDate: {
         paddingHorizontal: width(5),
-        marginTop: height(1),
+        // marginTop: height(1),
+        paddingVertical: height(1)
     },
     buttonStyle: {
         borderWidth: 1,
@@ -208,9 +210,10 @@ const styles = StyleSheet.create({
     rowSection: {
         justifyContent: 'space-between',
         marginLeft: width(4),
-        paddingVertical: height(1),
+        // paddingVertical: height(1),
         flexDirection: 'row',
         alignItems: 'center',
+        marginTop: height(1)
     },
     Input: {
         width: width(80),

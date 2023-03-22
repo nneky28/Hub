@@ -92,8 +92,6 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
         }
 
     }
-
-    console.log("Items",item)
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null

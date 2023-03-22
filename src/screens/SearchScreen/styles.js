@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     },
 
     team: {
-        // height: height(30),
+        height: height(30),
         width: width(90),
-        minHeight: height(20)
+        // minHeight: height(20)
 
     },
     searchBoxContainer: {

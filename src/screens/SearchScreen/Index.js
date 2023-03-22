@@ -62,30 +62,6 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         setMyTeam(details)
     }
 
-    const TeamDetails = ({ item }) => {
-        return (
-            <TouchableOpacity
-                // onPress={() => navigation.navigate("profile", { item, departments })}
-                style={styles.listContainer}>
-                <View style={CommonStyles.rowJustifySpaceBtw}>
-
-                    <ImgPlaceholder
-                        text={myTeam?.department?.name && myTeam?.department?.name.length > 0 ? Capitalize([...myTeam?.department?.name][0]) : ''}
-                        size={12}
-                    />
-                    <View style={styles.textContainer}>
-                        <Text style={styles.titleText}>
-                            {myTeam && myTeam?.department?.name ? Capitalize(myTeam?.department?.name) : ""} {" "}
-                        </Text>
-                    </View>
-                </View>
-
-
-            </TouchableOpacity>
-        )
-    }
-
-
     const RenderDept = ({ item }) => {
         return (
             <DeptListComp item={item}
@@ -174,7 +150,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
     useEffect(() => {
         aboutMe()
     }, [tab])
-
+    // console.log('dept', departments)
 
     return (
         <View
@@ -275,7 +251,11 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                         (<React.Fragment>
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Your Team</H1>
-                                <TeamDetails />
+
+                                <DeptListComp item={departments?.name}
+                                    onPressHandle={() => navigation.navigate("profile", { item, departments })}
+                                />
+
                             </View>
                             <View style={styles.container}>
                                 <H1 fontSize={3.3}>Department</H1>

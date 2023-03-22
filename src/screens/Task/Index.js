@@ -127,16 +127,18 @@ const Index = ({ navigation, route }) => {
     } = useFetchSentStatistics();
 
 
-    const EmptyState = () => {
+    const EmptyState = React.memo(() => {
         return (
             <View style={styles.emptyState}>
                 <View>
                     <P style={styles.emptyText}>{index === 2 ? (`${me?.department?.name} department`) : me?.first_name}</P>
-                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab ? (`task ${tab}`) : (`${actionTitle} Task`)}</P>
+
+                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab === 'All' ? 'To do.' : actionTitle === "To-Do" && tab ? (`task ${tab}`) :
+                        (index === 1 ? `sent task ${actionTitle} ` : `${actionTitle} Task.`)}</P>
                 </View>
             </View>
         );
-    };
+    });
     const RenderItems = ({ item }) => {
         return (
             <TodoContent
@@ -237,12 +239,7 @@ const Index = ({ navigation, route }) => {
 
     const __flattenArr = () => {
         let flattenedArr = [];
-        if (
-            index === 0 &&
-            allTasks &&
-            allTasks?.pages &&
-            Array.isArray(allTasks?.pages)
-        ) {
+        if (index === 0 && allTasks && allTasks?.pages && Array.isArray(allTasks?.pages)) {
             flattenedArr = allTasks?.pages;
         }
         if (
