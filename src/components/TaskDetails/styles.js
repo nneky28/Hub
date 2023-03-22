@@ -188,6 +188,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         height: height(4.5),
         marginLeft: width(2),
+
+    },
+    textCon: {
+        justifyContent: 'space-between',
+        height: height(4.5),
+        marginLeft: width(2),
+        marginTop: height(1)
     },
     listContainer1: {
         width: width(90),

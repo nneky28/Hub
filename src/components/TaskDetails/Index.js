@@ -203,7 +203,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         />
                     )}
 
-                    <View style={styles.textContainer1}>
+                    <View style={styles.textCon}>
                         <P numberOfLines={1} style={styles.titleText}>
                             {item && item?.comment}
                         </P>
@@ -227,13 +227,11 @@ const Index = ({ isVisible, onHide, item, title }) => {
         __flattenArr()
     }, [logs]);
 
-
     useEffect(() => {
         mapToState()
     }, [allComments]);
 
     return (
-
         <Modal
             onBackButtonPress={onHide}
             onModalHide={onHide}
@@ -398,20 +396,17 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                 )
                             }} />
 
-                        <SectionList
-                            sections={data}
-                            renderItem={RenderItem}
-                            keyExtractor={item => item.id}
-                            renderSectionHeader={({ section: { created_at } }) => {
-                                return (
-                                    <H1 style={styles.stickyDate}>
-                                        {moment(title).calendar().split(" at")[0]}
-                                        <P style={styles.point}>.</P>
-                                        <P style={styles.day}> {(moment(created_at).format('dddd, '))} </P>
-                                        <P style={styles.day}>{(moment(created_at).format("MMMM Do"))}</P>
-                                    </H1>
-                                )
-                            }} />
+                        <FlatList
+                            data={data}
+                            horizontal
+                            renderItem={renderItem}
+                            ItemSeparatorComponent={() => (
+                                <View style={[CommonStyles.marginRight_3]} />
+                            )}
+                            showsHorizontalScrollIndicator={false}
+                            nestedScrollEnabled={true}
+                        // style={styles.team}
+                        />
 
 
 
@@ -419,19 +414,23 @@ const Index = ({ isVisible, onHide, item, title }) => {
                             extraScrollHeight={8}>
                             <View style={styles.listContainer1}>
                                 <View style={CommonStyles.rowJustifySpaceBtw}>
-                                    {employee_pk?.photo ? (
+                                    {/* {employee_pk?.photo ? (
                                         <Image
                                             source={{ uri: employee_pk?.photo }}
                                             style={styles.avatarStyle}
                                         />
                                     ) : (
                                         <ImgPlaceholder
-                                            text={`${employee_pk ? employee_pk?.first_name[0] : 'q'} ${employee_pk ? employee_pk?.last_name[0] : 'He'
+                                            text={`${employee_pk ? employee_pk?.first_name[0] : ''} ${employee_pk ? employee_pk?.last_name[0] : ''
                                                 }`}
                                             size={12}
                                         />
-                                    )}
-
+                                    )} */}
+                                    <ImgPlaceholder
+                                        text={`${employee_pk ? employee_pk?.first_name[0] : ''}${employee_pk ? employee_pk?.last_name[0] : ''
+                                            }`}
+                                        size={12}
+                                    />
                                     <View style={styles.textContainer1}>
                                         <TextInput
                                             style={styles.Input}
