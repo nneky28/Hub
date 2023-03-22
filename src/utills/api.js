@@ -317,8 +317,6 @@ export const APIFunction = {
   },
   get_comments: async (id) => {
     let biz = await getStoredBusiness()
-    // https://coolowo.com/c/5fa2b5d8-be7b-4665-82fb-27a08b461529/tasks_app_comments/
-    https://coolowo.com/c/5fa2b5d8-be7b-4665-82fb-27a08b461529/tasks_app_comments/tasks_comment_order_by_date/?task_id=95
     return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
   },
 
@@ -592,8 +590,13 @@ export const useFetchActivities = (id) => {
   })
 }
 export const useFetchComments = (id) => {
-  return useQuery("get_comments", APIFunction.get_comments(id))
+  return useInfiniteQuery(["get_comments", id], () => APIFunction.get_comments(id), {
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.next
+    }
+  })
 }
+
 
 
 export const getAPIs = async (path) => {
