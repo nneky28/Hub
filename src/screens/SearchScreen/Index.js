@@ -153,7 +153,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
 
 
     return (
-        <View
+        <ScreenWrapper scrollEnabled={true}
             style={styles.wrapper}>
             {
                 loading || loadingTeam && <ActivityIndicator size={width(10)} color={AppColors.green} />
@@ -282,7 +282,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             </View>
 
 
-        </View>
+        </ScreenWrapper>
 
 
     )
