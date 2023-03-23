@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Image, Modal } from 'react-native'
+import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Image, Modal, SectionList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
 import { CloseHandler, Container, P, Rounded, H1, BackHandler, ImgPlaceholder, } from '../../utills/components';
@@ -31,6 +31,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
     const [deptPage, setDeptPage] = useState(1)
     const [departments, setDepartments] = useState([])
     const [searchDeptTerm, setSearchDeptTerm] = useState('')
+    const combinedState = [...teamItem, ...item]
 
 
     const {
@@ -39,6 +40,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         loading: loading,
         isFetchingNextPage: isFetchingNextPage
     } = useFetchEmployees(page, search)
+
 
     const {
         data: teamData,
@@ -82,27 +84,17 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             </Container>
         )
     }
-    const listEmptyState = () => {
-        return (
-            <View style={styles.emptyState}>
-                <P>
-                    There are no people in your company.
-                </P>
-                <P>
-                    Adding people will enable you assign tasks directly to people or department
-                </P>
-            </View>
-        )
-    }
+
+
 
     const __flattenArr = (param) => {
         let flattenedArr = []
-        if (param === "people" && data && data?.pages && Array.isArray(data?.pages)) {
-            flattenedArr = data?.pages
-        }
-        if (param === "team" && teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
-            flattenedArr = teamData?.pages
-        }
+        // if (param === "people" && data && data?.pages && Array.isArray(data?.pages)) {
+        //     flattenedArr = data?.pages
+        // }
+        // if (param === "team" && teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
+        //     flattenedArr = teamData?.pages
+        // }
         if (param === "departments" && departmentData && departmentData?.pages && Array.isArray(departmentData?.pages)) {
             flattenedArr = departmentData?.pages
         }
@@ -112,35 +104,96 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         })
         let arr = flattenArr.flat()
 
-        if (param === "people")
-            page > 1 ? setItem([...item, ...arr]) : setItem(arr)
+        // if (param === "people")
+        //     page > 1 ? setItem([...item, ...arr]) : setItem(arr)
 
-        if (param === "team")
-            teampage > 1 ? setTeamItem([...teamData, ...arr]) : setTeamItem(arr)
+        // if (param === "team")
+        //     teampage > 1 ? setTeamItem([...teamData, ...arr]) : setTeamItem(arr)
 
         if (param === "departments")
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
 
 
+    // const flattenAndMapData = (data, type) => {
+    //     let flattenedArr = [];
+    //     if (data && data.pages && Array.isArray(data.pages)) {
+    //         flattenedArr = data.pages;
+    //     }
+    //     flattenedArr = flattenedArr
+    //         .map((res) => {
+    //             if (!res) return {};
+    //             return res.results;
+    //         })
+    //         .map((item, i) => {
+    //             return {
+    //                 key: i,
+    //                 title: type,
+    //                 data: item.map((employee) => {
+    //                     return {
+    //                         id: employee.id,
+    //                         first_name: employee.first_name,
+    //                         last_name: employee.last_name,
+    //                         photo: employee.photo,
+    //                         job: employee.job.title
+    //                     };
+    //                 }),
+    //             };
+    //         });
+
+    //     if (type === "Others")
+    //         page > 1 ? [...data, ...flattenedArr] : flattenedArr;
+    //     return flattenedArr;
+    // };
+
+
+    const flattenAndMapData = (data, type, page = 1) => {
+        if (!data?.pages?.length) return [];
+
+        const flattenedArr = data.pages
+            .map((res) => res?.results ?? [])
+            .flat()
+            .map(({ id, first_name, last_name, photo, job }) => ({
+                id,
+                first_name,
+                last_name,
+                photo,
+                job: job?.title ?? "",
+            }));
+
+        const mappedData = {
+            key: 0,
+            title: type,
+            data: flattenedArr,
+        };
+
+        if (type === "Others" && page > 1) {
+            return [...data, mappedData];
+        }
+
+        return [mappedData];
+    };
+
+
+    useEffect(() => {
+        const formattedData = flattenAndMapData(data, 'Others');
+        setItem(formattedData);
+    }, [data]);
+
+    useEffect(() => {
+        const formattedData = flattenAndMapData(teamData, 'Team Members');
+        setTeamItem(formattedData);
+    }, [teamData]);
+
     const handleSearch = (item) => {
         setSearch(item)
         setPage(1)
     }
 
-    useEffect(() => {
-        __flattenArr('people')
-    }, [data])
-
-    useEffect(() => {
-        __flattenArr('team')
-    }, [teamData])
 
     useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
-
-
 
     useEffect(() => {
         setPage(1)
@@ -153,10 +206,10 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
 
 
     return (
-        <ScreenWrapper scrollEnabled={true}
+        <View
             style={styles.wrapper}>
             {
-                loading || loadingTeam && <ActivityIndicator size={width(10)} color={AppColors.green} />
+                loading && <ActivityIndicator size={width(10)} color={AppColors.green} />
             }
 
             <View style={styles.containerView}>
@@ -215,51 +268,34 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
 
                 {
                     tab === "Employees" ?
-                        <React.Fragment>
-                            <View style={styles.team} >
-                                <View style={styles.container}>
-                                    <H1 fontSize={3.3}>Team Members</H1>
-                                </View>
-                                <FlatList
-                                    data={teamItem}
-                                    keyExtractor={(item, index) => index.toString()}
+                        <View>
+                            {item && Array.isArray(item) && !loading && (
+                                <SectionList
+                                    sections={combinedState}
                                     renderItem={RenderItem}
-                                    ItemSeparatorComponent={() => <View style={styles.line} />}
-                                    showsVerticalScrollIndicator={false}
-                                    nestedScrollEnabled={true}
-                                    contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(5) }]}
-                                // ListEmptyComponent={listEmptyState}
+                                    contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(30) }]}
+                                    renderSectionHeader={({ section }) => {
+                                        return (
+                                            <View style={[styles.headingContainer]}>
+                                                <H1 numberOfLines={1} style={styles.container}>{section.title}</H1>
+                                            </View>
+                                        )
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    ListFooterComponent={
+                                        isFetchingNextPage || hasNextPage ? footerLoader : null
+                                    }
                                 />
-                            </View>
-
-                            <View style={styles.container}>
-                                <H1 fontSize={3.3}>People</H1>
-                            </View>
-                            <FlatList
-                                data={item}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={RenderItem}
-                                ItemSeparatorComponent={() => <View style={styles.line} />}
-                                showsVerticalScrollIndicator={false}
-                                nestedScrollEnabled={true}
-                                contentContainerStyle={[CommonStyles.marginTop_1, CommonStyles.marginLeft_5, { paddingBottom: height(100) }]}
-                                onEndReachedThreshold={0.1}
-                                onEndReached={loadMore}
-                                refreshing={false}
-                                ListFooterComponent={isFetchingNextPage || hasNextPage ? footerLoader : null}
-
-                            />
-                        </React.Fragment> :
-                        (<React.Fragment>
+                            )}
+                        </View> :
+                        <View>
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Your Team</H1>
-
                                 <DeptListComp item={myTeam?.department}
                                 // onPressHandle={() => navigation.navigate("profile", { item, departments })}
                                 />
-
                             </View>
-                            <View style={styles.container}>
+                            <View style={[CommonStyles.marginBottom_2, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Department</H1>
                             </View>
 
@@ -274,15 +310,11 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 onEndReachedThreshold={0.1}
 
                             />
-                        </React.Fragment>)
+                        </View>
                 }
 
-
-
             </View>
-
-
-        </ScreenWrapper>
+        </View>
 
 
     )

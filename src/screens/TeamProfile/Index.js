@@ -231,7 +231,7 @@ const Index = ({ route }) => {
 
 
     return (
-        <ScreenWrapper scrollEnabled={false} >
+        <ScreenWrapper >
             <View style={styles.header}>
                 <BackHandler position={'center'} />
                 {

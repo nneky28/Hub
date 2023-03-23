@@ -1,7 +1,7 @@
-import { View, Keyboard, Image, FlatList, TouchableOpacity, Platform, Text } from 'react-native'
+import { View, Keyboard, Image, FlatList, TouchableOpacity, Platform, Text, Animated } from 'react-native'
 import Modal from 'react-native-modal';
 import moment from 'moment';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './style'
 import { Container, P, CustomCalender, KeyboardAwareWrapper, CloseHandler, H1, GenerateIsoDates } from '../../utills/components'
 import AppColors from '../../utills/AppColors';
@@ -45,6 +45,13 @@ const Index = ({ visible, onHide, route }) => {
     const [disabled, setDisabled] = useState(false)
     const [scrollable, setScrollable] = useState(true)
     // const [coordinate, setCoordinate] = React.useState < CordType > ({})
+
+    const scrollY = useRef(new Animated.Value(0)).current;
+
+    const handleScroll = Animated.event(
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        { useNativeDriver: true },
+    );
 
     const [data, setData] = useState({
         title: item?.title ?? '',

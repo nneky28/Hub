@@ -19,8 +19,8 @@ import { showFlashMessage } from '../SuccessFlash/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
-import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
+
 
 
 
@@ -105,8 +105,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
                                 <TouchableWrapper
-                                    width={5}
-                                    style={CommonStyles.marginTop_1}
+                                    size={4}
                                     onPress={() => {
                                         if ( title === "Completed") {
                                        return setCompleted(true)
@@ -143,7 +142,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
 
             </View>
             <View style={styles.by}>
-                <P color={AppColors.black3}>
+                <P color={AppColors.black3} >
                     {
                         index === 1 ? 'To:' : 'By:'
                     }

@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: width(100),
-        paddingVertical: height(1),
-        paddingHorizontal: width(4.5),
-        // marginTop: height(1)
+        // paddingVertical: height(2),
+        paddingHorizontal: width(1.5),
+        marginTop: height(2)
     },
     btnText: {
         textDecorationLine: 'underline',
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     },
 
     team: {
-        height: height(30),
+        height: height(40),
         width: width(90),
-        // minHeight: height(20)
+        minHeight: height(20)
 
     },
     searchBoxContainer: {

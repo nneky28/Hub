@@ -6,7 +6,7 @@ import {
     FlatList
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { Container, P, Rounded, H1, ImgPlaceholder } from '../../utills/components'
+import { Container, P, Rounded, H1, ImgPlaceholder, TouchableWrapper } from '../../utills/components'
 import styles from './styles'
 import Button from '../Button/index';
 import AppColors, { ColorList } from '../../utills/AppColors';
@@ -142,9 +142,9 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
 
                 <View>
                     {
-                        title === "Completed" ? <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => setCompleted(true)}>
+                        title === "Completed" ? <TouchableWrapper size={4} onPress={() => setCompleted(true)}>
                             <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
-                        </TouchableOpacity> : title === "In Progress"
+                        </TouchableWrapper> : title === "In Progress"
                             ? <View style={styles.btn}>
                                 <TouchableOpacity
                                     onPress={() => onPressHandler('Completed')}

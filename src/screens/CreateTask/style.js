@@ -137,8 +137,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         backgroundColor: AppColors.white,
-        marginTop: height(2)
-        // paddingHorizontal: width(4),
+        marginTop: height(2),
 
     },
     buttonStyle: {

@@ -560,7 +560,7 @@ const Index = ({ navigation, route }) => {
                                     setActionTitle('To-Do');
                                     setTab('All');
                                 }}
-                                style={index == i ? styles.animatedView : styles.button}
+                                style={index === i ? styles.animatedView : styles.button}
                                 activeOpacity={0.8}
                                 key={i}>
                                 <Text

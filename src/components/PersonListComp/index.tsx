@@ -55,7 +55,7 @@ const PersonListComp: React.FC<PersonListCompProps> = ({
             {item.last_name ? Capitalize(item.last_name) : ''}
           </Text>
           <Text style={styles.subText}>
-            {item.job && item.job.title ? Capitalize(item.job.title) : ''}
+            {item.job && item.job ? Capitalize(item.job) : ''}
           </Text>
         </View>
       </View>
