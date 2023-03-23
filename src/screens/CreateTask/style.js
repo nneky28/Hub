@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     mainViewContainer: {
         backgroundColor: AppColors.white,
         paddingHorizontal: width(5),
-        marginTop: height(7),
         flex: 1,
         borderTopRightRadius: width(5),
         borderTopLeftRadius: width(5),
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(5),
-        height: height(15),
+        height: height(14),
         justifyContent: 'center',
         alignSelf: 'center',
         width: width(90)
@@ -112,31 +111,31 @@ const styles = StyleSheet.create({
     },
     attachIcon: {
         resizeMode: 'contain',
-        width: width(3),
-        height: height(3)
+        width: width(8),
+        height: height(8)
     },
     addSubtask: {
         marginTop: height(1.5),
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(2),
-        height: height(5.5),
+        height: height(5),
         justifyContent: 'center',
         alignSelf: 'center',
     },
     addBtn: {
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'space-between',
+
     },
     input: {
         marginTop: height(1)
     },
     btnContainer: {
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        flex: 1,
-        paddingVertical: height(9.5)
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     buttonStyle: {
         borderRadius: width(3),
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
         borderRadius: width(3),
         borderColor: AppColors.transparent,
         width: width(90),
-        marginTop: height(1.5),
+        // marginTop: height(1.5),
         paddingVertical: height(1.8)
     },
     buttonText: {

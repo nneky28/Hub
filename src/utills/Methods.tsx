@@ -1,13 +1,15 @@
 
-import React from "react"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
-import { useEffect } from 'react';
 import { showMessage } from 'react-native-flash-message';
-import { useDispatch } from 'react-redux';
-import { logout } from '../Redux/Actions/Auth';
 import { APIFunction, getAPIs } from "./api";
 
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import type { RootState,AppDispatch } from '../Redux';
+
+
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 export function debounce(func, wait, immediate) {
   var timeout;
@@ -24,7 +26,7 @@ export function debounce(func, wait, immediate) {
   };
 };
 
-export const ToastError = (msg) => {
+export const ToastError = (msg:string) => {
   showMessage({
     message: 'Error',
     description: msg,
@@ -32,7 +34,7 @@ export const ToastError = (msg) => {
   })
 };
 
-export const validateEmail = (value) => {
+export const validateEmail = (value:string) => {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) return true
   return false
 }

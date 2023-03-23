@@ -1,4 +1,4 @@
-import { ViewStyle,LayoutChangeEvent } from "react-native"
+
 import { DateData } from "react-native-calendars/src/types"
 
 
@@ -215,7 +215,7 @@ export type DateModeProps = "text-field" | "calendar"
      item : any,
      onPress : () => void
 }
-export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
+// export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
 
 export type UserPINComponentProps = {
   action : UserPINActionType,
@@ -231,4 +231,12 @@ export type UserPINComponentProps = {
   validatePIN : ((param : string) => void) | ((param : string) => Promise<void>),
   error : string
   setError : (param : string) => void
+}
+export type CordType = {
+  [key : string] : {
+      height? : number
+      width? : number
+      x? : number
+      y? : number
+  }
 }

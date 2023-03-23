@@ -131,10 +131,14 @@ const Index = ({ navigation, route }) => {
         return (
             <View style={styles.emptyState}>
                 <View>
-                    <P style={styles.emptyText}>{index === 2 ? (`${me?.department?.name} department`) : me?.first_name}</P>
+                    <P style={styles.emptyText}>{index === 2 ? (`${me?.department?.name} department`) : index === 0 && "You"}</P>
 
-                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab === 'All' ? 'To do.' : actionTitle === "To-Do" && tab ? (`task ${tab}`) :
-                        (index === 1 ? `sent task ${actionTitle} ` : `${actionTitle} Task.`)}</P>
+                    <P style={styles.emptyText}>
+                        {index === 0 && actionTitle === "To-Do" && tab === 'All' ? 'have no task in your To-Do.'
+                            : index === 0 && actionTitle === "To-Do" && tab === 'Upcoming' ? 'have no Upcoming task.'
+                                : index == 0 && actionTitle === "To-Do" && tab ? (` no task ${tab}`) : null}
+                        {index === 1 && tab ? `No sent task ${tab}` : index === 1 && `No sent task is ${actionTitle}`}
+                    </P>
                 </View>
             </View>
         );
@@ -525,7 +529,7 @@ const Index = ({ navigation, route }) => {
                     return (
                         <AddButton
                             style={styles.addButton}
-                            onPress={() => setVisible(true)}
+                            onPress={() => navigation.navigate("CreateTask", { setButtons })}
                         />
                     );
                 }}>
@@ -566,7 +570,6 @@ const Index = ({ navigation, route }) => {
                                 </Text>
                             </TouchableOpacity>
                         ))}
-                        {/* <AnimatedView marginLeft={margin} styles={[styles.animatedView]} /> */}
                     </View>
 
                     {index === 2 ? (
@@ -666,7 +669,7 @@ const Index = ({ navigation, route }) => {
                                     source={{ uri: item.image }}
                                     resizeMode='cover'
                                     imageStyle={{
-                                        borderRadius: width(3),
+                                        borderRadius: width(5),
                                         borderWidth: item.selected === actionTitle ? item.borderWidth : null,
                                         borderColor: item.selected === actionTitle ? item.borderColor : null,
                                     }}
@@ -828,13 +831,13 @@ const Index = ({ navigation, route }) => {
                 </ScrollView>
             </ScreenWrapper>
 
-            {visible && (
+            {/* {visible && (
                 <CreateTask
                     visible={visible}
                     onHide={() => setVisible(false)}
                     setButtons={setButtons}
                 />
-            )}
+            )} */}
         </React.Fragment>
     );
 };

@@ -82,12 +82,9 @@ const styles = StyleSheet.create({
     },
 
     animatedView: {
-        // position: 'absolute',
         width: width(28),
         backgroundColor: AppColors.white,
-        // height: height(4.4),
         borderRadius: width(15),
-        // zIndex: -1,
         paddingVertical: height(1.5),
         ...AppColors.smallShadow,
 
@@ -95,18 +92,19 @@ const styles = StyleSheet.create({
     currentTab: {
         backgroundColor: AppColors.white,
         borderRadius: width(8),
-        marginRight: width(5),
+        marginRight: width(2),
         height: height(3.5),
         ...AppColors.smallShadow,
         alignSelf: 'center',
-        paddingHorizontal: width(4),
+        paddingHorizontal: width(2),
         justifyContent: 'center',
         alignItems: 'center',
+
     },
 
     defaultTab: {
-        marginRight: width(5),
         alignSelf: "center",
+        paddingHorizontal: width(4),
     },
     selectedTab: {
         fontFamily: FontFamily.BlackSansBold,
@@ -273,7 +271,7 @@ const styles = StyleSheet.create({
         height: height(14),
         width: width(28)
     },
-    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1.1) },
+    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1) },
     count: {
         position: 'absolute',
         left: width(19),

@@ -617,7 +617,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
             </>
         }
         <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => { setShowForm(true), item }}>
+        <TouchableOpacity style={styles.textCon} onPress={() => navigation.navigate("CreateTask", { item })}>
           <P>Edit Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
@@ -628,11 +628,6 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
       </View>
 
       <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
-      <CreateTask
-        visible={showForm}
-        onHide={() => setShowForm(false)}
-        item={item}
-      />
     </Modal>
   );
 };

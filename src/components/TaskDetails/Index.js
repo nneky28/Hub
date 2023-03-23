@@ -36,6 +36,7 @@ import CreateTask from '../../screens/CreateTask/Index';
 
 
 const Index = ({ isVisible, onHide, item, title }) => {
+    const navigation = useNavigation()
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
     const [addBtn, setAddBtn] = useState(true)
@@ -70,7 +71,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
 
     const flattenAndMapData = (data) => {
-        console.log({ data })
         let flattenedArr = [];
         if (data && data.pages && Array.isArray(data.pages)) {
             flattenedArr = data.pages;
@@ -221,18 +221,12 @@ const Index = ({ isVisible, onHide, item, title }) => {
         getInfo()
     }, [])
 
-
-
     const formattedTitle = (title) => {
-        if (!title) {
-            return '';
-        }
-
+        if (!title) return '';
         const momentTitle = moment(title);
         const date = momentTitle.calendar().split(" at")[0];
         const dayOfWeek = momentTitle.format('dddd, ');
         const monthDay = momentTitle.format("MMMM Do");
-
         return (
             <Text>
                 {date}
@@ -300,20 +294,25 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                     title="Edit task"
                                     containerStyle={styles.buttonStyle}
                                     textStyle={styles.buttonText}
-                                    onPress={() => { setShowForm(true), item }}
+                                    onPress={() => navigation.navigate("CreateTask", { item })}
                                 />
                         }
                         <View style={styles.line} />
 
 
-                        <View style={styles.descriptionCon}>
-                            <H1 color={AppColors.black1}>Task Description</H1>
-                            <View style={styles.con}>
-                                <P style={styles.description}>
-                                    {item.description}
-                                </P>
-                            </View>
-                        </View>
+                        {
+                            !item?.description ? <View style={{ paddingVertical: height(2) }}>
+                                <H1 >No description for this Task</H1>
+                            </View> :
+                                <View style={styles.descriptionCon}>
+                                    <H1 color={AppColors.black1}>Task Description</H1>
+                                    <View style={styles.con}>
+                                        <P style={styles.description}>
+                                            {item.description}
+                                        </P>
+                                    </View>
+                                </View>
+                        }
                         <View
                             style={styles.container1}>
                             <View style={styles.assign}>
@@ -412,10 +411,12 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         ) : null}
 
                         <KeyboardAwareScrollView
+                            resetScrollToCoords={{ x: 0, y: 0 }}
+                            scrollEnabled={true}
                             extraScrollHeight={8}>
                             <View style={styles.listContainer1}>
                                 <View style={CommonStyles.rowJustifySpaceBtw}>
-                                    <View>
+                                    <View style={{ marginTop: height(2) }}>
                                         {employee_pk?.job?.photo ? (
                                             <Image
                                                 source={{ uri: employee_pk?.photo }}
@@ -445,11 +446,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                     </View>
                 }
             </ScreenWrapper>
-            <CreateTask
-                visible={showForm}
-                onHide={() => setShowForm(false)}
-                item={item}
-            />
+
         </Modal>
 
 

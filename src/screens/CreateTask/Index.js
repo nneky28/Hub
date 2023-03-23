@@ -17,12 +17,15 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useMutation, useQueryClient } from 'react-query';
 import { Images } from '../../component2/image/Image';
 import CommonStyles from '../../utills/CommonStyles';
-import { height } from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import { TextInput } from "react-native-paper"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useNavigation } from '@react-navigation/native';
+import { scrollToPosition } from '../../Redux/Actions/Config';
+import { CordType } from '../../utills/types';
+import ScreenWrapper from '../../components/ScreenWrapper';
 
 
 const Index = ({ visible, onHide, item, setButtons }) => {
@@ -39,6 +42,8 @@ const Index = ({ visible, onHide, item, setButtons }) => {
     const [showDiscard, setShowDiscard] = useState(false)
     const [assignTo, setAssignTo] = useState({})
     const [disabled, setDisabled] = useState(false)
+    const [scrollable, setScrollable] = useState(true)
+    // const [coordinate, setCoordinate] = React.useState < CordType > ({})
 
     const [data, setData] = useState({
         title: item?.title ?? '',
@@ -111,16 +116,15 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
-                onHide()
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
+                console.log("Post", create)
                 setDisabled(false)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
-                onHide()
                 if (assignTo?.type === "Employee" || assignTo?.type === "Departments") {
                     setButtons(1)
                 }
@@ -128,6 +132,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
+            console.log("err", err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -152,247 +157,231 @@ const Index = ({ visible, onHide, item, setButtons }) => {
 
 
     return (
-        <Modal
-            onBackButtonPress={onHide}
-            onModalHide={onHide}
-            onBackdropPress={() => {
-                if (data?.title || data?.description) {
-                    return setShowDiscard(true)
-                }
-                onHide()
-            }}
-            animationInTiming={500}
-            animationOutTiming={10}
-            backdropOpacity={0.8}
-            animationIn="fadeInUp"
-            animationOut="fadeInDown"
-            swipeThreshold={0.3}
-            backdropColor={AppColors.black}
-            isVisible={visible}
-            style={{ justifyContent: 'center', margin: 0, }}>
-
-            {
-                showDiscard ? <View style={styles.btnContainer}>
-                    <Button
-                        title="Discard"
-                        containerStyle={styles.buttonStyle}
-                        textStyle={styles.buttonText}
-                        onPress={() => onHide()}
-                    />
-                    <Button
-                        title="Continue Editing"
-                        containerStyle={styles.buttonStyle1}
-                        textStyle={styles.buttonText1}
-                        onPress={pressHandler}
-                    />
-                </View> :
-                    <View style={styles.mainViewContainer}>
-                        <View style={styles.formRow}>
-                            {
-                                item ? <H1 marginTop={2}>Edit Task</H1> :
-                                    <H1 marginTop={2}>Create New Task</H1>
-                            }
-                            <CloseHandler position={'center'} onPress={() => {
-                                if (data?.title || data?.description) {
-                                    return setShowDiscard(true)
-                                }
-                                onHide()
-                            }} />
-                        </View>
-                        <View style={styles.line} />
-                        <KeyboardAwareWrapper
-                            showsVerticalScrollIndicator={false}
-                            style={{ marginBottom: height(10) }}
-                            behavior={Platform.OS === "ios" ? "padding" : "height"} >
-                            <Formik
-                                initialValues={{
-                                    due_Date: '',
-                                    title: '',
-                                    description: '',
-                                }}
-                                validationSchema={validationSchema}
-                                onSubmit={showFlashMessage}
-                            >
-                                {({ submitHandler }) => (
-                                    <>
-                                        <Field
-                                            component={CustomInput}
-                                            name="title"
-                                            placeholder="Enter Task Title"
-                                            keyboardType={'default'}
-                                            inputMarginTop={3}
-                                            autoFocus={true}
-                                            value={data.title}
-                                            onChangeData={(value) => {
-                                                setData({ ...data, title: value })
-                                            }}
-
-                                        />
-
-                                        <Field
-                                            name="description"
-                                            component={CustomInput}
-                                            placeholder="Enter Task description here"
-                                            keyboardType={'default'}
-                                            multiline={true}
-                                            minHeight={6}
-                                            value={data.description}
-                                            onChangeData={(value) => {
-                                                setData({ ...data, description: value })
-                                            }}
-                                        />
-                                    </>
-                                )}
-                            </Formik>
-                            <View
-                                style={styles.container}>
-                                <View style={styles.assign}>
-                                    <P color={AppColors.black3}>Assign To</P>
-                                    <TouchableOpacity
-                                        onPress={() => setOpen(true)}
-                                        style={styles.button}>
-                                        {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
-                                        <P style={styles.btnIcon}>
-                                            {
-                                                !assignTo?.name ? "You" : Capitalize(assignTo?.name)
-                                            }
-                                        </P>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.dueDate}>
-                                    <P color={AppColors.black3}>Due Date</P>
-                                    <View style={CommonStyles.row}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                Keyboard.dismiss()
-                                                setShow(true)
-                                            }}
-                                            style={styles.button1}>
-                                            <Text numberOfLines={1} style={styles.date}>
-                                                {data?.due_date === "No Date" ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("ddd D, MMM YYYY")}
-                                            </Text>
-                                        </TouchableOpacity>
-
-                                        <TouchableOpacity onPress={() => setData({ ...data, due_date: "No Date" })}>
-                                            <Ionicons name='close-outline' size={18} color={AppColors.black1} style={styles.close} />
-                                        </TouchableOpacity>
-                                    </View>
-
-                                </View>
-                            </View>
-                            {
-                                subTask &&
-                                <Formik>
-                                    {({ submitHandler }) => (
-
-                                        <FlatList
-                                            data={subTask}
-                                            keyExtractor={(item, index) => index.toString()}
-                                            renderItem={({ item, index }) =>
-                                                <View style={styles.subRow}>
-                                                    <Image
-                                                        resizeMode={'contain'}
-                                                        source={{ uri: Images.subTaskIcon }}
-                                                        style={styles.downIcon2} />
-
-                                                    <Field
-                                                        component={CustomInput}
-                                                        name={item}
-                                                        placeholder="Add subtasks"
-                                                        keyboardType={'default'}
-                                                        multiline={true}
-                                                        minHeight={5}
-                                                        autoFocus={true}
-                                                        value={subData?.[item]}
-                                                        onChangeData={(value) => {
-                                                            setSubdata({ ...subData, [item]: value })
-                                                        }}
-                                                        right={<TextInput.Icon name={"close"}
-                                                            style={[CommonStyles.marginTop_1, CommonStyles.marginRight_8]}
-                                                            color={AppColors.darkGray}
-                                                            onPress={() => handleDelete(index)}
-                                                        />}
-                                                    />
-                                                </View>
-
-                                            }
-                                            showsVerticalScrollIndicator={false}
-                                            showsHorizontalScrollIndicator={false}
-                                        />
-
-                                    )}
-                                </Formik>
-                            }
-                            <Container style={styles.addSubtask}>
-                                <TouchableOpacity
-                                    onPress={_subTask}
-                                    style={styles.addBtn}>
-                                    <Ionicons name='add' size={15} color={AppColors.green} />
-                                    <P color={AppColors.green}>Add subtask</P>
-                                </TouchableOpacity>
-                            </Container>
-                            <Button
-                                // title="Create Task"
-                                title={item ? "Save" : "Create Task"}
-                                containerStyle={styles.buttonStyle1}
-                                textStyle={styles.buttonText1}
+        <ScreenWrapper
+            footerUnScrollable={() => {
+                return (
+                    <View style={styles.btnContainer}>
+                        <TouchableOpacity
+                            onPress={_subTask}
+                            style={styles.addBtn}>
+                            <Ionicons name='add' size={15} color={AppColors.green} />
+                            <P color={AppColors.green}>Add subtask</P>
+                        </TouchableOpacity>
+                        <View>
+                            <TouchableOpacity
                                 onPress={submitHandler}
-                                disabled={isLoading || isLoadingEdit}
-                            />
-                        </KeyboardAwareWrapper>
-
+                                disabled={isLoading || isLoadingEdit} >
+                                <Image source={{ uri: Images.NewBtn }} style={styles.attachIcon} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-
-            }
-
-            {
-                open ?
-                    <CustomList
-                        setOpen={setOpen}
-                        open={open}
-                        onPressHandler={(item) => {
-                            if (item.type === "Departments") {
-                                setAssignTo({ ...item, name: `${item.name ? Capitalize(item.name) : null}` })
-                                return setOpen(false)
-                            }
-                            if (item.type === "Employee") {
-                                setAssignTo({ ...item, name: `${item.first_name ? Capitalize(item.first_name) : ""} ${item.last_name ? Capitalize(item.last_name) : ''}` })
-                                return setOpen(false)
-                            }
-                            if (item.type === "Me") {
-                                setAssignTo({ name: item.name })
-                                return setOpen(false)
-                            }
+                );
+            }}
+            scrollEnabled={false}>
+            <View style={styles.mainViewContainer}>
+                <View style={styles.formRow}>
+                    {
+                        item ? <H1 marginTop={2}>Edit Task</H1> :
+                            <H1 marginTop={2}>Create New Task</H1>
+                    }
+                    <CloseHandler position={'center'} onPress={() => navigation.navigate("Task")} />
+                </View>
+                <View style={styles.line} />
+                <KeyboardAwareWrapper
+                    showsVerticalScrollIndicator={false} >
+                    <Formik
+                        initialValues={{
+                            due_Date: '',
+                            title: '',
+                            description: '',
                         }}
+                        validationSchema={validationSchema}
+                        onSubmit={showFlashMessage}
+                    >
+                        {({ submitHandler }) => (
+                            <>
+                                <Field
+                                    component={CustomInput}
+                                    name="title"
+                                    placeholder="Enter Task Title"
+                                    keyboardType={'default'}
+                                    inputMarginTop={1}
+                                    autoFocus={true}
+                                    value={data.title}
+                                    onChangeData={(value) => {
+                                        setData({ ...data, title: value })
+                                    }}
+
+                                />
+                                <Field
+                                    name="description"
+                                    component={CustomInput}
+                                    placeholder="Enter Task description here"
+                                    keyboardType={'default'}
+                                    multiline={true}
+                                    minHeight={5}
+                                    value={data.description}
+                                    onChangeData={(value) => {
+                                        setData({ ...data, description: value })
+                                    }}
+                                />
+                            </>
+                        )}
+                    </Formik>
+                    <View
+                        style={styles.container}>
+                        <View style={styles.assign}>
+                            <P color={AppColors.black3}>Assign To</P>
+                            <TouchableOpacity
+                                onPress={() => setOpen(true)}
+                                style={styles.button}>
+                                {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
+                                <P style={styles.btnIcon}>
+                                    {
+                                        !assignTo?.name ? "You" : Capitalize(assignTo?.name)
+                                    }
+                                </P>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.dueDate}>
+                            <P color={AppColors.black3}>Due Date</P>
+                            <View style={CommonStyles.row}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Keyboard.dismiss()
+                                        setShow(true)
+                                    }}
+                                    style={styles.button1}>
+                                    <Text numberOfLines={1} style={styles.date}>
+                                        {data?.due_date === "No Date" ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : moment(data?.due_date).format("ddd D, MMM YYYY")}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() => setData({ ...data, due_date: "No Date" })}>
+                                    <Ionicons name='close-outline' size={18} color={AppColors.black1} style={styles.close} />
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </View>
+                    {
+                        subTask &&
+                        <Formik>
+                            {({ submitHandler }) => (
+
+                                <FlatList
+                                    data={subTask}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    renderItem={({ item, index }) =>
+                                        <View>
+                                            <Field
+                                                component={CustomInput}
+                                                name={item}
+                                                placeholder="Add subtasks"
+                                                keyboardType={'default'}
+                                                multiline={true}
+                                                mode={'flat'}
+                                                autoFocus={true}
+                                                value={subData?.[item]}
+                                                onChangeData={(value) => {
+                                                    setSubdata({ ...subData, [item]: value })
+                                                }}
+                                                right={<TextInput.Icon name={"close"}
+                                                    style={[CommonStyles.marginTop_1, CommonStyles.marginRight_8]}
+                                                    color={AppColors.darkGray}
+                                                    onPress={() => handleDelete(index)}
+                                                />}
+                                            />
+                                        </View>
+
+                                    }
+                                    showsVerticalScrollIndicator={false}
+                                    showsHorizontalScrollIndicator={false}
+                                />
+
+                            )}
+                        </Formik>
+                    }
+
+                </KeyboardAwareWrapper>
+                {
+                    open ?
+                        <CustomList
+                            setOpen={setOpen}
+                            open={open}
+                            onPressHandler={(item) => {
+                                if (item.type === "Departments") {
+                                    setAssignTo({ ...item, name: `${item.name ? Capitalize(item.name) : null}` })
+                                    return setOpen(false)
+                                }
+                                if (item.type === "Employee") {
+                                    setAssignTo({ ...item, name: `${item.first_name ? Capitalize(item.first_name) : ""} ${item.last_name ? Capitalize(item.last_name) : ''}` })
+                                    return setOpen(false)
+                                }
+                                if (item.type === "Me") {
+                                    setAssignTo({ name: item.name })
+                                    return setOpen(false)
+                                }
+                            }}
+                        />
+                        : null
+                }
+                {
+                    show ? <CustomCalender
+                        date={data.due_date ? data.due_date : ''}
+                        setShow={(date) => {
+                            setData({ ...data, due_date: date.dateString })
+                            setShow(false)
+                        }}
+                        show={show}
+                        enabled
                     />
-                    : null
-            }
-            {
-                show ? <CustomCalender
-                    date={data.due_date ? data.due_date : ''}
-                    setShow={(date) => {
-                        setData({ ...data, due_date: date.dateString })
-                        setShow(false)
-                    }}
-                    show={show}
-                    enabled
-                />
-                    : null
-            }
+                        : null
+                }
+
+            </View>
+        </ScreenWrapper>
+    )
+}
+
+{/* <Button
+   title={item ? "Save" : "Create Task"}
+          containerStyle={styles.buttonStyle1}
+     textStyle={styles.buttonText1}
+        onPress={submitHandler}
+       disabled={isLoading || isLoadingEdit}
+       /> */}
+// <Modal
+//     onBackButtonPress={onHide}
+//     onModalHide={onHide}
+//     onBackdropPress={() => {
+//         if (data?.title || data?.description) {
+//             return setShowDiscard(true)
+//         }
+//         onHide()
+//     }}
+//     animationInTiming={500}
+//     animationOutTiming={10}
+//     backdropOpacity={0.8}
+//     animationIn="fadeInUp"
+//     animationOut="fadeInDown"
+//     swipeThreshold={0.3}
+//     backdropColor={AppColors.black}
+//     isVisible={visible}
+//     style={{ justifyContent: 'center', margin: 0, }}>
 
 
-            {/* {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") :
+
+{/* {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") :
   data?.due_date === 'No Date' ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : 
   moment(data?.due_date).format("dddd D, MMM YYYY")  } */}
-            {/* {!item?.assigned_to && !assignTo?.name ? "You" : 
+{/* {!item?.assigned_to && !assignTo?.name ? "You" : 
      item?.assigned_to ? item?.assigned_to?.first_name :
       assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"} */}
 
-        </Modal >
 
 
-    )
-}
+
 
 export default Index
 

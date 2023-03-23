@@ -160,7 +160,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
             {
                 title === "Completed" ? null :
                     <View style={styles.row1}>
-                        {dueToday ? <React.Fragment>
+                        {dueToday ? <React.Fragment>            
                             <Image source={{ uri: Images.DueFlag }} style={styles.flag} />
                             <P style={styles.flagText}>DueToday</P>
                         </React.Fragment> : overDue ? <React.Fragment>

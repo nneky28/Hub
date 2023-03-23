@@ -93,9 +93,7 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
         </View>
         <View style={styles.line} />
         <View style={styles.row}>
-
           <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
-
         </View>
       </View>
     </Modal>

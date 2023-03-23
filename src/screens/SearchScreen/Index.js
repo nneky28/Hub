@@ -162,7 +162,9 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             <View style={styles.containerView}>
                 <View style={styles.header}>
                     <CloseHandler onPress={() => navigation.goBack()} />
-                    <P style={CommonStyles.marginRight_8}>Done</P>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <P style={CommonStyles.marginRight_8}>Done</P>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.twoButtonCont}>

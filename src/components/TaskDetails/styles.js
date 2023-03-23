@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingBottom: height(5)
     },
     mainContainer: {
         flex: 1,
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
 
     textContainer1: {
         justifyContent: 'space-between',
-        height: height(4),
+        // height: height(4),
         marginLeft: width(2),
     },
     textCon: {
@@ -204,20 +205,19 @@ const styles = StyleSheet.create({
         marginLeft: width(4),
         paddingVertical: height(1),
         flexDirection: 'row',
-        alignItems: 'center',
     },
 
     rowSection: {
         justifyContent: 'space-between',
         marginLeft: width(4),
-        // paddingVertical: height(1),
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: height(1)
+        marginTop: height(1),
+
     },
     Input: {
-        width: width(80),
-        backgroundColor: AppColors.transparent
+        width: width(70),
+        backgroundColor: AppColors.transparent,
     },
     avatarStyle: {
         height: height(5),

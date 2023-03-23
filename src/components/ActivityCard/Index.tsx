@@ -3,6 +3,7 @@ import React, {FC} from 'react';
 import CommonStyles from '../../utills/CommonStyles';
 import {P, ImgPlaceholder} from '../../utills/components';
 import styles from './styles';
+import { height } from 'react-native-dimension';
 
 
 
@@ -31,12 +32,15 @@ const Index: FC<Props> = ({ item }) => {
               style={styles.avatarStyle}
             />
           ) : (
-            <ImgPlaceholder
+              <View style={{ marginTop: height(1) }}>
+                <ImgPlaceholder
               text={`${item.logged_by ? item.logged_by?.first_name[0] : ''} ${
                 item.logged_by ? item.logged_by?.last_name[0] : ''
               }`}
               size={10}
             />
+              </View>
+         
           )}
 
           <View style={styles.textContainer1}>

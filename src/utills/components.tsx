@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid, SafeAreaView, FlatList, KeyboardAvoidingView } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
 import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
 import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus, useFetchLocationType } from './api';
-import { setBottomTabBarVisible, setLoaderVisible } from '../Redux/Actions/Config';
+import { setLoaderVisible } from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
@@ -35,12 +35,15 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
+import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SearchBox from '../components/SearchBox';
 import Button from '../components/Button';
 import styles from "./styles"
 import CustomInput from '../components/CustomInput';
+import { useAppSelector } from './Methods';
+import { scrollToPosition } from '../Redux/Actions/Config';
+import { CordType } from './types';
 
 
 const winDimensions = Dimensions.get("window")
@@ -1292,25 +1295,46 @@ export const ClockINContainer = () => {
   )
 }
 
-export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => {
+interface KeyboardAwareWrapperProps {
+  children : React.ReactNode
+  scrollable? : boolean
+  style? : ViewStyle
+}
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-      dispatch(setBottomTabBarVisible(false))
-      return () => dispatch(setBottomTabBarVisible(true))
-  }, []);
+export const KeyboardAwareWrapper = ({children,scrollable,style} : KeyboardAwareWrapperProps) => {
+  const ref = useRef<KeyboardAwareScrollView>(null)
+  const position : CordType = useAppSelector(state=>state.Config.scrollPosition)
+  const dispatch = useDispatch()
+  useEffect(()=>{
+      if(scrollable && ref?.current?.scrollToPosition){
+        ref?.current?.scrollToPosition(0,position?.[0]?.y || 0,true)
+      }
+  },[position])
 
+  useEffect(()=>{
+      return () => {
+          dispatch(scrollToPosition({
+              [0] : {
+                  y : 0,
+                  x : 0
+              }
+          }))
+      }
+  },[])
   return(
       <KeyboardAwareScrollView 
         enableResetScrollToCoords={false}
         keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        ref={ref}
+        style={style}
       >
         {children}
       </KeyboardAwareScrollView>
   )
 }
+
 // generating dates in iso 
 
 // for length of the number structure
