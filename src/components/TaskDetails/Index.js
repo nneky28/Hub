@@ -36,7 +36,7 @@ import CreateTask from '../../screens/CreateTask/Index';
 
 
 const Index = ({ isVisible, onHide, item, title }) => {
-    const navigation = useNavigation()
+    const navigation = useNavigation();
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
     const [addBtn, setAddBtn] = useState(true)
@@ -294,7 +294,10 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                     title="Edit task"
                                     containerStyle={styles.buttonStyle}
                                     textStyle={styles.buttonText}
-                                    onPress={() => navigation.navigate("CreateTask", { item })}
+                                    onPress={() => {
+                                        onHide()
+                                        navigation.navigate("CreateTask", { item })
+                                    }}
                                 />
                         }
                         <View style={styles.line} />

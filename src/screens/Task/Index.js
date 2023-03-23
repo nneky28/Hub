@@ -51,10 +51,12 @@ import { __flatten, getData, getStoredBusiness } from '../../utills/Methods';
 import CreateTask from '../CreateTask/Index';
 import AnimatedView from '../../components/AnimatedView';
 import { useQueryClient } from 'react-query';
+import { setCurrentTabIndex } from '../../Redux/Actions/Config';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 
 const Index = ({ navigation, route }) => {
-    const [index, setIndex] = useState(0);
     const [employee_pk, setEmployeePK] = useState(null);
     const [business, setBusiness] = useState(null);
     const [tab, setTab] = useState('All');
@@ -89,13 +91,12 @@ const Index = ({ navigation, route }) => {
     const queryClient = useQueryClient();
     const [tasks, setTasks] = useState([]);
     const [teamTask, setTeamTask] = useState([]);
-    const [me, setMe] = useState(null)
+    const [aboutMe, setAboutMe] = useState(null)
+    const index = useSelector(state => state.Config.currentTaskTabIndex)
+    const dispatch = useDispatch()
 
     const setButtons = (i) => {
-        setIndex(i);
-        var margin = i * 30;
-        if (margin == 0) margin = 0.1;
-        setMargin(width(margin));
+        dispatch(setCurrentTabIndex(i));
     };
 
     const AddButton = ({ onPress, style }) => (
@@ -131,13 +132,14 @@ const Index = ({ navigation, route }) => {
         return (
             <View style={styles.emptyState}>
                 <View>
-                    <P style={styles.emptyText}>{index === 2 ? (`${me?.department?.name} department`) : index === 0 && "You"}</P>
+                    <P style={styles.emptyText}>{index === 2 ? (`${aboutMe?.department?.name} department`) : index === 0 && "You"}</P>
 
                     <P style={styles.emptyText}>
                         {index === 0 && actionTitle === "To-Do" && tab === 'All' ? 'have no task in your To-Do.'
                             : index === 0 && actionTitle === "To-Do" && tab === 'Upcoming' ? 'have no Upcoming task.'
                                 : index == 0 && actionTitle === "To-Do" && tab ? (` no task ${tab}`) : null}
                         {index === 1 && tab ? `No sent task ${tab}` : index === 1 && `No sent task is ${actionTitle}`}
+                        {index === 2 && actionTitle === "To-Do" && tab === "All" ? "no task To-Do" : index === 2 && actionTitle === "To-Do" && tab ? `has no task ${tab}` : index === 2 && `no task ${actionTitle}`}
                     </P>
                 </View>
             </View>
@@ -512,7 +514,7 @@ const Index = ({ navigation, route }) => {
         try {
             let about_me = await getData('about_me');
             setEmployeePK(about_me?.department?.id);
-            setMe(about_me)
+            setAboutMe(about_me)
         } catch (err) { }
     };
 
@@ -529,7 +531,7 @@ const Index = ({ navigation, route }) => {
                     return (
                         <AddButton
                             style={styles.addButton}
-                            onPress={() => navigation.navigate("CreateTask", { setButtons })}
+                            onPress={() => navigation.navigate("CreateTask")}
                         />
                     );
                 }}>

@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         width: width(90),
         height: 1,
         backgroundColor: AppColors.blackgray,
-        // elevation: 0,
+        marginTop: height(1)
     },
 
     button: {
@@ -136,6 +136,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        backgroundColor: AppColors.white,
+        marginTop: height(2)
+        // paddingHorizontal: width(4),
+
     },
     buttonStyle: {
         borderRadius: width(3),

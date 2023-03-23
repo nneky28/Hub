@@ -150,7 +150,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
     useEffect(() => {
         aboutMe()
     }, [tab])
-    // console.log('dept', departments)
+
 
     return (
         <View

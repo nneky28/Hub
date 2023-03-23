@@ -26,9 +26,12 @@ import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
 import TaskDetails from '../TaskDetails/Index'
 import CreateTask from '../../screens/CreateTask/Index'
+import { useNavigation } from '@react-navigation/native';
 
 
 const ContactModal = ({ isVisible, onHide, data }) => {
+
+
   let address = ""
   if (data?.address) {
     address = data?.address?.address1 || ""
@@ -566,8 +569,10 @@ const FilterModal = ({ isVisible, onHide, onPressHandle }) => {
   );
 };
 const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler, title }) => {
+
   const [showDetails, setShowDetails] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const navigation = useNavigation();
 
   const Loader = () => {
     if (loading)
@@ -617,7 +622,10 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
             </>
         }
         <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => navigation.navigate("CreateTask", { item })}>
+        <TouchableOpacity style={styles.textCon} onPress={() => {
+          onHide()
+          navigation.navigate("CreateTask", { item })
+        }}>
           <P>Edit Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
@@ -636,6 +644,7 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
   const [showForm, setShowForm] = useState(false)
   const [employee, setEmployee] = useState({})
   const [showDetails, setShowDetails] = useState(false)
+  const navigation = useNavigation();
 
   const getUser = async () => {
     let user = await getData("about_me")
@@ -676,7 +685,10 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
             <P>View Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity onPress={() => { setShowForm(true), item, onHide() }}
+          <TouchableOpacity onPress={() => {
+            onHide()
+            navigation.navigate("CreateTask", { item, })
+          }}
             style={styles.textCon}>
             <P>Edit Task</P>
           </TouchableOpacity>
@@ -689,11 +701,11 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
         </React.Fragment>
       </View>
 
-      <CreateTask
+      {/* <CreateTask
         visible={showForm}
         onHide={() => setShowForm(false)}
         item={item}
-      />
+      /> */}
       <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
     </Modal>
   );

@@ -47,7 +47,6 @@ const Index = ({ route }) => {
     const [teamData, setTeamData] = useState([]);
     const [teamPage, setTeamPage] = useState(1);
 
-    // console.log("coming", departments)
 
     const {
         data: counts

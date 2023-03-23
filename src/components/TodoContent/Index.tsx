@@ -76,7 +76,6 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
             }
 
         } catch (error) {
-            //console.log('err', error)
         }
     }
 
@@ -88,7 +87,6 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
             setModal(false)
             setSent(false)
         } catch (error) {
-            //console.log('err', error)
         }
 
     }

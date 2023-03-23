@@ -21,14 +21,15 @@ import { height, width } from 'react-native-dimension';
 import { TextInput } from "react-native-paper"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
-import { setLoaderVisible } from '../../Redux/Actions/Config';
+import { setCurrentTabIndex, setLoaderVisible } from '../../Redux/Actions/Config';
 import { useNavigation } from '@react-navigation/native';
 import { scrollToPosition } from '../../Redux/Actions/Config';
 import { CordType } from '../../utills/types';
 import ScreenWrapper from '../../components/ScreenWrapper';
 
 
-const Index = ({ visible, onHide, item, setButtons }) => {
+const Index = ({ visible, onHide, route }) => {
+    const { item } = route?.params || {}
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -107,7 +108,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
             if (assignTo?.type === "Departments") delete fd["assigned_to"]
             if (data?.due_date === "No Date" || item) delete fd["due_date"]
             if (item) delete fd["status"]
-
+            console.log("FD", fd)
 
             if (item) {
                 fd["id"] = item?.id;
@@ -120,19 +121,19 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
-                console.log("Post", create)
+                console.log("FDRes", res)
                 setDisabled(false)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
                 if (assignTo?.type === "Employee" || assignTo?.type === "Departments") {
-                    setButtons(1)
+                    dispatch(setCurrentTabIndex(1));
                 }
                 navigation.navigate("Task")
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
-            console.log("err", err)
+            console.log("Error", err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
@@ -158,25 +159,6 @@ const Index = ({ visible, onHide, item, setButtons }) => {
 
     return (
         <ScreenWrapper
-            footerUnScrollable={() => {
-                return (
-                    <View style={styles.btnContainer}>
-                        <TouchableOpacity
-                            onPress={_subTask}
-                            style={styles.addBtn}>
-                            <Ionicons name='add' size={15} color={AppColors.green} />
-                            <P color={AppColors.green}>Add subtask</P>
-                        </TouchableOpacity>
-                        <View>
-                            <TouchableOpacity
-                                onPress={submitHandler}
-                                disabled={isLoading || isLoadingEdit} >
-                                <Image source={{ uri: Images.NewBtn }} style={styles.attachIcon} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                );
-            }}
             scrollEnabled={false}>
             <View style={styles.mainViewContainer}>
                 <View style={styles.formRow}>
@@ -205,7 +187,6 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                                     name="title"
                                     placeholder="Enter Task Title"
                                     keyboardType={'default'}
-                                    inputMarginTop={1}
                                     autoFocus={true}
                                     value={data.title}
                                     onChangeData={(value) => {
@@ -303,6 +284,29 @@ const Index = ({ visible, onHide, item, setButtons }) => {
                         </Formik>
                     }
 
+                    <View
+                        style={styles.btnContainer}>
+
+                        <TouchableOpacity
+                            onPress={_subTask}
+                            style={styles.addBtn}>
+                            <Ionicons name='add' size={15} color={AppColors.green} />
+                            <H1 color={AppColors.green}>Add subtask</H1>
+                        </TouchableOpacity>
+
+
+                        <View>
+                            <TouchableOpacity
+                                onPress={submitHandler}
+                                disabled={isLoading || isLoadingEdit} >
+                                {/* <Image source={{ uri: Images.NewBtn }} style={styles.attachIcon} /> */}
+                                <H1 color={AppColors.green}>{item ? "Save" : "Create"}</H1>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+
+
                 </KeyboardAwareWrapper>
                 {
                     open ?
@@ -344,13 +348,7 @@ const Index = ({ visible, onHide, item, setButtons }) => {
     )
 }
 
-{/* <Button
-   title={item ? "Save" : "Create Task"}
-          containerStyle={styles.buttonStyle1}
-     textStyle={styles.buttonText1}
-        onPress={submitHandler}
-       disabled={isLoading || isLoadingEdit}
-       /> */}
+
 // <Modal
 //     onBackButtonPress={onHide}
 //     onModalHide={onHide}
