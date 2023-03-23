@@ -22,8 +22,8 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
     const [item, setItem] = useState([])
     const [teamItem, setTeamItem] = useState([])
     const [page, setPage] = useState(1)
+    const [teamPage, setTeamPage] = useState(1)
     const [search, setSearch] = useState('')
-    const [teampage, setTeamPage] = useState(1)
     const [id, setId] = useState(false)
     const [tab, setTab] = useState('Employees');
     const [employeeList, setEmployeeList] = useState(false)
@@ -41,16 +41,16 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         isFetchingNextPage: isFetchingNextPage
     } = useFetchEmployees(page, search)
 
-
     const {
         data: teamData,
         loading: loadingTeam,
-    } = useFetchTeams(page, id)
+    } = useFetchTeams(teamPage, id)
     const {
         data: departmentData,
         isFetching: fetchingDepartments,
         isFetchingNextPage: fetchingNextDepartments,
     } = useFetchDepartments(deptPage, searchDeptTerm)
+
 
     const RenderItem = ({ item }) => {
         return (
@@ -85,16 +85,8 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
         )
     }
 
-
-
     const __flattenArr = (param) => {
         let flattenedArr = []
-        // if (param === "people" && data && data?.pages && Array.isArray(data?.pages)) {
-        //     flattenedArr = data?.pages
-        // }
-        // if (param === "team" && teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
-        //     flattenedArr = teamData?.pages
-        // }
         if (param === "departments" && departmentData && departmentData?.pages && Array.isArray(departmentData?.pages)) {
             flattenedArr = departmentData?.pages
         }
@@ -103,77 +95,41 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             return res.results
         })
         let arr = flattenArr.flat()
-
-        // if (param === "people")
-        //     page > 1 ? setItem([...item, ...arr]) : setItem(arr)
-
-        // if (param === "team")
-        //     teampage > 1 ? setTeamItem([...teamData, ...arr]) : setTeamItem(arr)
-
         if (param === "departments")
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
 
 
-    // const flattenAndMapData = (data, type) => {
-    //     let flattenedArr = [];
-    //     if (data && data.pages && Array.isArray(data.pages)) {
-    //         flattenedArr = data.pages;
-    //     }
-    //     flattenedArr = flattenedArr
-    //         .map((res) => {
-    //             if (!res) return {};
-    //             return res.results;
-    //         })
-    //         .map((item, i) => {
-    //             return {
-    //                 key: i,
-    //                 title: type,
-    //                 data: item.map((employee) => {
-    //                     return {
-    //                         id: employee.id,
-    //                         first_name: employee.first_name,
-    //                         last_name: employee.last_name,
-    //                         photo: employee.photo,
-    //                         job: employee.job.title
-    //                     };
-    //                 }),
-    //             };
-    //         });
-
-    //     if (type === "Others")
-    //         page > 1 ? [...data, ...flattenedArr] : flattenedArr;
-    //     return flattenedArr;
-    // };
-
-
-    const flattenAndMapData = (data, type, page = 1) => {
-        if (!data?.pages?.length) return [];
-
-        const flattenedArr = data.pages
-            .map((res) => res?.results ?? [])
-            .flat()
-            .map(({ id, first_name, last_name, photo, job }) => ({
-                id,
-                first_name,
-                last_name,
-                photo,
-                job: job?.title ?? "",
-            }));
-
-        const mappedData = {
-            key: 0,
-            title: type,
-            data: flattenedArr,
-        };
-
-        if (type === "Others" && page > 1) {
-            return [...data, mappedData];
+    const flattenAndMapData = (data, type) => {
+        let flattenedArr = [];
+        if (data && data.pages && Array.isArray(data.pages)) {
+            flattenedArr = data.pages;
         }
+        flattenedArr = flattenedArr
+            .map((res) => {
+                if (!res) return {};
+                return res.results;
+            })
+            .map((item, i) => {
+                return {
+                    key: i,
+                    title: type,
+                    data: item.map((employee) => {
+                        return {
+                            id: employee.id,
+                            first_name: employee.first_name,
+                            last_name: employee.last_name,
+                            photo: employee.photo,
+                            job: employee.job.title
+                        };
+                    }),
+                };
+            });
 
-        return [mappedData];
+        if (type === "Others")
+            page > 1 ? setItem([...item, ...flattenedArr]) : setItem(flattenedArr)
+        return flattenedArr;
     };
-
 
     useEffect(() => {
         const formattedData = flattenAndMapData(data, 'Others');
