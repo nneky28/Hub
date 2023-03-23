@@ -35,7 +35,7 @@ const Index: FC<Props> = ({ item }) => {
               text={`${item.logged_by ? item.logged_by?.first_name[0] : ''} ${
                 item.logged_by ? item.logged_by?.last_name[0] : ''
               }`}
-              size={12}
+              size={10}
             />
           )}
 

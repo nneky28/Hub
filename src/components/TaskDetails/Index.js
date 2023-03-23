@@ -198,7 +198,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         <ImgPlaceholder
                             text={`${item ? item.comment_by?.first_name[0] : ''} ${item ? item.comment_by?.last_name[0] : ''
                                 }`}
-                            size={12}
+                            size={10}
                         />
                     )}
                     <View style={styles.textCon}>
@@ -425,7 +425,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                             <ImgPlaceholder
                                                 text={`${employee_pk ? employee_pk?.first_name[0] : ''}${employee_pk ? employee_pk?.last_name[0] : ''
                                                     }`}
-                                                size={12}
+                                                size={10}
                                             />
                                         )}
                                     </View>

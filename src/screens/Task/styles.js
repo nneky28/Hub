@@ -269,10 +269,6 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         borderRadius: width(3.5),
-        shadowColor: '#FFFFFF',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
         elevation: width(1),
         height: height(14),
         width: width(28)
