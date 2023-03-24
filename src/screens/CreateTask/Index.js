@@ -115,7 +115,7 @@ const Index = ({ visible, onHide, route }) => {
             if (assignTo?.type === "Departments") delete fd["assigned_to"]
             if (data?.due_date === "No Date" || item) delete fd["due_date"]
             if (item) delete fd["status"]
-            console.log("FD", fd)
+
 
             if (item) {
                 fd["id"] = item?.id;
@@ -128,7 +128,6 @@ const Index = ({ visible, onHide, route }) => {
                 showFlashMessage({ title: `Task edited successfully` })
             } else {
                 let res = await mutateAsync(fd)
-                console.log("FDRes", res)
                 setDisabled(false)
                 await storeData('tasks', res)
                 queryClient.invalidateQueries()
@@ -140,7 +139,6 @@ const Index = ({ visible, onHide, route }) => {
                 showFlashMessage({ title: `Task created successfully` })
             }
         } catch (err) {
-            console.log("Error", err)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
