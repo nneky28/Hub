@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   container: {
     width: width(80),
     paddingTop: height(2),
-    paddingBottom: height(5),
+    paddingBottom: height(3),
     backgroundColor: AppColors.white,
     borderRadius: 15
     // borderTopRightRadius: 15,
