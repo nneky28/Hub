@@ -76,8 +76,6 @@ const Index = ({ navigation, route }) => {
     const [sentDueItem, setSentDueItems] = useState([]);
     const [sentUpcomingItem, setSentUpcomingItems] = useState([]);
     const [sentOverdueItem, setSentOverdueItems] = useState([]);
-    const [people, setPeople] = useState(true);
-    const [focus, setFocus] = useState(true);
     const [margin, setMargin] = useState(0.1);
     const [visible, setVisible] = useState(false);
     const [teamData, setTeamData] = useState([]);
@@ -589,7 +587,7 @@ const Index = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.searchView}
                                     onPress={() =>
-                                        navigation.navigate('search', { people })
+                                        navigation.navigate('search')
                                     }>
                                     <Image
                                         source={{ uri: Images.SearchIcon }}
@@ -676,7 +674,7 @@ const Index = ({ navigation, route }) => {
                                     source={{ uri: item.image }}
                                     resizeMode='cover'
                                     imageStyle={{
-                                        borderRadius: width(5),
+                                        borderRadius: width(4),
                                         borderWidth: item.selected === actionTitle ? item.borderWidth : null,
                                         borderColor: item.selected === actionTitle ? item.borderColor : null,
                                     }}
@@ -837,14 +835,6 @@ const Index = ({ navigation, route }) => {
                     ) : null}
                 </ScrollView>
             </ScreenWrapper>
-
-            {/* {visible && (
-                <CreateTask
-                    visible={visible}
-                    onHide={() => setVisible(false)}
-                    setButtons={setButtons}
-                />
-            )} */}
         </React.Fragment>
     );
 };

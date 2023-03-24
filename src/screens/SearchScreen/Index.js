@@ -17,7 +17,7 @@ import { Images } from '../../component2/image/Image';
 
 
 const PeopleList = ({ navigation, route, onPressHandler }) => {
-    const { team, people, focus, } = route.params
+    // const { focus, } = route.params
     const [myTeam, setMyTeam] = useState({})
     const [item, setItem] = useState([])
     const [teamItem, setTeamItem] = useState([])
@@ -205,7 +205,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
-                                autoFocus={focus ? true : false}
+                            // autoFocus={focus ? true : false}
                             />
                         </View>
                     ) : Platform.OS === 'ios' ? (
@@ -215,7 +215,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
-                                autoFocus={focus ? true : false}
+                            // autoFocus={focus ? true : false}
                             />
 
                         </View>
@@ -246,12 +246,10 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                         </View> :
                         <View>
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
-                                <H1 fontSize={3.3}>Your Team</H1>
-                                <DeptListComp item={myTeam?.department}
-                                // onPressHandle={() => navigation.navigate("profile", { item, departments })}
-                                />
+                                <H1 style={CommonStyles.marginBottom_2} fontSize={3.3}>Your Team</H1>
+                                <DeptListComp item={myTeam?.department} />
                             </View>
-                            <View style={[CommonStyles.marginBottom_2, CommonStyles.marginLeft_5,]}>
+                            <View style={[CommonStyles.marginBottom_2, CommonStyles.marginTop_1, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Department</H1>
                             </View>
 

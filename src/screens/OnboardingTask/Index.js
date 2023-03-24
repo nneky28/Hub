@@ -149,6 +149,8 @@ const Index = ({ navigation }) => {
             scrollEnabled={false}>
             <View style={styles.container}>
                 <Swiper
+                    autoplay={true}
+                    autoplayTimeout={8}
                     ref={swiperRef}
                     style={styles.wrapper}
                     dot={
@@ -198,7 +200,7 @@ const Index = ({ navigation }) => {
                 </Swiper>
 
                 <Button
-                    title="Continue"
+                    title="Explore Tasks"
                     textStyle={styles.buttonText}
                     containerStyle={styles.button}
                     onPress={() => {
@@ -208,12 +210,12 @@ const Index = ({ navigation }) => {
                         swiperRef.current.scrollBy(1)
                     }}
                 />
-                <Button
+                {/* <Button
                     title="Skip"
                     textStyle={styles.btnText}
                     containerStyle={styles.btn}
                     onPress={handleCompletion}
-                />
+                /> */}
             </View>
         </ScreenWrapper>
     )

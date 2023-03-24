@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(5),
     },
     logText: {
-        fontFamily: FontFamily.BlackSansBlack,
+        // fontFamily: FontFamily.BlackSansBlack,
         fontSize: width(3.5)
     },
     leftIcon: {
@@ -189,12 +189,21 @@ const styles = StyleSheet.create({
     textContainer1: {
         justifyContent: 'space-between',
         marginLeft: width(2),
+        alignItems: "center"
     },
     textCon: {
         justifyContent: 'space-between',
         height: height(4.5),
         marginLeft: width(2),
         marginTop: height(1)
+    },
+    titleText: {
+        fontSize: width(3.5),
+        fontFamily: FontFamily.BlackSansBold,
+        color: AppColors.black1,
+        paddingVertical: height(1),
+        lineHeight: 18,
+
     },
     listContainer1: {
         width: width(90),
@@ -214,9 +223,8 @@ const styles = StyleSheet.create({
     },
     Input: {
         width: width(80),
-        backgroundColor: AppColors.gray,
-        borderWidth: width(0.1),
-        borderColor: AppColors.transparent
+        alignSelf: 'center',
+        marginTop: height(1),
     },
     avatarStyle: {
         height: height(5),

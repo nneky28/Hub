@@ -16,7 +16,7 @@ import { useFetchOnboarding } from '../../utills/api';
 import { clockRunning } from 'react-native-reanimated';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
-  const [selected, setSelected] = useState('Todos');
+  const [selected, setSelected] = useState('Task');
   const Task_Name = "Task"
 
   const {
@@ -42,16 +42,20 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
           //navigation.navigate(text)
           onHide();
         }}
-        style={{ alignItems: 'center' }}>
-        <Image
-          resizeMode="contain"
-          style={[
-            styles.icon,
-            selected == text && { tintColor: AppColors.green },
-          ]}
-          source={{ uri: selected == text ? fill : icon }}
-        />
+        // backgroundColor: AppColors.green
+        style={styles.textIconContainer}>
+        <View style={[styles.iconContainer, selected == text && { backgroundColor: AppColors.lightestGren, },]}>
+          <Image
+            resizeMode="contain"
+            style={[
+              styles.icon,
+              selected == text && { tintColor: AppColors.green, },
+            ]}
+            source={{ uri: selected == text ? fill : icon }}
+          />
+        </View>
         <Text
+          numberOfLines={1}
           style={[styles.text, selected == text && { color: AppColors.green }]}>
           {text}
         </Text>
@@ -76,12 +80,12 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
+      style={{ justifyContent: 'flex-end', alignSelf: 'center', marginBottom: height(12) }}
       isVisible={isVisible}>
       <View style={styles.container}>
         <View style={styles.line1} />
         <View style={styles.row}>
-          <TextWithIcon text="Todos" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
+          <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
           <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
           <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
         </View>
@@ -91,10 +95,7 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
         </View>
-        <View style={styles.line} />
-        <View style={styles.row}>
-          <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
-        </View>
+
       </View>
     </Modal>
   );

@@ -250,7 +250,7 @@ const Routes = () => {
                               <Stack.Navigator
                                 screenOptions={{ headerMode: false }}
                               >
-                                <Stack.Screen name="Todos" component={Todos} />
+                                {/* <Stack.Screen name="Todos" component={Todos} /> */}
                                 <Stack.Screen name="Time off" component={TimeOff} />
                                 <Stack.Screen name="Payslip" component={PayslipHistory} />
                                 <Stack.Screen name="PayslipBreakDown" component={PayslipBreakDown} />

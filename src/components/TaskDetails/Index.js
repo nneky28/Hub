@@ -3,6 +3,7 @@ import {
     Animated,
     Easing,
     LayoutAnimation,
+    TextInput
 } from 'react-native'
 import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
@@ -18,8 +19,8 @@ import { useFetchActivities, useUpdate, updateSubTask, useFetchComments } from '
 import ActivityCard from '../ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
 import { Field, Formik } from 'formik';
-import { TextInput } from "react-native-paper"
-import CustomInput from '../CustomInput/index';
+// import { TextInput } from "react-native-paper"
+// import CustomInput from '../CustomInput/index';
 import CommonStyles from '../../utills/CommonStyles';
 import { Capitalize, __flatten, getData } from '../../utills/Methods';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -394,9 +395,9 @@ const Index = ({ isVisible, onHide, item, title }) => {
                             keyExtractor={item => item.id}
                             renderSectionHeader={({ section: { title } }) => {
                                 return (
-                                    <H1 style={styles.stickyDate}>
+                                    <P style={styles.stickyDate}>
                                         {formattedTitle(title)}
-                                    </H1>
+                                    </P>
                                 )
                             }} />
 
@@ -406,7 +407,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                                 renderItem={renderItem}
                                 renderSectionHeader={({ section: { title } }) => (
                                     data[0]?.title ? (
-                                        <H1 style={styles.stickyDate}>{formattedTitle(data[0].title)}</H1>
+                                        <P style={styles.stickyDate}>{formattedTitle(data[0].title)}</P>
                                     ) : null
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
@@ -419,7 +420,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                             extraScrollHeight={8}>
                             <View style={styles.listContainer1}>
                                 <View style={CommonStyles.rowJustifySpaceBtw}>
-                                    <View style={{ marginTop: height(2) }}>
+                                    <View >
                                         {employee_pk?.job?.photo ? (
                                             <Image
                                                 source={{ uri: employee_pk?.photo }}

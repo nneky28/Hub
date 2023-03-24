@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         height: height(3.5),
         ...AppColors.smallShadow,
         alignSelf: 'center',
-        paddingHorizontal: width(2),
+        paddingHorizontal: width(3.5),
         justifyContent: 'center',
         alignItems: 'center',
 
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 
     defaultTab: {
         alignSelf: "center",
-        paddingHorizontal: width(4),
+        paddingHorizontal: width(5),
     },
     selectedTab: {
         fontFamily: FontFamily.BlackSansBold,

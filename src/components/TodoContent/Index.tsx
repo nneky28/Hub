@@ -141,22 +141,26 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                      </>
 
             </View>
-            <View style={styles.by}>
+            <TouchableOpacity
+                onPress={() => setDisplay(true)}
+                style={styles.by}>
                 <P color={AppColors.black3} >
                     {
                         index === 1 ? 'To:' : 'By:'
                     }
                     {" "}
                     {
-                        !item?.assigned_to ? item?.department?.name:item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''
+                        !item?.created_by ? item?.department?.name:item.assigned_to?.first_name ? item.created_by?.first_name : ""} {item.created_by?.last_name ? item.created_by?.last_name : ''
                     }
                
                 </P>
-            </View>
+            </TouchableOpacity>
 
             {
                 title === "Completed" ? null :
-                    <View style={styles.row1}>
+                    <TouchableOpacity
+                    onPress={() => setDisplay(true)}
+                        style={styles.row1}>
                         {dueToday ? <React.Fragment>            
                             <Image source={{ uri: Images.DueFlag }} style={styles.flag} />
                             <P style={styles.flagText}>DueToday</P>
@@ -173,7 +177,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                                 <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
                             </React.Fragment>
                         }
-                    </View>
+                    </TouchableOpacity>
             }
 
 

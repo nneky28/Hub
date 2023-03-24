@@ -34,12 +34,13 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansRegular,
     },
     titleText: {
-        fontSize: width(3.5),
+        fontSize: width(3.3),
         color: AppColors.black1,
         marginRight: width(2),
         fontFamily: FontFamily.BlackSansBold,
         width: width(70)
     },
+
     textContainer1: {
         justifyContent: 'space-between',
         height: height(4.5),
