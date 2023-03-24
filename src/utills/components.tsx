@@ -853,13 +853,14 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
     }
   }
   const reportMainError = () => {
+    if(__DEV__) return
     let fd = {
       report: JSON.stringify(`${props?.error}${props?.error?.toString()}`)
     }
     reportError.mutateAsync(fd)
   }
   useEffect(() => {
-    // reportMainError()
+    reportMainError()
   }, [])
   return (
     <Container flex={1} style={{
