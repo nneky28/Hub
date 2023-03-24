@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
     },
     stickyDate: {
         paddingHorizontal: width(5),
-        // marginTop: height(1),
         paddingVertical: height(1)
     },
     buttonStyle: {
@@ -176,7 +175,6 @@ const styles = StyleSheet.create({
         borderRadius: width(5),
         width: width(30),
         alignSelf: 'flex-start',
-        // height: width(8.9),
     },
     buttonText: {
         color: AppColors.black1,
@@ -190,7 +188,6 @@ const styles = StyleSheet.create({
 
     textContainer1: {
         justifyContent: 'space-between',
-        // height: height(4),
         marginLeft: width(2),
     },
     textCon: {
@@ -216,8 +213,10 @@ const styles = StyleSheet.create({
 
     },
     Input: {
-        width: width(70),
-        backgroundColor: AppColors.transparent,
+        width: width(80),
+        backgroundColor: AppColors.gray,
+        borderWidth: width(0.1),
+        borderColor: AppColors.transparent
     },
     avatarStyle: {
         height: height(5),
