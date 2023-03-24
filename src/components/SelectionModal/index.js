@@ -26,8 +26,8 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
   } = useFetchOnboarding(Task_Name)
 
   useEffect(async ()=>{
-    let id = await getStoredBusiness()
-    setBusinessID(id)
+    let biz = await getStoredBusiness()
+    setBusinessID(biz?.business_id)
   },[])
 
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
