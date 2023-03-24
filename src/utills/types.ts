@@ -1,7 +1,10 @@
-import { TextStyle } from "react-native"
+
 import { DateData } from "react-native-calendars/src/types"
 
+
 export type boldType = "10" | "20" | "30" | "40" | "50" | "60" | "70" | "80" | "90" | "100" | "110"
+
+export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
 export type ImgPlaceholderProps = {
     size? : number,
     backgroundColor? : string,
@@ -16,7 +19,90 @@ export type LottieIconProps = {
     icon : string | {uri : string}
     size? : number
 }
-
+export type SizedBoxProps = {
+  width?: number;
+  height?: number;
+  size?:number,
+  backgroundColor?: string;
+  style?: {}
+}
+export type BackHandlerProps = {
+  onPress? : () => void
+  position? : "flex-start" | "center" | "flex-end"
+}
+export type CustomWebViewProps = {
+  web_url : string
+  show : boolean
+  setShow : () => void
+}
+export type OnboardModalProps = {
+  url : string
+  visible : boolean
+}
+export type onNavigationStateChangeProps = {
+  param : { url : string},
+  dispatch : (
+    (param : any) => void
+  ),
+  auth: any,
+}
+export type TouchWrapProps = {
+  onPress : (param? : any) => void
+  rippleColor? : string,
+  height? : number,
+  width? : number
+  justifyContent?: string;
+  alignItems?: string;
+ style?: any,
+  children:React.ReactNode
+}
+export type AppButtonProp = {
+  text: string;
+  onPress: (param?: any) => void;
+  height?: number;
+  width?: number;
+  backgroundColor?: string;
+  color?: string;
+  paddingVertical?: number;
+  loading : boolean,
+}
+export type ContainerProps = {
+  position?: string;
+  flex?: number;
+  elevation?: number;
+  width?: number;
+  height?: number;
+  borderColor?: string;
+  widthPercent?: any;
+  padding?: number;
+  paddingHorizontal?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  paddingVertical?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
+  marginRight?: number;
+  paddingLeft?: number;
+  paddingRight?: number;
+  borderWidth?: number;
+  borderTopWidth?: number;
+  borderBottomWidth?: number;
+  borderRadius?: number;
+  direction?: "row" | "column" | "row-reverse";
+  wrap?: "wrap";
+  verticalAlignment?: "flex-start" | "center" | "flex-end";
+  horizontalAlignment?:
+    | "flex-start"
+    | "center"
+    | "flex-end"
+    | "space-between"
+    | "space-evenly";
+  alignSelf?: "flex-start" | "center" | "flex-end";
+  backgroundColor?: string;
+  style?: object;
+  children?: React.ReactNode;
+}
 
 export type PTagProps = {
     fontSize? : number,
@@ -28,7 +114,7 @@ export type PTagProps = {
     marginTop? : number,
     marginLeft? : number,
     marginBottom? : number,
-    style? : TextStyle,
+    style? : any,
     numberOfLines? : number,
     children : React.ReactNode
 }
@@ -43,7 +129,7 @@ export type HTagProps = {
     marginTop? : number,
     marginLeft? : number,
     marginBottom? : number,
-    style? : TextStyle,
+    style? : any,
     numberOfLines? : number,
     children : React.ReactNode,
     bold? : boldType
@@ -52,6 +138,7 @@ export type HTagProps = {
   export interface KeyboardAwareWrapperProps {
     children : React.ReactNode
   }
+  
 
 export type DatePickerModalProps = {
     show : boolean
@@ -128,7 +215,7 @@ export type DateModeProps = "text-field" | "calendar"
      item : any,
      onPress : () => void
 }
-export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
+// export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
 
 export type UserPINComponentProps = {
   action : UserPINActionType,
@@ -144,4 +231,12 @@ export type UserPINComponentProps = {
   validatePIN : ((param : string) => void) | ((param : string) => Promise<void>),
   error : string
   setError : (param : string) => void
+}
+export type CordType = {
+  [key : string] : {
+      height? : number
+      width? : number
+      x? : number
+      y? : number
+  }
 }

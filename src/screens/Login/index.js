@@ -80,6 +80,7 @@ export default function Dashboard(props) {
       ToastSuccess("Login was successful")
       return dispatch(login({ ...auth, user: { userName: "Joe", ...about_me }, route: about_me.completed_user_onboarding ? "main" : "onboard", isLogin: true }));
     } catch (err) {
+      console.log("error", err)
       dispatch(setLoaderVisible(false));
       let msg = "";
       if (err.msg && err.msg.code === "invalid_credentials") {
@@ -111,6 +112,7 @@ export default function Dashboard(props) {
             alignItems: "center"
           }}
         >
+
           <ImageWrap
             url={Images.AppLogo}
             height={5}
@@ -133,13 +135,14 @@ export default function Dashboard(props) {
               component={CustomInput}
               name="email"
               placeholder="Email"
-              value={data.email}
+              // value={data.email}
               onChangeData={(value) => {
                 setData({ ...data, email: value })
               }}
               keyboardType={"email-address"}
               color={AppColors.black}
             />
+
 
             <Field
               placeholder="Password"
@@ -159,7 +162,8 @@ export default function Dashboard(props) {
           </>
         </Formik>
 
-        <Container marginTop={3} width={90}>
+        <Container marginTop={3}
+          width={90}>
           <CustomButton
             btnText={'Sign In'}
             handelButtonPress={loginMethod}

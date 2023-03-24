@@ -5,13 +5,12 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
 const styles = StyleSheet.create({
-    wrapper: { marginTop: height(1.5), },
+    wrapper: { backgroundColor: '#F5F5F5' },
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(2),
-        paddingHorizontal: width(5),
-
+        marginTop: height(3),
+        paddingHorizontal: width(5)
     },
     line: {
         width: width(100),
@@ -29,21 +28,18 @@ const styles = StyleSheet.create({
     },
     btn: { flexDirection: 'row', marginTop: height(1) },
     button: {
-        // backgroundColor: '#D9D9D9',
-        backgroundColor: AppColors.white,
+        backgroundColor: '#D9D9D9',
         width: width(25),
         borderTopLeftRadius: width(6),
         borderBottomLeftRadius: width(6),
         borderRightWidth: width(0.5),
-        borderRightColor: '#D9D9D9',
+        borderRightColor: AppColors.white,
         alignItems: 'center',
         padding: height(1),
-        // borderColor: AppColors.green,
-        // borderWidth: width(0.15)
+
     },
     btnPart: {
-        // backgroundColor: '#D9D9D9',
-        backgroundColor: AppColors.white,
+        backgroundColor: '#D9D9D9',
         width: width(6),
         alignItems: 'center',
         justifyContent: 'center',
@@ -57,12 +53,13 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(6),
+        paddingHorizontal: width(5),
     },
-    by: {
-        paddingHorizontal: width(6),
-        paddingVertical: height(0.5)
 
+    by: {
+        paddingHorizontal: width(5.2),
+        height: height(2),
+        fontSize: width(3.2),
     },
     date: {
         color: AppColors.black3,
@@ -89,10 +86,9 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.4),
         color: AppColors.black1,
-        marginTop: height(1),
-        width: width(50)
+        paddingVertical: height(1),
+        width: width(50),
     },
-
     dots: {
         color: AppColors.darkGray,
     },

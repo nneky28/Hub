@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginTop: height(2)
   },
   listContainer1: {
-    backgroundColor: AppColors.white,
+    // backgroundColor: AppColors.white,
     width: width(90),
     justifyContent: 'space-between',
     paddingVertical: height(0.8),

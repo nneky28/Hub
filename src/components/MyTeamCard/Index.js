@@ -36,13 +36,17 @@ const Index = () => {
     const RenderItem = ({ item }) => {
         return (
             <TouchableOpacity
-                onPress={() => navigation.navigate('search', { team })}>
+                onPress={() => navigation.navigate("profile", { item })}>
                 {
                     item.photo ? (
                         <Image source={{ uri: item.photo }} style={styles.avatarStyle} />
                     ) : (
 
-                        <ImgPlaceholder text={item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""} size={15} />
+                        <ImgPlaceholder
+                            text={`${item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ''}${item.last_name && item.last_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ''
+                                }`}
+                            size={12}
+                        />
                     )
                 }
             </TouchableOpacity>

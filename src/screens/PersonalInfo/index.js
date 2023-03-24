@@ -96,7 +96,7 @@ export default function PersonalInfo({ navigation }) {
         mobileNumber2: "",
         state: "",
         city: "",
-        country : "",
+        country: "",
         postal_code: ''
     })
     const [show, setShow] = React.useState(false)
@@ -129,7 +129,7 @@ export default function PersonalInfo({ navigation }) {
         } catch (err) {
         }
     }
-    
+
     useEffect(() => {
         getProfile()
     }, [])

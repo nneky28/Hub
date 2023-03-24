@@ -18,6 +18,9 @@ const CommonStyles = StyleSheet.create({
     marginLeft_5: {
         marginLeft: width(5)
     },
+    marginLeft_8: {
+        marginLeft: width(8)
+    },
     marginRight_1: {
         marginRight: width(1)
     },
@@ -32,6 +35,9 @@ const CommonStyles = StyleSheet.create({
     },
     marginRight_5: {
         marginRight: width(5)
+    },
+    marginRight_8: {
+        marginRight: width(8)
     },
     marginTop_05: {
         marginTop: height(0.5)
@@ -129,8 +135,12 @@ const CommonStyles = StyleSheet.create({
     paddingBottom_8: {
         paddingBottom: height(8)
     },
+    paddingBottom_10: {
+        paddingBottom: height(40)
+    },
     row: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+
     },
     rowAlignItemCenter: {
         flexDirection: 'row',
@@ -156,7 +166,7 @@ const CommonStyles = StyleSheet.create({
     alignLeft: {
         alignItems: "flex-start"
     },
-    flatList : {
+    flatList: {
         paddingHorizontal: width(5),
         paddingVertical: height(2),
     },

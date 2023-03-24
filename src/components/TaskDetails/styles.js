@@ -7,11 +7,12 @@ const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
         margin: 0,
-        marginTop: height(10),
+        marginTop: height(5),
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingBottom: height(5)
     },
     mainContainer: {
         flex: 1,
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
+        height: height(3)
     },
 
     title: {
@@ -44,6 +46,7 @@ const styles = StyleSheet.create({
     row1: {
         alignItems: 'center',
         flexDirection: 'row',
+        paddingHorizontal: width(1),
     },
     line: {
         width: width(100),
@@ -63,14 +66,10 @@ const styles = StyleSheet.create({
         marginBottom: height(2),
     },
     subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4) },
-    descriptionCon: { marginTop: height(2) },
+    descriptionCon: { marginTop: height(1), },
     con: {
-        borderWidth: width(0.3),
-        borderColor: AppColors.grayBorder,
-        marginTop: height(1.5),
-        borderRadius: width(2),
-        height: height(13),
-        paddingHorizontal: width(3),
+
+        paddingHorizontal: width(1),
     },
     button: {
         width: width(50),
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
 
     },
     container1: {
-        marginTop: height(2),
+        marginTop: height(1),
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(2),
@@ -111,7 +110,9 @@ const styles = StyleSheet.create({
         borderRadius: width(2),
         minHeight: height(8),
         paddingHorizontal: width(4),
-        paddingVertical: height(1.8)
+        paddingVertical: height(1.8),
+        width: width(90),
+        marginTop: height(2),
     },
     name: {
         color: AppColors.black1,
@@ -138,14 +139,15 @@ const styles = StyleSheet.create({
         color: AppColors.black1,
         paddingVertical: height(1),
         lineHeight: 18,
-        paddingHorizontal: width(1)
+
     },
 
     sections: {
         backgroundColor: '#E0EEF0',
         paddingVertical: height(1),
         width: width(100),
-        marginTop: height(2),
+        marginTop: height(1),
+        marginBottom: height(1),
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingHorizontal: width(5),
@@ -159,13 +161,69 @@ const styles = StyleSheet.create({
         height: width(3.5),
     },
     newBtn: {
-        alignSelf: 'flex-end',
-        paddingVertical: height(1)
+        marginTop: height(2),
+
     },
     stickyDate: {
         paddingHorizontal: width(5),
-        marginTop: height(2),
-    }
+        // marginTop: height(1),
+        paddingVertical: height(1)
+    },
+    buttonStyle: {
+        borderWidth: 1,
+        borderColor: AppColors.blackgray,
+        backgroundColor: AppColors.transparent,
+        borderRadius: width(5),
+        width: width(30),
+        alignSelf: 'flex-start',
+        // height: width(8.9),
+    },
+    buttonText: {
+        color: AppColors.black1,
+        fontSize: width(3.1)
+    },
+    subTaskRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: width(4)
+    },
+
+    textContainer1: {
+        justifyContent: 'space-between',
+        // height: height(4),
+        marginLeft: width(2),
+    },
+    textCon: {
+        justifyContent: 'space-between',
+        height: height(4.5),
+        marginLeft: width(2),
+        marginTop: height(1)
+    },
+    listContainer1: {
+        width: width(90),
+        justifyContent: 'space-between',
+        marginLeft: width(4),
+        paddingVertical: height(1),
+        flexDirection: 'row',
+    },
+
+    rowSection: {
+        justifyContent: 'space-between',
+        marginLeft: width(4),
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: height(1),
+
+    },
+    Input: {
+        width: width(70),
+        backgroundColor: AppColors.transparent,
+    },
+    avatarStyle: {
+        height: height(5),
+        width: height(5),
+        borderRadius: height(4.75),
+    },
 
 });
 export default styles;

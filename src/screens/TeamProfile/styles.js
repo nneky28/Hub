@@ -6,7 +6,8 @@ import { FontFamily } from '../../utills/FontFamily';
 
 const styles = StyleSheet.create({
     mainViewContainer: {
-        backgroundColor: AppColors.white,
+        // backgroundColor: AppColors.white,
+        backgroundColor: '#F2F2F2',
         alignItems: 'center',
     },
     line1: {
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
         fontSize: width(4.5),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
-        width: width(40)
+        width: width(43)
 
     },
     headerTitle: {
@@ -122,14 +123,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(5)
     },
 
-    boxContainer: {
-        marginBottom: height(1),
-        elevation: 3,
-        flexDirection: 'row',
-        marginTop: height(3),
-        paddingHorizontal: width(5),
-        justifyContent: 'space-between'
-    },
+
     cont: {
         width: width(100),
         marginTop: height(2),
@@ -151,53 +145,58 @@ const styles = StyleSheet.create({
         elevation: 0,
     },
     boxContainer: {
-        elevation: 3,
         flexDirection: 'row',
-        marginTop: height(3),
         justifyContent: 'space-evenly',
         paddingHorizontal: width(3)
-
     },
-    mainContainer: { borderWidth: 0.5, width: width(28.5), borderRadius: width(4), borderColor: AppColors.transparent, },
-    clipped: { height: height(9), resizeMode: 'contain', width: width(28) },
+    mainContainer: { borderWidth: 0.5, borderRadius: width(4), borderColor: AppColors.transparent, height: height(14.3) },
+    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1.2) },
     count: {
         position: 'absolute',
         left: width(19),
         top: height(4)
     },
     title: {
-        fontSize: width(3.3), color: AppColors.white,
+        fontSize: width(3.1),
+        color: AppColors.black1,
+        // marginRight: width(5)
+        alignItems: 'flex-start'
     },
     titleCon: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(3),
         paddingVertical: height(2),
+        paddingHorizontal: width(2)
     },
     currentTab: {
         backgroundColor: AppColors.white,
         borderRadius: width(8),
-        marginRight: width(3.5),
+        marginRight: width(5),
         height: height(3.5),
         ...AppColors.smallShadow,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        paddingHorizontal: width(4),
+        justifyContent: 'center',
+        alignItems: 'center',
     },
+
     defaultTab: {
-        marginRight: width(3.5)
+        marginRight: width(5),
+        alignSelf: "center",
     },
     selectedTab: {
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.green,
+
     },
     tab: {
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.black1,
         fontSize: width(3.3)
     },
-    scrollViewContainer: {
-        flex: 1,
+    scroll: {
         backgroundColor: '#F2F2F2',
-
+        paddingBottom: height(50),
 
     },
     scrollViewCon: {
@@ -210,8 +209,17 @@ const styles = StyleSheet.create({
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
-        marginLeft: width(4.5)
-
+        marginLeft: width(4.5),
+        height: height(4.5)
+    },
+    emptyState: {
+        flex: 1,
+        marginTop: height(15),
+    },
+    emptyText: {
+        color: "#A8A8A8",
+        textAlign: "center",
+        fontSize: width(4.5)
     },
 
 });

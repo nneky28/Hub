@@ -65,11 +65,12 @@ import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 
 
+
 const queryClient = new QueryClient(
   {
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus : true,
+        refetchOnWindowFocus: true,
         //cacheTime: 1000 * 250 * 60, //cache expires in 5 minutes
         staleTime: 1000 * 0.5 * 60 //fetch new records every 0.5 minutes for stale records.
       },
@@ -139,9 +140,9 @@ const Routes = () => {
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     AppStateListener()
-  },[route])
+  }, [route])
 
   useEffect(() => {
     getDeepLinkInfo()
@@ -228,7 +229,7 @@ const Routes = () => {
                           screenOptions={{
                             headerShown: false,
                             tabBarHideOnKeyboard: true,
-                            unmountOnBlur : true
+                            unmountOnBlur: true
                           }}
                         >
                           <Tab.Screen name="Home">
@@ -262,7 +263,6 @@ const Routes = () => {
                                 <Stack.Screen name="CreateTask" component={CreateTask} />
                                 <Stack.Screen name="search" component={SearchScreen} />
                                 <Stack.Screen name="profile" component={TeamProfile} />
-
                               </Stack.Navigator>
                             )}
                           </Tab.Screen>

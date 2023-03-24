@@ -33,11 +33,11 @@ const styles = StyleSheet.create({
         fontSize: width(5),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
-        paddingHorizontal: width(2)
+        paddingHorizontal: width(2.5)
 
     },
     headerTitle: {
-        fontSize: width(4.5),
+        fontSize: width(4),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
         paddingHorizontal: width(6),
@@ -47,67 +47,75 @@ const styles = StyleSheet.create({
     team: {
         paddingHorizontal: width(5),
         marginTop: height(0.2),
-
-
     },
+    scrollRow: {
+        alignSelf: 'center',
+    },
+
     scrollViewContainer: {
-        marginTop: height(3),
+        marginTop: height(2),
         justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: AppColors.grayBorder,
         borderRadius: width(15),
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
-        marginLeft: width(4.5)
-
+        marginLeft: width(4.5),
+        height: height(4.5)
     },
+
     threeButtonCont: {
         width: width(90),
         alignSelf: 'center',
         marginTop: height(4),
         borderWidth: 1,
+        // position: 'absolute',
         borderColor: AppColors.grayBorder,
         borderRadius: width(15),
         flexDirection: 'row',
         justifyContent: 'space-around',
-        height: height(4.5),
+        height: height(5.5),
         alignItems: 'center',
         backgroundColor: AppColors.whiteBase
     },
 
     animatedView: {
-        position: 'absolute',
-        width: width(27),
+        width: width(28),
         backgroundColor: AppColors.white,
-        height: height(3),
         borderRadius: width(15),
-        zIndex: -1,
+        paddingVertical: height(1.5),
+        ...AppColors.smallShadow,
 
     },
     currentTab: {
         backgroundColor: AppColors.white,
         borderRadius: width(8),
-        marginRight: width(3.5),
+        marginRight: width(2),
         height: height(3.5),
         ...AppColors.smallShadow,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        paddingHorizontal: width(2),
+        justifyContent: 'center',
+        alignItems: 'center',
+
     },
+
     defaultTab: {
-        marginRight: width(3.5)
+        alignSelf: "center",
+        paddingHorizontal: width(4),
     },
     selectedTab: {
-        fontFamily: FontFamily.BlackSansSemiBold,
+        fontFamily: FontFamily.BlackSansBold,
         color: AppColors.green,
     },
     tab: {
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.black1,
-        fontSize: width(3.3)
+        fontSize: width(3.3),
+        alignSelf: "center",
     },
-
-
     button: {
         width: '30%',
         height: height(3),
@@ -135,19 +143,7 @@ const styles = StyleSheet.create({
         color: '#1E727B',
         fontFamily: FontFamily.BlackSansRegular
     },
-    emptyState: {
-        height: height(8),
-        width: height(8),
-        borderRadius: height(10),
-        backgroundColor: '#ADE5EB',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: height(30),
-        left: width(40),
-        borderWidth: 0.1,
-        borderColor: '#ADE5EB'
-    },
+
     logoBox: { backgroundColor: '#FDEDCE', padding: width(1.5), borderRadius: width(1.5) },
     logo: { width: width(4.5), height: height(2), borderRadius: 50, alignSelf: 'center', },
 
@@ -180,8 +176,9 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(2.5),
-        paddingHorizontal: width(5)
+        marginTop: height(2),
+        paddingHorizontal: width(5),
+        // paddingVertical: height(1)
     },
 
     downIcon: {
@@ -217,7 +214,9 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: width(3.3),
         color: AppColors.black,
-        fontFamily: FontFamily.BlackSansRegular
+        fontFamily: FontFamily.BlackSansRegular,
+        alignSelf: 'center',
+
     },
     buttonText1: {
         color: AppColors.black,
@@ -240,42 +239,69 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: width(3.3), color: AppColors.white,
+        fontSize: width(3.1),
+        color: AppColors.black1,
+        // marginRight: width(5)
+        alignItems: 'flex-start'
     },
     titleCon: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingHorizontal: width(3),
         paddingVertical: height(2),
+        paddingHorizontal: width(2)
     },
     scroll: {
         backgroundColor: '#F5F5F5',
-        paddingBottom: height(5),
+        paddingBottom: height(50),
 
     },
     emptyCon: {
         paddingHorizontal: width(18),
         marginTop: height(15)
     },
-    emptyText: {
-        textAlign: 'center',
-        color: '#545454'
-    },
+
     boxContainer: {
-        elevation: 3,
         flexDirection: 'row',
-        marginTop: height(2),
         justifyContent: 'space-evenly',
         paddingHorizontal: width(3)
-
     },
-    mainContainer: { borderWidth: 0.5, width: width(28), borderRadius: width(3.5), borderColor: AppColors.transparent, },
-    clipped: { height: height(8.5), resizeMode: 'contain' },
+    mainContainer: {
+        borderRadius: width(3.5),
+        elevation: width(1),
+        height: height(14),
+        width: width(28)
+    },
+    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1) },
     count: {
         position: 'absolute',
         left: width(19),
         top: height(4)
-    }
+    },
+    emptyState: {
+        flex: 1,
+        marginTop: height(12),
 
+    },
+    emptyText: {
+        color: "#A8A8A8",
+        textAlign: "center",
+        fontSize: width(4.5)
+    },
+    searchBox: {
+        width: width(90),
+        alignSelf: 'center',
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: AppColors.grayBorder,
+        borderRadius: width(3),
+        alignItems: 'center',
+        backgroundColor: AppColors.whiteBase,
+        paddingVertical: height(1),
+        height: height(5),
+
+    },
+    imageStyle: {
+
+    },
 });
 export default styles;

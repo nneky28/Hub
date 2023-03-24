@@ -1,4 +1,4 @@
-import {SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE} from '../Types';
+import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX } from '../Types';
 
 export const setLoaderVisible = (payload) => {
   return {
@@ -24,6 +24,13 @@ export const setBottomTabBarVisible = (payload) => {
 export const scrollToPosition = (payload) => {
   return {
     type: SCROLLTOPOSITION,
+    payload: payload,
+  };
+};
+
+export const setCurrentTabIndex = (payload) => {
+  return {
+    type: SETCURRENTTASKTABINDEX,
     payload: payload,
   };
 };

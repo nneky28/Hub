@@ -13,13 +13,30 @@ import AppColors from '../../utills/AppColors';
 import { Images } from '../../component2/image/Image';
 import { getData } from '../../utills/Methods';
 import { useFetchOnboarding } from '../../utills/api';
+import { clockRunning } from 'react-native-reanimated';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Todos');
-  const TextWithIcon = ({ text, icon, fill }) => {
+  const Task_Name = "Task"
+
+  const {
+    data: onboarding,
+  } = useFetchOnboarding(Task_Name)
+
+
+  const TextWithIcon = ({ text, icon, fill, onboarded }) => {
+
     return (
       <TouchableOpacity
         onPress={() => {
+          if (text === "Task" && !onboarding?.[0]?.has_completed_mobile_onboarding) {
+            onHide();
+            return navigation.navigate("Menu", { screen: "TaskOnboarding" })
+          }
+          if (text === "Task" && onboarding?.[0]?.has_completed_mobile_onboarding) {
+            onHide()
+            return navigation.navigate("Menu", { screen: "Task" })
+          }
           setSelected(text)
           navigation.navigate('Menu', { screen: text })
           //navigation.navigate(text)
@@ -44,9 +61,7 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
 
 
 
-  // const {
-  //   data,
-  // } = useFetchOnboarding()
+
 
 
   return (
@@ -76,13 +91,10 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
         </View>
-        {/* <View style={styles.line} />
+        <View style={styles.line} />
         <View style={styles.row}>
-          {
-            data && data.length > 0 || null ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> :
-              <TextWithIcon text="TaskOnboarding" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
-          }
-        </View> */}
+          <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
+        </View>
       </View>
     </Modal>
   );

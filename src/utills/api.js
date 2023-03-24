@@ -59,7 +59,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff/`)
   },
-  employee_timeoff_taken: async (id,status) => {
+  employee_timeoff_taken: async (id, status) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
   },
@@ -186,11 +186,15 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz.business_id}/app_onboarding/`, fd)
   },
-  get_onboarding: async () => {
+  update_onboarding: async (fd) => {
+    let biz = await getStoredBusiness()
+    return putAPIs(`/c/${biz.business_id}/app_onboarding/${fd.id}/`, fd)
+  },
+  get_onboarding: async (type) => {
     let about_me = await getData("about_me")
     let id = await about_me?.id
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/app_onboarding/?type=Task&employee_id=${id}`)
+    return getAPIs(`/c/${biz.business_id}/app_onboarding/?${type}&employee_id=${id}`)
   },
   post_task: async (fd) => {
     let biz = await getStoredBusiness();
@@ -232,26 +236,26 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=overdue`)
   },
-  get_team_tasks: async () => {
-    let biz = await getStoredBusiness()
-    const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}`)
-  },
 
-  get_team_duetoday: async () => {
+  get_team_statistics: async (id) => {
     let biz = await getStoredBusiness()
-    const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}&due_date_status=duetoday`)
+    // const user = await getData("about_me")
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?department_id=${id}`)
   },
-  get_team_upcoming: async () => {
+  get_team_duetoday: async (id) => {
     let biz = await getStoredBusiness()
-    const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}&due_date_status=upcoming`)
+    // const user = await getData("about_me")
+    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=duetoday`)
   },
-  get_team_overdue: async () => {
+  get_team_upcoming: async (id) => {
     let biz = await getStoredBusiness()
-    const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${user?.department?.id}&due_date_status=overdue`)
+    // const user = await getData("about_me")
+    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=upcoming`)
+  },
+  get_team_overdue: async (id) => {
+    let biz = await getStoredBusiness()
+    // const user = await getData("about_me")
+    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=overdue`)
   },
 
   get_personal_tasks: async (id) => {
@@ -283,12 +287,13 @@ export const APIFunction = {
 
   get_employee_statistics: async (id) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?employee_id=${id}`)
+    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
   },
-  get_team_statistics: async () => {
+
+  get_team_tasks: async (id) => {
     let biz = await getStoredBusiness()
-    const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?department_id=${user?.department?.id}`)
+    // const user = await getData("about_me")
+    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}`)
   },
   get_all_sent: async () => {
     let biz = await getStoredBusiness()
@@ -310,10 +315,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
   },
-  // get_comments: async (id) => {
-  //   let biz = await getStoredBusiness()
-  //   return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
-  // },
+  get_comments: async (id) => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
+  },
+
   departments: async (page, search) => {
     const user = await getData('user')
     const business_id = user?.employee_user_memberships?.[0]?.business_id
@@ -335,20 +341,20 @@ export const APIFunction = {
 }
 
 export const useFetchEmployeeTimeOff = (id) => {
-  return useQuery(["employee_timeoff",id],()=>APIFunction.employee_timeoff(id),{
-    enabled : !!id
+  return useQuery(["employee_timeoff", id], () => APIFunction.employee_timeoff(id), {
+    enabled: !!id
   })
 }
 
-export const useFetchEmployeeTimeOffTaken = (id,status) => {
-  return useQuery(["employee_timeoff_taken",id,status],()=>APIFunction.employee_timeoff_taken(id,status),{
-    enabled : !!id && !!status
+export const useFetchEmployeeTimeOffTaken = (id, status) => {
+  return useQuery(["employee_timeoff_taken", id, status], () => APIFunction.employee_timeoff_taken(id, status), {
+    enabled: !!id && !!status
   })
 }
 
 export const useFetchEmployeeTimeOffReqs = (id) => {
-  return useQuery(["employee_timeoff_reqs",id],()=>APIFunction.employee_timeoff_reqs(id),{
-    enabled : !!id
+  return useQuery(["employee_timeoff_reqs", id], () => APIFunction.employee_timeoff_reqs(id), {
+    enabled: !!id
   })
 }
 
@@ -435,20 +441,22 @@ export const useFetchEmergency = (employee_id) => {
 }
 
 export const useFetchBanking = (employee_id) => {
-  return useQuery("banks",APIFunction.banks)
+  return useQuery("banks", APIFunction.banks)
 }
 
 export const useFetchProviders = () => {
-  return useQuery("pension_providers",APIFunction.pension_providers)
+  return useQuery("pension_providers", APIFunction.pension_providers)
 }
 
-export const useFetchOnboarding = () => {
-  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding()
+export const useFetchOnboarding = (type) => {
+  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding(type), {
+    enabled: !!type
+  }
+
   )
 }
 export const useFetchEmployees = (page, search) => {
   return useInfiniteQuery(['get_users', page, search], () => APIFunction.get_users(page, search), {
-
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next
     }
@@ -471,44 +479,44 @@ export const useFetchDepartments = (page, search) => {
     }
   })
 }
-export const useFetchTodos = (tab) => {
-  return useInfiniteQuery(['ge_to_dos', tab], () => APIFunction.get_to_dos(tab), {
-    // enabled: tab === "All" && tab !== null && tab !== undefined
+export const useFetchTodos = (tab, index) => {
+  return useInfiniteQuery(['ge_to_dos', tab], () => APIFunction.get_to_dos(tab, index), {
+    enabled: index === 0 && index !== null && index !== undefined
   })
 }
-export const useFetchDueToday = (tab) => {
-  return useInfiniteQuery(['get_duetoday', tab], () => APIFunction.get_duetoday(tab), {
-    enabled: tab === "Due Today" && tab !== null && tab !== undefined
+export const useFetchDueToday = (tab, index) => {
+  return useInfiniteQuery(['get_duetoday', tab], () => APIFunction.get_duetoday(tab, index), {
+    enabled: index == 0 && tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
-export const useFetchUpcoming = (tab) => {
-  return useInfiniteQuery(['get_upcoming', tab], () => APIFunction.get_upcoming(tab), {
-    enabled: tab === "Upcoming" && tab !== null && tab !== undefined
+export const useFetchUpcoming = (tab, index) => {
+  return useInfiniteQuery(['get_upcoming', tab], () => APIFunction.get_upcoming(tab, index), {
+    enabled: index === 0 && tab === "Upcoming" && tab !== null && tab !== undefined
   })
 }
-export const useFetchOverDue = (tab) => {
-  return useInfiniteQuery(['get_overdue', tab], () => APIFunction.get_overdue(tab), {
-    enabled: tab === "Overdue" && tab !== null && tab !== undefined
+export const useFetchOverDue = (tab, index) => {
+  return useInfiniteQuery(['get_overdue', tab], () => APIFunction.get_overdue(tab, index), {
+    enabled: index === 0 && tab === "Overdue" && tab !== null && tab !== undefined
   })
 }
 export const useFetchAllSent = (tab, index) => {
-  return useInfiniteQuery(['get_all_sent', tab], () => APIFunction.get_all_sent(tab), {
+  return useInfiniteQuery(['get_all_sent', tab], () => APIFunction.get_all_sent(tab, index), {
     enabled: index === 1 && index !== null && index !== undefined
   })
 }
 export const useFetchAllSentDue = (tab, index) => {
-  return useInfiniteQuery(['get_sent_duetoday', tab], () => APIFunction.get_sent_duetoday(tab), {
-    enabled: index === 1 && index !== null && index !== undefined
+  return useInfiniteQuery(['get_sent_duetoday', tab], () => APIFunction.get_sent_duetoday(tab, index), {
+    enabled: index === 1 && tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
 export const useFetchAllSentUpcoming = (tab, index) => {
-  return useInfiniteQuery(['get_sent_upcoming', tab], () => APIFunction.get_sent_upcoming(tab), {
-    enabled: index === 1 && index !== null && index !== undefined
+  return useInfiniteQuery(['get_sent_upcoming', tab], () => APIFunction.get_sent_upcoming(tab, index), {
+    enabled: index === 1 && tab === "Upcoming" && tab !== null && tab !== undefined
   })
 }
 export const useFetchAllSentOverdue = (tab, index) => {
-  return useInfiniteQuery(['get_sent_overdue', tab], () => APIFunction.get_sent_overdue(tab), {
-    enabled: index === 1 && index !== null && index !== undefined
+  return useInfiniteQuery(['get_sent_overdue', tab], () => APIFunction.get_sent_overdue(tab, index), {
+    enabled: index === 1 && tab === "Overdue" && tab !== null && tab !== undefined
   })
 }
 export const useFetchPersonalTask = (tab, id) => {
@@ -531,32 +539,26 @@ export const useFetchPersonalOverdue = (tab, id) => {
     enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
-export const useFetchTeamTask = (index, tab) => {
-  return useInfiniteQuery(['get_team_tasks', tab], () => APIFunction.get_team_tasks(tab), {
-    // enabled: index === 2 && index !== null && index !== undefined,
+export const useFetchTeamTask = (tab, id) => {
+  return useInfiniteQuery(['get_team_tasks', id], () => APIFunction.get_team_tasks(id), {
+    enabled: tab === "All" && id !== null && id !== undefined
   })
 }
 
-export const useFetchTeamDuetoday = (tab, index) => {
-  return useInfiniteQuery(['get_team_duetoday', tab], () => APIFunction.get_team_duetoday(tab), {
-    enabled: index === 2 && tab === "Due Today" && tab !== null && tab !== undefined
+export const useFetchTeamDuetoday = (tab, id) => {
+  return useInfiniteQuery(['get_team_duetoday', id], () => APIFunction.get_team_duetoday(id), {
+    enabled: tab === "Due Today" && id !== null && id !== undefined
   })
 }
-export const useFetchMyTeamUpcoming = (tab, index) => {
-  return useInfiniteQuery(['get_team_upcoming', tab], () => APIFunction.get_team_upcoming(tab), {
-    enabled: index === 2 && tab === "Upcoming" && tab !== null && tab !== undefined,
+export const useFetchMyTeamUpcoming = (tab, id) => {
+  return useInfiniteQuery(['get_team_upcoming', id], () => APIFunction.get_team_upcoming(id), {
+    enabled: tab === "Upcoming" && id !== null && id !== undefined,
 
   })
 }
-export const useFetchMyTeamOverdue = (tab) => {
-  return useInfiniteQuery(['get_team_overdue', tab], () => APIFunction.get_team_overdue(tab), {
-    enabled: tab === "Overdue" && tab !== null && tab !== undefined,
-  })
-}
-export const useFetchMyStatus = (status, tab, id) => {
-  return useInfiniteQuery(['get_Mystatus', status, id], () => APIFunction.get_Mystatus(status, id), {
-    enabled:
-      tab === "Status" && status !== null && status !== undefined,
+export const useFetchMyTeamOverdue = (tab, id) => {
+  return useInfiniteQuery(['get_team_overdue', id], () => APIFunction.get_team_overdue(id), {
+    enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
 
@@ -574,8 +576,10 @@ export const useFetchPeopleStatics = (id) => {
 
   )
 }
-export const useFetchTeamStatistics = () => {
-  return useQuery("get_team_statistics", APIFunction.get_team_statistics)
+export const useFetchTeamStatistics = (id) => {
+  return useQuery(["get_team_statistics", id], () => APIFunction.get_team_statistics(id), {
+    enabled: id !== null && id !== undefined
+  },)
 }
 
 export const useFetchActivities = (id) => {
@@ -592,27 +596,8 @@ export const useFetchComments = (id) => {
     }
   })
 }
-export const updateSubTask = () => {
-  return useMutation(() => APIFunction.update_sub_task(),
-    {
-      onSuccess: () => {
-      },
-      onError: () => {
-      }
-    }
-  )
-}
 
-export const useUpdate = () => {
-  return useMutation(() => APIFunction.update_status(),
-    {
-      onSuccess: () => {
-      },
-      onError: () => {
-      }
-    }
-  )
-}
+
 
 export const getAPIs = async (path) => {
   let _token = await getData("token");

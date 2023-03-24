@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid, SafeAreaView, FlatList, KeyboardAvoidingView } from 'react-native';
+import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
 import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
 import { APIFunction, useFetchAttendanceConfig, useFetchAttendanceStatus, useFetchLocationType } from './api';
-import { setBottomTabBarVisible, setLoaderVisible } from '../Redux/Actions/Config';
+import { setLoaderVisible } from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from 'react-query';
@@ -35,23 +35,26 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps, KeyboardAwareWrapperProps, LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
+import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SearchBox from '../components/SearchBox';
 import Button from '../components/Button';
 import styles from "./styles"
 import CustomInput from '../components/CustomInput';
+import { useAppSelector } from './Methods';
+import { scrollToPosition } from '../Redux/Actions/Config';
+import { CordType } from './types';
 
 
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
 
-export const PageLoader = () => {
+export const PageLoader = (props={}) => {
   return (
     [...'123567'].map((item) => (
       <ContentLoader
         key={item}
-        viewBox="0 0 778 116" width={350} height={100} 
+        viewBox="0 0 778 116" width={350} height={100} {...props}
         backgroundColor={AppColors.gray1}
       >
         <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
@@ -64,12 +67,12 @@ export const PageLoader = () => {
   )
 }
 
-export const Reload = () => {
+export const Reload = (props={}) => {
   return (
     [...'1'].map((item) => (
       <ContentLoader
         key={item}
-        viewBox="0 0 778 116" width={350} height={100}
+        viewBox="0 0 778 116" width={350} height={100}{...props}
         backgroundColor={AppColors.gray1}
       >
         <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
@@ -130,11 +133,11 @@ export const P = (props : PTagProps) => (
   </Text>
 )
 
-export const H1 = (props) => (
+export const H1 = (props:HTagProps) => (
   <Text
     style={[
       {
-        fontSize: width(props.fontSize) || width(4),
+        fontSize : props?.fontSize ? width(props.fontSize) : width(4),
         fontFamily: FontFamily.BlackSansBold,
         color: props.color || 'black',
         textAlign: props.textAlign,
@@ -151,17 +154,17 @@ export const H1 = (props) => (
   </Text>
 )
 
-export const SizedBox = (props) => (
+export const SizedBox = ({...props}:SizedBoxProps) => (
   <View
     style={{
       height: height(props.size || 1),
       backgroundColor: props.backgroundColor || AppColors.white,
-      width: props?.width ? width(props.width) : null
+      width: props?.width ? width(props.width) : 0
     }}
   />
 )
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value:any, delay:any) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(
@@ -361,12 +364,12 @@ export const Container = (props) => (
     style={[
       {
         position: props.position,
-        borderColor: props.borderColor,
+        borderColor: props.borderColor?props.borderColor:AppColors.grayBorder,
         flex: props.flex || 0,
         flexDirection: props.direction,
         width: props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
         padding: props.padding ? width(props.padding) : null,
-        height: props.height,
+        height: props?.height,
         //? height(props.height) : null,
         justifyContent:
           props.direction === "row"
@@ -400,7 +403,7 @@ export const Container = (props) => (
   </View>
 )
 
-export const ImageWrap = (props) => (
+export const ImageWrap = (props:ImageWrapProps) => (
   <ImageBackground
     source={props.source || { uri: props.url }}
     resizeMode={props.fit}
@@ -408,20 +411,19 @@ export const ImageWrap = (props) => (
       overflow: "hidden",
       //...Elevation(props.elevation),
       position: props.position,
-      width: width(props.width) || props.widthPercent || "100%",
-      height: height(props.height) || height(3),
-      backgroundColor: props.backgroundColor,
-      color: props.color,
+      width:props.width ? width(props?.width)|| props.widthPercent : "100%",
+      height:props.height? width(props?.height) : height(3),
+      backgroundColor: props?.backgroundColor,
       borderRadius: props.borderRadius,
       borderTopLeftRadius: props.borderTopLeftRadius,
       borderBottomLeftRadius: props.borderBottomLeftRadius,
-      margin: width(props.margin) || 0,
-      marginVertical: height(props.marginVertical) || 0,
-      marginHorizontal: width(props.marginHorizontal) || 0,
-      marginRight: width(props.marginRight) || 0,
-      marginLeft: width(props.marginLeft) || 0,
-      marginTop: height(props.marginTop) || 0,
-      marginBottom: height(props.marginBottom) || 0,
+      margin: props?.margin || 0,
+      marginVertical: props?.marginVertical || 0,
+      marginHorizontal: props?.marginHorizontal || 0,
+      marginRight:props?.marginRight || 0,
+      marginLeft: props?.marginLeft|| 0,
+      marginTop: props?.marginTop || 0,
+      marginBottom: props?.marginBottom || 0,
       padding: props.padding,
     }}
   >
@@ -429,7 +431,7 @@ export const ImageWrap = (props) => (
   </ImageBackground>
 )
 
-export const AppButton = (props) => (
+export const AppButton = (props:AppButtonProp) => (
   <TouchableOpacity
     onPress={props.onPress}
   >
@@ -450,7 +452,7 @@ export const AppButton = (props) => (
   </TouchableOpacity>
 )
 
-export const TouchWrap = (props) => (
+export const TouchWrap = (props:TouchWrapProps) => (
   <TouchableRipple
     onPress={props.onPress}
     rippleColor="rgba(0, 0, 0, .32)"
@@ -463,16 +465,18 @@ export const TouchWrap = (props) => (
       },
       props.style
     ]}
+    hasTVPreferredFocus={false}
+    tvParallaxProperties={false}
   >
     {props.children}
   </TouchableRipple>
 )
-export const Width = (val) => {
+export const Width = (val:any) => {
   let res;
   val === undefined || null ? (res = null) : (res = (val / 100) * winWidth);
   return res;
 };
-export const Rounded = (props) => (
+export const Rounded = (props:RoundedProps) => (
   <Container
     style={{
       width: Width(props.size || 15),
@@ -499,7 +503,7 @@ export const ImgPlaceholder = React.memo((props : ImgPlaceholderProps ) => (
   return prevProps.text === nextProps.text
 })
 
-export const CustomCalender = (props) => {
+export const CustomCalender = (props:CustomCalenderProps) => {
   return (
     <Container
       paddingVertical={5}
@@ -652,7 +656,7 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
 }
 
 
-const onNavigationStateChange = async (param, dispatch, auth) => {
+const onNavigationStateChange = async ({param, dispatch, auth}:onNavigationStateChangeProps) => {
   try {
     let split = param.url && typeof (param.url) == "string" ? param.url.split("&business_id") : []
     if (split.length === 1) return
@@ -691,7 +695,7 @@ const onNavigationStateChange = async (param, dispatch, auth) => {
   }
 };
 
-export const OnboardModal = (props) => {
+export const OnboardModal = (props:OnboardModalProps) => {
   const dispatch = useDispatch()
   const auth = useSelector(state => state.Auth)
   return (
@@ -741,7 +745,7 @@ export const CustomRefreshControl = (props : {loading : boolean, onRefresh : () 
   />)
 }
 
-export const CustomWebView = (props) => (
+export const CustomWebView = (props:CustomWebViewProps) => (
   <Modal visible={props.show}>
     <Container
       flex={1}
@@ -752,8 +756,7 @@ export const CustomWebView = (props) => (
         width={20}
       >
         <TouchWrap
-          onPress={() => props.setShow(false)}
-        >
+          onPress={() => props.setShow}>
           <H1 textAlign="center">Close</H1>
         </TouchWrap>
       </Container>
@@ -771,7 +774,7 @@ export const CustomWebView = (props) => (
   </Modal>
 )
 
-export const BackHandler = ({ onPress, position }) => {
+export const BackHandler = ({ onPress, position }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -794,7 +797,7 @@ export const BackHandler = ({ onPress, position }) => {
     </TouchableWrapper>
   )
 }
-export const CloseHandler = ({ onPress }) => {
+export const CloseHandler = ({ onPress }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -806,14 +809,7 @@ export const CloseHandler = ({ onPress }) => {
       }}
       style={{
         alignItems: "center",
-        //backgroundColor : AppColors.yellow
       }}>
-      {/* <ImageWrap
-        url={Images.Close}
-        fit={"contain"}
-        height={4}
-        width={4}
-      /> */}
       <Ionicons name="close-outline" size={25} />
     </TouchableWrapper>
   )
@@ -821,7 +817,7 @@ export const CloseHandler = ({ onPress }) => {
 
 
 
-export const NotifyHandler = ({ onPress }) => {
+export const NotifyHandler = ({ onPress }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <TouchableWrapper
@@ -846,7 +842,7 @@ export const NotifyHandler = ({ onPress }) => {
   )
 }
 
-export const CustomFallBackScreen = (props) => {
+export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
   const reportError = useMutation((load) => APIFunction.error_report(load))
   const logoutMethod = async () => {
     try {
@@ -889,7 +885,7 @@ export const CustomFallBackScreen = (props) => {
   )
 }
 
-export const EmptyStateWrapper = (props) => (
+export const EmptyStateWrapper = (props:EmptyStateWrapperProps) => (
   <Container
     marginTop={props.marginTop || 8}
     style={{
@@ -897,11 +893,13 @@ export const EmptyStateWrapper = (props) => (
       backgroundColor: props.backgroundColor || AppColors.white
     }}
   >
+    <View style={{width:width(50)}}>
     <ImageWrap
       url={props.icon}
-      height={props.height || 30}
+      height={props.height ? height(props.height ) : 50}
       fit="contain"
     />
+</View>
     <SizedBox height={props?.spacing || 2} />
     {
       props.header_1 ? (
@@ -925,10 +923,9 @@ export const EmptyStateWrapper = (props) => (
   </Container>
 )
 
-export const TouchableWrapper = (props) => (
+export const TouchableWrapper = (props:TouchableWrapperProps) => (
   <TouchableRipple onPress={props.onPress}
     rippleColor={AppColors.whiteBase}
-
     style={[
       props?.isText ? {
         height: props?.height ? height(props?.height) : height(5),
@@ -943,6 +940,10 @@ export const TouchableWrapper = (props) => (
         alignItems: "center"
       } : {}, props.style
     ]}
+    disabled={props?.disabled}
+    onLayout={props?.onLayout}
+    hasTVPreferredFocus={false}
+    tvParallaxProperties={false}
   >
     {props.children}
   </TouchableRipple>
@@ -1294,32 +1295,79 @@ export const ClockINContainer = () => {
   )
 }
 
-export const KeyboardAwareWrapper = ({children} : KeyboardAwareWrapperProps) => {
+interface KeyboardAwareWrapperProps {
+  children : React.ReactNode
+  scrollable? : boolean
+  style? : ViewStyle
+}
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-      dispatch(setBottomTabBarVisible(false))
-      return () => dispatch(setBottomTabBarVisible(true))
-  }, []);
+export const KeyboardAwareWrapper = ({children,scrollable,style} : KeyboardAwareWrapperProps) => {
+  const ref = useRef<KeyboardAwareScrollView>(null)
+  const position : CordType = useAppSelector(state=>state.Config.scrollPosition)
+  const dispatch = useDispatch()
+  useEffect(()=>{
+      if(scrollable && ref?.current?.scrollToPosition){
+        ref?.current?.scrollToPosition(0,position?.[0]?.y || 0,true)
+      }
+  },[position])
 
+  useEffect(()=>{
+      return () => {
+          dispatch(scrollToPosition({
+              [0] : {
+                  y : 0,
+                  x : 0
+              }
+          }))
+      }
+  },[])
   return(
       <KeyboardAwareScrollView 
         enableResetScrollToCoords={false}
         keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        ref={ref}
+        style={style}
       >
         {children}
       </KeyboardAwareScrollView>
   )
 }
 
-// const areEqual = (prevProps, nextProps) => {
-//   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
+// generating dates in iso 
+
+// for length of the number structure
+// export const padStart = ({ value, maxLength, fillingValue }:
+//   { value: string | number, maxLength: number, fillingValue: string | number }) => {
+//   return `${value}`.padStart(maxLength,`${fillingValue}`.trim())
+// }
+// export const rawDate = ({ date }: { date?: string | number | Date; }={}) :Date=> {
+//   return date ? new Date(date) : new Date();
+// }
+
+// export const rawDateObject = ({ date }: { date?: string | number | Date; } = {}):
+//   { year: string, month: string; day: string; weekDay: string; hour: string; minutes: string; seconds: string; milliseconds: string; } => {
+  
+//   const now = rawDate({ date });
+//   const year = now.getFullYear().toString();
+//   const month = padStart({ value: now.getMonth() +1,maxLength:2,fillingValue:0 })
+//   const day = padStart({ value: now.getDate(), maxLength: 2, fillingValue: 0 })
+//   const weekDay = padStart({ value: now.getDay(), maxLength: 2, fillingValue: 0 })
+//   const hour = padStart({ value: now.getHours(), maxLength: 2, fillingValue: 0 })
+//   const minutes = padStart({ value: now.getMinutes(), maxLength: 2, fillingValue: 0 })
+//   const seconds = padStart({ value: now.getSeconds(), maxLength: 2, fillingValue: 0 })
+//   const milliseconds = padStart({ value: now.getMilliseconds(),maxLength:3,fillingValue:0 })
+//   return {year,month,day,weekDay,hour,minutes,seconds,milliseconds} 
+// }
+
+// export const GenerateIsoDates = ({ date }: { date?: string | number | Date; }={}) :string=> {
+//   const { year, month, day, hour, minutes, seconds, milliseconds } = rawDateObject({ date });
+//   return `${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${milliseconds}Z`;
 // }
 
 
-//export const Rounded = React.memo(_Rounded, areEqual);
+
 
 
 const ComponentStyles = StyleSheet.create({
@@ -1331,4 +1379,3 @@ const ComponentStyles = StyleSheet.create({
     marginBottom: height(0.3)
   }
 })
-

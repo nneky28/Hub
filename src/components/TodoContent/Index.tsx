@@ -3,9 +3,10 @@ import {
     Image,
     Text,
     TouchableOpacity,
+    Platform
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { H1, P, } from '../../utills/components'
+import React, { useState} from 'react'
+import { H1, P, TouchableWrapper, } from '../../utills/components'
 import styles from './styles'
 import { Images } from '../../component2/image/Image';
 import AppColors from '../../utills/AppColors';
@@ -13,24 +14,35 @@ import { ActionModal, UnCompletedModal, SentActionModal } from '../ContactModal'
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { storeData, getData, Capitalize } from '../../utills/Methods';
+import { storeData, Capitalize } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
-import CommonStyles from '../../utills/CommonStyles';
 import TaskDetails from '../TaskDetails/Index'
 
-const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => {
+
+
+
+interface TaskProps {
+    item: any;
+    index: number;
+    title: string;
+    isSent: boolean;
+    user: boolean;
+    allTasks: any[];
+    onPressHandle: () => void;
+  
+}
+
+const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
     const queryClient = useQueryClient()
-    const [modal, setModal] = useState(false)
-    const [display, setDisplay] = useState(false)
-    const [subTask, setSubTask] = useState(false)
-    const [completed, setCompleted] = useState(false)
-    const [watch, setWatch] = useState(false)
-    const [sentModal, setSent] = useState(false)
-    const navigation = useNavigation()
+    const [modal, setModal] = useState <boolean>(false)
+    const [display, setDisplay] = useState<boolean>(false)
+    const [completed, setCompleted] = useState<boolean>(false)
+    const [watch, setWatch] = useState<boolean>(false)
+    const [sentModal, setSent] = useState<boolean>(false)
+ 
 
     const {
         mutateAsync,
@@ -39,7 +51,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
 
     const deleteTask = useMutation(APIFunction.delete_task)
 
-    const onPressHandler = async (action) => {
+    const onPressHandler = async (action:string) => {
         try {
             let fd = {
                 status: action,
@@ -53,54 +65,58 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                 setModal(false)
                 setCompleted(false)
                 setSent(false)
-                showFlashMessage({ title: `status changed` })
+                showFlashMessage({
+                    title: `Task moved to ${action.toUpperCase()}`,
+                    duration: 4600,
+                    type: 'info',
+                    statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null
+                })
+               
                 setWatch(!watch)
             }
 
         } catch (error) {
-            //console.log('err', error)
         }
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id:number) => {
         try {
-            let res = await deleteTask.mutateAsync(id)
+             await deleteTask.mutateAsync(id)
             queryClient.invalidateQueries()
             showFlashMessage({ title: `Task deleted` })
             setModal(false)
             setSent(false)
         } catch (error) {
-            //console.log('err', error)
         }
 
     }
-
-    useEffect(() => {
-        __flattenArr()
-    }, [allTasks]);
-
-
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
+    
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
+                <>  
                 <TouchableOpacity onPress={() => setDisplay(true)}>
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
                 </TouchableOpacity>
                 {
-                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" || user ? null :
+                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
-                            <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => {
-                                title === "Completed" && setCompleted(true)
-                                index === 1 && setSent(true)
+                                <TouchableWrapper
+                                    size={4}
+                                    onPress={() => {
+                                        if ( title === "Completed") {
+                                       return setCompleted(true)
+                                    }
+                               setSent(true)
                             }}>
                                 <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
-                            </TouchableOpacity> :
+                            </TouchableWrapper> :
                             <View style={styles.btn}>
-                                <TouchableOpacity
-
+                                
+                                    <TouchableOpacity   
                                     onPress={() => {
                                         if (title === 'In Progress') {
                                             onPressHandler("Completed")
@@ -108,7 +124,7 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                                         onPressHandler('In-progress')
                                     }}
                                     style={styles.button}>
-                                    <Text numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</Text>
+                                    <H1 numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</H1>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
@@ -121,23 +137,27 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
                                 </TouchableOpacity>
                             </View>
 
-                }
+                    }
+                     </>
 
             </View>
             <View style={styles.by}>
-                <P color={AppColors.black3}>
+                <P color={AppColors.black3} >
                     {
-                        isSent || user ? 'To:' : 'By:'
+                        index === 1 ? 'To:' : 'By:'
                     }
                     {" "}
-                    {item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}
+                    {
+                        !item?.assigned_to ? item?.department?.name:item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''
+                    }
+               
                 </P>
             </View>
 
             {
-                title !== 'To-Do' ? null :
+                title === "Completed" ? null :
                     <View style={styles.row1}>
-                        {dueToday ? <React.Fragment>
+                        {dueToday ? <React.Fragment>            
                             <Image source={{ uri: Images.DueFlag }} style={styles.flag} />
                             <P style={styles.flagText}>DueToday</P>
                         </React.Fragment> : overDue ? <React.Fragment>
@@ -159,32 +179,34 @@ const Index = ({ item, index, title, __flattenArr, isSent, allTasks, user }) => 
 
             <View style={styles.subTaskRow}>
                 {
-                    item?.sub_tasks_tasksapp?.length > 0 ?
-                        <FlatList
-                            data={Object.values(item?.sub_tasks_tasksapp)}
-                            renderItem={({ item }) =>
-                                <View style={styles.content}>
-                                    <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
-                                    <Text numberOfLines={1}
-                                        style={styles.sub}>{item.title}</Text>
-                                </View>
-                            }
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                        : null
+                    !item?.sub_tasks_tasksapp?.title ? null :
+                        item?.sub_tasks_tasksapp?.length > 0 ?
+                            <FlatList
+                                data={Object.values(item?.sub_tasks_tasksapp)}
+                                renderItem={({ item }) =>
+                                    <View style={styles.content}>
+                                        <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
+                                        <Text numberOfLines={1}
+                                            style={styles.sub}>{item.title}</Text>
+                                    </View>
+                                }
+                                keyExtractor={(index) => index.toString()}
+                            />
+                            : null
                 }
             </View>
             <View style={styles.line1} />
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading} />
+                loading={isLoading} title={title} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-            <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item}
-                onPressHandle={onPressHandler}
+
+            <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item} onPressHandle={onPressHandler} 
                 deleteHandler={() => handleDelete(item.id)}
                 loading={isLoading} />
-            <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} />
+            
+            <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} title={title} />
 
         </View>
     )

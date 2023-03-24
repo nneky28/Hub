@@ -23,7 +23,10 @@ interface Props{
   secureTextEntry? : boolean
   right? : React.ReactNode,
   maxLength? : number,
-  editable? : boolean
+  editable?: boolean,
+  style: any[],
+  autoFocus: boolean,
+  multiline:boolean
 }
 
 const CustomInput: React.FC<Props> = (props) => {
@@ -36,7 +39,9 @@ const CustomInput: React.FC<Props> = (props) => {
             value={props.value}
             outlineColor={AppColors.grayBorder}
             keyboardType={props.keyboardType}
-            secureTextEntry={props?.secureTextEntry}
+           secureTextEntry={props?.secureTextEntry}
+        autoFocus={props.autoFocus}
+        multiline={props.multiline}
             style={[
               {
                 backgroundColor: AppColors.gray,
@@ -50,7 +55,7 @@ const CustomInput: React.FC<Props> = (props) => {
               props.minHeight !== undefined ? {
                 minHeight: height(props.minHeight),
                 height: undefined
-              } : {}
+              } : {},props.style
             ]}
             theme={{
               colors: {

@@ -11,8 +11,10 @@ import Button from '../../components/Button'
 import { useMutation, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
-import { APIFunction } from '../../utills/api';
+import { APIFunction, useFetchOnboarding } from '../../utills/api';
 import { getData, storeData } from '../../utills/Methods';
+import { showFlashMessage } from '../../components/SuccessFlash/index';
+
 
 
 const styles = {
@@ -98,20 +100,47 @@ const Index = ({ navigation }) => {
 
     const swiperRef = useRef(null);
     const dispatch = useDispatch();
+    const Task_Name = "Task"
+    const queryClient = useQueryClient()
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
+    const { mutateAsync: editHandler } = useMutation(APIFunction.update_onboarding)
+    const [toCheck, setToCheck] = useState(true)
+
+    const {
+        data: onboarding,
+    } = useFetchOnboarding(Task_Name)
+
 
     const handleCompletion = async () => {
-        let employee_id = await getData("about_me")
-        let fd = {
-            type: 'Task',
-            employee: employee_id.id,
-            has_completed_mobile_navigation: true,
-            has_completed_mobile_onboarding: true
-        }
+        try {
+            let employee_id = await getData("about_me")
 
-        let res = await mutateAsync(fd)
-        await storeData('onboard', res)
-        navigation.navigate("onBoardHome")
+            let fd = {
+                type: 'Task',
+                employee: employee_id.id,
+                has_completed_mobile_navigation: true,
+                has_completed_mobile_onboarding: true
+            }
+
+            if (!onboarding) {
+                fd["id"] = onboarding[0]?.id;
+                let res = await editHandler(fd)
+                await storeData('onboard completion', res)
+                queryClient.invalidateQueries("get_onboarding")
+                navigation.navigate("Task", { toCheck })
+            } else {
+                let res = await mutateAsync(fd)
+                queryClient.invalidateQueries()
+                await storeData('onboard completion', res)
+                navigation.navigate("Task", { toCheck })
+            }
+        } catch (error) {
+            console.log('err', error)
+            showFlashMessage({
+                title: "Something went wrong. Please retry",
+                type: 'error'
+            })
+        }
 
     }
 
@@ -172,9 +201,14 @@ const Index = ({ navigation }) => {
                     title="Continue"
                     textStyle={styles.buttonText}
                     containerStyle={styles.button}
-                    onPress={() => swiperRef.current.scrollBy(1)}
+                    onPress={() => {
+                        if (swiperRef?.current?.state?.index === 2) {
+                            return handleCompletion()
+                        }
+                        swiperRef.current.scrollBy(1)
+                    }}
                 />
-                < Button
+                <Button
                     title="Skip"
                     textStyle={styles.btnText}
                     containerStyle={styles.btn}

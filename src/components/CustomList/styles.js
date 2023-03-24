@@ -146,17 +146,25 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansRegular,
         color: AppColors.green,
     },
-    search: { flexDirection: 'row', paddingHorizontal: width(5) },
-    searchView: {
-        justifyContent: "center",
-        borderRadius: 50,
+
+    emptyState: {
+        justifyContent: 'center',
         alignItems: 'center',
-        width: width(15),
-        height: height(7),
-        borderWidth: 1,
-        borderColor: AppColors.grayBorder
+        flex: 1,
+        marginTop: height(15),
 
     },
+    // search: { flexDirection: 'row', paddingHorizontal: width(5) },
+    // searchView: {
+    //     justifyContent: "center",
+    //     borderRadius: 50,
+    //     alignItems: 'center',
+    //     width: width(15),
+    //     height: height(7),
+    //     borderWidth: 1,
+    //     borderColor: AppColors.grayBorder
+
+    // },
     searchBoxStyle: { width: width(4), height: height(2), borderRadius: 50, alignSelf: 'center' },
     close: {
         flexDirection: 'row',

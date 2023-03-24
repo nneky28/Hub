@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity
+  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity, Alert
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
@@ -26,16 +26,19 @@ import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
 import TaskDetails from '../TaskDetails/Index'
 import CreateTask from '../../screens/CreateTask/Index'
+import { useNavigation } from '@react-navigation/native';
 
 
 const ContactModal = ({ isVisible, onHide, data }) => {
+
+
   let address = ""
-  if(data?.address){
-      address = data?.address?.address1 || ""
-      address =   address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2  : address
-      address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
-      address = address && data?.address?.state ? `${address}, ${data?.address?.state}` : data?.address?.state ? data?.address?.state : address
-      address = address && data?.address?.country_display ? `${address}, ${data?.address?.country_display}` : data?.address?.country_display ? data?.address?.country_display : address
+  if (data?.address) {
+    address = data?.address?.address1 || ""
+    address = address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2 : address
+    address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
+    address = address && data?.address?.state ? `${address}, ${data?.address?.state}` : data?.address?.state ? data?.address?.state : address
+    address = address && data?.address?.country_display ? `${address}, ${data?.address?.country_display}` : data?.address?.country_display ? data?.address?.country_display : address
   }
   const contactData = [
     {
@@ -565,9 +568,11 @@ const FilterModal = ({ isVisible, onHide, onPressHandle }) => {
     </Modal>
   );
 };
-const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler }) => {
+const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler, title }) => {
+
   const [showDetails, setShowDetails] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const navigation = useNavigation();
 
   const Loader = () => {
     if (loading)
@@ -596,7 +601,7 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{ margin: 0 }}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
 
       <View style={styles.container1}>
@@ -607,36 +612,54 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
         <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
           <P>Mark task as complete</P>
         </TouchableOpacity>
+        {
+          title === "To-Do" ? null :
+            <>
+              <View style={styles.line} />
+              <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("To-do")}>
+                <P>Mark task as not started</P>
+              </TouchableOpacity>
+            </>
+        }
         <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => { setShowForm(true), item }}>
+        <TouchableOpacity style={styles.textCon} onPress={() => {
+          onHide()
+          navigation.navigate("CreateTask", { item })
+        }}>
           <P>Edit Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
         <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
-          <P>Delete Task</P>
+          <P color={AppColors.red}>Delete Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
       </View>
 
       <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
-      <CreateTask
-        visible={showForm}
-        onHide={() => setShowForm(false)}
-        item={item}
-      />
     </Modal>
   );
 };
 
-const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
+const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle, loading }) => {
   const [showForm, setShowForm] = useState(false)
   const [employee, setEmployee] = useState({})
+  const [showDetails, setShowDetails] = useState(false)
+  const navigation = useNavigation();
 
   const getUser = async () => {
     let user = await getData("about_me")
     setEmployee(user)
   }
+  // const disabled = () => {
+  //   if (employee?.id !== item?.created_by?.id) {
+  //     Alert('You can not delete this task')
+  //   }
+  // }
 
+  const handleView = () => {
+    setShowDetails(true)
+    item
+  }
   useEffect(() => {
     getUser()
   }, [])
@@ -653,30 +676,37 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler }) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container1}>
         <React.Fragment>
-          <TouchableOpacity onPress={() => { setShowForm(true), item }}
-            style={styles.textCon}
-            disabled={(employee?.id !== item?.created_by?.id)}
-          >
-            <P style={styles.text1}>Edit Task</P>
+          <TouchableOpacity onPress={handleView}
+            style={styles.textCon}>
+            <P>View Task</P>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.textCon}
+          <TouchableOpacity onPress={() => {
+            onHide()
+            navigation.navigate("CreateTask", { item, })
+          }}
+            style={styles.textCon}>
+            <P>Edit Task</P>
+          </TouchableOpacity>
+          <View style={styles.line} />
+          <TouchableOpacity style={[styles.textCon]}
             onPress={() => deleteHandler()}
-            disabled={(employee?.id !== item?.created_by?.id)}
-          >
-            <P style={styles.text1}>Delete task</P>
+            disabled={(employee?.id !== item?.created_by?.id)}>
+            <P color={AppColors.red}>Delete task</P>
           </TouchableOpacity>
         </React.Fragment>
       </View>
 
-      <CreateTask
+      {/* <CreateTask
         visible={showForm}
         onHide={() => setShowForm(false)}
         item={item}
-      />
+      /> */}
+      <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
     </Modal>
   );
 };
@@ -699,7 +729,7 @@ const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
       swipeThreshold={0.3}
       style={{ margin: 0 }}
       isVisible={isVisible}>
-      <View style={styles.container1}>
+      <View style={styles.conBox}>
         <TouchableWrapper style={styles.textCon} onPress={() => onPressHandle('In-progress')}>
           <Text style={styles.progress}>Undo completed</Text>
         </TouchableWrapper>

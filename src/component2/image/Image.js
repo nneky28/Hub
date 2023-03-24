@@ -94,10 +94,18 @@ export const Images = {
   Checked: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+9229.png",
   Create: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+(2).png",
   player: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Vector+(13).png",
-  clippedPart: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Rectangle+4029+(1).png",
+  clippedBlue: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle_Blue_2.png",
+  clippedYellow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle_Yellow_3.png",
+  clippedGreen: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle_Green_1.png",
   TaskLogo: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(14).png",
   DueFlag: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(15).png",
-  Attach: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(16).png"
+  Attach: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(16).png",
+  FilterArrow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/arrows.png",
+  ArrowDown: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/down.png",
+  SubTaskBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/RectangleGrey.png",
+  blueBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026+2.png",
+  yellowBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4028.png",
+  greenBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026.png"
 
 }
 

@@ -57,6 +57,7 @@ const CustomModalDropdown = (props : DropDownProps) => {
             if(props.setOpen) return props.setOpen(true)
             setShowDropDown(true)
           }}
+     
           onDismiss={() => setShowDropDown(false)}
           value={props.defaultValue !== props.placeholder ? props.defaultValue : ""}
           iconColor={AppColors.black3}

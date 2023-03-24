@@ -1,29 +1,38 @@
-import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
+import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Image, Modal, SectionList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
 import { CloseHandler, Container, P, Rounded, H1, BackHandler, ImgPlaceholder, } from '../../utills/components';
 import SearchBox, { SearchBoxIOS, SearchBoxIOSWithout, SearchBoxWithout } from '../../components/SearchBox/index';
 import CommonStyles from '../../utills/CommonStyles';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import PersonListComp from '../../components/PersonListComp/index';
-import { useFetchEmployees, useFetchTeams } from '../../utills/api';
+import PersonListComp, { DeptListComp } from '../../components/PersonListComp/index';
+import { useFetchEmployees, useFetchTeams, useFetchDepartments } from '../../utills/api';
 import { arrowIcon } from '../../assets/images'
 import Button from '../../components/Button';
-import { Capitalize } from '../../utills/Methods';
+import { Capitalize, getData } from '../../utills/Methods';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper/index';
-import { borderColor } from 'styled-system';
+import { Images } from '../../component2/image/Image';
 
 
 
-const PeopleList = ({ navigation, route }) => {
-    const { team, people } = route.params
+const PeopleList = ({ navigation, route, onPressHandler }) => {
+    const { team, people, focus, } = route.params
+    const [myTeam, setMyTeam] = useState({})
     const [item, setItem] = useState([])
     const [teamItem, setTeamItem] = useState([])
     const [page, setPage] = useState(1)
-    const [teampage, setTeamPage] = useState(1)
-    const [id, setId] = useState(false)
+    const [teamPage, setTeamPage] = useState(1)
     const [search, setSearch] = useState('')
+    const [id, setId] = useState(false)
+    const [tab, setTab] = useState('Employees');
+    const [employeeList, setEmployeeList] = useState(false)
+    const [deptList, setDeptList] = useState(false)
+    const [deptPage, setDeptPage] = useState(1)
+    const [departments, setDepartments] = useState([])
+    const [searchDeptTerm, setSearchDeptTerm] = useState('')
+    const combinedState = [...teamItem, ...item]
+
 
     const {
         data: data,
@@ -35,7 +44,13 @@ const PeopleList = ({ navigation, route }) => {
     const {
         data: teamData,
         loading: loadingTeam,
-    } = useFetchTeams(page, id)
+    } = useFetchTeams(teamPage, id)
+    const {
+        data: departmentData,
+        isFetching: fetchingDepartments,
+        isFetchingNextPage: fetchingNextDepartments,
+    } = useFetchDepartments(deptPage, searchDeptTerm)
+
 
     const RenderItem = ({ item }) => {
         return (
@@ -44,51 +59,18 @@ const PeopleList = ({ navigation, route }) => {
             />
         )
     }
-    const teamItems = ({ item }) => {
-        return (
-            <View
-                style={styles.listItemContainer}>
-                <View style={styles.rowPart}>
-                    {
-                        item.photo ? (
-                            <Image source={{ uri: item.photo }} style={styles.avatarStyle} />
-                        ) : (
-                            // <Rounded backgroundColor={ColorList[Math.floor(Math.random() * 4)]} size={12}>
-                            //     <H1>
-                            //         {item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}
-                            //         {item && item.last_name && item.first_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ""}
-                            //     </H1>
-                            //     </Rounded>
-                            <ImgPlaceholder text={`${item && item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ""}${item && item.last_name && item.first_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ""}`}
-                                size={12} />
-                        )
-                    }
-                    <View style={styles.textContainer}>
-                        <Text style={styles.titleText}>
-                            {item && item.first_name ? Capitalize(item.first_name) : ""} {" "}
-                            {item && item.last_name ? Capitalize(item.last_name) : ""}
-                        </Text>
-                        <Text style={styles.subText}>{item.job && item.job.title ? Capitalize(item.job.title) : ""}</Text>
-                    </View>
-                </View>
-
-                <View>
-                    <Button
-                        title="View tasks"
-                        textStyle={styles.buttonText}
-                        containerStyle={styles.button}
-                        onPress={() => navigation.navigate('profile', {
-                            item,
-                        })
-                        }
-                    />
-                </View>
-
-
-            </View>
-        )
+    const aboutMe = async () => {
+        let details = await getData("about_me");
+        setMyTeam(details)
     }
 
+    const RenderDept = ({ item }) => {
+        return (
+            <DeptListComp item={item}
+                onPressHandle={() => navigation.navigate("profile", { item, departments })}
+            />
+        )
+    }
     const loadMore = () => {
         if (hasNextPage && !loading)
             setPage(page + 1)
@@ -105,215 +87,190 @@ const PeopleList = ({ navigation, route }) => {
 
     const __flattenArr = (param) => {
         let flattenedArr = []
-        if (param === "people" && data && data?.pages && Array.isArray(data?.pages)) {
-            flattenedArr = data?.pages
+        if (param === "departments" && departmentData && departmentData?.pages && Array.isArray(departmentData?.pages)) {
+            flattenedArr = departmentData?.pages
         }
-        if (param === "team" && teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
-            flattenedArr = teamData?.pages
-        }
-
         let flattenArr = flattenedArr.map((res) => {
             if (!res) return {}
             return res.results
         })
         let arr = flattenArr.flat()
-
-        if (param === "people")
-            page > 1 ? setItem([...item, ...arr]) : setItem(arr)
-
-        if (param === "team")
-            teampage > 1 ? setTeamItem([...teamData, ...arr]) : setTeamItem(arr)
+        if (param === "departments")
+            return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
 
+
+    const flattenAndMapData = (data, type) => {
+        let flattenedArr = [];
+        if (data && data.pages && Array.isArray(data.pages)) {
+            flattenedArr = data.pages;
+        }
+        flattenedArr = flattenedArr
+            .map((res) => {
+                if (!res) return {};
+                return res.results;
+            })
+            .map((item, i) => {
+                return {
+                    key: i,
+                    title: type,
+                    data: item.map((employee) => {
+                        return {
+                            id: employee.id,
+                            first_name: employee.first_name,
+                            last_name: employee.last_name,
+                            photo: employee.photo,
+                            job: employee.job.title
+                        };
+                    }),
+                };
+            });
+
+        if (type === "Others")
+            page > 1 ? setItem([...item, ...flattenedArr]) : setItem(flattenedArr)
+        return flattenedArr;
+    };
+
+    useEffect(() => {
+        const formattedData = flattenAndMapData(data, 'Others');
+        setItem(formattedData);
+    }, [data]);
+
+    useEffect(() => {
+        const formattedData = flattenAndMapData(teamData, 'Team Members');
+        setTeamItem(formattedData);
+    }, [teamData]);
 
     const handleSearch = (item) => {
         setSearch(item)
         setPage(1)
     }
 
-    useEffect(() => {
-        __flattenArr('people')
-    }, [data])
 
     useEffect(() => {
-        __flattenArr('team')
-    }, [teamData])
+        __flattenArr('departments')
+    }, [fetchingDepartments, fetchingNextDepartments])
 
+    useEffect(() => {
+        setPage(1)
+        setSearch("")
+    }, [tab])
 
-    const alpha = Array.from(Array(26)).map((e, i) => i + 65);
-    const alphabet = alpha.map((x) => String.fromCharCode(x));
+    useEffect(() => {
+        aboutMe()
+    }, [tab])
 
-    const RenderItems = ({ item }) => {
-        return (
-            <TouchableOpacity onPress={() => setSearch(item)} >
-                {/* <Rounded
-                    marginRight={3}
-                    backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
-                    <H1 style={styles.team}>
-                        {item}
-                    </H1>
-                </Rounded> */}
-                <ImgPlaceholder text={item} size={15} />
-            </TouchableOpacity>
-        )
-    }
 
     return (
-        <Container backgroundColor='#F5F5F5'>
-
-            {
-                team &&
-                <React.Fragment>
-                    <View style={{ backgroundColor: AppColors.white, marginTop: height(4) }}>
-                        <View style={styles.header}>
-                            <View style={{ marginLeft: width(2) }}>
-                                <BackHandler position={'center'} />
-                            </View>
-                            <Text numberOfLines={1} style={styles.screenTitle}>Team Members</Text>
-                            <View style={{ width: width(13) }} />
-                        </View>
-                        <View style={styles.line} />
-                    </View>
-
-
-                    <View style={CommonStyles.marginTop_1}>
-                        {
-                            Platform.OS === 'android' ?
-                                <>
-                                    <View style={styles.searchBox}>
-                                        <SearchBox
-                                            title="Search by name "
-                                            containerStyle={styles.searchBox}
-                                            onSubmitEditing={handleSearch}
-                                        />
-                                        <TouchableOpacity style={styles.filterIconContainer}>
-                                            <Image resizeMode="contain" source={arrowIcon} style={styles.filterIcon} />
-                                        </TouchableOpacity>
-                                    </View>
-                                </> : Platform.OS === 'ios' ?
-                                    <View style={styles.searchBox}>
-                                        <SearchBoxIOS
-                                            title="Search by name "
-                                            containerStyle={styles.searchBox}
-                                            onSubmitEditing={handleSearch}
-                                        />
-                                        <TouchableOpacity style={styles.filterIconContainerIOS}>
-                                            <Image resizeMode="contain" source={arrowIcon} style={styles.filterIconIOS} />
-                                        </TouchableOpacity>
-                                    </View> : null
-                        }
-                    </View>
-                    <FlatList
-                        data={teamItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={teamItems}
-                        ItemSeparatorComponent={() => <View style={styles.line} />}
-                        showsVerticalScrollIndicator={false}
-                        nestedScrollEnabled={true}
-                        contentContainerStyle={[CommonStyles.marginTop_1]}
-                    />
-
-                </React.Fragment>
-            }
-
+        <View
+            style={styles.wrapper}>
             {
                 loading && <ActivityIndicator size={width(10)} color={AppColors.green} />
             }
 
-
-            {people && <View style={styles.containerView}>
-
+            <View style={styles.containerView}>
                 <View style={styles.header}>
                     <CloseHandler onPress={() => navigation.goBack()} />
-
-                    <Text numberOfLines={1} style={styles.screenTitle}>
-                        Search
-                    </Text>
-                    <View style={{ width: width(10) }} />
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <P style={CommonStyles.marginRight_8}>Done</P>
+                    </TouchableOpacity>
                 </View>
+
+                <View style={styles.twoButtonCont}>
+                    {
+                        ['Employees', 'Departments'].map((item, i) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setTab(item)
+                                }
+                                }
+                                style={styles.button3}
+                                activeOpacity={1}
+                                key={i}
+                            >
+                                <Text style={[styles.buttonText, tab == item && styles.buttonText1]}>
+                                    {item}
+                                </Text>
+                                {tab == item && <View style={styles.animatedView3} />}
+                            </TouchableOpacity>
+                        ))
+                    }
+                </View>
+
                 {
                     Platform.OS === "android" ? (
                         <View style={styles.searchBoxContainer}>
                             <SearchBoxWithout
-                                title="Search for People"
+                                title="Search by name"
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
+                                autoFocus={focus ? true : false}
                             />
                         </View>
                     ) : Platform.OS === 'ios' ? (
                         <View style={styles.searchBoxContainer}>
                             <SearchBoxIOSWithout
-                                title="Search for People"
+                                title="Search by name"
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
+                                autoFocus={focus ? true : false}
                             />
 
                         </View>
                     ) : null
                 }
-                <View>
-                    <View style={styles.container}>
-                        <P color={'#A8A8A8'}>Filter</P>
-                        <TouchableOpacity onPress={() => {
-                            setSearch(" ")
-                            setPage(1)
-                        }}>
-                            <P style={styles.btnText}>Clear</P>
-                        </TouchableOpacity>
-                    </View>
-                    <FlatList
-                        data={alphabet}
-                        horizontal
-                        renderItem={RenderItems}
-                        ItemSeparatorComponent={() => <View style={[CommonStyles.marginRight_3]} />}
-                        showsHorizontalScrollIndicator={false}
-                        nestedScrollEnabled={true}
-                        style={styles.team}
-                    />
-                </View>
 
+                {
+                    tab === "Employees" ?
+                        <View>
+                            {item && Array.isArray(item) && !loading && (
+                                <SectionList
+                                    sections={combinedState}
+                                    renderItem={RenderItem}
+                                    contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(30) }]}
+                                    renderSectionHeader={({ section }) => {
+                                        return (
+                                            <View style={[styles.headingContainer]}>
+                                                <H1 numberOfLines={1} style={styles.container}>{section.title}</H1>
+                                            </View>
+                                        )
+                                    }}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    ListFooterComponent={
+                                        isFetchingNextPage || hasNextPage ? footerLoader : null
+                                    }
+                                />
+                            )}
+                        </View> :
+                        <View>
+                            <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
+                                <H1 fontSize={3.3}>Your Team</H1>
+                                <DeptListComp item={myTeam?.department}
+                                // onPressHandle={() => navigation.navigate("profile", { item, departments })}
+                                />
+                            </View>
+                            <View style={[CommonStyles.marginBottom_2, CommonStyles.marginLeft_5,]}>
+                                <H1 fontSize={3.3}>Department</H1>
+                            </View>
 
-                <View>
-                    <View style={styles.container}>
-                        <P color={AppColors.black1}>Recent Searches</P>
-                        <TouchableOpacity onPress={() => {
-                            setSearch(" ")
-                            setPage(1)
-                        }}>
-                            <P style={styles.btnText}>Clear</P>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.line} />
-                </View>
+                            <FlatList
+                                data={departments}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={RenderDept}
+                                ItemSeparatorComponent={() => <View style={styles.line} />}
+                                showsVerticalScrollIndicator={false}
+                                nestedScrollEnabled={true}
+                                contentContainerStyle={[CommonStyles.marginLeft_5, { paddingBottom: height(100) }]}
+                                onEndReachedThreshold={0.1}
 
-                <View>
-                    <View style={styles.container}>
-                        <P color={'#A8A8A8'}>People</P>
-                    </View>
-                </View>
-                <FlatList
-                    data={item}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={RenderItem}
-                    ItemSeparatorComponent={() => <View style={styles.line} />}
-                    showsVerticalScrollIndicator={false}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={[CommonStyles.marginTop_1, CommonStyles.marginLeft_5, { paddingBottom: height(100) }]}
-                    onEndReachedThreshold={0.1}
-                    onEndReached={loadMore}
-                    refreshing={false}
-                    onRefresh={async () => {
-                        await storePage("page", 1)
+                            />
+                        </View>
+                }
 
-                    }}
-                    ListFooterComponent={isFetchingNextPage || hasNextPage ? footerLoader : null}
-                />
             </View>
-            }
-
-        </Container>
+        </View>
 
 
     )

@@ -6,7 +6,7 @@ import {
     FlatList
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { Container, P, Rounded, H1, ImgPlaceholder } from '../../utills/components'
+import { Container, P, Rounded, H1, ImgPlaceholder, TouchableWrapper } from '../../utills/components'
 import styles from './styles'
 import Button from '../Button/index';
 import AppColors, { ColorList } from '../../utills/AppColors';
@@ -24,7 +24,7 @@ import { UnCompletedModal, ActionModal } from '../ContactModal';
 import TaskDetails from '../TaskDetails/Index'
 
 
-const Index = ({ __flattenArr, item, title, team }) => {
+const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
 
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
@@ -42,10 +42,12 @@ const Index = ({ __flattenArr, item, title, team }) => {
         mutateAsync,
         isLoading,
     } = useMutation(APIFunction.update_status)
+    const deleteTask = useMutation(APIFunction.delete_task)
 
     const onPressHandler = async (action) => {
 
         let employee = await getData("about_me")
+
         let fd = {
             assigned_to: employee?.id,
             id: item.id,
@@ -54,12 +56,25 @@ const Index = ({ __flattenArr, item, title, team }) => {
         }
 
         let res = await mutateAsync(fd)
-        //console.log('res', res)
+        console.log('res', res)
         await storeData('task claim', res)
-        queryClient.invalidateQueries()
-        showFlashMessage({ title: `task updated` })
+        queryClient.invalidateQueries('get_team_tasks')
+        showFlashMessage({ title: `Task claimed successfully` })
         setWatch(!watch)
         setCompleted(false)
+
+    }
+
+    const handleDelete = async (id) => {
+        try {
+            await deleteTask.mutateAsync(id)
+            queryClient.invalidateQueries()
+            showFlashMessage({ title: `Task deleted` })
+            setModal(false)
+            setSent(false)
+        } catch (error) {
+            //console.log('err', error)
+        }
 
     }
 
@@ -68,9 +83,6 @@ const Index = ({ __flattenArr, item, title, team }) => {
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
 
-    useEffect(() => {
-        __flattenArr()
-    }, [watch]);
 
 
     return (
@@ -78,25 +90,27 @@ const Index = ({ __flattenArr, item, title, team }) => {
             <View style={styles.row}>
                 <View style={CommonStyles.row}>
                     {
-                        item?.department !== item?.assigned_to?.id ?
-                            <ImgPlaceholder text={item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""} size={12} />
-                            :
-                            (
-                                // <Rounded backgroundColor='#E1E1E1' size={12}>
-                                //     <H1 color={AppColors.black1}>?</H1>
-                                // </Rounded>
-                                <ImgPlaceholder text={'?'} size={12} />
-                            )
+                        item?.department?.id !== item?.assigned_to?.id ?
+                            <Image
+                                source={{ uri: item?.assigned_to?.photo }}
+                                style={styles.avatarStyle}
+                            /> :
+                            item?.department?.id !== item?.assigned_to?.id && !item?.assigned_to?.photo ?
+                                <ImgPlaceholder text={item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""} size={12} />
+                                :
+                                (
+                                    <ImgPlaceholder text={'?'} size={12} />
+                                )
 
                     }
 
-                    <View style={{ marginLeft: width(3), marginTop: height(0.5) }}>
+                    <View style={{ marginLeft: width(4), marginTop: height(0.5) }}>
                         <TouchableOpacity onPress={() => setShow(true)}>
                             <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
                         </TouchableOpacity>
                         <P fontSize={3} style={styles.author}>
-                            {item?.department === item?.assigned_to?.id ? `To: ${item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} `
-                                : `Claimed by: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
+                            {item?.department?.id === item?.assigned_to?.id ? `To: ${item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} `
+                                : `Claimed: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
                             }
                         </P>
                         <View>
@@ -128,9 +142,9 @@ const Index = ({ __flattenArr, item, title, team }) => {
 
                 <View>
                     {
-                        title === "Completed" ? <TouchableOpacity style={CommonStyles.marginTop_1} onPress={() => setCompleted(true)}>
+                        title === "Completed" ? <TouchableWrapper size={4} onPress={() => setCompleted(true)}>
                             <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
-                        </TouchableOpacity> : title === "In Progress"
+                        </TouchableWrapper> : title === "In Progress"
                             ? <View style={styles.btn}>
                                 <TouchableOpacity
                                     onPress={() => onPressHandler('Completed')}
@@ -147,7 +161,7 @@ const Index = ({ __flattenArr, item, title, team }) => {
                                     <Ionicons name="chevron-down-outline" size={15} color={AppColors.black3} />
                                 </TouchableOpacity>
                             </View> :
-                            item?.department === item?.assigned_to?.id ?
+                            item?.department?.id === item?.assigned_to?.id ?
                                 <Button
                                     title="Claim task"
                                     textStyle={styles.buttonText}
@@ -182,11 +196,15 @@ const Index = ({ __flattenArr, item, title, team }) => {
             </View>
             <View style={styles.line1} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-            <TaskDetails isVisible={show} onHide={() => setShow(false)} item={item} />
+            <TaskDetails isVisible={show}
+                onHide={() => setShow(false)} item={item} title={title} />
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading} />
+                loading={isLoading}
+                title={title}
+            />
+
         </View>
 
 

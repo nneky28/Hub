@@ -1,63 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { ColorList } from '../../utills/AppColors';
-import { CloseHandler, Container, H1, P, Rounded } from '../../utills/components'
+import AppColors, { ColorList } from '../../utills/AppColors';
+import { CloseHandler, Container, H1, P, Rounded, ImgPlaceholder } from '../../utills/components'
 import { FlatList, Modal, View, Image, Text } from 'react-native';
 import PersonListComp, { DeptListComp } from '../PersonListComp/index';
-import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { width, height } from 'react-native-dimension';
 import styles from './styles'
 import CommonStyles from '../../utills/CommonStyles';
 import { useFetchDepartments, useFetchEmployees } from '../../utills/api';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { Images } from '../../component2/image/Image';
+import { showFlashMessage } from '../SuccessFlash/index';
 
 
-const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
+const CustomList = ({ open, setOpen, onPressHandler }) => {
+
+    const [tab, setTab] = useState('Employees');
     const [options, setOptions] = useState(true)
     const [deptPage, setDeptPage] = useState(1)
-    const [empPage, setEmpPage] = useState(1)
+    const [page, setPage] = useState(1)
+    const [search, setSearch] = useState("")
     const [searchDeptTerm, setSearchDeptTerm] = useState('')
     const [employees, setEmployees] = useState([])
     const [departments, setDepartments] = useState([])
-    const [searchEmp, setSearchEmp] = useState("")
     const [employeeList, setEmployeeList] = useState(false)
     const [deptList, setDeptList] = useState(false)
-    const [tab, setTab] = useState('Employees');
-    const [selected, setSelected] = useState('')
+
+
 
     const RenderItem = ({ item }) => {
         return (
-
             <PersonListComp item={item}
                 onPressHandle={() => {
-                    onPressHandler({ ...item, type: "Employee" })
+                    onPressHandler({ ...item, type: "Employee", assigned_to: item.id })
                 }}
             />
-
         )
     }
     const RenderDept = ({ item }) => {
         return (
             <DeptListComp item={item}
                 onPressHandle={() => {
-                    onPressHandler({ ...item, type: "Departments" })
+                    onPressHandler({ ...item, type: "Departments", assigned_to: item.id })
                 }}
             />
         )
     }
-
-    const handleSearch = (text) => {
-        setSearchEmp(text)
-        setEmpPage(1)
-
-    }
     const {
-        data: employeeData,
-        hasNextPage: hasNextEmployees,
-        isFetchingNextPage: fetchingNextEmployees,
-        loading: empLoading
-    } = useFetchEmployees(empPage, searchEmp)
+        data: data,
+        hasNextPage: hasNextPage,
+        isFetchingNextPage: isFetchingNextPage,
+        loading
+    } = useFetchEmployees(page, search)
 
     const {
         data: departmentData,
@@ -67,8 +61,8 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
     const __flattenArr = (param) => {
         let flattenedArr = []
-        if (param === "employee" && employeeData && employeeData?.pages && Array.isArray(employeeData?.pages)) {
-            flattenedArr = employeeData?.pages
+        if (param === "people" && data && data?.pages && Array.isArray(data?.pages)) {
+            flattenedArr = data?.pages
         }
         if (param === "departments" && departmentData && departmentData?.pages && Array.isArray(departmentData?.pages)) {
             flattenedArr = departmentData?.pages
@@ -79,51 +73,64 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
         })
         let arr = flattenArr.flat()
 
-        if (param === "employee")
-            empPage > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
+        if (param === "people")
+            page > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
 
         if (param === "departments")
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
-
     }
 
     const loadMore = () => {
-        if (hasNextEmployees && !empLoading)
-            setEmpPage(empPage + 1)
+        if (hasNextPage && !loading)
+            setPage(page + 1)
     }
     const footerLoader = () => {
         return (
-            <Container marginTop={3}>
-                <ActivityIndicator size={width(10)} color={ColorList[Math.floor(Math.random() * 4)]} />
+            <Container
+                alignSelf={'center'}
+                width={30} marginTop={3}>
+                <ActivityIndicator size={width(10)} color={AppColors.green} />
             </Container>
         )
-
     }
-    const RenderItems = ({ item, index }) => {
+
+
+    const alpha = Array.from(Array(26)).map((e, i) => i + 65);
+    const alphabet = alpha.map((x) => String.fromCharCode(x));
+
+    const RenderItems = ({ item }) => {
+
         return (
-            <TouchableOpacity onPress={() => setSelected(index, item)}>
-                <Rounded
-                    marginRight={3}
-                    backgroundColor={ColorList[Math.floor(Math.random() * 4)]}>
-                    <H1 fontSize={5} style={styles.team}>
-                        {item}
-                    </H1>
-                </Rounded>
+            <TouchableOpacity
+                onPress={() => {
+                    setPage(1)
+                    setSearch(item)
+
+                    if (!search && !loading) {
+                        setPage(1)
+
+                    }
+                }}>
+                <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         )
     }
+    useEffect(() => {
+        __flattenArr('people')
+    }, [data])
 
     useEffect(() => {
-        __flattenArr('employee')
-    }, [employeeData])
+        setPage(1)
+        setSearch("")
+    }, [tab])
 
     useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
 
+
     return (
-        <Modal
-            visible={open}>
+        <Modal visible={open}>
             <Container style={styles.container}>
                 <View style={styles.close}>
                     <CloseHandler
@@ -139,12 +146,12 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setTab(item)
-
                                     if (item === 'Employee')
                                         return setEmployeeList(true)
                                     if (item === "Departments")
                                         return setDeptList(true)
-                                    onPressHandler({ name: item, type: "Me" })
+                                    if (item === "Me")
+                                        return onPressHandler({ name: item, type: "Me" })
                                 }
                                 }
 
@@ -173,14 +180,8 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                     </View>
 
                     <View style={styles.search}>
-                        <TouchableOpacity style={styles.searchView}
-                            onPress={handleSearch} >
-                            <Image source={{ uri: Images.SearchIcon }} style={styles.searchBoxStyle} />
-                        </TouchableOpacity>
                         <FlatList
-                            data={
-                                ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-                            }
+                            data={alphabet}
                             horizontal
                             renderItem={RenderItems}
                             ItemSeparatorComponent={() => <View style={[CommonStyles.marginRight_3]} />}
@@ -191,25 +192,38 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                     </View>
                 </Container>
 
-                <Container>
-                    {tab === "Employees" &&
-                        <>
-                            <View style={styles.containerA}>
-                                <H1 fontSize={3.3} color={'#878787'}>Recent Searches</H1>
-                                <TouchableOpacity onPress={() => setEmpPage(1)}>
-                                    <P style={styles.btnText}>Clear</P>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.line} />
-                        </>
-                    }
-                </Container>
-                <KeyboardAwareScrollView>
 
-                    <P style={styles.people}>People</P>
+                <Container>
+
+                </Container>
+                <ScrollView>
+                    {tab === "Employees" ?
+                        <P style={styles.people}>People</P> :
+                        <P style={styles.people}>Departments</P>
+                    }
+
+                    {
+                        loading && <ActivityIndicator size={width(20)} color={AppColors.green} />
+                    }
+
+
+
+                    {data && Array.isArray(data) &&
+                        data.length === 0 && !loading ?
+                        <View style={styles.emptyState}>
+                            <P>
+                                There are no people in your company.
+                            </P>
+                            <P>
+                                Adding people will enable you assign tasks directly to people or department
+                            </P>
+                        </View>
+                        : null
+                    }
+
                     {
                         tab === 'Employees' ?
-                            <React.Fragment>
+                            (<React.Fragment>
                                 <FlatList
                                     data={employees}
                                     keyExtractor={(item, index) => index.toString()}
@@ -221,15 +235,11 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                                     onEndReachedThreshold={0.1}
                                     onEndReached={loadMore}
                                     refreshing={false}
-                                    onRefresh={async () => {
-                                        await storePage("page", 1)
-
-                                    }}
-                                    ListFooterComponent={fetchingNextEmployees || hasNextEmployees ? footerLoader : null}
+                                    ListFooterComponent={isFetchingNextPage || hasNextPage || loading ? footerLoader : null}
                                 />
-                            </React.Fragment>
+                            </React.Fragment>)
                             :
-                            <React.Fragment>
+                            (<React.Fragment>
                                 <FlatList
                                     data={departments}
                                     keyExtractor={(item, index) => index.toString()}
@@ -240,10 +250,10 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
                                     contentContainerStyle={[styles.flatlist, { paddingBottom: height(40), paddingHorizontal: width(5) }]}
                                     onEndReachedThreshold={0.1}
                                 />
-                            </React.Fragment>
+                            </React.Fragment>)
 
                     }
-                </KeyboardAwareScrollView>
+                </ScrollView>
 
             </Container>
 
@@ -253,4 +263,4 @@ const CustomListModal = ({ open, setOpen, onPressHandler }) => {
 
 
 
-export default React.memo(CustomListModal)
+export default CustomList;
