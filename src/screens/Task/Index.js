@@ -99,7 +99,7 @@ const Index = ({ navigation, route }) => {
         dispatch(setCurrentTabIndex(i));
     };
 
-    console.log("INDEX", index)
+
     const AddButton = ({ onPress, style }) => (
         <TouchableOpacity style={style} onPress={onPress}>
             <Text style={styles.addButtonText}>+</Text>
