@@ -411,8 +411,8 @@ export const ImageWrap = (props:ImageWrapProps) => (
       overflow: "hidden",
       //...Elevation(props.elevation),
       position: props.position,
-      width:props.width ? width(props?.width)|| props.widthPercent : "100%",
-      height:props.height? width(props?.height) : height(3),
+      width:props.width ? width(props?.width) : "100%",
+      height:props.height? height(props?.height) : height(3),
       backgroundColor: props?.backgroundColor,
       borderRadius: props.borderRadius,
       borderTopLeftRadius: props.borderTopLeftRadius,
@@ -893,13 +893,13 @@ export const EmptyStateWrapper = (props:EmptyStateWrapperProps) => (
       backgroundColor: props.backgroundColor || AppColors.white
     }}
   >
-    <View style={{width:width(50)}}>
-    <ImageWrap
-      url={props.icon}
-      height={props.height ? height(props.height ) : 50}
-      fit="contain"
-    />
-</View>
+    <Container width={70} alignSelf="center" backgroundColor={props.backgroundColor}>
+      <ImageWrap
+        url={props.icon}
+        height={props.height || 30}
+        fit="contain"
+      />
+    </Container>
     <SizedBox height={props?.spacing || 2} />
     {
       props.header_1 ? (

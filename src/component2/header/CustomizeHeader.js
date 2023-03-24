@@ -56,7 +56,6 @@ import { useNavigation } from '@react-navigation/core';
 
 //   async componentDidMount() {
 //     let LoginProfile = await getLodgedInDetailsProfile();
-//     console.log(LoginProfile, 'LoginProfile');
 //     this.setState({
 //       displayName: LoginProfile.firstName,
 //     });
@@ -388,7 +387,6 @@ const CustomizeHeader  = (props) => {
         <Button
           transparent
           onPress={() => {
-           // console.log("props>>>",props,navigation)
             navigation.toggleDrawer();
           }}>
           <Image

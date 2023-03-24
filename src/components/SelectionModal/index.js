@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -11,18 +11,24 @@ import Modal from 'react-native-modal';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import { Images } from '../../component2/image/Image';
-import { getData } from '../../utills/Methods';
+import { getData, getStoredBusiness } from '../../utills/Methods';
 import { useFetchOnboarding } from '../../utills/api';
 import { clockRunning } from 'react-native-reanimated';
+import { STABLE_BUSINESS_ID } from '../../utills/Constants';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Todos');
+  const [business_id,setBusinessID] = React.useState("")
   const Task_Name = "Task"
 
   const {
     data: onboarding,
   } = useFetchOnboarding(Task_Name)
 
+  useEffect(async ()=>{
+    let id = await getStoredBusiness()
+    setBusinessID(id)
+  },[])
 
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
 
@@ -81,20 +87,24 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
       <View style={styles.container}>
         <View style={styles.line1} />
         <View style={styles.row}>
-          <TextWithIcon text="Todos" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
+        <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
+          {/* <TextWithIcon text="Todos" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> */}
           <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
           <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
         </View>
         <View style={styles.line} />
         <View style={styles.row}>
-          <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
+        
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
+          {
+            business_id === STABLE_BUSINESS_ID ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> : null
+          }
         </View>
-        <View style={styles.line} />
+        {/* <View style={styles.line} />
         <View style={styles.row}>
           <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
-        </View>
+        </View> */}
       </View>
     </Modal>
   );

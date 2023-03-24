@@ -36,10 +36,6 @@ const CustomDatePicker = (props) => {
           defaultValue={defaultValue.toString()}
           keyboardType={'default'}
           autoCapitalize={'words'}
-          // onFocus={
-          //   // console.log('focussed')
-          //   showDatePickerHandler
-          // }
           value={defaultValue.toString()}
           // disabled={true}
         />

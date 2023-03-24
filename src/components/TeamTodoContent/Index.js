@@ -56,7 +56,6 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
         }
 
         let res = await mutateAsync(fd)
-        console.log('res', res)
         await storeData('task claim', res)
         queryClient.invalidateQueries('get_team_tasks')
         showFlashMessage({ title: `Task claimed successfully` })
@@ -73,7 +72,6 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
             setModal(false)
             setSent(false)
         } catch (error) {
-            //console.log('err', error)
         }
 
     }

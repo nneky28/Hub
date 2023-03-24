@@ -135,7 +135,6 @@ const Index = ({ navigation }) => {
                 navigation.navigate("Task", { toCheck })
             }
         } catch (error) {
-            console.log('err', error)
             showFlashMessage({
                 title: "Something went wrong. Please retry",
                 type: 'error'
