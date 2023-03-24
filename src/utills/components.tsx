@@ -756,7 +756,7 @@ export const CustomWebView = (props:CustomWebViewProps) => (
         width={20}
       >
         <TouchWrap
-          onPress={() => props.setShow}>
+          onPress={() => props.setShow()}>
           <H1 textAlign="center">Close</H1>
         </TouchWrap>
       </Container>

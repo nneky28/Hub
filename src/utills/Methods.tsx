@@ -95,7 +95,7 @@ export const __flatten = (data) => {
   return flattenArr = flattenArr.flat()
 }
 
-export const Capitalize = string => {
+export const Capitalize = (string : string) => {
   string = string.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase());
   return string;
 };
