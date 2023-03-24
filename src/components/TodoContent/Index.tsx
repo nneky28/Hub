@@ -191,7 +191,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                                     <View style={styles.content}>
                                         <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
                                         <Text numberOfLines={1}
-                                            style={styles.sub}>{item.title}</Text>
+                                            style={styles.sub}>{item?.title}</Text>
                                     </View>
                                 }
                                 keyExtractor={(index) => index.toString()}

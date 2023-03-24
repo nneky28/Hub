@@ -44,7 +44,7 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
         }}
         // backgroundColor: AppColors.green
         style={styles.textIconContainer}>
-        <View style={[styles.iconContainer, selected == text && { backgroundColor: AppColors.lightestGren, },]}>
+        <View style={[styles.iconContainer, selected == text && { backgroundColor: AppColors.lightestGreen, },]}>
           <Image
             resizeMode="contain"
             style={[
@@ -83,13 +83,13 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
       style={{ justifyContent: 'flex-end', alignSelf: 'center', marginBottom: height(12) }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <View style={styles.line1} />
+        {/* <View style={styles.line1} /> */}
         <View style={styles.row}>
           <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
           <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
           <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
         </View>
-        <View style={styles.line} />
+
         <View style={styles.row}>
           <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />

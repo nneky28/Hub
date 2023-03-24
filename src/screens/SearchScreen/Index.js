@@ -120,7 +120,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                             first_name: employee.first_name,
                             last_name: employee.last_name,
                             photo: employee.photo,
-                            job: employee.job.title
+                            job: employee?.job?.title
                         };
                     }),
                 };
@@ -233,7 +233,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                     renderSectionHeader={({ section }) => {
                                         return (
                                             <View style={[styles.headingContainer]}>
-                                                <H1 numberOfLines={1} style={styles.container}>{section.title}</H1>
+                                                <H1 numberOfLines={1} style={styles.container}>{section?.title}</H1>
                                             </View>
                                         )
                                     }}

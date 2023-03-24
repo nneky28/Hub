@@ -7,10 +7,9 @@ import { FontFamily } from '../../utills/FontFamily';
 const styles = StyleSheet.create({
   container: {
     width: width(80),
-    paddingTop: height(2),
-    paddingBottom: height(3),
+    // paddingTop: height(1),
     backgroundColor: AppColors.white,
-    borderRadius: 15
+    borderRadius: width(4)
     // borderTopRightRadius: 15,
     // borderTopLeftRadius: 15,
   },
@@ -24,6 +23,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    marginVertical: height(2),
   },
   icon: {
     width: width(7),
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 
   },
   iconContainer: {
-    backgroundColor: AppColors.gray1,
+    backgroundColor: AppColors.lightestWhite,
     borderWidth: width(1),
     borderColor: AppColors.transparent,
     borderRadius: width(2),
