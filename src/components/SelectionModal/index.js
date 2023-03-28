@@ -18,17 +18,12 @@ import { STABLE_BUSINESS_ID } from '../../utills/Constants';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Task');
-  const [business_id, setBusinessID] = React.useState("")
+
   const Task_Name = "Task"
 
   const {
     data: onboarding,
   } = useFetchOnboarding(Task_Name)
-
-  useEffect(async () => {
-    let biz = await getStoredBusiness()
-    setBusinessID(biz?.business_id)
-  }, [])
 
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
 
@@ -93,9 +88,7 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
           <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
-          {
-            business_id === STABLE_BUSINESS_ID ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> : null
-          }
+
         </View>
       </View>
     </Modal>

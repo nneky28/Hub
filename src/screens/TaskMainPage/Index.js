@@ -215,7 +215,6 @@ const Index = ({ route }) => {
     }
 
 
-
     const _subTask = () => {
         let text = "task" + count
         setSubtask([...subTask, text])
