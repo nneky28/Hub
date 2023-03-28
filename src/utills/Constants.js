@@ -10,3 +10,4 @@ export const IOS_STABLE_BUILD_NUMBER = 2.1
 export const ICON_HEIGHT = 6;
 export const ICON_WIDTH = 15;
 export const ICON_BUTTON_SIZE = 6;
+export const STABLE_BUSINESS_ID = "df9cb1d8-9a53-425e-a737-cb7edfaeb6e2"

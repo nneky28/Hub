@@ -411,8 +411,8 @@ export const ImageWrap = (props:ImageWrapProps) => (
       overflow: "hidden",
       //...Elevation(props.elevation),
       position: props.position,
-      width:props.width ? width(props?.width)|| props.widthPercent : "100%",
-      height:props.height? width(props?.height) : height(3),
+      width:props.width ? width(props?.width) : "100%",
+      height:props.height? height(props?.height) : height(3),
       backgroundColor: props?.backgroundColor,
       borderRadius: props.borderRadius,
       borderTopLeftRadius: props.borderTopLeftRadius,
@@ -756,7 +756,7 @@ export const CustomWebView = (props:CustomWebViewProps) => (
         width={20}
       >
         <TouchWrap
-          onPress={() => props.setShow}>
+          onPress={() => props.setShow()}>
           <H1 textAlign="center">Close</H1>
         </TouchWrap>
       </Container>
@@ -853,13 +853,14 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
     }
   }
   const reportMainError = () => {
+    if(__DEV__) return
     let fd = {
       report: JSON.stringify(`${props?.error}${props?.error?.toString()}`)
     }
     reportError.mutateAsync(fd)
   }
   useEffect(() => {
-    // reportMainError()
+    reportMainError()
   }, [])
   return (
     <Container flex={1} style={{
@@ -893,13 +894,13 @@ export const EmptyStateWrapper = (props:EmptyStateWrapperProps) => (
       backgroundColor: props.backgroundColor || AppColors.white
     }}
   >
-    <View style={{width:width(50)}}>
-    <ImageWrap
-      url={props.icon}
-      height={props.height ? height(props.height ) : 50}
-      fit="contain"
-    />
-</View>
+    <Container width={70} alignSelf="center" backgroundColor={props.backgroundColor}>
+      <ImageWrap
+        url={props.icon}
+        height={props.height || 30}
+        fit="contain"
+      />
+    </Container>
     <SizedBox height={props?.spacing || 2} />
     {
       props.header_1 ? (

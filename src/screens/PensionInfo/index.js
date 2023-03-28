@@ -263,7 +263,6 @@ export default function PensionInfo({ navigation }) {
                         data={banks}
                         setOpen={setOpen} open={open}
                         onPressHandler={(value) => {
-                            console.log('pension banks', value)
                             let load = { ...data, bank: value }
                             setData(load)
                             storeData("load", load)

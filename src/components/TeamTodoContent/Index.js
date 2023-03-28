@@ -84,7 +84,6 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
             setModal(false)
             setSent(false)
         } catch (error) {
-            //console.log('err', error)
         }
 
     }

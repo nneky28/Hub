@@ -75,7 +75,7 @@ export default class MultiSelectExample extends Component {
           selectedItems={this.props.selectedItems}
           selectText={this.props.selectName || ''}
           searchInputPlaceholderText="Search..."
-          onChangeInput={(text) => console.log(text)}
+          onChangeInput={(text) => {}}
           altFontFamily="ProximaNova-Light"
           tagRemoveIconColor="#CCC"
           tagBorderColor="#CCC"

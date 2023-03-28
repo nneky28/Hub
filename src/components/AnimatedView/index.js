@@ -17,13 +17,7 @@ function AnimatedView({styles, marginLeft}) {
   });
   useEffect(() => {
     if (marginLeft) {
-      // offset.value = withSpring(marginLeft, {damping: 20}, (finished) => {
-      //   if (finished) {
-      //     console.log('ANIMATION ENDED');
-      //   } else {
-      //     console.log('ANIMATION GOT CANCELLED');
-      //   }
-      // });
+      
     }
   }, [marginLeft]);
   return (
