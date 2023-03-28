@@ -46,7 +46,12 @@ const Index = ({ route }) => {
     const [tasks, setTasks] = useState([])
     const [teamData, setTeamData] = useState([]);
     const [teamPage, setTeamPage] = useState(1);
-
+    const [teamDueData, setTeamDueData] = useState([]);
+    const [teamDuePage, setTeamDuePage] = useState(1);
+    const [teamUpcomingData, setTeamUpcomingData] = useState([]);
+    const [teamUpcomingPage, setTeamUpcomingPage] = useState(1);
+    const [teamOverdueData, setTeamOverdueData] = useState([]);
+    const [teamOverduePage, setTeamOverduePage] = useState(1);
 
     const {
         data: counts
@@ -55,6 +60,7 @@ const Index = ({ route }) => {
     const {
         data: teamCount
     } = useFetchTeamStatistics(item?.id);
+
 
     const {
         data: allTeamData,
@@ -97,6 +103,8 @@ const Index = ({ route }) => {
         data: overdueTask,
         isLoading: loadingOverdue
     } = useFetchPersonalOverdue(tab, item?.id)
+
+
     const RenderItems = ({ item }) => {
         return (
             <TodoContent
@@ -145,6 +153,15 @@ const Index = ({ route }) => {
         if (departments && tab === "All" && allTeamData && allTeamData?.pages && Array.isArray(allTeamData?.pages)) {
             flattenedArr = allTeamData?.pages
         }
+        if (departments && tab === 'Due Today' && allTeamDue && allTeamDue?.pages && Array.isArray(allTeamDue?.pages)) {
+            flattenedArr = allTeamDue?.pages;
+        }
+        if (departments && tab === 'Upcoming' && allTeamUpcoming && allTeamUpcoming?.pages && Array.isArray(allTeamUpcoming?.pages)) {
+            flattenedArr = allTeamUpcoming?.pages;
+        }
+        if (departments && tab === 'Overdue' && allTeamOverdue && allTeamOverdue?.pages && Array.isArray(allTeamOverdue?.pages))
+            flattenedArr = allTeamOverdue?.pages;
+
         flattenedArr = flattenedArr.map((res) => {
             if (!res) return {}
             return res.results
@@ -156,10 +173,13 @@ const Index = ({ route }) => {
             dueItems: [],
             upcomingItems: [],
             overdueItems: [],
-            teamData: []
+            teamData: [],
+            teamDueData: [],
+            teamUpcomingData: [],
+            teamOverdueData: [],
         };
 
-        if (actionTitle === "To-Do")
+        if (data)
             state.data = page > 1 ? [...data, ...arr] : arr;
 
         if (actionTitle === "To-Do" && tab === "Due Today")
@@ -173,12 +193,21 @@ const Index = ({ route }) => {
 
         if (departments && tab === 'All')
             state.teamData = teamPage > 1 ? [...teamData, ...arr] : arr;
+        if (departments && tab === 'Due Today')
+            state.teamDueData = teamDuePage > 1 ? [...teamDueData, ...arr] : arr;
+        if (departments && tab === 'Upcoming')
+            state.teamUpcomingData = teamUpcomingPage > 1 ? [...teamUpcomingData, ...arr] : arr;
+        if (departments && tab === 'Overdue')
+            state.teamOverdueData = teamOverduePage > 1 ? [...teamOverdueData, ...arr] : arr;
+
 
 
         return state;
     }
 
     const MapToState = ({ data, dueItems, upcomingItems, overdueItems, teamData, }) => {
+        console.log("In team", Object.values(data).filter((item) => item.status === "In-progress"))
+
         if (actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
             return setTasks(arr);
@@ -201,11 +230,16 @@ const Index = ({ route }) => {
             return setTasks(arr);
         }
         if (actionTitle === 'In Progress') {
-            let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            let arr = Object.values(data).filter((item) => item.status === "In-progress");
+            console.log("Data progress", data)
             return setTasks(arr);
         }
         if (actionTitle === 'Completed') {
             let arr = Object.values(data).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            return setTasks(arr);
+        }
+        if (departments && actionTitle === 'To-Do' && tab === 'Due Today') {
+            let arr = Object.values(teamData).filter((item) => item.status !== 'In-progress');
             return setTasks(arr);
         }
 
@@ -228,6 +262,8 @@ const Index = ({ route }) => {
         MapToState(__flattenArr())
     }, [actionTitle, tab, allEmployeeTask, dueTask, upcomingTask, overdueTask, allTeamData, departments])
 
+    const peopleCount = actionTitle === 'To-Do' ? counts?.todo_count : actionTitle === 'In Progress' ? counts?.inprogress_count : actionTitle === 'Completed' ? counts?.completed_count : 0;
+    const deptCount = actionTitle === 'To-Do' ? teamCount?.todo_count : actionTitle === 'In Progress' ? teamCount?.inprogress_count : actionTitle === 'Completed' ? teamCount?.completed_count : 0;
 
 
     return (
@@ -293,7 +329,7 @@ const Index = ({ route }) => {
                                     borderColor: item.selected === actionTitle ? item.borderColor : null,
                                 }}
                                 style={{
-                                    width: width(28),
+                                    width: width(29),
                                     height: height(15),
                                     marginTop: height(2),
                                 }}>
@@ -310,10 +346,12 @@ const Index = ({ route }) => {
                                     </View>
                                     <View>
                                         {item.selected === actionTitle && (
-                                            <ImageBackground
-                                                source={{ uri: item.selected_image }}
-                                                style={styles.clipped}
-                                            />
+                                            <View style={styles.clippedCon}>
+                                                <ImageBackground
+                                                    source={{ uri: item.selected_image }}
+                                                    style={styles.clipped}
+                                                />
+                                            </View>
                                         )}
                                         <H1
                                             color={AppColors.black1}
@@ -329,10 +367,8 @@ const Index = ({ route }) => {
                 </View>
 
                 <View style={styles.container}>
-                    <H1 color={AppColors.black1}>{actionTitle}{' '}({
-                        departments && actionTitle === 'To-Do' ? teamCount?.todo_count : actionTitle === 'In Progress' ? teamCount?.inprogress_count : actionTitle === 'Completed' ? teamCount?.completed_count :
-                            actionTitle === 'To-Do' ? counts?.todo_count : actionTitle === 'In Progress' ? counts?.inprogress_count : actionTitle === 'Completed' ? counts?.completed_count : 0
-                    })
+                    <H1 color={AppColors.black1}>
+                        {actionTitle}{' '}({departments && deptCount || peopleCount})
                     </H1>
                 </View>
 
@@ -370,8 +406,8 @@ const Index = ({ route }) => {
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled={true}
                     contentContainerStyle={[
-                        CommonStyles.marginTop_3,
-                        { paddingBottom: height(100) },
+                        CommonStyles.marginTop_2,
+                        { paddingBottom: height(5) },
                     ]}
                     onEndReachedThreshold={0.1}
                     refreshing={false}

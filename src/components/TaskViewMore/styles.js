@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
         margin: 0,
-        marginTop: height(5),
+        // marginTop: height(20),
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-        height: height(3)
+        // height: height(3),
+        width: width(100)
     },
 
     title: {

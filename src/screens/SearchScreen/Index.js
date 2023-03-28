@@ -99,7 +99,6 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
 
-
     const flattenAndMapData = (data, type) => {
         let flattenedArr = [];
         if (data && data.pages && Array.isArray(data.pages)) {
@@ -110,6 +109,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                 if (!res) return {};
                 return res.results;
             })
+            .map((item) => item.filter((employee) => employee.status === "active"))
             .map((item, i) => {
                 return {
                     key: i,
@@ -130,6 +130,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             page > 1 ? setItem([...item, ...flattenedArr]) : setItem(flattenedArr)
         return flattenedArr;
     };
+
 
     useEffect(() => {
         const formattedData = flattenAndMapData(data, 'Others');
@@ -241,6 +242,8 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                     ListFooterComponent={
                                         isFetchingNextPage || hasNextPage ? footerLoader : null
                                     }
+                                    onEndReachedThreshold={0.1}
+                                    onEndReached={loadMore}
                                 />
                             )}
                         </View> :

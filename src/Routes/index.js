@@ -30,6 +30,7 @@ import Task from '../screens/Task/Index'
 import CreateTask from '../screens/CreateTask/Index'
 import SearchScreen from '../screens/SearchScreen/Index'
 import TeamProfile from '../screens/TeamProfile/Index'
+import TaskMainPage from '../screens/TaskMainPage/Index'
 import OnboardingTask from '../screens/OnboardingTask/Index'
 import HomeScreen from '../screens/OnboardingTask/HomeScreen';
 import Drawer from './Drawer';
@@ -250,7 +251,7 @@ const Routes = () => {
                               <Stack.Navigator
                                 screenOptions={{ headerMode: false }}
                               >
-                                {/* <Stack.Screen name="Todos" component={Todos} /> */}
+                                <Stack.Screen name="Task" component={Task} />
                                 <Stack.Screen name="Time off" component={TimeOff} />
                                 <Stack.Screen name="Payslip" component={PayslipHistory} />
                                 <Stack.Screen name="PayslipBreakDown" component={PayslipBreakDown} />
@@ -259,10 +260,10 @@ const Routes = () => {
                                 <Stack.Screen name="Trainings" component={Training} />
                                 <Stack.Screen name="TaskOnboarding" component={OnboardingTask} />
                                 <Stack.Screen name="onBoardHome" component={HomeScreen} />
-                                <Stack.Screen name="Task" component={Task} />
                                 <Stack.Screen name="CreateTask" component={CreateTask} />
                                 <Stack.Screen name="search" component={SearchScreen} />
                                 <Stack.Screen name="profile" component={TeamProfile} />
+                                <Stack.Screen name="TaskView" component={TaskMainPage} />
                               </Stack.Navigator>
                             )}
                           </Tab.Screen>

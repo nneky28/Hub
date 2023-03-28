@@ -105,7 +105,6 @@ const Index = ({ navigation }) => {
     const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
     const { mutateAsync: editHandler } = useMutation(APIFunction.update_onboarding)
     const [toCheck, setToCheck] = useState(true)
-
     const {
         data: onboarding,
     } = useFetchOnboarding(Task_Name)
@@ -113,6 +112,7 @@ const Index = ({ navigation }) => {
 
     const handleCompletion = async () => {
         try {
+            dispatch(setLoaderVisible(true));
             let employee_id = await getData("about_me")
 
             let fd = {
@@ -122,15 +122,17 @@ const Index = ({ navigation }) => {
                 has_completed_mobile_onboarding: true
             }
 
-            if (!onboarding) {
+            if (onboarding) {
                 fd["id"] = onboarding[0]?.id;
                 let res = await editHandler(fd)
                 await storeData('onboard completion', res)
                 queryClient.invalidateQueries("get_onboarding")
+                dispatch(setLoaderVisible(false));
                 navigation.navigate("Task", { toCheck })
             } else {
                 let res = await mutateAsync(fd)
                 queryClient.invalidateQueries()
+                dispatch(setLoaderVisible(false));
                 await storeData('onboard completion', res)
                 navigation.navigate("Task", { toCheck })
             }
@@ -150,7 +152,7 @@ const Index = ({ navigation }) => {
             <View style={styles.container}>
                 <Swiper
                     autoplay={true}
-                    autoplayTimeout={8}
+                    autoplayTimeout={6}
                     ref={swiperRef}
                     style={styles.wrapper}
                     dot={
@@ -203,12 +205,8 @@ const Index = ({ navigation }) => {
                     title="Explore Tasks"
                     textStyle={styles.buttonText}
                     containerStyle={styles.button}
-                    onPress={() => {
-                        if (swiperRef?.current?.state?.index === 2) {
-                            return handleCompletion()
-                        }
-                        swiperRef.current.scrollBy(1)
-                    }}
+                    onPress={handleCompletion}
+
                 />
                 {/* <Button
                     title="Skip"

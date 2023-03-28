@@ -19,11 +19,9 @@ import { showFlashMessage } from '../SuccessFlash/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { FlatList } from 'react-native-gesture-handler';
-import TaskDetails from '../TaskDetails/Index'
-
-
-
-
+import { height } from 'react-native-dimension';
+import CommonStyles from '../../utills/CommonStyles';
+import { useNavigation } from '@react-navigation/native';
 interface TaskProps {
     item: any;
     index: number;
@@ -32,17 +30,18 @@ interface TaskProps {
     user: boolean;
     allTasks: any[];
     onPressHandle: () => void;
-  
+    action: () => void;  
+    unDo: () => void;
 }
 
-const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
+const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
     const queryClient = useQueryClient()
+    const navigation = useNavigation();
     const [modal, setModal] = useState <boolean>(false)
-    const [display, setDisplay] = useState<boolean>(false)
     const [completed, setCompleted] = useState<boolean>(false)
     const [watch, setWatch] = useState<boolean>(false)
     const [sentModal, setSent] = useState<boolean>(false)
- 
+
 
     const {
         mutateAsync,
@@ -51,39 +50,67 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
 
     const deleteTask = useMutation(APIFunction.delete_task)
 
-    const onPressHandler = async (action:string) => {
+    const unDo = async (action: string) => {
         try {
             let fd = {
                 status: action,
                 id: item.id,
-                due_date: moment().toISOString(true)
-            }
-            let res = await mutateAsync(fd)
-            if (res) {
-                await storeData('task updated', res)
-                queryClient.invalidateQueries()
-                setModal(false)
-                setCompleted(false)
-                setSent(false)
-                showFlashMessage({
-                    title: `Task moved to ${action.toUpperCase()}`,
-                    duration: 4600,
-                    type: 'info',
-                    statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null
-                })
-               
-                setWatch(!watch)
-            }
+                sub_tasks: []
+            };
+            let res = await mutateAsync(fd);
 
-        } catch (error) {
+            if (res) {
+                await storeData('task updated', res);
+                queryClient.invalidateQueries();
+                }
+        } catch (err) {
+            
         }
-    }
+}
+
+
+    const onPressHandler = async (action:string) => {
+        try {
+          let fd = {
+            status: action,
+              id: item.id,
+              sub_tasks:[]
+          };
+          let res = await mutateAsync(fd);
+          if (res) {
+            await storeData('task updated', res);
+            queryClient.invalidateQueries();
+            setModal(false);
+            setCompleted(false);
+            setSent(false);
+            showFlashMessage({
+              title: `${' '} Task moved to ${action.toUpperCase()} ${' '} `,
+              duration: 5000,
+              type: 'task',
+              statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+              backgroundColor: AppColors.newYellow,
+              actionType:"task",
+              action:()=>unDo(action==="Completed"?"In-progress":action==="In-progress"?"To-do":'To-do')
+            });
+            setWatch(!watch);
+          }
+        } catch (error) {
+          // Handle error here
+        }
+      }
+      
 
     const handleDelete = async (id:number) => {
         try {
              await deleteTask.mutateAsync(id)
             queryClient.invalidateQueries()
-            showFlashMessage({ title: `Task deleted` })
+            showFlashMessage({
+                title: `${' '} Task Deleted`,
+                duration: 8000,
+                type: 'task',
+                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null,
+                backgroundColor: AppColors.newYellow
+            })
             setModal(false)
             setSent(false)
         } catch (error) {
@@ -93,24 +120,32 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
+   
     
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
                 <>  
-                <TouchableOpacity onPress={() => setDisplay(true)}>
+                    <TouchableOpacity
+                        style={{height:height(5),marginBottom:height(1.5)}}
+                        onPress={() => navigation.navigate("TaskView" as never, { item ,title, }as never)}
+                    >
+                        
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
                 </TouchableOpacity>
-                {
+                    <View>
+                    {
                     index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
                         index === 1 && title === "To-Do" || title === "Completed" ?
                                 <TouchableWrapper
-                                    size={4}
+                                        size={4} 
+                                        style={CommonStyles.marginTop_1}
                                     onPress={() => {
-                                        if ( title === "Completed") {
+                                        if (title === "Completed") {
                                        return setCompleted(true)
                                     }
-                               setSent(true)
+                                        setSent(true)
+                                    
                             }}>
                                 <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
                             </TouchableWrapper> :
@@ -138,20 +173,21 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
                             </View>
 
                     }
+                </View>
                      </>
 
             </View>
             <TouchableOpacity
-                onPress={() => setDisplay(true)}
-                style={styles.by}>
+               onPress={() => navigation.navigate("TaskView" as never, { item ,title} as never)}
+                style={styles.author}>
                 <P color={AppColors.black3} >
-                    {
-                        index === 1 ? 'To:' : 'By:'
+
+                     {
+                        index === 1 ? 'To: ' : 'By: '
                     }
-                    {" "}
                     {
-                        !item?.created_by ? item?.department?.name:item.assigned_to?.first_name ? item.created_by?.first_name : ""} {item.created_by?.last_name ? item.created_by?.last_name : ''
-                    }
+                        !item?.assigned_to ? item?.department?.name:item?.assigned_to?.first_name ? item.assigned_to.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''
+                    } 
                
                 </P>
             </TouchableOpacity>
@@ -159,7 +195,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
             {
                 title === "Completed" ? null :
                     <TouchableOpacity
-                    onPress={() => setDisplay(true)}
+                    onPress={() => navigation.navigate("TaskView" as never, { item ,title} as never)}
                         style={styles.row1}>
                         {dueToday ? <React.Fragment>            
                             <Image source={{ uri: Images.DueFlag }} style={styles.flag} />
@@ -208,9 +244,11 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user}) => {
 
             <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item} onPressHandle={onPressHandler} 
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading} />
+                loading={isLoading}
+                title={title} 
+            />
             
-            <TaskDetails isVisible={display} onHide={() => setDisplay(false)} item={item} title={title} />
+            {/* <TaskViewMore isVisible={display} onHide={() => setDisplay(false)} item={item} title={title} setDisplay={setDisplay} /> */}
 
         </View>
     )

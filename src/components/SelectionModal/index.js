@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -17,12 +17,12 @@ import { clockRunning } from 'react-native-reanimated';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Task');
+
   const Task_Name = "Task"
 
   const {
     data: onboarding,
   } = useFetchOnboarding(Task_Name)
-
 
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
 
@@ -42,7 +42,6 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
           //navigation.navigate(text)
           onHide();
         }}
-        // backgroundColor: AppColors.green
         style={styles.textIconContainer}>
         <View style={[styles.iconContainer, selected == text && { backgroundColor: AppColors.lightestGreen, },]}>
           <Image
@@ -63,11 +62,6 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
     );
   };
 
-
-
-
-
-
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -80,10 +74,9 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
       animationIn="fadeInUp"
       animationOut="fadeInDown"
       swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', alignSelf: 'center', marginBottom: height(12) }}
+      style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        {/* <View style={styles.line1} /> */}
         <View style={styles.row}>
           <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
           <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />

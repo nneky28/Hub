@@ -40,22 +40,22 @@ const PersonListComp: React.FC<PersonListCompProps> = ({
     >
       <View style={CommonStyles.rowJustifySpaceBtw}>
         {item.photo ? (
-          <Image source={{ uri: item.photo }} style={styles.avatarStyle} />
+          <Image source={{ uri: item?.photo }} style={styles.avatarStyle} />
         ) : (
           <ImgPlaceholder
-            text={`${item.first_name && item.first_name.length > 0 ? Capitalize([...item.first_name][0]) : ''}${
-              item.last_name && item.last_name.length > 0 ? `${Capitalize([...item.last_name][0])}` : ''
+            text={`${item?.first_name?.[0] ? Capitalize(item?.first_name?.[0]) : ''}${
+              item?.last_name?.[0] ? `${Capitalize(item?.last_name?.[0])}` : ''
             }`}
             size={12}
           />
         )}
         <View style={styles.textContainer}>
           <Text style={styles.titleText}>
-            {item.first_name ? Capitalize(item.first_name) : ''}{' '}
-            {item.last_name ? Capitalize(item.last_name) : ''}
+            {item?.first_name ? Capitalize(item?.first_name) : ''}{' '}
+            {item?.last_name ? Capitalize(item?.last_name) : ''}
           </Text>
           <Text style={styles.subText}>
-            {item.job && item.job ? Capitalize(item.job) : ''}
+            {item?.job?.title ? Capitalize(item?.job?.title) : ''}
           </Text>
         </View>
       </View>

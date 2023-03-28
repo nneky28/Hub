@@ -24,9 +24,10 @@ import { showFlashMessage } from '../SuccessFlash';
 import { Images } from '../../component2/image/Image';
 import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
-import TaskDetails from '../TaskDetails/Index'
+// import TaskViewMore from '../TaskViewMore/index'
 import CreateTask from '../../screens/CreateTask/Index'
 import { useNavigation } from '@react-navigation/native';
+
 
 
 const ContactModal = ({ isVisible, onHide, data }) => {
@@ -605,7 +606,10 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
       isVisible={isVisible}>
 
       <View style={styles.container1}>
-        <TouchableOpacity style={styles.textCon} onPress={handleOpen}>
+        <TouchableOpacity style={styles.textCon} onPress={() => {
+          onHide()
+          navigation.navigate("TaskView", { item, title })
+        }}>
           <P>View Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
@@ -635,12 +639,12 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
         <View style={styles.line} />
       </View>
 
-      <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
+      {/* <TaskViewMore isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} /> */}
     </Modal>
   );
 };
 
-const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle, loading }) => {
+const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle, loading, title }) => {
   const [showForm, setShowForm] = useState(false)
   const [employee, setEmployee] = useState({})
   const [showDetails, setShowDetails] = useState(false)
@@ -680,7 +684,10 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
       isVisible={isVisible}>
       <View style={styles.container1}>
         <React.Fragment>
-          <TouchableOpacity onPress={handleView}
+          <TouchableOpacity onPress={() => {
+            onHide()
+            navigation.navigate("TaskView", { item, title })
+          }}
             style={styles.textCon}>
             <P>View Task</P>
           </TouchableOpacity>
@@ -700,13 +707,7 @@ const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle
           </TouchableOpacity>
         </React.Fragment>
       </View>
-
-      {/* <CreateTask
-        visible={showForm}
-        onHide={() => setShowForm(false)}
-        item={item}
-      /> */}
-      <TaskDetails isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} />
+      {/* <TaskViewMore isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} /> */}
     </Modal>
   );
 };

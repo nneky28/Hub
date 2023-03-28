@@ -6,10 +6,11 @@ import { FontFamily } from '../../utills/FontFamily';
 
 const styles = StyleSheet.create({
   container: {
-    width: width(80),
-    // paddingTop: height(1),
+    width: width(100),
+    paddingTop: height(2),
+    paddingBottom: height(3),
     backgroundColor: AppColors.white,
-    borderRadius: width(4)
+    borderRadius: 15
     // borderTopRightRadius: 15,
     // borderTopLeftRadius: 15,
   },
@@ -23,10 +24,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginVertical: height(2),
+    marginVertical: height(2.5),
   },
   icon: {
-    width: width(7),
+    width: width(10),
     height: height(5),
     // tintColor: AppColors.black1,
   },
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 1,
     backgroundColor: AppColors.gray1,
-    marginVertical: height(2.5),
+    marginVertical: height(2),
     elevation: 0,
   },
   line1: {
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: width(2),
     paddingHorizontal: width(2),
     alignItems: 'center',
+    paddingVertical: height(1)
   }
 });
 export default styles;

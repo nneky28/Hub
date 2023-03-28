@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(3)
     },
     mainContainer: { borderWidth: 0.5, borderRadius: width(4), borderColor: AppColors.transparent, height: height(14.3) },
-    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1.2) },
+    clipped: { resizeMode: 'cover', height: height(8), },
+    clippedCon: { top: height(1.2) },
     count: {
         position: 'absolute',
         left: width(19),

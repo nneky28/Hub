@@ -105,7 +105,7 @@ const Index = ({ navigation, route }) => {
     );
     const RenderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('search', { people })}>
+            <TouchableOpacity onPress={() => navigation.navigate('search')}>
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         );
@@ -121,29 +121,50 @@ const Index = ({ navigation, route }) => {
         data: teamCount
     } = useFetchTeamStatistics(employee_pk);
 
-
     const {
         data: sentStatistics
     } = useFetchSentStatistics();
+
 
 
     const EmptyState = React.memo(() => {
         return (
             <View style={styles.emptyState}>
                 <View>
-                    <P style={styles.emptyText}>{index === 2 ? (`${aboutMe?.department?.name} department`) : index === 0 && "You"}</P>
+                    <Text style={styles.emptyText}>
+                        {index === 2 ? `${aboutMe?.department?.name} department`
+                            : index === 0 ? "You" : null}
+                    </Text>
 
-                    <P style={styles.emptyText}>
-                        {index === 0 && actionTitle === "To-Do" && tab === 'All' ? 'have no task in your To-Do.'
-                            : index === 0 && actionTitle === "To-Do" && tab === 'Upcoming' ? 'have no Upcoming task.'
-                                : index == 0 && actionTitle === "To-Do" && tab ? (` no task ${tab}`) : null}
-                        {index === 1 && tab ? `No sent task ${tab}` : index === 1 && `No sent task is ${actionTitle}`}
-                        {index === 2 && actionTitle === "To-Do" && tab === "All" ? "no task To-Do" : index === 2 && actionTitle === "To-Do" && tab ? `has no task ${tab}` : index === 2 && `no task ${actionTitle}`}
-                    </P>
+                    <Text style={styles.emptyText}>
+                        {index === 0 && actionTitle === "To-Do" && tab === "All"
+                            ? "have no task in your To-Do."
+                            : index === 0 && actionTitle === "To-Do" && tab === "Upcoming"
+                                ? "have no Upcoming task."
+                                : index === 0 && actionTitle === "To-Do" && tab
+                                    ? `have no task ${tab}.`
+                                    : index === 0 ? "have no Completed task." : null}
+
+                        {index === 1 && actionTitle === "To-Do" && tab === "All"
+                            ? "No sent task TO-DO"
+                            : index === 1 && actionTitle === "To-Do" && tab
+                                ? `No sent task is ${tab}`
+                                : index === 1 && actionTitle === "Completed"
+                                    ? `No sent task is ${actionTitle}`
+                                    : null}
+
+                        {index === 2 && actionTitle === "To-Do" && tab === "All"
+                            ? "no task To-Do"
+                            : index === 2 && actionTitle === "To-Do" && tab
+                                ? `has no task ${tab}`
+                                : index === 2 ? `no task ${actionTitle}` : null}
+                    </Text>
                 </View>
             </View>
         );
     });
+
+
     const RenderItems = ({ item }) => {
         return (
             <TodoContent
@@ -416,6 +437,10 @@ const Index = ({ navigation, route }) => {
         teamOverdueData,
     }) => {
 
+
+        // console.log("Sent TASKS", Object.values(sentItems).filter((item) => item.status === "In-progress"))
+        // console.log("Sent DATA", sentItems)
+
         if (index === 0 && actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
             return setTasks(arr);
@@ -437,11 +462,11 @@ const Index = ({ navigation, route }) => {
             return setTasks(arr);
         }
         if (index === 0 && actionTitle === 'In Progress') {
-            let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            let arr = Object.values(data).filter((item) => item.status === "In-progress");
             return setTasks(arr);
         }
         if (index === 0 && actionTitle === 'Completed') {
-            let arr = Object.values(data).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            let arr = Object.values(data).filter((item) => item.status === "Completed")
             return setTasks(arr);
         }
 
@@ -466,16 +491,16 @@ const Index = ({ navigation, route }) => {
             return setTasks(arr);
         }
         if (index === 1 && actionTitle === 'In Progress') {
-            let arr = Object.values(sentItems).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            let arr = Object.values(sentItems).filter((item) => item.status === "In-progress");
             return setTasks(arr);
         }
         if (index === 1 && actionTitle === 'Completed') {
-            let arr = Object.values(sentItems).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            let arr = Object.values(sentItems).filter((item) => item.status === "Completed");
             return setTasks(arr);
         }
 
         if (index === 2 && actionTitle === 'To-Do' && tab === 'All') {
-            let arr = Object.values(teamData).filter((item) => item.status !== 'Completed');
+            let arr = Object.values(teamData).filter((item) => item.status !== "Completed");
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'To-Do' && tab === 'Due Today') {
@@ -495,11 +520,11 @@ const Index = ({ navigation, route }) => {
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'In Progress') {
-            let arr = Object.values(teamData).filter((item) => item.status !== 'Completed' && item.status !== 'To-do');
+            let arr = Object.values(teamData).filter((item) => item.status === "In-progress");
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'Completed') {
-            let arr = Object.values(teamData).filter((item) => item.status !== 'To-do' && item.status !== 'In-progress');
+            let arr = Object.values(teamData).filter((item) => item.status === "Completed");
             return setTeamTask(arr);
         }
     };
@@ -623,7 +648,7 @@ const Index = ({ navigation, route }) => {
                                             ? numeral(sentStatistics?.todo_count).format('0,0')
                                             : index === 2 && teamCount
                                                 ? numeral(
-                                                    teamCount?.todo_count + teamCount?.inprogress_count,
+                                                    teamCount?.todo_count + teamCount.inprogress_count
                                                 ).format('0,0')
                                                 : 0,
                                 borderWidth: 0.5,
@@ -679,7 +704,7 @@ const Index = ({ navigation, route }) => {
                                         borderColor: item.selected === actionTitle ? item.borderColor : null,
                                     }}
                                     style={{
-                                        width: width(28),
+                                        width: width(29),
                                         height: height(15),
                                         marginTop: height(2),
                                     }}>
@@ -696,10 +721,12 @@ const Index = ({ navigation, route }) => {
                                         </View>
                                         <View>
                                             {item.selected === actionTitle && (
-                                                <ImageBackground
-                                                    source={{ uri: item.selected_image }}
-                                                    style={styles.clipped}
-                                                />
+                                                <View style={styles.clippedCon}>
+                                                    <ImageBackground
+                                                        source={{ uri: item.selected_image }}
+                                                        style={styles.clipped}
+                                                    />
+                                                </View>
                                             )}
                                             <H1
                                                 color={AppColors.black1}
@@ -804,7 +831,7 @@ const Index = ({ navigation, route }) => {
                             showsVerticalScrollIndicator={false}
                             nestedScrollEnabled={true}
                             contentContainerStyle={[
-                                CommonStyles.marginTop_3,
+                                CommonStyles.marginTop_1,
                                 { paddingBottom: height(10) },
                             ]}
                             onEndReachedThreshold={0.1}

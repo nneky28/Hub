@@ -9,7 +9,7 @@ export const Images = {
   LeaveIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/Vector_1_qunykd.png",
   CakeIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/Vector_3_bt64pb.png",
   RadioIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Union.png",
-  PayslipIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Vector+(2).png",
+  PayslipIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/payroll-icon.png",
   DocumentIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Vector+(3).png",
   BenefitIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Vector+(1).png",
   TrainingIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Layer+1.png",
@@ -97,7 +97,7 @@ export const Images = {
   clippedBlue: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle_Blue_2.png",
   clippedYellow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle_Yellow_3.png",
   clippedGreen: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle_Green_1.png",
-  TaskLogo: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(14).png",
+  TaskLogo: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+8884.png",
   DueFlag: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(15).png",
   Attach: "https://bizedge-prod.s3.us-west-2.amazonaws.com/Vector+(16).png",
   FilterArrow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/arrows.png",
@@ -105,7 +105,9 @@ export const Images = {
   SubTaskBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/RectangleGrey.png",
   blueBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026+2.png",
   yellowBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4028.png",
-  greenBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026.png"
+  greenBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026.png",
+  TaskTickIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+9823.png",
+  UndoBtn: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Frame+9720.png"
 
 }
 

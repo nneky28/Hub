@@ -9,34 +9,33 @@ import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
 import Button from '../../components/Button'
-import { P, H1, Container, Rounded, CloseHandler, ImgPlaceholder } from '../../utills/components';
+import { P, H1, Container, Rounded, CloseHandler, ImgPlaceholder, SizedBox } from '../../utills/components';
 import { Images } from '../../component2/image/Image';
-import { CompletedModal, SubTaskActionModal } from '../ContactModal';
+import { CompletedModal, SubTaskActionModal } from '../../components/ContactModal';
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import { useFetchActivities, useUpdate, updateSubTask, useFetchComments } from '../../utills/api';
-import ActivityCard from '../ActivityCard/Index'
+import ActivityCard from '../../components/ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
 import { Field, Formik } from 'formik';
-// import { TextInput } from "react-native-paper"
-// import CustomInput from '../CustomInput/index';
 import CommonStyles from '../../utills/CommonStyles';
 import { Capitalize, __flatten, getData } from '../../utills/Methods';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction } from '../../utills/api';
 import { storeData } from '../../utills/Methods';
-import { showFlashMessage } from '../SuccessFlash/index';
+import { showFlashMessage } from '../../components/SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { downIcon, } from '../../assets/images';
 import { height, width, totalSize } from 'react-native-dimension';
-import ScreenWrapper from '../ScreenWrapper/index';
+import ScreenWrapper from '../../components/ScreenWrapper/index';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import CreateTask from '../../screens/CreateTask/Index';
 
 
-const Index = ({ isVisible, onHide, item, title }) => {
+
+const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
+    // console.log("Subtask item", item)
     const navigation = useNavigation();
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
@@ -46,7 +45,6 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const [subTask, setSubtask] = useState([])
     const [subData, setSubdata] = useState({})
     const [count, setCount] = useState(0)
-    const [modal, setModal] = useState(false)
     const [show, setShow] = useState(false);
     const [action, setAction] = useState(false)
     const queryClient = useQueryClient()
@@ -60,6 +58,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
     const [employee_pk, setEmployeePK] = useState(null);
     const [myComment, setMyComment] = useState(null)
 
+
     const {
         data: logs,
         isLoading: loading
@@ -69,7 +68,10 @@ const Index = ({ isVisible, onHide, item, title }) => {
         data: allComments,
         isLoading: loadingComments
     } = useFetchComments(item.id)
-
+    const {
+        mutateAsync: subTaskEditHandler,
+        isLoading: isLoadingSubtask
+    } = useMutation(APIFunction.update_sub_task)
 
     const flattenAndMapData = (data) => {
         let flattenedArr = [];
@@ -89,6 +91,28 @@ const Index = ({ isVisible, onHide, item, title }) => {
             });
         return flattenedArr;
     };
+
+    const handleSubmit = async () => {
+        try {
+            Keyboard.dismiss()
+            let employee = await getData("about_me")
+            let fd = {
+                comment: comment,
+                comment_by: employee?.id,
+                task: item?.id,
+                due_date: moment().toISOString(true)
+            }
+            let res = await mutateAsync(fd)
+            queryClient.invalidateQueries()
+            setComment("")
+            showFlashMessage({ title: "comment sent" })
+        } catch (err) {
+            showFlashMessage({
+                title: "Something went wrong. Please retry",
+                type: 'error'
+            })
+        }
+    }
 
     const hide = () => {
         setShow((show) => {
@@ -138,32 +162,77 @@ const Index = ({ isVisible, onHide, item, title }) => {
         isLoading,
     } = useMutation(APIFunction.post_comment)
 
-    const handleSubmit = async () => {
-        try {
-            Keyboard.dismiss()
-            let employee = await getData("about_me")
-            let fd = {
-                comment: comment,
-                comment_by: employee?.id,
-                task: item?.id,
-                due_date: moment().toISOString(true)
-            }
-            let res = await mutateAsync(fd)
-            queryClient.invalidateQueries()
-            setComment("")
-            showFlashMessage({ title: "comment sent" })
-        } catch (err) {
-            showFlashMessage({
-                title: "Something went wrong. Please retry",
-                type: 'error'
-            })
-        }
-    }
 
 
-    const handleChecked = (item) => {
+
+    // const handleChecked = (item) => {
+    //     setSelectedIDs((prev) => [...prev, item.id])
+    //     showFlashMessage({
+    //         title: `Sub task marked as completed`,
+    //         duration: 5000,
+    //         type: 'task',
+    //         statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+    //         backgroundColor: AppColors.newYellow
+    //     })
+    // }
+
+
+    const handleChecked = React.useCallback((item) => {
         setSelectedIDs((prev) => [...prev, item.id])
-        showFlashMessage({ title: `Sub task marked as completed` })
+        showFlashMessage({
+            title: `Sub task marked as completed`,
+            duration: 5000,
+            type: 'task',
+            statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+            backgroundColor: AppColors.newYellow
+        })
+    }, [setSelectedIDs]);
+
+    // const handleChecked = (item) => {
+    //     console.log("ITEM", item)
+    //     const alreadyCompleted = selectedIDs.includes(item.id);
+    //     if (alreadyCompleted) {
+    //         handleUncomplete(item);
+    //     } else {
+    //         setSelectedIDs((prev) => [...prev, item.id]);
+    //         showFlashMessage({
+    //             title: `Sub task marked as completed`,
+    //             duration: 5000,
+    //             type: 'task',
+    //             statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+    //             backgroundColor: AppColors.newYellow
+    //         });
+    //         const fd = {
+    //             assigned_to: item?.assigned_by?.id,
+    //             id: item.id,
+    //             status: "Completed",
+    //         };
+    //         subTaskEditHandler(fd)
+    //             .then((res) => {
+    //                 console.log("res", res);
+    //                 storeData("task claim", res);
+    //                 queryClient.invalidateQueries();
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error);
+    //             });
+    //     }
+    // };
+
+
+
+
+    const handleComplete = async () => {
+        let employee = await getData("about_me")
+        let fd = {
+            assigned_to: item?.id,
+            id: item.id,
+            status: "Completed",
+        }
+        let res = await subTaskEditHandler(fd)
+        console.log('res', res)
+        await storeData('task claim', res)
+        queryClient.invalidateQueries()
     }
 
     const handleUncomplete = (item) => {
@@ -267,10 +336,12 @@ const Index = ({ isVisible, onHide, item, title }) => {
                 <View style={styles.mainContainer}>
                     <View style={styles.container}>
                         <View style={styles.row}>
-                            <View>
-                                <H1>{Capitalize(item?.title)}</H1>
+                            <View style={{ width: width(70) }}>
+                                <H1 numberOfLines={1}>{Capitalize(item?.title)}</H1>
                             </View>
-                            <CloseHandler position={'center'} onPress={onHide} />
+                            <View style={{ paddingHorizontal: width(5) }}>
+                                <CloseHandler position={'center'} onPress={onHide} size={ICON_BUTTON_SIZE} />
+                            </View>
                         </View>
 
                         <View style={styles.row1}>
@@ -292,12 +363,12 @@ const Index = ({ isVisible, onHide, item, title }) => {
                         {
                             title === 'Completed' ? null :
                                 <Button
-                                    title="Edit task"
+                                    title="Edit Task"
                                     containerStyle={styles.buttonStyle}
                                     textStyle={styles.buttonText}
                                     onPress={() => {
+                                        navigation.navigate("CreateTask", { item, isVisible, setDisplay })
                                         onHide()
-                                        navigation.navigate("CreateTask", { item })
                                     }}
                                 />
                         }
@@ -322,7 +393,7 @@ const Index = ({ isVisible, onHide, item, title }) => {
                             <View style={styles.assign}>
                                 <P color={AppColors.black3}>Assigned To</P>
                                 <View style={styles.button}>
-                                    <Text style={styles.name}>{item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} {item?.assigned_to?.last_name ? item?.assigned_to?.last_name : ''}</Text>
+                                    <Text style={styles.name}>{!item?.assigned_to ? item?.department?.name : item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} {item?.assigned_to?.last_name ? item?.assigned_to?.last_name : ''}</Text>
                                 </View>
                             </View>
                             <View style={styles.dueDate}>
@@ -338,35 +409,38 @@ const Index = ({ isVisible, onHide, item, title }) => {
 
                             {
                                 item?.sub_tasks_tasksapp?.length !== 0 &&
-                                <View style={styles.subTaskContainer}>
-                                    <View style={CommonStyles.row}>
-                                        <FlatList
-                                            data={Object.values(item?.sub_tasks_tasksapp)}
-                                            renderItem={({ item, index }) =>
-                                                <>
-                                                    <View style={CommonStyles.row}>
-                                                        {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
-                                                            <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
-                                                        </TouchableOpacity> :
-                                                            <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                                <Image
-                                                                    source={{ uri: Images.SubTaskBox }}
-                                                                    style={styles.leftIcon} />
-                                                            </TouchableOpacity>}
+                                <>
+                                    <H1 style={{ marginTop: height(2) }}>SubTasks</H1>
+                                    <View style={styles.subTaskContainer}>
+                                        <View style={CommonStyles.row}>
+                                            <FlatList
+                                                data={Object.values(item?.sub_tasks_tasksapp)}
+                                                renderItem={({ item, index }) =>
+                                                    <>
+                                                        <View style={CommonStyles.row}>
+                                                            {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
+                                                                <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
+                                                            </TouchableOpacity> :
+                                                                <TouchableOpacity onPress={() => handleChecked(item)}>
+                                                                    <Image
+                                                                        source={{ uri: Images.SubTaskBox }}
+                                                                        style={styles.leftIcon} />
+                                                                </TouchableOpacity>}
 
-                                                        <Text
-                                                            numberOfLines={1}
-                                                            style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
-                                                    </View>
-                                                    {index <= 15 ? <View style={styles.line1} /> : null}
-                                                </>
-                                            }
-                                            keyExtractor={(item, index) => index.toString()}
-                                        />
+                                                            <Text
+                                                                numberOfLines={1}
+                                                                style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
+                                                        </View>
+                                                        {index <= 15 ? <View style={styles.line1} /> : null}
+                                                    </>
+                                                }
+                                                keyExtractor={(item, index) => index.toString()}
+                                            />
+                                        </View>
+
+
                                     </View>
-
-
-                                </View>
+                                </>
                             }
                         </View>
                         <View style={styles.descriptionCon}>
