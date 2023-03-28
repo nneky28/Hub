@@ -38,7 +38,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 const Index = ({ route }) => {
     const { item, title } = route?.params
     const navigation = useNavigation();
-    const queryClient = useQueryClient()
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
     const [addBtn, setAddBtn] = useState(true)
@@ -49,6 +48,7 @@ const Index = ({ route }) => {
     const [count, setCount] = useState(0)
     const [show, setShow] = useState(false);
     const [action, setAction] = useState(false)
+    const queryClient = useQueryClient()
     const [pag, setPag] = useState(1)
     const [comment, setComment] = useState('')
     const [checked, setChecked] = useState(false)
@@ -73,13 +73,6 @@ const Index = ({ route }) => {
         mutateAsync: subTaskEditHandler,
         isLoading: isLoadingSubtask
     } = useMutation(APIFunction.update_sub_task)
-
-    const {
-        mutateAsync,
-        isLoading,
-    } = useMutation(APIFunction.post_comment)
-
-
 
     const flattenAndMapData = (data) => {
         let flattenedArr = [];
@@ -165,59 +158,62 @@ const Index = ({ route }) => {
             </View>
         )
     }
+    const {
+        mutateAsync,
+        isLoading,
+    } = useMutation(APIFunction.post_comment)
 
 
-    const unDo = async (action) => {
+
+    const saveCheckedState = async (id, checked) => {
         try {
-            let fd = {
-                assigned_by: obj?.assigned_by?.id,
-                task: item?.id,
-                status: "Completed",
-                id: obj?.id + ""
-            };
-            let res = await mutateAsync(fd);
-
-            if (res) {
-                await storeData('task updated', res);
-                queryClient.invalidateQueries();
-            }
-        } catch (err) {
-
+            await AsyncStorage.setItem(`subtask:${id}`, JSON.stringify(checked));
+        } catch (e) {
+            console.log(`Error saving checked state for sub task ${id}: ${e}`);
         }
-    }
+    };
 
-    const handleChecked = async (obj) => {
-        setSelectedIDs((prev) => [...prev, obj.id]);
-        let fd = {
-            assigned_by: obj?.assigned_by?.id,
-            task: item?.id,
-            status: "Completed",
-            id: obj?.id + ""
+    const retrieveCheckedState = async (id) => {
+        try {
+            const checkedState = await AsyncStorage.getItem(`subtask:${id}`);
+            return checkedState ? JSON.parse(checkedState) : false;
+        } catch (e) {
+            console.log(`Error retrieving checked state for sub task ${id}: ${e}`);
+            return false;
         }
+    };
 
-        const res = await subTaskEditHandler(fd);
-        if (res) {
-            showFlashMessage({
-                title: `This Subtask is marked as completed`,
-                duration: 3000,
-                type: 'task',
-                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
-                backgroundColor: AppColors.newYellow,
-                actionType: "task",
-                action: () => unDo(action === "Completed" ? "TO-DO" : 'To-do')
-            });
-            await storeData(res);
-            queryClient.invalidateQueries();
-        }
-
-
-    }
-
+    const handleChecked = React.useCallback(async (item) => {
+        setSelectedIDs((prev) => [...prev, item.id]);
+        showFlashMessage({
+            title: `Sub task marked as completed`,
+            duration: 5000,
+            type: 'task',
+            statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+            backgroundColor: AppColors.newYellow
+        });
+        await saveCheckedState(item.id, true);
+    }, [setSelectedIDs]);
 
     const handleUncomplete = React.useCallback(async (item) => {
         setSelectedIDs((prev) => prev.filter((id) => id !== item.id));
         await saveCheckedState(item.id, false);
     }, [setSelectedIDs]);
+
+
+    const handleComplete = async () => {
+        let employee = await getData("about_me")
+        let fd = {
+            assigned_to: item?.id,
+            id: item.id,
+            status: "Completed",
+        }
+        let res = await subTaskEditHandler(fd)
+        console.log('res', res)
+        await storeData('task claim', res)
+        queryClient.invalidateQueries()
+    }
+
 
 
     const _subTask = () => {
@@ -226,6 +222,18 @@ const Index = ({ route }) => {
         setCount(count + 1)
 
     }
+
+    useEffect(() => {
+        const retrieveCheckedStates = async () => {
+            const checkedStates = await Promise.all(
+                subTasks.map((subTask) => retrieveCheckedState(subTask.id))
+            );
+            setSelectedIDs(
+                subTasks.filter((subTask, index) => checkedStates[index]).map((subTask) => subTask.id)
+            );
+        };
+        retrieveCheckedStates();
+    }, [subTasks]);
 
 
     const handleDelete = (index) => {
@@ -300,11 +308,12 @@ const Index = ({ route }) => {
         setData(flattenedComments);
     }, [allComments]);
 
-    // useEffect(() => {
-    //     // __flattenArr()
-    // }, [item]);
+    useEffect(() => {
+    }, [item])
+
 
     return (
+
         <ScreenWrapper scrollEnabled={true}>
             <View style={styles.mainContainer}>
                 <View style={styles.container}>
@@ -391,7 +400,7 @@ const Index = ({ route }) => {
                                             renderItem={({ item, index }) => (
                                                 <>
                                                     <View style={CommonStyles.row}>
-                                                        {selectedIDs ? (
+                                                        {selectedIDs.includes(item.id) ? (
                                                             <TouchableOpacity onPress={() => handleUncomplete(item)}>
                                                                 <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
                                                             </TouchableOpacity>
