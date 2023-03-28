@@ -436,11 +436,6 @@ const Index = ({ navigation, route }) => {
         teamUpcomingData,
         teamOverdueData,
     }) => {
-
-
-        // console.log("Sent TASKS", Object.values(sentItems).filter((item) => item.status === "In-progress"))
-        // console.log("Sent DATA", sentItems)
-
         if (index === 0 && actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
             return setTasks(arr);

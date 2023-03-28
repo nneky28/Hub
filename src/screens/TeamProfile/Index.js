@@ -206,8 +206,6 @@ const Index = ({ route }) => {
     }
 
     const MapToState = ({ data, dueItems, upcomingItems, overdueItems, teamData, }) => {
-        console.log("In team", Object.values(data).filter((item) => item.status === "In-progress"))
-
         if (actionTitle === 'To-Do' && tab === 'All') {
             let arr = Object.values(data).filter((item) => item.status !== 'Completed' && item.status !== 'In-progress');
             return setTasks(arr);
@@ -231,7 +229,6 @@ const Index = ({ route }) => {
         }
         if (actionTitle === 'In Progress') {
             let arr = Object.values(data).filter((item) => item.status === "In-progress");
-            console.log("Data progress", data)
             return setTasks(arr);
         }
         if (actionTitle === 'Completed') {
