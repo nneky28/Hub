@@ -18,12 +18,21 @@ import { STABLE_BUSINESS_ID } from '../../utills/Constants';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Task');
+  const [business_id,setBusinessID] = React.useState("")
 
   const Task_Name = "Task"
 
   const {
     data: onboarding,
   } = useFetchOnboarding(Task_Name)
+
+  const getBusinessID = async () => {
+    let biz = await getStoredBusiness()
+    setBusinessID(biz?.business_id)
+  }
+  useEffect(()=>{
+    getBusinessID()
+  },[])
 
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
 
@@ -79,16 +88,16 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
       isVisible={isVisible}>
       <View style={styles.container}>
         <View style={styles.row}>
-          <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} />
-          <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
-          <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
-        </View>
-
-        <View style={styles.row}>
           <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
           <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
           <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
-
+        </View>
+        <View style={styles.row}>
+          {
+            business_id === STABLE_BUSINESS_ID ?  <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> : null
+          }
+          <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
+          <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
         </View>
       </View>
     </Modal>
