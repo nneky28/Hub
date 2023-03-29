@@ -178,9 +178,7 @@ const Index = ({ route }) => {
         }
     }
 
-    const pressHandler = () => {
-        setShowDiscard(false)
-    }
+
 
     useEffect(() => {
         if (!item?.id) return
