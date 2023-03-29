@@ -86,19 +86,28 @@ export const getGreetingTime = () => {
   // Between dawn and noon
   return 'Good morning';
 }
-export const __flatten = (data) => {
-  let flattenArr = data.map((res) => {
-    if (!res) return {}
-    return res.results
-  }).
-    filter(arr => arr && Array.isArray(arr))
-  return flattenArr = flattenArr.flat()
-}
-
-export const Capitalize = (string : string) => {
-  string = string.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase());
-  return string;
+export const __flatten = (data:any) => {
+  return data
+    .map((res:any) => res?.results || {})
+    .filter((arr) => Array.isArray(arr))
+    .flat();
 };
+
+
+// export const Capitalize = string => {
+//   string = string.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase());
+//   return string;
+// };
+export const Capitalize = (string) => {
+  const words = string.split(' ');
+  const capitalizedWords = words.map((word) => {
+    const firstLetter = word.charAt(0).toUpperCase();
+    const restOfWord = word.slice(1).toLowerCase();
+    return firstLetter + restOfWord;
+  });
+  return capitalizedWords.join(' ');
+};
+
 
 export const getTimeOffsFunction = async () => {
   let token = await getData("token");

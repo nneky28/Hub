@@ -3,7 +3,8 @@ import {
     Image,
     Text,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    Platform
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { Container, P, Rounded, H1, ImgPlaceholder, TouchableWrapper } from '../../utills/components'
@@ -21,11 +22,11 @@ import { Images } from '../../component2/image/Image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CommonStyles from '../../utills/CommonStyles';
 import { UnCompletedModal, ActionModal } from '../ContactModal';
-import TaskDetails from '../TaskDetails/Index'
+import { useNavigation } from '@react-navigation/native';
 
 
 const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
-
+    const navigation = useNavigation();
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
     const [display, setDisplay] = useState(false)
@@ -45,20 +46,25 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
     const deleteTask = useMutation(APIFunction.delete_task)
 
     const onPressHandler = async (action) => {
-
         let employee = await getData("about_me")
-
         let fd = {
             assigned_to: employee?.id,
             id: item.id,
-            due_date: moment().toISOString(true),
             status: action,
+            sub_tasks: []
         }
-
         let res = await mutateAsync(fd)
-        await storeData('task claim', res)
-        queryClient.invalidateQueries('get_team_tasks')
-        showFlashMessage({ title: `Task claimed successfully` })
+        if (res) {
+            await storeData('task claim', res)
+            queryClient.invalidateQueries()
+            showFlashMessage({
+                title: `Task Status Updated Successfully`,
+                duration: 5000,
+                type: 'task',
+                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+                backgroundColor: AppColors.newYellow,
+            });
+        }
         setWatch(!watch)
         setCompleted(false)
 
@@ -68,7 +74,13 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
         try {
             await deleteTask.mutateAsync(id)
             queryClient.invalidateQueries()
-            showFlashMessage({ title: `Task deleted` })
+            showFlashMessage({
+                title: `${' '} Task Deleted`,
+                duration: 5000,
+                type: 'task',
+                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+                backgroundColor: AppColors.newYellow
+            })
             setModal(false)
             setSent(false)
         } catch (error) {
@@ -80,37 +92,35 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
-
-
-
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
                 <View style={CommonStyles.row}>
                     {
-                        item?.department?.id !== item?.assigned_to?.id ?
+                        item?.department?.id !== item?.assigned_to?.id && item?.assigned_to?.photo ?
                             <Image
                                 source={{ uri: item?.assigned_to?.photo }}
                                 style={styles.avatarStyle}
-                            /> :
-                            item?.department?.id !== item?.assigned_to?.id && !item?.assigned_to?.photo ?
-                                <ImgPlaceholder text={item && item?.assigned_to?.first_name && item?.assigned_to?.first_name.length > 0 ? Capitalize([...item?.assigned_to?.first_name][0]) : ""} size={12} />
-                                :
-                                (
-                                    <ImgPlaceholder text={'?'} size={12} />
-                                )
+                            /> : item?.assigned_to?.id && !item?.assigned_to?.photo ?
+                                <ImgPlaceholder
+                                    text={`${item?.assigned_to?.first_name?.[0] ? Capitalize(item?.assigned_to?.first_name?.[0]) : ''}${item?.assigned_to?.last_name?.[0] ? `${Capitalize(item?.assigned_to?.last_name?.[0])}` : ''
+                                        }`}
+                                    size={12}
+                                /> :
+
+                                <ImgPlaceholder text={'?'} size={12} />
 
                     }
 
                     <View style={{ marginLeft: width(4), marginTop: height(0.5) }}>
-                        <TouchableOpacity onPress={() => setShow(true)}>
+                        <TouchableOpacity onPress={() => navigation.navigate("TaskView", { item })}>
                             <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
+                            <P fontSize={3} style={styles.author}>
+                                {item?.department?.id && !item?.assigned_to?.id ? `To: ${item?.department?.name ? item?.department?.name : ""} `
+                                    : `Claimed: ${item.assigned_to?.first_name ? item.assigned_to?.first_name : ""} ${item.assigned_to?.last_name ? item.assigned_to?.last_name : ''}`
+                                }
+                            </P>
                         </TouchableOpacity>
-                        <P fontSize={3} style={styles.author}>
-                            {item?.department?.id === item?.assigned_to?.id ? `To: ${item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} `
-                                : `Claimed: ${item.created_by?.first_name ? item.created_by?.first_name : ""} ${item.created_by?.last_name ? item.created_by?.last_name : ''}`
-                            }
-                        </P>
                         <View>
 
                             {
@@ -159,7 +169,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
                                     <Ionicons name="chevron-down-outline" size={15} color={AppColors.black3} />
                                 </TouchableOpacity>
                             </View> :
-                            item?.department?.id === item?.assigned_to?.id ?
+                            item?.department?.id && !item?.assigned_to?.id ?
                                 <Button
                                     title="Claim task"
                                     textStyle={styles.buttonText}
@@ -169,7 +179,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
                     }
                 </View>
             </View>
-            <View style={styles.subRow}>
+            {/* <View style={styles.subRow}>
                 {
                     title === "Completed" ? null :
                         <>
@@ -191,11 +201,11 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
 
                         </>
                 }
-            </View>
+            </View> */}
             <View style={styles.line1} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-            <TaskDetails isVisible={show}
-                onHide={() => setShow(false)} item={item} title={title} />
+            {/* <TaskViewMore isVisible={show}
+                onHide={() => setShow(false)} item={item} title={title} /> */}
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}

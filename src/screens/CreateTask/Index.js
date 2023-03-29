@@ -28,26 +28,24 @@ import { CordType } from '../../utills/types';
 import ScreenWrapper from '../../components/ScreenWrapper';
 
 
-const Index = ({ visible, onHide, route }) => {
-    const { item } = route?.params || {}
 
+const Index = ({ route }) => {
+    const { item } = route?.params || {}
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const queryClient = useQueryClient()
     const [show, setShow] = useState(false)
     const [open, setOpen] = useState(false)
-    const [display, setDisplay] = useState(false)
-    const [subTask, setSubtask] = useState([])
-    const [subData, setSubdata] = useState({})
-    const [count, setCount] = React.useState(0)
+    const [subTask, setSubtask] = useState(() => item?.sub_tasks_tasksapp?.map((item, i) => "task" + i) ?? [])
+    const [subData, setSubdata] = useState(() => item?.sub_tasks_tasksapp?.reduce((acc, curr, index) => { return { ...acc, ["task" + index]: curr.title } }, {}) ?? {})
+    const [count, setCount] = useState(item?.sub_tasks_tasksapp?.length ?? 0)
     const [showDiscard, setShowDiscard] = useState(false)
     const [assignTo, setAssignTo] = useState({})
     const [disabled, setDisabled] = useState(false)
     const [scrollable, setScrollable] = useState(true)
-    // const [coordinate, setCoordinate] = React.useState < CordType > ({})
+
 
     const scrollY = useRef(new Animated.Value(0)).current;
-
     const handleScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { y: scrollY } } }],
         { useNativeDriver: true },
@@ -59,8 +57,20 @@ const Index = ({ visible, onHide, route }) => {
         due_date: "Today",
     })
 
-    const { mutateAsync, isLoading } = useMutation(APIFunction.post_task)
-    const { mutateAsync: editHandler, isLoading: isLoadingEdit } = useMutation(APIFunction.update_status)
+    const {
+        mutateAsync,
+        isLoading
+    } = useMutation(APIFunction.post_task)
+
+    const {
+        mutateAsync: editHandler,
+        isLoading: isLoadingEdit
+    } = useMutation(APIFunction.update_status)
+
+    const {
+        mutateAsync: subTaskEditHandler,
+        isLoading: isLoadingSubtask
+    } = useMutation(APIFunction.post_sub_Task)
 
 
     const _subTask = () => {
@@ -115,7 +125,17 @@ const Index = ({ visible, onHide, route }) => {
             if (assignTo?.type === "Departments") delete fd["assigned_to"]
             if (data?.due_date === "No Date" || item) delete fd["due_date"]
             if (item) delete fd["status"]
-
+            if (item) {
+                const subtasks = Object.values(subData).map((obj, i) => {
+                    return {
+                        title: obj,
+                        assigned_by: employee?.id,
+                        id: item?.sub_tasks_tasksapp[i]?.id,
+                        task: item?.id
+                    }
+                })
+                fd["sub_tasks"] = subtasks
+            }
 
             if (item) {
                 fd["id"] = item?.id;
@@ -124,8 +144,14 @@ const Index = ({ visible, onHide, route }) => {
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
-                navigation.navigate("Task")
-                showFlashMessage({ title: `Task edited successfully` })
+                navigation.goBack()
+                showFlashMessage({
+                    title: "Task Edited successfully",
+                    duration: 5000,
+                    type: 'task',
+                    statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+                    backgroundColor: AppColors.newYellow
+                })
             } else {
                 let res = await mutateAsync(fd)
                 setDisabled(false)
@@ -136,7 +162,13 @@ const Index = ({ visible, onHide, route }) => {
                     dispatch(setCurrentTabIndex(1));
                 }
                 navigation.navigate("Task")
-                showFlashMessage({ title: `Task created successfully` })
+                showFlashMessage({
+                    title: "Task created successfully",
+                    duration: 5000,
+                    type: 'task',
+                    statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+                    backgroundColor: AppColors.newYellow
+                })
             }
         } catch (err) {
             showFlashMessage({
@@ -171,7 +203,7 @@ const Index = ({ visible, onHide, route }) => {
                         item ? <H1 marginTop={2}>Edit Task</H1> :
                             <H1 marginTop={2}>Create New Task</H1>
                     }
-                    <CloseHandler position={'center'} onPress={() => navigation.navigate("Task")} />
+                    <CloseHandler position={'center'} onPress={() => navigation.goBack()} />
                 </View>
                 <View style={styles.line} />
                 <KeyboardAwareWrapper
@@ -214,6 +246,7 @@ const Index = ({ visible, onHide, route }) => {
                             </>
                         )}
                     </Formik>
+
                     <View
                         style={styles.container}>
                         <View style={styles.assign}>
@@ -221,10 +254,10 @@ const Index = ({ visible, onHide, route }) => {
                             <TouchableOpacity
                                 onPress={() => setOpen(true)}
                                 style={styles.button}>
-                                {!assignTo?.name && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
+                                {!assignTo?.assigned_to && <Ionicons name='person-add' size={15} color={AppColors.black3} />}
                                 <P style={styles.btnIcon}>
                                     {
-                                        !assignTo?.name ? "You" : Capitalize(assignTo?.name)
+                                        !assignTo?.assigned_to ? "You" : Capitalize(assignTo?.name ?? item?.department?.name)
                                     }
                                 </P>
                             </TouchableOpacity>
@@ -263,10 +296,10 @@ const Index = ({ visible, onHide, route }) => {
                                             <Field
                                                 component={CustomInput}
                                                 name={item}
-                                                placeholder="Add subtasks"
                                                 keyboardType={'default'}
                                                 multiline={true}
                                                 mode={'flat'}
+                                                autoCorrect={false}
                                                 autoFocus={true}
                                                 value={subData?.[item]}
                                                 onChangeData={(value) => {
@@ -304,7 +337,6 @@ const Index = ({ visible, onHide, route }) => {
                             <TouchableOpacity
                                 onPress={submitHandler}
                                 disabled={isLoading || isLoadingEdit} >
-                                {/* <Image source={{ uri: Images.NewBtn }} style={styles.attachIcon} /> */}
                                 <H1 color={AppColors.green}>{item ? "Save" : "Create"}</H1>
                             </TouchableOpacity>
                         </View>
@@ -352,26 +384,6 @@ const Index = ({ visible, onHide, route }) => {
         </ScreenWrapper>
     )
 }
-
-
-// <Modal
-//     onBackButtonPress={onHide}
-//     onModalHide={onHide}
-//     onBackdropPress={() => {
-//         if (data?.title || data?.description) {
-//             return setShowDiscard(true)
-//         }
-//         onHide()
-//     }}
-//     animationInTiming={500}
-//     animationOutTiming={10}
-//     backdropOpacity={0.8}
-//     animationIn="fadeInUp"
-//     animationOut="fadeInDown"
-//     swipeThreshold={0.3}
-//     backdropColor={AppColors.black}
-//     isVisible={visible}
-//     style={{ justifyContent: 'center', margin: 0, }}>
 
 
 

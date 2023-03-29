@@ -17,7 +17,7 @@ import { Images } from '../../component2/image/Image';
 
 
 const PeopleList = ({ navigation, route, onPressHandler }) => {
-    const { team, people, focus, } = route.params
+    // const { focus, } = route.params
     const [myTeam, setMyTeam] = useState({})
     const [item, setItem] = useState([])
     const [teamItem, setTeamItem] = useState([])
@@ -99,7 +99,6 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
 
-
     const flattenAndMapData = (data, type) => {
         let flattenedArr = [];
         if (data && data.pages && Array.isArray(data.pages)) {
@@ -110,6 +109,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                 if (!res) return {};
                 return res.results;
             })
+            .map((item) => item.filter((employee) => employee.status === "active"))
             .map((item, i) => {
                 return {
                     key: i,
@@ -120,7 +120,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                             first_name: employee.first_name,
                             last_name: employee.last_name,
                             photo: employee.photo,
-                            job: employee.job.title
+                            job: employee?.job?.title
                         };
                     }),
                 };
@@ -130,6 +130,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
             page > 1 ? setItem([...item, ...flattenedArr]) : setItem(flattenedArr)
         return flattenedArr;
     };
+
 
     useEffect(() => {
         const formattedData = flattenAndMapData(data, 'Others');
@@ -205,7 +206,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
-                                autoFocus={focus ? true : false}
+                            // autoFocus={focus ? true : false}
                             />
                         </View>
                     ) : Platform.OS === 'ios' ? (
@@ -215,7 +216,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
                                 value={search}
-                                autoFocus={focus ? true : false}
+                            // autoFocus={focus ? true : false}
                             />
 
                         </View>
@@ -233,7 +234,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                     renderSectionHeader={({ section }) => {
                                         return (
                                             <View style={[styles.headingContainer]}>
-                                                <H1 numberOfLines={1} style={styles.container}>{section.title}</H1>
+                                                <H1 numberOfLines={1} style={styles.container}>{section?.title}</H1>
                                             </View>
                                         )
                                     }}
@@ -241,17 +242,17 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                                     ListFooterComponent={
                                         isFetchingNextPage || hasNextPage ? footerLoader : null
                                     }
+                                    onEndReachedThreshold={0.1}
+                                    onEndReached={loadMore}
                                 />
                             )}
                         </View> :
                         <View>
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
-                                <H1 fontSize={3.3}>Your Team</H1>
-                                <DeptListComp item={myTeam?.department}
-                                // onPressHandle={() => navigation.navigate("profile", { item, departments })}
-                                />
+                                <H1 style={CommonStyles.marginBottom_2} fontSize={3.3}>Your Team</H1>
+                                <DeptListComp item={myTeam?.department} />
                             </View>
-                            <View style={[CommonStyles.marginBottom_2, CommonStyles.marginLeft_5,]}>
+                            <View style={[CommonStyles.marginBottom_2, CommonStyles.marginTop_1, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Department</H1>
                             </View>
 

@@ -1,6 +1,6 @@
 import moment from 'moment';
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View, Keyboard } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { useSelector } from 'react-redux';
 import {
@@ -22,7 +22,24 @@ function TabBar({ state, descriptors, navigation }) {
   const isBottomTabBarVisible = useSelector(state => state.Config.isBottomTabBarVisible);
   const auth = useSelector(state => state.Auth);
   const [modal, setModal] = useState(false);
+  const [visible, setVisible] = useState(true);
 
+
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      //Whenever keyboard did show make it don't visible
+      setVisible(false);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setVisible(true);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
   if (!isBottomTabBarVisible)
     return null;
   else
@@ -34,6 +51,7 @@ function TabBar({ state, descriptors, navigation }) {
             paddingBottom: height(3)
           }}
         >
+          {/* tabBarHideOnKeyboard: true, */}
           {state.routes.map((route, index) => {
             const { options } = descriptors[route.key];
             const label =
@@ -61,6 +79,8 @@ function TabBar({ state, descriptors, navigation }) {
               }
             };
 
+            // props.descriptors[route.key].options.tabBarHideOnKeyboard && (
+
             const onLongPress = () => {
               navigation.emit({
                 type: 'tabLongPress',
@@ -85,7 +105,10 @@ function TabBar({ state, descriptors, navigation }) {
               image = Images.ProfileIcon;
               image1 = Images.ProfileFillIcon;
             }
-            return (
+
+
+
+            return visible && (
               <TouchableOpacity
                 accessibilityRole="button"
                 accessibilityState={isFocused ? { selected: true } : {}}

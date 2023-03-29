@@ -40,7 +40,7 @@ const PersonListComp: React.FC<PersonListCompProps> = ({
     >
       <View style={CommonStyles.rowJustifySpaceBtw}>
         {item.photo ? (
-          <Image source={{ uri: item.photo }} style={styles.avatarStyle} />
+          <Image source={{ uri: item?.photo }} style={styles.avatarStyle} />
         ) : (
           <ImgPlaceholder
             text={`${item?.first_name?.[0] ? Capitalize(item?.first_name?.[0]) : ''}${

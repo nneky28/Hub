@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
         margin: 0,
-        marginTop: height(5),
+        // marginTop: height(20),
         flex: 1,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-        height: height(3)
+        // height: height(3),
+        width: width(100)
     },
 
     title: {
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(5),
     },
     logText: {
-        fontFamily: FontFamily.BlackSansBlack,
+        // fontFamily: FontFamily.BlackSansBlack,
         fontSize: width(3.5)
     },
     leftIcon: {
@@ -166,7 +167,6 @@ const styles = StyleSheet.create({
     },
     stickyDate: {
         paddingHorizontal: width(5),
-        // marginTop: height(1),
         paddingVertical: height(1)
     },
     buttonStyle: {
@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
         borderRadius: width(5),
         width: width(30),
         alignSelf: 'flex-start',
-        // height: width(8.9),
     },
     buttonText: {
         color: AppColors.black1,
@@ -190,14 +189,22 @@ const styles = StyleSheet.create({
 
     textContainer1: {
         justifyContent: 'space-between',
-        // height: height(4),
         marginLeft: width(2),
+        alignItems: "center"
     },
     textCon: {
         justifyContent: 'space-between',
         height: height(4.5),
         marginLeft: width(2),
         marginTop: height(1)
+    },
+    titleText: {
+        fontSize: width(3.5),
+        fontFamily: FontFamily.BlackSansBold,
+        color: AppColors.black1,
+        paddingVertical: height(1),
+        lineHeight: 18,
+
     },
     listContainer1: {
         width: width(90),
@@ -216,8 +223,9 @@ const styles = StyleSheet.create({
 
     },
     Input: {
-        width: width(70),
-        backgroundColor: AppColors.transparent,
+        width: width(80),
+        alignSelf: 'center',
+        marginTop: height(1),
     },
     avatarStyle: {
         height: height(5),

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: height(3),
+        // marginTop: height(3),
         paddingHorizontal: width(5)
     },
     line: {
@@ -35,8 +35,11 @@ const styles = StyleSheet.create({
         borderRightWidth: width(0.5),
         borderRightColor: AppColors.white,
         alignItems: 'center',
-        padding: height(1),
-
+        margin: 0,
+        alignSelf: 'center',
+        paddingHorizontal: width(10),
+        justifyContent: 'center',
+        height: height(3.5)
     },
     btnPart: {
         backgroundColor: '#D9D9D9',
@@ -46,8 +49,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: width(6),
         borderBottomRightRadius: width(6),
         margin: 0,
-        // borderColor: AppColors.green,
-        // borderWidth: width(0.15)
+        // height: height(3.5)
     },
 
     row: {
@@ -56,10 +58,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(5),
     },
 
-    by: {
-        paddingHorizontal: width(5.2),
-        height: height(2),
+    author: {
+        marginLeft: width(5.2),
         fontSize: width(3.2),
+        bottom: height(1)
     },
     date: {
         color: AppColors.black3,
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     row1: {
         flexDirection: 'row',
         paddingHorizontal: width(6),
-
+        bottom: height(0.5)
     },
     subTaskRow: {
         flexDirection: 'row',
@@ -86,8 +88,9 @@ const styles = StyleSheet.create({
     title: {
         fontSize: width(3.4),
         color: AppColors.black1,
-        paddingVertical: height(1),
-        width: width(50),
+        width: width(55),
+        marginTop: height(1.5),
+        // top: height(1)
     },
     dots: {
         color: AppColors.darkGray,
@@ -113,7 +116,8 @@ const styles = StyleSheet.create({
         fontSize: width(3.1),
         color: AppColors.black3,
         marginTop: height(0.5)
-    }
+    },
+
 
 })
 

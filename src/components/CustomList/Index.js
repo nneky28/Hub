@@ -53,6 +53,7 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
         loading
     } = useFetchEmployees(page, search)
 
+
     const {
         data: departmentData,
         isFetching: fetchingDepartments,
@@ -72,13 +73,17 @@ const CustomList = ({ open, setOpen, onPressHandler }) => {
             return res.results
         })
         let arr = flattenArr.flat()
-
-        if (param === "people")
-            page > 1 ? setEmployees([...employees, ...arr]) : setEmployees(arr)
+        if (param === "people") {
+            const activeEmployees = arr.filter((emp) => emp.status === "active");
+            page > 1
+                ? setEmployees([...employees, ...activeEmployees])
+                : setEmployees(activeEmployees);
+        }
 
         if (param === "departments")
             return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
+    console.log("Data", employees)
 
     const loadMore = () => {
         if (hasNextPage && !loading)

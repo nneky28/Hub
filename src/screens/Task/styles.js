@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         height: height(3.5),
         ...AppColors.smallShadow,
         alignSelf: 'center',
-        paddingHorizontal: width(2),
+        paddingHorizontal: width(3.5),
         justifyContent: 'center',
         alignItems: 'center',
 
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 
     defaultTab: {
         alignSelf: "center",
-        paddingHorizontal: width(4),
+        paddingHorizontal: width(5),
     },
     selectedTab: {
         fontFamily: FontFamily.BlackSansBold,
@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansRegular
     },
 
-    logoBox: { backgroundColor: '#FDEDCE', padding: width(1.5), borderRadius: width(1.5) },
-    logo: { width: width(4.5), height: height(2), borderRadius: 50, alignSelf: 'center', },
+    logoBox: { backgroundColor: '#FDEDCE', borderRadius: width(1.5) },
+    logo: { width: width(10), height: height(5), },
 
     animatedView3: {
         position: 'absolute',
@@ -271,7 +271,8 @@ const styles = StyleSheet.create({
         height: height(14),
         width: width(28)
     },
-    clipped: { height: height(8), resizeMode: 'contain', width: width(28), marginTop: height(1) },
+    clipped: { resizeMode: 'cover', height: height(8), },
+    clippedCon: { top: height(1.2) },
     count: {
         position: 'absolute',
         left: width(19),
