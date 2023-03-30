@@ -122,6 +122,7 @@ const Index = ({ route }) => {
                     }
                 })
             }
+            // return console.log("FD", fd)
             if (assignTo?.type === "Departments") delete fd["assigned_to"]
             if (data?.due_date === "No Date" || item) delete fd["due_date"]
             if (item) delete fd["status"]
@@ -298,6 +299,7 @@ const Index = ({ route }) => {
                                                 multiline={true}
                                                 mode={'flat'}
                                                 autoCorrect={false}
+                                                minHeight={3}
                                                 autoFocus={true}
                                                 value={subData?.[item]}
                                                 onChangeData={(value) => {

@@ -50,8 +50,7 @@ const styles = StyleSheet.create({
     containerView: {
         width: width(100),
         paddingVertical: height(2),
-        // backgroundColor: '#F5F5F5',
-        // flex: 1
+        flex: 1
     },
     mainViewContainer: {
         backgroundColor: AppColors.white,

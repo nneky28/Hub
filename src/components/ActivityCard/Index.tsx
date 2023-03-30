@@ -25,7 +25,7 @@ const Index: FC<Props> = ({ item }) => {
   return (
     <View>
       <View style={styles.rowSection}>
-        <View style={CommonStyles.rowJustifySpaceBtw}>
+        <View style={[CommonStyles.rowJustifySpaceBtw]}>
           {item.logged_by?.photo ? (
             <Image
               source={{uri: item.logged_by.photo}}

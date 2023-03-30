@@ -172,19 +172,21 @@ const styles = StyleSheet.create({
     currentTab: {
         backgroundColor: AppColors.white,
         borderRadius: width(8),
-        marginRight: width(5),
+        marginRight: width(2),
         height: height(3.5),
         ...AppColors.smallShadow,
         alignSelf: 'center',
-        paddingHorizontal: width(4),
+        paddingHorizontal: width(3.5),
         justifyContent: 'center',
         alignItems: 'center',
+
     },
 
     defaultTab: {
-        marginRight: width(5),
         alignSelf: "center",
+        paddingHorizontal: width(5),
     },
+
     selectedTab: {
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.green,
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
 
     },
     scrollViewCon: {
-        marginTop: height(3),
+        marginTop: height(2),
         justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',

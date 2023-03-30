@@ -120,7 +120,7 @@ const PeopleList = ({ navigation, route, onPressHandler }) => {
                             first_name: employee.first_name,
                             last_name: employee.last_name,
                             photo: employee.photo,
-                            job: employee?.job?.title
+                            job: employee?.job
                         };
                     }),
                 };

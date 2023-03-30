@@ -3,7 +3,9 @@ import {
     Animated,
     Easing,
     LayoutAnimation,
-    TextInput
+    TextInput,
+    ScrollView,
+    Platform
 } from 'react-native'
 import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
@@ -16,7 +18,7 @@ import { CompletedModal, SubTaskActionModal } from '../../components/ContactModa
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import { useFetchActivities, useUpdate, updateSubTask, useFetchComments } from '../../utills/api';
+import { useFetchActivities, useUpdate, updateSubTask, useFetchComments, useFetchAllTask } from '../../utills/api';
 import ActivityCard from '../../components/ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
 import { Field, Formik } from 'formik';
@@ -36,7 +38,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 
 const Index = ({ route }) => {
-    const { item, title } = route?.params
+    const { id, title } = route?.params
     const navigation = useNavigation();
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
@@ -58,25 +60,37 @@ const Index = ({ route }) => {
     const [showForm, setShowForm] = useState(false)
     const [employee_pk, setEmployeePK] = useState(null);
     const [myComment, setMyComment] = useState(null)
-    const [subTasks, setSubTasks] = useState(Object.values(item?.sub_tasks_tasksapp))
+    const [item, setItem] = useState({})
+    const [subTasks, setSubTasks] = useState([])
+    // const [subTasks, setSubTasks] = useState(Object.values(item?.sub_tasks_tasksapp) ?? [])
+
 
     const {
         data: logs,
         isLoading: loading
-    } = useFetchActivities(item?.id)
+    } = useFetchActivities(id)
 
     const {
         data: allComments,
         isLoading: loadingComments
-    } = useFetchComments(item?.id)
+    } = useFetchComments(id)
+
     const {
         mutateAsync: subTaskEditHandler,
         isLoading: isLoadingSubtask
     } = useMutation(APIFunction.update_sub_task)
 
+
+    const {
+        data: allTask,
+        isLoading: loadingAllTask,
+    } = useFetchAllTask(id)
+
+
+
     const flattenAndMapData = (data) => {
         let flattenedArr = [];
-        if (data && data.pages && Array.isArray(data.pages)) {
+        if (data && data?.pages && Array.isArray(data?.pages)) {
             flattenedArr = data.pages;
         }
         flattenedArr = flattenedArr.map((res) => {
@@ -183,65 +197,45 @@ const Index = ({ route }) => {
         }
     };
 
-    const handleChecked = React.useCallback(async (item) => {
-        setSelectedIDs((prev) => [...prev, item.id]);
+
+
+    const handleChecked = React.useCallback((item) => {
+        setSelectedIDs((prev) => [...prev, item.id])
         showFlashMessage({
             title: `Sub task marked as completed`,
             duration: 5000,
             type: 'task',
             statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
             backgroundColor: AppColors.newYellow
-        });
-        await saveCheckedState(item.id, true);
-    }, [setSelectedIDs]);
-
-    const handleUncomplete = React.useCallback(async (item) => {
-        setSelectedIDs((prev) => prev.filter((id) => id !== item.id));
-        await saveCheckedState(item.id, false);
+        })
     }, [setSelectedIDs]);
 
 
-    const handleComplete = async () => {
-        let employee = await getData("about_me")
-        let fd = {
-            assigned_to: item?.id,
-            id: item.id,
-            status: "Completed",
+    // const handleComplete = async () => {
+    //     let employee = await getData("about_me")
+    //     let fd = {
+    //         assigned_to: item?.id,
+    //         id: item.id,
+    //         status: "Completed",
+    //     }
+    //     let res = await subTaskEditHandler(fd)
+    //     console.log('res', res)
+    //     await storeData('task claim', res)
+    //     queryClient.invalidateQueries()
+    // }
+
+    const __flattenArr = () => {
+        if (allTask?.pages) {
+            const flattenedArray = Object.values(allTask.pages).flatMap(item => {
+                return item;
+            });
+            setItem(flattenedArray[0]);
+
         }
-        let res = await subTaskEditHandler(fd)
-        console.log('res', res)
-        await storeData('task claim', res)
-        queryClient.invalidateQueries()
-    }
+    };
 
-
-    const _subTask = () => {
-        let text = "task" + count
-        setSubtask([...subTask, text])
-        setCount(count + 1)
-
-    }
-
-    useEffect(() => {
-        const retrieveCheckedStates = async () => {
-            const checkedStates = await Promise.all(
-                subTasks.map((subTask) => retrieveCheckedState(subTask.id))
-            );
-            setSelectedIDs(
-                subTasks.filter((subTask, index) => checkedStates[index]).map((subTask) => subTask.id)
-            );
-        };
-        retrieveCheckedStates();
-    }, [subTasks]);
-
-
-    const handleDelete = (index) => {
-        let arr = [...subTask]
-        arr.splice(index, 1)
-        setSubtask(arr)
-    }
-    const overDue = moment(item?.due_date).isBefore(new Date())
-    const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
+    const overDue = moment(item?.[0]?.due_date).isBefore(new Date())
+    const dueToday = moment(item?.[0]?.due_date).isSame(new Date(), 'day');
 
 
     const renderItem = ({ item, index }) => {
@@ -308,203 +302,218 @@ const Index = ({ route }) => {
     }, [allComments]);
 
     useEffect(() => {
-    }, [item])
+        __flattenArr()
+    }, [allTask])
 
+    useEffect(() => {
+        const retrieveCheckedStates = async () => {
+            const checkedStates = await Promise.all(
+                subTasks.map((subTask) => retrieveCheckedState(subTask.id))
+            );
+            setSelectedIDs(
+                subTasks.filter((subTask, index) => checkedStates[index]).map((subTask) => subTask.id)
+            );
+        };
+        retrieveCheckedStates();
+    }, [subTasks]);
 
     return (
-
-        <ScreenWrapper scrollEnabled={true}>
-            <View style={styles.mainContainer}>
-                <View style={styles.container}>
-                    <View style={styles.row}>
-                        <View style={{ width: width(70) }}>
-                            <H1 numberOfLines={1}>{Capitalize(item?.title)}</H1>
-                        </View>
-                        <View style={{ paddingHorizontal: width(5) }}>
-                            <CloseHandler position={'center'} onPress={() => navigation.goBack()} size={ICON_BUTTON_SIZE} />
-                        </View>
-                    </View>
-
-                    <View style={styles.row1}>
-                        <P style={styles.flagText}>Due: </P>
-                        {dueToday ? <React.Fragment>
-                            <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                            <Entypo name="dot-single" size={18} color={AppColors.black} />
-                            <P style={styles.flagText}>DueToday</P>
-                        </React.Fragment> : overDue ? <React.Fragment>
-                            <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                            <Entypo name="dot-single" size={18} color={AppColors.black} />
-                            <P color={AppColors.red} fontSize={3.1}>Overdue</P>
-                        </React.Fragment> : <React.Fragment>
-                            <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                            <Entypo name="dot-single" size={18} color={AppColors.black} />
-                            <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
-                        </React.Fragment>}
-                    </View>
-                    {
-                        title === 'Completed' ? null :
-                            <Button
-                                title="Edit Task"
-                                containerStyle={styles.buttonStyle}
-                                textStyle={styles.buttonText}
-                                onPress={() => {
-                                    navigation.navigate("CreateTask", { item })
-                                }}
-                            />
-                    }
-                    <View style={styles.line} />
-
-
-                    {
-                        !item?.description ? <View style={{ paddingVertical: height(2) }}>
-                            <H1 >No description for this Task</H1>
-                        </View> :
-                            <View style={styles.descriptionCon}>
-                                <H1 color={AppColors.black1}>Task Description</H1>
-                                <View style={styles.con}>
-                                    <P style={styles.description}>
-                                        {item.description}
-                                    </P>
-                                </View>
+        <View style={styles.mainContainer}>
+            <ScreenWrapper scrollEnabled={true}>
+                <View >
+                    <View style={styles.container}>
+                        <View style={styles.row}>
+                            <View style={{ width: width(70) }}>
+                                <H1 numberOfLines={1}>{item?.title}</H1>
                             </View>
-                    }
-                    <View
-                        style={styles.container1}>
-                        <View style={styles.assign}>
-                            <P color={AppColors.black3}>Assigned To</P>
-                            <View style={styles.button}>
-                                <Text style={styles.name}>{!item?.assigned_to ? item?.department?.name : item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} {item?.assigned_to?.last_name ? item?.assigned_to?.last_name : ''}</Text>
+                            <View style={{ paddingHorizontal: width(5) }}>
+                                <CloseHandler position={'center'} onPress={() => navigation.goBack()} size={ICON_BUTTON_SIZE} />
                             </View>
                         </View>
-                        <View style={styles.dueDate}>
-                            <P color={AppColors.black3}>Due Date</P>
-                            <View style={styles.button}>
-                                <Text style={styles.name} numberOfLines={1}>
-                                    {item?.due_date && moment(item?.due_date).format("dddd D, MMM YYYY")}</Text>
-                            </View>
-                        </View>
-                    </View>
 
-                    <View>
+                        <View style={styles.row1}>
+                            <P style={styles.flagText}>Due: </P>
+                            {dueToday ? <React.Fragment>
+                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                                <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                <P style={styles.flagText}>DueToday</P>
+                            </React.Fragment> : overDue ? <React.Fragment>
+                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                                <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                <P color={AppColors.red} fontSize={3.1}>Overdue</P>
+                            </React.Fragment> : <React.Fragment>
+                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                                <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
+                            </React.Fragment>}
+                        </View>
+                        {
+                            title === 'Completed' ? null :
+                                <Button
+                                    title="Edit Task"
+                                    containerStyle={styles.buttonStyle}
+                                    textStyle={styles.buttonText}
+                                    onPress={() => {
+                                        navigation.navigate("CreateTask", { item })
+                                    }}
+                                />
+                        }
+                        <View style={styles.line} />
+
 
                         {
-                            item?.sub_tasks_tasksapp?.length !== 0 &&
-                            <>
-                                <H1 style={{ marginTop: height(2) }}>SubTasks</H1>
-                                <View style={styles.subTaskContainer}>
-                                    <View style={CommonStyles.row}>
-
-                                        <FlatList
-                                            data={subTasks}
-                                            renderItem={({ item, index }) => (
-                                                <>
-                                                    <View style={CommonStyles.row}>
-                                                        {selectedIDs.includes(item.id) ? (
-                                                            <TouchableOpacity onPress={() => handleUncomplete(item)}>
-                                                                <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
-                                                            </TouchableOpacity>
-                                                        ) : (
-                                                            <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                                <Image source={{ uri: Images.SubTaskBox }} style={styles.leftIcon} />
-                                                            </TouchableOpacity>
-                                                        )}
-                                                        <Text
-                                                            numberOfLines={1}
-                                                            style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
-                                                    </View>
-                                                    {index <= 15 ? <View style={styles.line1} /> : null}
-                                                </>
-                                            )}
-                                            keyExtractor={(item, index) => item.id.toString()}
-                                        />
+                            !item?.description ? <View style={{ paddingVertical: height(2) }}>
+                                <H1 >No description for this Task</H1>
+                            </View> :
+                                <View style={styles.descriptionCon}>
+                                    <H1 color={AppColors.black1}>Task Description</H1>
+                                    <View style={styles.con}>
+                                        <P style={styles.description}>
+                                            {item?.description}
+                                        </P>
                                     </View>
-
-
                                 </View>
-                            </>
                         }
-                    </View>
-                    <View style={styles.descriptionCon}>
-                        <H1 color={AppColors.black1}>Created By</H1>
-                        <Text style={styles.description}>
-                            {item?.created_by?.first_name ? item?.created_by?.first_name : ""} {item?.created_by?.last_name ? item?.created_by?.last_name : ''}
-                        </Text>
-                    </View>
-                </View>
-            </View>
-
-            <TouchableOpacity onPress={hide} style={styles.sections}>
-                <H1 style={styles.logText}>Activity log</H1>
-                <Animated.Image
-                    resizeMode="contain"
-                    source={{ uri: Images.ArrowDown }}
-                    style={[styles.leftIcon, { transform: [{ rotate: spin }] }]}
-                />
-            </TouchableOpacity>
-            {
-                show &&
-                <View>
-                    <SectionList
-                        sections={log}
-                        renderItem={RenderItem}
-                        keyExtractor={item => item.id}
-                        renderSectionHeader={({ section: { title } }) => {
-                            return (
-                                <P style={styles.stickyDate}>
-                                    {formattedTitle(title)}
-                                </P>
-                            )
-                        }} />
-
-                    {data && Array.isArray(data) && !loadingComments ? (
-                        <SectionList
-                            sections={data}
-                            renderItem={renderItem}
-                            renderSectionHeader={({ section: { title } }) => (
-                                data[0]?.title ? (
-                                    <P style={styles.stickyDate}>{formattedTitle(data[0].title)}</P>
-                                ) : null
-                            )}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                    ) : null}
-
-                    <KeyboardAwareScrollView
-                        resetScrollToCoords={{ x: 0, y: 0 }}
-                        scrollEnabled={true}
-                        extraScrollHeight={8}>
-                        <View style={styles.listContainer1}>
-                            <View style={CommonStyles.rowJustifySpaceBtw}>
-                                <View >
-                                    {employee_pk?.job?.photo ? (
-                                        <Image
-                                            source={{ uri: employee_pk?.photo }}
-                                            style={styles.avatarStyle}
-                                        />
-                                    ) : (
-                                        <ImgPlaceholder
-                                            text={`${employee_pk ? employee_pk?.first_name[0] : ''}${employee_pk ? employee_pk?.last_name[0] : ''
-                                                }`}
-                                            size={10}
-                                        />
-                                    )}
+                        <View
+                            style={styles.container1}>
+                            <View style={styles.assign}>
+                                <P color={AppColors.black3}>Assigned To</P>
+                                <View style={styles.button}>
+                                    <Text style={styles.name}>{!item?.assigned_to ? item?.department?.name : item?.assigned_to?.first_name ? item?.assigned_to?.first_name : ""} {item?.assigned_to?.last_name ? item?.assigned_to?.last_name : ''}</Text>
                                 </View>
-
-                                <View style={styles.textContainer1}>
-                                    <TextInput
-                                        style={styles.Input}
-                                        placeholder="Add a comment"
-                                        value={comment}
-                                        onSubmitEditing={handleSubmit}
-                                        onChangeText={text => setComment(text)}
-                                    />
+                            </View>
+                            <View style={styles.dueDate}>
+                                <P color={AppColors.black3}>Due Date</P>
+                                <View style={styles.button}>
+                                    <Text style={styles.name} numberOfLines={1}>
+                                        {item?.due_date && moment(item?.due_date).format("dddd D, MMM YYYY")}</Text>
                                 </View>
                             </View>
                         </View>
-                    </KeyboardAwareScrollView>
+
+                        <View>
+                            {
+                                item?.sub_tasks_tasksapp?.length !== 0 &&
+                                <>
+                                    <H1 style={{ marginTop: height(2) }}>SubTasks</H1>
+                                    <View style={styles.subTaskContainer}>
+                                        <View style={CommonStyles.row}>
+                                            <FlatList
+                                                data={Object.values(item?.sub_tasks_tasksapp ?? {}) ?? []}
+                                                renderItem={({ item, index }) => (
+                                                    <>
+                                                        <View style={CommonStyles.row}>
+                                                            {selectedIDs.includes(item.id) ? (
+                                                                <TouchableOpacity onPress={() => handleUncomplete(item)}>
+                                                                    <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
+                                                                </TouchableOpacity>
+                                                            ) : (
+                                                                <TouchableOpacity onPress={() => handleChecked(item)}>
+                                                                    <Image source={{ uri: Images.SubTaskBox }} style={styles.leftIcon} />
+                                                                </TouchableOpacity>
+                                                            )}
+                                                            <TouchableOpacity onPress={() => handleChecked(item)}>
+                                                                <Text
+                                                                    numberOfLines={1}
+                                                                    style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
+
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        {index <= 15 ? <View style={styles.line1} /> : null}
+                                                    </>
+                                                )}
+                                                keyExtractor={(item, index) => item.id.toString()}
+                                            />
+                                        </View>
+
+
+                                    </View>
+                                </>
+                            }
+                        </View>
+                        <View style={styles.descriptionCon}>
+                            <H1 color={AppColors.black1}>Created By</H1>
+                            <Text style={styles.description}>
+                                {item?.created_by?.first_name ? item?.created_by?.first_name : ""} {item?.created_by?.last_name ? item?.created_by?.last_name : ''}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
-            }
-        </ScreenWrapper>
+
+                <TouchableOpacity onPress={hide} style={styles.sections}>
+                    <H1 style={styles.logText}>Activity log</H1>
+                    <Animated.Image
+                        resizeMode="contain"
+                        source={{ uri: Images.ArrowDown }}
+                        style={[styles.leftIcon, { transform: [{ rotate: spin }] }]}
+                    />
+                </TouchableOpacity>
+                {/* <ScrollView></ScrollView> */}
+                {
+                    show &&
+                    <View>
+                        <SectionList
+                            sections={log}
+                            renderItem={RenderItem}
+                            keyExtractor={item => item.id}
+                            renderSectionHeader={({ section: { title } }) => {
+                                return (
+                                    <P style={styles.stickyDate}>
+                                        {formattedTitle(title)}
+                                    </P>
+                                )
+                            }} />
+
+                        {data && Array.isArray(data) && !loadingComments ? (
+                            <SectionList
+                                sections={data}
+                                renderItem={renderItem}
+                                renderSectionHeader={({ section: { title } }) => (
+                                    data[0]?.title ? (
+                                        <P style={styles.stickyDate}>{formattedTitle(data[0].title)}</P>
+                                    ) : null
+                                )}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        ) : null}
+
+                        <KeyboardAwareScrollView
+                            resetScrollToCoords={{ x: 0, y: 0 }}
+                            scrollEnabled={true}
+                            extraScrollHeight={8}>
+                            <View style={styles.listContainer1}>
+                                <View style={CommonStyles.rowJustifySpaceBtw}>
+                                    <View >
+                                        {employee_pk?.job?.photo ? (
+                                            <Image
+                                                source={{ uri: employee_pk?.photo }}
+                                                style={styles.avatarStyle}
+                                            />
+                                        ) : (
+                                            <ImgPlaceholder
+                                                text={`${employee_pk ? employee_pk?.first_name[0] : ''}${employee_pk ? employee_pk?.last_name[0] : ''
+                                                    }`}
+                                                size={10}
+                                            />
+                                        )}
+                                    </View>
+
+                                    <View style={styles.textContainer1}>
+                                        <TextInput
+                                            style={styles.Input}
+                                            placeholder={"Add a comment"}
+                                            value={comment}
+                                            onSubmitEditing={handleSubmit}
+                                            onChangeText={text => setComment(text)}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+                        </KeyboardAwareScrollView>
+                    </View>
+                }
+            </ScreenWrapper>
+        </View>
     )
 }
 

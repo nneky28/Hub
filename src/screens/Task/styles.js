@@ -272,6 +272,7 @@ const styles = StyleSheet.create({
         width: width(28)
     },
     clipped: { resizeMode: 'cover', height: height(8), },
+
     clippedCon: { top: height(1.2) },
     count: {
         position: 'absolute',
