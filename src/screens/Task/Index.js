@@ -183,6 +183,7 @@ const Index = ({ navigation, route }) => {
                 title={actionTitle}
                 __flattenArr={__flattenArr}
                 index={index}
+                id={item.id}
             />
         );
     };
@@ -495,7 +496,7 @@ const Index = ({ navigation, route }) => {
         }
 
         if (index === 2 && actionTitle === 'To-Do' && tab === 'All') {
-            let arr = Object.values(teamData).filter((item) => item.status !== "Completed");
+            let arr = Object.values(teamData).filter((item) => item.status !== "Completed" && item.status !== 'In-progress');
             return setTeamTask(arr);
         }
         if (index === 2 && actionTitle === 'To-Do' && tab === 'Due Today') {
@@ -643,7 +644,7 @@ const Index = ({ navigation, route }) => {
                                             ? numeral(sentStatistics?.todo_count).format('0,0')
                                             : index === 2 && teamCount
                                                 ? numeral(
-                                                    teamCount?.todo_count + teamCount.inprogress_count
+                                                    teamCount?.todo_count
                                                 ).format('0,0')
                                                 : 0,
                                 borderWidth: 0.5,

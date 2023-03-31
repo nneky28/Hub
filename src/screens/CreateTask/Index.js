@@ -299,7 +299,7 @@ const Index = ({ route }) => {
                                                 multiline={true}
                                                 mode={'flat'}
                                                 autoCorrect={false}
-                                                minHeight={3}
+                                                minHeight={5}
                                                 autoFocus={true}
                                                 value={subData?.[item]}
                                                 onChangeData={(value) => {

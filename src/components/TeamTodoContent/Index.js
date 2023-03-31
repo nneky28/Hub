@@ -25,7 +25,7 @@ import { UnCompletedModal, ActionModal } from '../ContactModal';
 import { useNavigation } from '@react-navigation/native';
 
 
-const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
+const Index = ({ __flattenArr, item, title, team, index, mapToState, id }) => {
     const navigation = useNavigation();
     const queryClient = useQueryClient()
     const [modal, setModal] = useState(false)
@@ -51,8 +51,8 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
             assigned_to: employee?.id,
             id: item.id,
             status: action,
-            sub_tasks: []
         }
+
         let res = await mutateAsync(fd)
         if (res) {
             await storeData('task claim', res)
@@ -113,7 +113,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
                     }
 
                     <View style={{ marginLeft: width(4), marginTop: height(0.5) }}>
-                        <TouchableOpacity onPress={() => navigation.navigate("TaskView", { item })}>
+                        <TouchableOpacity onPress={() => navigation.navigate("TaskView", { id })}>
                             <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
                             <P fontSize={3} style={styles.author}>
                                 {item?.department?.id && !item?.assigned_to?.id ? `To: ${item?.department?.name ? item?.department?.name : ""} `
@@ -179,33 +179,8 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState }) => {
                     }
                 </View>
             </View>
-            {/* <View style={styles.subRow}>
-                {
-                    title === "Completed" ? null :
-                        <>
-                            {
-                                item?.sub_tasks_tasksapp?.length > 0 ?
-                                    <FlatList
-                                        data={Object.values(item?.sub_tasks_tasksapp)}
-                                        renderItem={({ item }) =>
-                                            <View style={styles.content}>
-                                                <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
-                                                <Text numberOfLines={1}
-                                                    style={styles.sub}>{item.title}</Text>
-                                            </View>
-                                        }
-                                        keyExtractor={(item, index) => index.toString()}
-                                    />
-                                    : null
-                            }
-
-                        </>
-                }
-            </View> */}
             <View style={styles.line1} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-            {/* <TaskViewMore isVisible={show}
-                onHide={() => setShow(false)} item={item} title={title} /> */}
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}

@@ -112,6 +112,7 @@ const Index = ({ route }) => {
                 count={count}
                 title={actionTitle}
                 user
+                id={item.id}
             />
         );
     };
