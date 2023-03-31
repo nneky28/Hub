@@ -97,8 +97,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
             setWatch(!watch);
           }
         } catch (error) {
-            // console.log("ERror",error)
-          // Handle error here
+       
         }
       }
       
