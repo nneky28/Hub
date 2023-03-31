@@ -64,6 +64,7 @@ import ResetPIN from '../screens/Security/ResetPIN';
 import UsePassword from '../screens/Security/UsePassword';
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
+import { requestUserPermission } from '../utills/push_functions';
 
 
 
@@ -140,6 +141,11 @@ const Routes = () => {
       }
     })
   }
+
+
+  useEffect(()=>{
+    requestUserPermission()
+  },[])
 
   useEffect(() => {
     AppStateListener()

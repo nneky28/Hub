@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 project.ext.envConfigFiles = [
     stagingdebug: ".env.staging",
     stagingrelease : ".env.staging",
@@ -142,6 +143,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 23
+        multiDexEnabled true //Add this line
         versionName "3.4"
     }
     splits {
@@ -207,7 +209,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'androidx.multidex:multidex:2.0.1' 
     implementation 'com.facebook.fresco:fresco:2.0.0'
     implementation 'com.facebook.fresco:animated-gif:2.0.0'
     implementation "androidx.work:work-runtime-ktx:2.7.0"

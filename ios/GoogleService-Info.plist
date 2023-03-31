@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>866821852495-u7qrm0c5v0vlb41gv1mcm5i4ldgmlkuj.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.866821852495-u7qrm0c5v0vlb41gv1mcm5i4ldgmlkuj</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>866821852495-8pr6an955qqgetmuf8l9778l8tr734aa.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCGn2jiLfEK4j4LLehgcCXXuzXGE1O3T1c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>866821852495</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.coolowo.ReactNativeBoilerPlaceHermes</string>
+	<key>PROJECT_ID</key>
+	<string>myedge-123a4</string>
+	<key>STORAGE_BUCKET</key>
+	<string>myedge-123a4.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:866821852495:ios:3d7b6b3aff49a66fe4893a</string>
+</dict>
+</plist>
