@@ -109,7 +109,6 @@ const Index = ({ navigation }) => {
         data: onboarding,
     } = useFetchOnboarding(Task_Name)
 
-
     const handleCompletion = async () => {
         try {
             dispatch(setLoaderVisible(true));
@@ -122,19 +121,18 @@ const Index = ({ navigation }) => {
                 has_completed_mobile_onboarding: true
             }
 
-            if (onboarding) {
+            if (onboarding && onboarding?.length) {
                 fd["id"] = onboarding[0]?.id;
                 let res = await editHandler(fd)
-                await storeData('onboard completion', res)
+
                 queryClient.invalidateQueries("get_onboarding")
                 dispatch(setLoaderVisible(false));
-                navigation.navigate("Task", { toCheck })
+                navigation.navigate("Task")
             } else {
                 let res = await mutateAsync(fd)
                 queryClient.invalidateQueries()
                 dispatch(setLoaderVisible(false));
-                await storeData('onboard completion', res)
-                navigation.navigate("Task", { toCheck })
+                navigation.navigate("Task")
             }
         } catch (error) {
             showFlashMessage({

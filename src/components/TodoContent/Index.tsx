@@ -3,10 +3,10 @@ import {
     Image,
     Text,
     TouchableOpacity,
-    Platform
+    Platform,
 } from 'react-native'
 import React, { useState} from 'react'
-import { H1, P, TouchableWrapper, } from '../../utills/components'
+import { H1, P, TouchableWrapper} from '../../utills/components'
 import styles from './styles'
 import { Images } from '../../component2/image/Image';
 import AppColors from '../../utills/AppColors';
@@ -22,6 +22,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { height } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
+
 interface TaskProps {
     item: any;
     index: number;
@@ -29,23 +30,25 @@ interface TaskProps {
     isSent: boolean;
     user: boolean;
     allTasks: any[];
+    id: number;
     onPressHandle: () => void;
     action: () => void;  
     unDo: () => void;
 }
 
-const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
+const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
     const queryClient = useQueryClient()
     const navigation = useNavigation();
     const [modal, setModal] = useState <boolean>(false)
     const [completed, setCompleted] = useState<boolean>(false)
     const [watch, setWatch] = useState<boolean>(false)
     const [sentModal, setSent] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false);
 
 
     const {
         mutateAsync,
-        isLoading,
+        // isLoading,
     } = useMutation(APIFunction.update_status)
 
     const deleteTask = useMutation(APIFunction.delete_task)
@@ -54,8 +57,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
         try {
             let fd = {
                 status: action,
-                id: item.id,
-                sub_tasks: []
+                id: item.id
             };
             let res = await mutateAsync(fd);
 
@@ -73,13 +75,14 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
         try {
           let fd = {
             status: action,
-              id: item.id,
-              sub_tasks:[]
+              id: item.id
           };
+          setLoading(true)
           let res = await mutateAsync(fd);
           if (res) {
             await storeData('task updated', res);
-            queryClient.invalidateQueries();
+              queryClient.invalidateQueries();
+              setLoading(false)
             setModal(false);
             setCompleted(false);
             setSent(false);
@@ -95,6 +98,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
             setWatch(!watch);
           }
         } catch (error) {
+            console.log("ERror",error)
           // Handle error here
         }
       }
@@ -117,6 +121,8 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
         }
 
     }
+
+
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
     const noDate = item?.due_date === null
@@ -128,7 +134,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
                 <>  
                     <TouchableOpacity
                         style={{height:height(5),marginBottom:height(1.5)}}
-                        onPress={() => navigation.navigate("TaskView" as never, { item ,title, }as never)}
+                        onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
                     >
                         
                     <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
@@ -239,16 +245,14 @@ const Index: React.FC<TaskProps> = ({ item, index, title,user,}) => {
             <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
                 onPressHandle={onPressHandler}
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading} title={title} />
+                loading={loading} title={title} />
             <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
 
             <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item} onPressHandle={onPressHandler} 
                 deleteHandler={() => handleDelete(item.id)}
-                loading={isLoading}
+                loading={loading}
                 title={title} 
             />
-            
-            {/* <TaskViewMore isVisible={display} onHide={() => setDisplay(false)} item={item} title={title} setDisplay={setDisplay} /> */}
 
         </View>
     )

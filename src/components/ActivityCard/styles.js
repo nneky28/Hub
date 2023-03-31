@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         height: height(4.5),
         marginLeft: width(2),
         marginTop: height(1.5),
+        // width: width(90)
     },
     listContainer1: {
         width: width(90),

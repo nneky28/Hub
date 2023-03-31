@@ -347,6 +347,11 @@ const Index = ({ route }) => {
                                                 <ImageBackground
                                                     source={{ uri: item.selected_image }}
                                                     style={styles.clipped}
+                                                    resizeMode='cover'
+                                                    imageStyle={{
+                                                        borderRadius: width(4),
+                                                        height: height(8)
+                                                    }}
                                                 />
                                             </View>
                                         )}

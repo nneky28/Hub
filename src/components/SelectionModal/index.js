@@ -18,7 +18,7 @@ import { STABLE_BUSINESS_ID } from '../../utills/Constants';
 
 const SelectionModal = ({ isVisible, onHide, navigation }) => {
   const [selected, setSelected] = useState('Task');
-  const [business_id,setBusinessID] = React.useState("")
+  const [business_id, setBusinessID] = React.useState("")
 
   const Task_Name = "Task"
 
@@ -30,9 +30,12 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
     let biz = await getStoredBusiness()
     setBusinessID(biz?.business_id)
   }
-  useEffect(()=>{
+  useEffect(() => {
     getBusinessID()
-  },[])
+  }, [])
+
+  useEffect(() => {
+  }, [selected])
 
   const TextWithIcon = ({ text, icon, fill, onboarded }) => {
 
@@ -94,7 +97,7 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
         </View>
         <View style={styles.row}>
           {
-            business_id === STABLE_BUSINESS_ID ?  <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> : null
+            business_id !== STABLE_BUSINESS_ID ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> : null
           }
           <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
           <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />

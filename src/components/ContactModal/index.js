@@ -575,15 +575,6 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
   const [showForm, setShowForm] = useState(false)
   const navigation = useNavigation();
 
-  const Loader = () => {
-    if (loading)
-      return (
-        <Container marginTop={3}>
-          <ActivityIndicator size={width(10)} color={AppColors.green} />
-        </Container>
-      )
-
-  }
 
   const handleOpen = () => {
     setShowDetails(true)
@@ -613,14 +604,19 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
           <P>View Task</P>
         </TouchableOpacity>
         <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("Completed")}>
+        <TouchableOpacity
+          style={styles.textCon} onPress={() => onPressHandle("Completed")}>
           <P>Mark task as complete</P>
         </TouchableOpacity>
         {
           title === "To-Do" ? null :
             <>
               <View style={styles.line} />
-              <TouchableOpacity style={styles.textCon} onPress={() => onPressHandle("To-do")}>
+              <TouchableOpacity style={styles.textCon} onPress={() => {
+                onHide()
+                onPressHandle("To-do")
+              }
+              } >
                 <P>Mark task as not started</P>
               </TouchableOpacity>
             </>

@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: height(2),
     },
-    subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4) },
+    subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4), alignSelf: 'center', width: width(80) },
     descriptionCon: { marginTop: height(1), },
     con: {
 

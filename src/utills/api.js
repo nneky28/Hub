@@ -224,6 +224,10 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
   },
+  get_all_task: async (id) => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz.business_id}/tasks_app/${id}/`)
+  },
   get_duetoday: async () => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=duetoday`)
@@ -480,8 +484,13 @@ export const useFetchDepartments = (page, search) => {
   })
 }
 export const useFetchTodos = (tab, index) => {
-  return useInfiniteQuery(['ge_to_dos', tab], () => APIFunction.get_to_dos(tab, index), {
+  return useInfiniteQuery(['get_to_dos', tab], () => APIFunction.get_to_dos(tab, index), {
     enabled: index === 0 && index !== null && index !== undefined
+  })
+}
+export const useFetchAllTask = (id) => {
+  return useInfiniteQuery(['get_all_task', id], () => APIFunction.get_all_task(id), {
+    enabled: id !== null && id !== undefined
   })
 }
 export const useFetchDueToday = (tab, index) => {

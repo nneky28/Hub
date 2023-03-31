@@ -171,6 +171,7 @@ const Index = ({ navigation, route }) => {
                 count={count}
                 title={actionTitle}
                 index={index}
+                id={item.id}
             />
         );
     };
@@ -718,6 +719,11 @@ const Index = ({ navigation, route }) => {
                                                 <View style={styles.clippedCon}>
                                                     <ImageBackground
                                                         source={{ uri: item.selected_image }}
+                                                        resizeMode='cover'
+                                                        imageStyle={{
+                                                            borderRadius: width(4),
+                                                            height: height(8)
+                                                        }}
                                                         style={styles.clipped}
                                                     />
                                                 </View>
