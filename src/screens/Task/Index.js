@@ -131,7 +131,7 @@ const Index = ({ navigation, route }) => {
             <View style={styles.emptyState}>
                 <View>
                     <Text style={styles.emptyText}>
-                        {index === 2 ? `${aboutMe?.department?.name} department`
+                        {index === 2 ? `${aboutMe?.department?.name}`
                             : index === 0 ? "You" : null}
                     </Text>
 
