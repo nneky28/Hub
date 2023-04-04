@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import { APIFunction } from './api';
-import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType} from '@notifee/react-native';
-import { PushNotificationData } from '../Routes/types';
+import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType, TimestampTrigger, TriggerType, RepeatFrequency, NotificationAndroid, NotificationIOS} from '@notifee/react-native';
+import { PushNotificationData, TIME_OFF_REQUEST } from '../Routes/types';
 
 export const requestUserPermission = async () => {
     try{
@@ -39,7 +39,7 @@ const createChannel = async (name : string) => {
     return channelId
   }
 
-const generateTimeoffNotifeeProperties = async (message : PushNotificationData) => {
+const generateNotifeeProperties = async (message : PushNotificationData) : Promise<{android : NotificationAndroid,ios : NotificationIOS}> => {
     await notifee.setNotificationCategories([
       {
         id : message?.data?.type || ""
@@ -76,14 +76,7 @@ const generateTimeoffNotifeeProperties = async (message : PushNotificationData) 
   }
 export const  onDisplayNotification = async (message : PushNotificationData) => {
     try{
-      let ios = {}
-      let android = {}
-      if(message?.data?.type === "time_off_request"){
-        const properties = await generateTimeoffNotifeeProperties(message)
-        ios = properties?.ios || {}
-        android = properties?.android || {}
-      }
-      // Display a notification
+      const {ios, android} = await generateNotifeeProperties(message)
       await notifee.displayNotification({
         data : message?.data,
         title: message?.data?.message_title,
@@ -103,11 +96,45 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
   }
   export const screenDeterminant = (detail : EventDetail) => {
     const {data} : PushNotificationData = detail?.notification || {}
-    if(data?.type === "time_off_request"){
+    if(data?.type === TIME_OFF_REQUEST){
         return {
             screen : "Time off",
             stack : "Menu",
             params : undefined
         }
+    }
+  }
+
+  export const onCreateScheduledNotification = async (time : number,title : string,body : string,type : string,icon : string)=> {
+    try{
+      // Create a time-based trigger
+      const trigger: TimestampTrigger = {
+        type: TriggerType.TIMESTAMP,
+        timestamp: time, // fire at 11:10am (10 minutes before meeting)
+        repeatFrequency : RepeatFrequency.DAILY
+      };
+      // Create a trigger notification
+      const msg = {
+        data : {
+          message_body : body,
+          message_icon : icon,
+          message_title : title,
+          type, 
+          type_id : type
+      }
+      }
+      const {ios,android} = await generateNotifeeProperties(msg)
+      await notifee.createTriggerNotification(
+        {
+          id : type,
+          title,
+          body,
+          android,
+          ios
+        },
+        trigger,
+      );
+    }catch(err){
+      //console.log("onCreateScheduledNotification Error",err)
     }
   }

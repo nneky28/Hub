@@ -1,3 +1,15 @@
+import { useFetchAboutMeData } from "../components/TimeoffModal/types"
+
+
+
+//PUSH NOTIFICAITON TYPES
+
+export const CLOCK_IN_ALERT = "clock_in_alert"
+export const TIME_OFF_REQUEST = "time_off_request"
+
+
+
+
 export type PushNotificationData = {
     data? : {
         message_body? : string
@@ -30,6 +42,4 @@ export type StoredUserProps = {
     profiles? : []
 }
 
-export type StoredAboutMeProps = {
-    
-}
+export type StoredAboutMeProps = useFetchAboutMeData

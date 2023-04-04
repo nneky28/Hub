@@ -42,7 +42,7 @@ import { login } from '../Redux/Actions/Auth';
 import NextKin from '../screens/NextKin';
 import Emergency from '../screens/Emergency';
 import PensionInfo from '../screens/PensionInfo';
-import { APIFunction } from '../utills/api';
+import { APIFunction, useFetchAboutMe, useFetchAttendanceConfig, useFetchAttendanceStatus } from '../utills/api';
 import { CustomFallBackScreen } from '../utills/components';
 import { AppState, Linking, Platform } from 'react-native';
 import LandingPage from '../screens/LandingPage';
@@ -57,10 +57,12 @@ import PayslipHistory from '../screens/PayslipHistory';
 import PayslipBreakDown from '../screens/PayslipBreakDown';
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
-import { notifeeEventHandler, onDisplayNotification, requestUserPermission, screenDeterminant } from '../utills/push_functions';
-import { PushNotificationData } from './types';
+import { notifeeEventHandler, onCreateScheduledNotification, onDisplayNotification, requestUserPermission, screenDeterminant } from '../utills/push_functions';
+import { CLOCK_IN_ALERT, PushNotificationData } from './types';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventDetail, EventType } from '@notifee/react-native';
+import { useFetchAttendanceConfigProps, useFetchAttendanceStatusProps } from '../components/ClockInComponent/types';
+import { useFetchAboutMeProps } from '../components/TimeoffModal/types';
 import { Images } from '../component2/image/Image';
 
 const inAppUpdates = new SpInAppUpdates(
@@ -78,6 +80,16 @@ const Routes = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient()
   const [backgroundEventDetails,setBackgroundEventDetails] = React.useState<EventDetail>()
+  const {
+    data : config,
+  } = useFetchAttendanceConfig() as useFetchAttendanceConfigProps
+  const {
+    data : about
+  } = useFetchAboutMe() as useFetchAboutMeProps
+
+  const {
+    data : status,
+  } = useFetchAttendanceStatus() as useFetchAttendanceStatusProps
 
   const logoutMethod = async () => {
     try {
@@ -138,11 +150,27 @@ const Routes = () => {
     })
   }
 
+  const pushNotificationInit = async () => {
+    try{
+      await requestUserPermission()
+      if(
+        !config?.data?.start_date || 
+        !moment(config?.data?.start_date).isBefore(moment()) || 
+        status?.is_clocked_in || !about?.employee_job?.arrival_time ||
+        moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))
+      ){
+        return
+      }
+      let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes").valueOf()
+      onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
+    }catch(err){
 
+    }
+  }
   useEffect(()=>{
     if(route !== "main") return
-    requestUserPermission()
-  },[route])
+    pushNotificationInit()
+  },[route,about,config,status])
 
   useEffect(()=>{
     const unsubscribe = notifee.onForegroundEvent(async ({type,detail})=>{
@@ -159,15 +187,6 @@ const Routes = () => {
   
   useEffect(()=>{
     const unsubscribe = messaging().onMessage(async (message : PushNotificationData)=>{
-    //     let msg = {
-    //     data : {
-    //       message_body : "Grace is requesting for a 3 day Sick Leave",
-    //       message_icon : Images.EmptyTimeoff,
-    //       message_title : "Time Off Request",
-    //       type : "time_off_request",
-    //       type_id : "34"
-    //   }
-    // }
       onDisplayNotification(message)
     })
     return unsubscribe

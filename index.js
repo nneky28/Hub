@@ -23,15 +23,6 @@ notifee.onBackgroundEvent(async ({type,detail})=>{
   })
   
   messaging().setBackgroundMessageHandler(async (message)=>{
-    // let msg = {
-    //     data : {
-    //       message_body : "Grace is requesting for a 3 day Sick Leave",
-    //       message_icon : Images.EmptyTimeoff,
-    //       message_title : "Time Off Request",
-    //       type : "time_off_request",
-    //       type_id : "34"
-    //   }
-    // }
-    onDisplayNotification(message)
+    onDisplayNotification(msg)
   })
 AppRegistry.registerComponent(appName, () => App);
