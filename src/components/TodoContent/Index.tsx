@@ -29,7 +29,6 @@ interface TaskProps {
     title: string;
     isSent: boolean;
     user: boolean;
-    allTasks: any[];
     id: number;
     onPressHandle: () => void;
     action: () => void;  
@@ -47,7 +46,6 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
 
     const {
         mutateAsync,
-        // isLoading,
     } = useMutation(APIFunction.update_status)
 
     const deleteTask = useMutation(APIFunction.delete_task)

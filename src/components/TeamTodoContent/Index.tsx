@@ -3,14 +3,13 @@ import {
     Image,
     Text,
     TouchableOpacity,
-    FlatList,
     Platform
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { Container, P, Rounded, H1, ImgPlaceholder, TouchableWrapper } from '../../utills/components'
+import React, { useState} from 'react'
+import { P,H1, ImgPlaceholder, TouchableWrapper } from '../../utills/components'
 import styles from './styles'
 import Button from '../Button/index';
-import AppColors, { ColorList } from '../../utills/AppColors';
+import AppColors from '../../utills/AppColors';
 import { width, height } from 'react-native-dimension';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
@@ -25,19 +24,21 @@ import { UnCompletedModal, ActionModal } from '../ContactModal';
 import { useNavigation } from '@react-navigation/native';
 
 
-const Index = ({ __flattenArr, item, title, team, index, mapToState, id }) => {
+
+type Props = {
+    item: any;
+    title: string;
+    id: number;
+  };
+
+  const Index: React.FC<Props> = ({ item, title,  id }) => {
     const navigation = useNavigation();
     const queryClient = useQueryClient()
-    const [modal, setModal] = useState(false)
-    const [display, setDisplay] = useState(false)
-    const [subTask, setSubTask] = useState(false)
-    const [completed, setCompleted] = useState(false)
-    const [watch, setWatch] = useState(false)
-    const [show, setShow] = useState(false)
+    const [modal, setModal] = useState<boolean>(false)
+    const [completed, setCompleted] = useState<boolean>(false)
+    const [watch, setWatch] = useState<boolean>(false)
+  
 
-    const hideModal = () => {
-        setSubTask(false)
-    }
 
     const {
         mutateAsync,
@@ -45,7 +46,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState, id }) => {
     } = useMutation(APIFunction.update_status)
     const deleteTask = useMutation(APIFunction.delete_task)
 
-    const onPressHandler = async (action) => {
+    const onPressHandler = async (action:string) => {
         let employee = await getData("about_me")
         let fd = {
             assigned_to: employee?.id,
@@ -70,7 +71,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState, id }) => {
 
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id:number) => {
         try {
             await deleteTask.mutateAsync(id)
             queryClient.invalidateQueries()
@@ -82,16 +83,15 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState, id }) => {
                 backgroundColor: AppColors.newYellow
             })
             setModal(false)
-            setSent(false)
         } catch (error) {
         }
 
     }
 
-
     const overDue = moment(item?.due_date).isBefore(new Date())
     const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
-    const noDate = item?.due_date === null
+      const noDate = item?.due_date === null
+      
     return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
@@ -113,7 +113,7 @@ const Index = ({ __flattenArr, item, title, team, index, mapToState, id }) => {
                     }
 
                     <View style={{ marginLeft: width(4), marginTop: height(0.5) }}>
-                        <TouchableOpacity onPress={() => navigation.navigate("TaskView", { id })}>
+                        <TouchableOpacity onPress={() => navigation.navigate("TaskView" as never, { id }as never)}>
                             <H1 numberOfLines={1} style={styles.title}>{item?.title}</H1>
                             <P fontSize={3} style={styles.author}>
                                 {item?.department?.id && !item?.assigned_to?.id ? `To: ${item?.department?.name ? item?.department?.name : ""} `

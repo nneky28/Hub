@@ -72,7 +72,7 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing, autoFocus
         </View>
     );
 }
-export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing, autoFocus }) => {
+export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing, value }) => {
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -94,14 +94,14 @@ export const SearchBoxIOSWithout = ({ title, containerStyle, onSubmitEditing, au
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
-                autoFocus={autoFocus}
+                value={value}
             />
 
         </View>
     );
 }
 
-export function SearchBoxWithout({ title, containerStyle, onSubmitEditing, autoFocus }) {
+export function SearchBoxWithout({ title, containerStyle, onSubmitEditing, value }) {
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -123,7 +123,7 @@ export function SearchBoxWithout({ title, containerStyle, onSubmitEditing, autoF
                     onSubmitEditing(value)
                 }}
                 color={AppColors.black}
-                autoFocus={autoFocus}
+                value={value}
             />
 
         </View>

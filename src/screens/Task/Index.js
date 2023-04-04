@@ -181,7 +181,6 @@ const Index = ({ navigation, route }) => {
                 count={count}
                 item={item}
                 title={actionTitle}
-                __flattenArr={__flattenArr}
                 index={index}
                 id={item.id}
             />

@@ -122,9 +122,9 @@ const Index = ({ route }) => {
                     }
                 })
             }
-            // return console.log("FD", fd)
+
             if (assignTo?.type === "Departments") delete fd["assigned_to"]
-            if (data?.due_date === "No Date" || item) delete fd["due_date"]
+            if (data?.due_date === "No Date") delete fd["due_date"]
             if (item) delete fd["status"]
             if (item) {
                 const subtasks = Object.values(subData).map((obj, i) => {
@@ -141,6 +141,7 @@ const Index = ({ route }) => {
             if (item) {
                 fd["id"] = item?.id;
                 let res = await editHandler(fd)
+                console.log("Res", res)
                 setDisabled(false)
                 await storeData('edited tasks', res)
                 queryClient.invalidateQueries()
@@ -179,7 +180,7 @@ const Index = ({ route }) => {
         }
     }
 
-
+    console.log("Due date", data.due_date)
 
     useEffect(() => {
         if (!item?.id) return
