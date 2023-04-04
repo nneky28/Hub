@@ -2,29 +2,29 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { showMessage } from 'react-native-flash-message';
-import { APIFunction, getAPIs } from "./api";
 
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { RootState,AppDispatch } from '../Redux';
+import { StoredUserProps } from '../Routes/types';
 
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
-export function debounce(func, wait, immediate) {
-  var timeout;
-  return function () {
-    var context = this, args = arguments;
-    var later = function () {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
-};
+// export function debounce(func : () => void, wait : number, immediate) {
+//   var timeout;
+//   return function () {
+//     var context = this, args = arguments;
+//     var later = function () {
+//       timeout = null;
+//       if (!immediate) func.apply(context, args);
+//     };
+//     var callNow = immediate && !timeout;
+//     clearTimeout(timeout);
+//     timeout = setTimeout(later, wait);
+//     if (callNow) func.apply(context, args);
+//   };
+// };
 
 export const ToastError = (msg:string) => {
   showMessage({
@@ -39,7 +39,7 @@ export const validateEmail = (value:string) => {
   return false
 }
 
-export const ToastSuccess = (msg) => (
+export const ToastSuccess = (msg : string) => (
   showMessage({
     message: 'Success',
     description: msg,
@@ -54,12 +54,12 @@ export type getStoredBusinessProps = {
   logo? : string
 }
 export const getStoredBusiness = async () : Promise<getStoredBusinessProps | null>  => {
-  let user = await getData("user");
-  let biz = user?.employee_user_memberships?.[0]?.business_id ? user.employee_user_memberships[0] : null;
-  return biz;
+  let user : StoredUserProps | false | null = await getData("user");
+  if(!user || !user?.employee_user_memberships?.[0]) return null
+  return user?.employee_user_memberships?.[0];
 }
 
-export const storeData = async (key, value) => {
+export const storeData = async (key : string, value : any) => {
   try {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem(`@${key}`, jsonValue);
@@ -92,18 +92,20 @@ export const getGreetingTime = () => {
   // Between dawn and noon
   return 'Good morning';
 }
-export const __flatten = (data:any) => {
+
+type __flattenProps = {
+  res? : {
+    results? : any
+  }
+}
+
+export const __flatten = (data:__flattenProps[]) => {
   return data
     .map((res:any) => res?.results || {})
     .filter((arr) => Array.isArray(arr))
     .flat();
 };
 
-
-// export const Capitalize = string => {
-//   string = string.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase());
-//   return string;
-// };
 export const Capitalize = (string:string) => {
   const words = string.split(' ');
   const capitalizedWords = words.map((word) => {
@@ -113,76 +115,3 @@ export const Capitalize = (string:string) => {
   });
   return capitalizedWords.join(' ');
 };
-
-
-export const getTimeOffsFunction = async () => {
-  let token = await getData("token");
-  let user = await getData("user");
-  let about_me = await getData("about_me")
-  let biz = user.employee_user_memberships &&
-    Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
-    && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
-  let timeoff_url = APIFunction.timeoff(biz.business_id, about_me.id);
-  let active_url = APIFunction.timeoff_taken(biz.business_id, about_me.id, "active");
-  let upcoming_url = APIFunction.timeoff_taken(biz.business_id, about_me.id, "upcoming");
-  let hist_url = APIFunction.timeoff_taken(biz.business_id, about_me.id, "history")
-  let req_url = APIFunction.timeoff_reqs(biz.business_id, about_me.id);
-
-  let timeoff_res = await getAPIs(timeoff_url, token);
-  let active_res = await getAPIs(active_url, token);
-  let upcoming_res = await getAPIs(upcoming_url, token);
-  let hist_res = await getAPIs(hist_url, token);
-  let req_res = await getAPIs(req_url, token);
-  let tabs = [];
-  let active = []
-  let history = []
-  let available = [];
-  let requests = []
-  if (
-    timeoff_res && timeoff_res.results &&
-    Array.isArray(timeoff_res.results) &&
-    timeoff_res.results.length > 0
-  ) {
-    tabs.push("Available")
-    available = [...available, ...timeoff_res.results]
-  }
-  if (
-    active_res && active_res.results &&
-    Array.isArray(active_res.results) &&
-    active_res.results.length > 0
-  ) {
-    tabs.push("Active")
-    active = [...active, ...active_res.results];
-  }
-  if (
-    upcoming_res && upcoming_res.results &&
-    Array.isArray(upcoming_res.results) &&
-    upcoming_res.results.length > 0
-  ) {
-    !tabs.includes("Active") ? tabs.push("Active") : null
-    active = [...active, ...upcoming_res.results];
-  }
-  if (
-    hist_res && hist_res.results &&
-    Array.isArray(hist_res.results) &&
-    hist_res.results.length > 0
-  ) {
-    tabs.push("History")
-    history = [...history, ...hist_res.results]
-  }
-  if (
-    req_res && req_res.results &&
-    Array.isArray(req_res.results) &&
-    req_res.results.length > 0
-  ) {
-    tabs.push("Requests")
-    requests = [...requests, ...req_res.results]
-  }
-  return {
-    requests,
-    history,
-    active,
-    tabs,
-    available
-  }
-}

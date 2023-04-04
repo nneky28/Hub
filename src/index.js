@@ -4,7 +4,7 @@ import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import store from './Redux/index';
 import FlashMessage from 'react-native-flash-message';
-import { LogBox } from 'react-native';
+import { Keyboard, LogBox, View } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -53,16 +53,22 @@ export default function App() {
       secondaryText: 'red'
     }
   }
+  const handleUnhandledTouches = () =>{
+    Keyboard.dismiss()
+    return false;
+  }
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
+
   return (
     <NavigationContainer>
-      {console.log("APP.js")}
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <PaperProvider theme={theme}>
+          <View style={{ flex: 1 }} onStartShouldSetResponder={handleUnhandledTouches}>
             <Routes />
+          </View>
           </PaperProvider>
           <FlashMessage position="top" icon="auto" />
         </Provider>

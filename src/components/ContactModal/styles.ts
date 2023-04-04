@@ -57,15 +57,6 @@ const styles = StyleSheet.create({
     elevation: 0,
     alignSelf: 'center',
   },
-
-  contactComponentContainer: {
-    justifyContent: 'center',
-    paddingVertical: height(2),
-    backgroundColor: AppColors.white,
-    width: width(90),
-    paddingHorizontal: width(2),
-    alignSelf: 'center',
-  },
   downIcon: {
     width: width(4),
     height: width(4),

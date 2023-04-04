@@ -15,7 +15,7 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, postAPIs } from '../../utills/api';
-import { getData, ToastError, storeData, getStoredBusiness, getTimeOffsFunction } from '../../utills/Methods';
+import { getData, ToastError, storeData, getStoredBusiness } from '../../utills/Methods';
 import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap, TouchableWrapper } from '../../utills/components';
 import Warningjson from '../../assets/lottie/warning.json'
 import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
@@ -27,6 +27,7 @@ import { useQueryClient } from 'react-query';
 // import TaskViewMore from '../TaskViewMore/index'
 import CreateTask from '../../screens/CreateTask/Index'
 import { useNavigation } from '@react-navigation/native';
+import { nextProps, prevProps } from './types';
 
 
 
@@ -199,179 +200,6 @@ export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
           />
         </Container>
       </View>
-    </Modal>
-  );
-};
-
-const __TimeoffModal = ({ isVisible, onHide, timeoff_id, closeAndRefresh }) => {
-  const dispatch = useDispatch();
-  const defaultColor = AppColors.black;
-  const [action, setAction] = React.useState(null)
-  const [loading, setLoading] = React.useState(false)
-  const [data, setData] = React.useState({
-    "timeoff": timeoff_id,
-    "start_date": "",
-    "end_date": "",
-    "reason": ""
-  })
-  const [show, setShow] = React.useState(false)
-  useEffect(() => {
-    setData({
-      "timeoff": timeoff_id,
-      "start_date": "",
-      "end_date": "",
-      "reason": ""
-    })
-    setShow(false)
-  }, [isVisible])
-
-  const handleSubmit = async () => {
-    try {
-      let failed = false;
-      required = ["start_date", "end_date", "reason"]
-      for (let req of required) {
-        if (!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) failed = true;
-      }
-      if (failed) {
-        return showFlashMessage({ type: "error", title: "All fields are required" })
-      };
-      let about_me = await getData("about_me")
-      let biz = await getStoredBusiness();
-      dispatch(setLoaderVisible(true));
-      setLoading(true)
-      let timeoff_url = APIFunction.timeoff_reqs(biz.business_id, about_me.id)
-      let fd = {
-        ...data, timeoff: timeoff_id
-      }
-      await postAPIs(timeoff_url, fd);
-      storeData("curr_timeoff", null)
-      closeAndRefresh()
-      setLoading(false)
-      dispatch(setLoaderVisible(false));
-      showFlashMessage({ title: "Request has been submitted for processing" })
-      onHide()
-    } catch (err) {
-      let msg = err.msg && err.msg.detail && typeof (err.msg.detail) == "string" ? err.msg.detail : err.msg
-      dispatch(setLoaderVisible(false));
-      setLoading(false)
-      return showFlashMessage({ type: "error", title: msg })
-    }
-  }
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      //swipeDirection={'down'}
-      // onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1, justifyContent: "flex-end" }}
-      >
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.inner}>
-            <View style={styles.bodyWrap}>
-              {
-                show ? <CustomCalender
-                  date={action === "start_date" ? data.start_date : data.end_date}
-                  setShow={(date) => {
-                    if (action === "start_date") {
-                      setData({ ...data, start_date: date.dateString })
-                    }
-                    if (action === "end_date") {
-                      setData({ ...data, end_date: date.dateString })
-                    }
-                    setShow(false)
-                  }}
-                /> : <Formik>
-                  <React.Fragment>
-                    <Container marginLeft={2}>
-                      <TouchWrap onPress={onHide}
-                        width={15}
-                        height={6}
-                      >
-                        <P>Close</P>
-                      </TouchWrap>
-                    </Container>
-                    <View
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginTop: 25,
-                      }}>
-                      <CustomText
-                        textSize={20}
-                        textWeight={'bold'}
-                        textcolor={defaultColor}
-                        displayText={'Timeoff Request'}
-                        textStyle={{
-                          marginTop: -3,
-                        }}
-                      />
-                    </View>
-                    <Field
-                      name="start_date"
-                      placeholder="Start Date"
-                      component={CustomDatePicker}
-                      value={data.start_date}
-                      setShow={() => {
-                        setAction("start_date")
-                        setShow(true)
-                      }}
-                      maximumDate={null}
-                      color={AppColors.black}
-                    />
-                    <Field
-                      name="end_date"
-                      placeholder="Resumption Date"
-                      component={CustomDatePicker}
-                      value={data.end_date}
-                      setShow={() => {
-                        setAction("end_date")
-                        setShow(true)
-                      }}
-                      maximumDate={null}
-                      color={AppColors.black}
-                    />
-                    <Field
-                      component={CustomInput}
-                      name="reason"
-                      placeholder="Reason"
-                      keyboardType="default"
-                      value={data.reason}
-                      onChangeData={(value) => {
-                        setData({ ...data, reason: value })
-                      }}
-                      minHeight={10}
-                      multiline={true}
-                      color={AppColors.black}
-                    />
-                    <View style={{ width: '100%', padding: '5%' }}>
-                      {
-                        loading ? <ActivityIndicator
-                          color={AppColors.pink}
-                        /> : <CustomButton
-                          btnText={'Submit'}
-                          handelButtonPress={handleSubmit}
-                        />
-                      }
-                    </View>
-                  </React.Fragment>
-                </Formik>
-              }
-            </View>
-          </ScrollView>
-        </View>
-      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -735,14 +563,10 @@ const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
   );
 };
 
-
-
-
-const areEqual = (prevProps, nextProps) => {
+const areEqual = (prevProps : prevProps, nextProps : nextProps) => {
   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
 }
 export const WarningModal = React.memo(__WarningModal, areEqual)
-export const TimeoffModal = React.memo(__TimeoffModal, areEqual)
 export const ReportModal = React.memo(__ReportModal, areEqual)
 export { DocumentModal, FilterModal, ActionModal, UnCompletedModal, SentActionModal };
 export default ContactModal;

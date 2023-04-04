@@ -18,7 +18,7 @@ import { BackHandler, Container, CustomRefreshControl, LottieIcon, PageLoader, R
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
-import { getData, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods'
+import { getData, getStoredBusiness, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
 
 
