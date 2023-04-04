@@ -15,7 +15,7 @@ import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
 import { Capitalize, getData, getGreetingTime, getStoredBusiness, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
@@ -26,6 +26,7 @@ import { useQueryClient } from 'react-query';
 import TimeoffModal from '../../components/TimeoffModal';
 import CustomCalendarModal from '../../components/CustomCalendarModal';
 import { DateData } from 'react-native-calendars/src/types';
+import ClockINContainer from '../../components/ClockInComponent';
 const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
 

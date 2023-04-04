@@ -106,7 +106,7 @@ export const APIFunction = {
   about_me: async (biz_id = null) => {
     if(biz_id) return await getAPIs(`/c/${biz_id}/employees/me/`);
     let biz = await getStoredBusiness();
-    await getAPIs(`/c/${biz?.business_id}/employees/me/`);
+    return getAPIs(`/c/${biz?.business_id}/employees/me/`);
   },
   read_notification: async (id) => {
     let biz = await getStoredBusiness();
