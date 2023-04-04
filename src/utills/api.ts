@@ -3,6 +3,7 @@ import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "react-query"
 import Config from "react-native-config";
+import { ABOUT_ME, RegisterTokenLoad, RequestTimeoffPayload } from "./payload";
 
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
@@ -19,30 +20,30 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz.business_id}/employees/${id}/next-of-kin/`)
   },
-  whos_out: async (category) => {
+  whos_out: async (category : string) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/timeoff_taken/widgets/whos_out/?category=${category}`)
   },
-  birthdays: async (status) => {
+  birthdays: async (status : string) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/birthdays/?status=${status}`)
   },
-  my_business_assests: async (employee_pk) => {
+  my_business_assests: async (employee_pk : number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${employee_pk}/asset_vehicles/`)
   },
-  benefits: async (employee_pk) => {
+  benefits: async (employee_pk: number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${employee_pk}/benefits/`)
 
   },
-  emergency: async (id) => {
+  emergency: async (id : number) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz.business_id}/employees/${id}/emergency-contact/`)
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/emergency-contact/`)
   },
   update_emergency: async (fd, id) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz.business_id}/employees/${id}/update-emergency-contact/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-emergency-contact/`, fd)
   },
   update_photo: (business_id, id) => `/c/${business_id}/employees/${id}/update-photo/`,
   edit: async (fd, id) => {
@@ -55,15 +56,21 @@ export const APIFunction = {
   timeoff_reqs: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id, id, status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
   delete_timeoff: (business_id, id, timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
-  employee_timeoff: async (id) => {
+
+  employee_timeoff: async (id : number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff/`)
+  },
+
+  request_timeoff : async (fd : RequestTimeoffPayload) => {
+    let biz = await getStoredBusiness();
+    return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/timeoff_requests/`, fd)
   },
   employee_timeoff_taken: async (id, status) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
   },
-  employee_timeoff_reqs: async (id) => {
+  employee_timeoff_reqs: async (id : number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_requests/`)
   },
@@ -97,16 +104,9 @@ export const APIFunction = {
     return postAPIs(`/c/${biz.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
   about_me: async (biz_id = null) => {
-    let biz = {}
-    if (biz_id) {
-      biz = {
-        business_id: biz_id
-      }
-    }
-    if (!biz_id) {
-      biz = await getStoredBusiness();
-    }
-    return getAPIs(`/c/${biz.business_id}/employees/me/`);
+    if(biz_id) return await getAPIs(`/c/${biz_id}/employees/me/`);
+    let biz = await getStoredBusiness();
+    await getAPIs(`/c/${biz?.business_id}/employees/me/`);
   },
   read_notification: async (id) => {
     let biz = await getStoredBusiness();
@@ -329,19 +329,26 @@ export const APIFunction = {
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_users: async (page = 1, search) => {
+  get_users: async (page = 1, search = "") => {
     let user = await getData("user");
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/employees/?page=${page}&search=${search}`)
   },
-  get_teams: async (page) => {
+  get_teams: async (page = 1) => {
     const user = await getData('user')
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     const about_me = await getData("about_me")
     const id = about_me?.id
     return getAPIs(`/c/${business_id}/employees/${id}/team_members/?page=${page}`)
   },
+  register_device_token : async (fd : RegisterTokenLoad) => {
+    let biz = await getStoredBusiness()
+    return postAPIs(`/c/${biz?.business_id}/firebase_notifications/`,fd)
+  },
+}
 
+export const useFetchAboutMe = () => {
+  return useQuery(ABOUT_ME,()=>APIFunction.about_me())
 }
 
 export const useFetchEmployeeTimeOff = (id) => {
@@ -608,20 +615,19 @@ export const useFetchComments = (id) => {
 
 
 
-export const getAPIs = async (path) => {
+export const getAPIs = async (path : string) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
-        headers: {
-          Authorization: `Bearer ${_token}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': 0
-        },
-      }, {
-        timeout: 200
-      })
+          headers: {
+            Authorization: `Bearer ${_token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': 0
+          }
+        }
+      )
       .then(result => {
         resolve(result.data);
       })
@@ -639,7 +645,7 @@ export const getAPIs = async (path) => {
 };
 
 
-export const postAPIs = async (path, fd) => {
+export const postAPIs = async (path : string, fd : any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({

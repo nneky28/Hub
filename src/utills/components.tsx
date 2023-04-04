@@ -35,7 +35,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
+import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps, ContainerProps, HTagProps, CustomCalenderProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SearchBox from '../components/SearchBox';
 import Button from '../components/Button';
@@ -133,7 +133,7 @@ export const P = (props : PTagProps) => (
   </Text>
 )
 
-export const H1 = (props:HTagProps) => (
+export const H1 = (props: HTagProps) => (
   <Text
     style={[
       {
@@ -359,7 +359,7 @@ export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
   )
 }
 
-export const Container = (props) => (
+export const Container = (props : ContainerProps) => (
   <View
     style={[
       {
@@ -394,6 +394,8 @@ export const Container = (props) => (
         borderTopWidth: props.borderTopWidth,
         borderBottomWidth: props.borderBottomWidth,
         borderRadius: props.borderRadius,
+        borderTopRightRadius : props.borderTopRightRadius,
+        borderTopLeftRadius : props.borderTopLeftRadius,
         alignSelf: props.alignSelf
         //...props.style
       }, props.style
@@ -503,17 +505,11 @@ export const ImgPlaceholder = React.memo((props : ImgPlaceholderProps ) => (
   return prevProps.text === nextProps.text
 })
 
-export const CustomCalender = (props:CustomCalenderProps) => {
+export const CustomCalender = (props : CustomCalenderProps) => {
   return (
     <Container
       paddingVertical={5}
     >
-      <TouchableWrapper
-        isText
-        onPress={() => props.setShow(false)}
-      >
-        <P>Cancel</P>
-      </TouchableWrapper>
       <Calendar
         markedDates={{
           [props.date]: { selected: true, selectedColor: AppColors.green }

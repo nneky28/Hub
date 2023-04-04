@@ -7,12 +7,11 @@ import { FontFamily } from '../../utills/FontFamily';
 const styles = StyleSheet.create({
   container: {
     width: width(100),
-    paddingTop: height(2),
+    paddingTop: height(3),
     paddingBottom: height(3),
     backgroundColor: AppColors.white,
-    borderRadius: 15
-    // borderTopRightRadius: 15,
-    // borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
   },
   text: {
     color: AppColors.black1,
@@ -21,10 +20,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansRegular,
     marginTop: height(1),
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginVertical: height(2.5),
+  columnWrapperStyle : {
+    justifyContent : "space-evenly"
+  },
+  contentContainerStyle : {
+    width : width(90),
+    alignSelf : "center"
   },
   icon: {
     width: width(10),
@@ -49,7 +50,6 @@ const styles = StyleSheet.create({
   },
   textIconContainer: {
     alignItems: 'center',
-
   },
   iconContainer: {
     backgroundColor: AppColors.lightestWhite,

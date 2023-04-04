@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "866821852495",
+    "project_id": "myedge-123a4",
+    "storage_bucket": "myedge-123a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866821852495:android:1b81863b5095eee8e4893a",
+        "android_client_info": {
+          "package_name": "com.reactnativeboilerplacehermes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866821852495-8pr6an955qqgetmuf8l9778l8tr734aa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reactnativeboilerplacehermes",
+            "certificate_hash": "5fc30ec4919e950653e5e7addf8b0665c8b08dc8"
+          }
+        },
+        {
+          "client_id": "866821852495-ck593l3vpc82piddsbr81qaf6tmd9apn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reactnativeboilerplacehermes",
+            "certificate_hash": "6c9460b7d3b038d76a20b996fc26ab6753541b74"
+          }
+        },
+        {
+          "client_id": "866821852495-9c7m8fg7lrfms7c1c0fqlr2dk4v7n85m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCENNzxIxhD1CjNkdZukp1OZHNtPKvMtXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866821852495-9c7m8fg7lrfms7c1c0fqlr2dk4v7n85m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

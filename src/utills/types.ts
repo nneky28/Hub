@@ -100,6 +100,8 @@ export type ContainerProps = {
     | "space-evenly";
   alignSelf?: "flex-start" | "center" | "flex-end";
   backgroundColor?: string;
+  borderTopRightRadius? : number
+  borderTopLeftRadius? : number
   style?: object;
   children?: React.ReactNode;
 }
