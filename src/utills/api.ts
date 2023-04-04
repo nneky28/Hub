@@ -3,6 +3,7 @@ import moment from "moment";
 import { getData, getStoredBusiness, storeData } from "./Methods";
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "react-query"
 import Config from "react-native-config";
+import { RegisterTokenLoad } from "./payload";
 
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
@@ -329,19 +330,22 @@ export const APIFunction = {
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_users: async (page = 1, search) => {
+  get_users: async (page = 1, search = "") => {
     let user = await getData("user");
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/employees/?page=${page}&search=${search}`)
   },
-  get_teams: async (page) => {
+  get_teams: async (page = 1) => {
     const user = await getData('user')
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     const about_me = await getData("about_me")
     const id = about_me?.id
     return getAPIs(`/c/${business_id}/employees/${id}/team_members/?page=${page}`)
   },
-
+  register_device_token : async (fd : RegisterTokenLoad) => {
+    let biz = await getStoredBusiness()
+    return postAPIs(`/c/${biz?.business_id}/firebase_notifications/`,fd)
+  },
 }
 
 export const useFetchEmployeeTimeOff = (id) => {
@@ -639,8 +643,9 @@ export const getAPIs = async (path) => {
 };
 
 
-export const postAPIs = async (path, fd) => {
+export const postAPIs = async (path : string, fd : any) => {
   let _token = await getData("token");
+  console.log("postAPIs",path,_token)
   return new Promise((resolve, reject) => {
     axios({
       url: `${endPoint}${path}`,

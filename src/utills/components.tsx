@@ -35,7 +35,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps } from './types';
+import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps, ContainerProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SearchBox from '../components/SearchBox';
 import Button from '../components/Button';
@@ -359,7 +359,7 @@ export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
   )
 }
 
-export const Container = (props) => (
+export const Container = (props : ContainerProps) => (
   <View
     style={[
       {

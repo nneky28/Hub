@@ -295,7 +295,7 @@ PODS:
     - React-Core
   - react-native-geolocation-service (5.3.1):
     - React
-  - react-native-image-picker (4.1.2):
+  - react-native-image-picker (5.3.1):
     - React-Core
   - react-native-photo-manipulator (1.2.7):
     - React
@@ -390,10 +390,10 @@ PODS:
     - RNFBApp
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNNotifee (7.6.1):
+  - RNNotifee (7.7.0-0):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.6.1)
-  - RNNotifee/NotifeeCore (7.6.1):
+    - RNNotifee/NotifeeCore (= 7.7.0-0)
+  - RNNotifee/NotifeeCore (7.7.0-0):
     - React-Core
   - RNPDF (0.12.2):
     - React
@@ -669,7 +669,7 @@ SPEC CHECKSUMS:
   react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
   react-native-date-picker: 89c419d88fa8e3c5f2d3cbae0bb7f7454ae8ea55
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
-  react-native-image-picker: 9c8a2687b69300ad9e95cec5d38f35ab9d32467d
+  react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-photo-manipulator: dce015c4d602abb529931a40d9d34c277ee478b8
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
@@ -694,7 +694,7 @@ SPEC CHECKSUMS:
   RNFBApp: b0f0c53ed8a00395ceb4863910a2c1ff6e24d9f6
   RNFBMessaging: e683adf735d2afb847bce161dce0e4006e88a3a2
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNNotifee: bdc064c29f4d558046f51f0c3ae02bab4fd3cd85
+  RNNotifee: 499f5fbf13df4690bdc35f0a276c6210e822e23f
   RNPDF: cec73ef87dec104e902bd38b1f47c6f611ee4698
   RNReanimated: bd6be32488d65cc66a843de8214c2fee49f761a6
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c

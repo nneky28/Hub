@@ -46,8 +46,14 @@ export const ToastSuccess = (msg) => (
     type: 'success',
   })
 );
-
-export const getStoredBusiness = async () => {
+export type getStoredBusinessProps = {
+  business_id? : string
+  business_name? : string
+  created? : string
+  currency? : string
+  logo? : string
+}
+export const getStoredBusiness = async () : Promise<getStoredBusinessProps | null>  => {
   let user = await getData("user");
   let biz = user?.employee_user_memberships?.[0]?.business_id ? user.employee_user_memberships[0] : null;
   return biz;
@@ -63,7 +69,7 @@ export const storeData = async (key, value) => {
   }
 };
 
-export const getData = async key => {
+export const getData = async (key : string) : Promise<{[index : string] : any} | null |  false> => {
   try {
     const jsonValue = await AsyncStorage.getItem(`@${key}`);
     return jsonValue != null ? JSON.parse(jsonValue) : null;

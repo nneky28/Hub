@@ -27,7 +27,7 @@
     "ios_codepush_prod": "appcenter codepush release-react -a Torilo/myedge-ios -d Production"
   },
   "dependencies": {
-    "@notifee/react-native": "^7.6.1",
+    "@notifee/react-native": "7.7.0-0",
     "@react-native-async-storage/async-storage": "^1.17.7",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "^3.5.2",

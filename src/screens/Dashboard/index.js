@@ -155,7 +155,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       fetchingHistory || fetchingReq ||
       fetchingUpcoming
     ) {
-      dispatch(setLoaderVisible(true))
+      //dispatch(setLoaderVisible(true))
       return setLoading(true)
     }
     dispatch(setLoaderVisible(false))
