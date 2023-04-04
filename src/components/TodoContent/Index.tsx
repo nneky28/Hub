@@ -45,7 +45,6 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
     const [sentModal, setSent] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false);
 
-
     const {
         mutateAsync,
         // isLoading,
@@ -98,8 +97,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
             setWatch(!watch);
           }
         } catch (error) {
-            console.log("ERror",error)
-          // Handle error here
+       
         }
       }
       
@@ -133,7 +131,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
             <View style={styles.row}>
                 <>  
                     <TouchableOpacity
-                        style={{height:height(5),marginBottom:height(1.5)}}
+                        style={{height:height(5),marginBottom:height(1)}}
                         onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
                     >
                         
@@ -168,14 +166,14 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
                                     <H1 numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</H1>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity
+                                <TouchableWrapper
                                     onPress={() => {
                                         setModal(true)
                                         item.id
                                     }}
                                     style={styles.btnPart}>
                                     <Ionicons name="chevron-down-outline" size={15} color={AppColors.black} />
-                                </TouchableOpacity>
+                                </TouchableWrapper>
                             </View>
 
                     }
@@ -184,7 +182,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
 
             </View>
             <TouchableOpacity
-               onPress={() => navigation.navigate("TaskView" as never, { item ,title} as never)}
+               onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
                 style={styles.author}>
                 <P color={AppColors.black3} >
 
@@ -201,7 +199,7 @@ const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
             {
                 title === "Completed" ? null :
                     <TouchableOpacity
-                    onPress={() => navigation.navigate("TaskView" as never, { item ,title} as never)}
+                    onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
                         style={styles.row1}>
                         {dueToday ? <React.Fragment>            
                             <Image source={{ uri: Images.DueFlag }} style={styles.flag} />

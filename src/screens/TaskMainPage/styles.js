@@ -6,22 +6,17 @@ import { FontFamily } from '../../utills/FontFamily';
 const styles = StyleSheet.create({
     genContainer: {
         backgroundColor: AppColors.white,
-        margin: 0,
-        // marginTop: height(20),
         flex: 1,
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-        justifyContent: 'center',
-        paddingBottom: height(5)
+        paddingHorizontal: width(5),
     },
     mainContainer: {
         flex: 1,
-        borderTopRightRadius: width(5),
-        borderTopLeftRadius: width(5),
-        backgroundColor: 'transparent',
+        backgroundColor: AppColors.white,
+
     },
     container: {
         paddingHorizontal: width(5),
+        marginTop: height(10)
     },
 
     flagText: {
@@ -36,7 +31,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
-        // height: height(3),
         width: width(100)
     },
 
@@ -48,13 +42,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         paddingHorizontal: width(1),
+        bottom: height(1)
     },
     line: {
         width: width(100),
         height: 1,
         backgroundColor: AppColors.grayBorder,
         elevation: 0,
-        marginTop: height(1.5),
         alignSelf: 'center',
     },
     line1: {
@@ -130,8 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     addBtn: {
-        flexDirection: 'row',
-        justifyContent: 'center',
+        bottom: height(1)
 
     },
     description: {

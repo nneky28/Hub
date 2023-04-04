@@ -6,7 +6,7 @@ import styles from './styles';
 import { showMessage } from 'react-native-flash-message';
 import { Images } from '../../component2/image/Image';
 import { FontFamily } from '../../utills/FontFamily';
-import { H1 } from '../../utills/components';
+import { H1, TouchableWrapper } from '../../utills/components';
 
 const CustomIcon = () => (<Image resizeMode="contain" source={{ uri: Images.TickIcon }} style={styles.tickIcon} />);
 const ErrorIcon = () => (<Image resizeMode="contain" source={{ uri: Images.ErrorIcon }} style={styles.tickIcon} />);
@@ -17,9 +17,9 @@ const TaskIcon = () => (<Image resizeMode="contain" source={{ uri: Images.TaskTi
 export const showFlashMessage = (props) => {
   const CustomView = ({ message, onPress }) => (
     <View style={styles.actionBtn}>
-      <TouchableOpacity onPress={onPress}>
-        <H1 color={"#E1844C"}>Undo</H1>
-      </TouchableOpacity>
+      <TouchableWrapper onPress={onPress}>
+        <H1 style={{ alignSelf: 'center' }} color={"#E1844C"}>Undo</H1>
+      </TouchableWrapper>
     </View>
   );
 
