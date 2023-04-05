@@ -7,9 +7,7 @@ import App from './src';
 import { name as appName } from './app.json';
 import messaging from '@react-native-firebase/messaging';
 import { notifeeEventHandler, onDisplayNotification } from './src/utills/push_functions';
-import { PushNotificationData } from './src/Routes/types';
 import notifee, { EventType } from '@notifee/react-native';
-import { Images } from './src/component2/image/Image';
 import { storeData } from './src/utills/Methods';
 
 Text.defaultProps = Text.defaultProps || {};
@@ -23,6 +21,6 @@ notifee.onBackgroundEvent(async ({type,detail})=>{
   })
   
   messaging().setBackgroundMessageHandler(async (message)=>{
-    onDisplayNotification(msg)
+    onDisplayNotification(message)
   })
 AppRegistry.registerComponent(appName, () => App);

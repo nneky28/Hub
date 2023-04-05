@@ -22,21 +22,7 @@ const queryClient = new QueryClient(
     },
   }
 )
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primaryButton: '#2898A4',
-    whiteColor: '#ffffff',
-    darkColor: '#3E3E3E',
-    fadeDarkColor: '#717171',
-    fadeDarkColor2: '#8F8F8F',
-    // primaryButton: 'green',
-    secondaryButon: 'yellow',
-    primaryText: '#000',
-    secondaryText: 'red'
-  }
-}
+
 export default function App() {
   const theme = {
     ...DefaultTheme,

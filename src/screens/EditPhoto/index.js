@@ -177,7 +177,6 @@ export default function EditPhoto({navigation}) {
         let biz = user.employee_user_memberships &&
         Array.isArray(user.employee_user_memberships) && user.employee_user_memberships[0]
         && user.employee_user_memberships[0].business_id ? user.employee_user_memberships[0] : null;
-        dispatch(setLoaderVisible(true));
         let url = APIFunction.update_photo(biz.business_id,about_me.id)
         let fd = new FormData();
         let file = {
@@ -191,7 +190,6 @@ export default function EditPhoto({navigation}) {
           await APIFunction.onboarded(about_me.id)
           setIsSaved(true);
           setLoading(false);
-          dispatch(setLoaderVisible(false));
           let about = {...res,completed_user_onboarding : true}
           await storeData("about_me",about);
           await storeData("profile",{...profile,about})
@@ -199,21 +197,11 @@ export default function EditPhoto({navigation}) {
         }
         setIsSaved(true);
         setLoading(false);
-        dispatch(setLoaderVisible(false));
         await storeData("about_me",res);
         await storeData("profile",{...profile,about : res })
-        showFlashMessage();
+        ToastSuccess("Profile image has been saved")
       }catch(err){
-        let msg = "Something went wrong. Please retry"
-        if(err.msg && err.msg.detail && typeof(err.msg.detail) == "string"){
-          msg = err.msg.detail
-        }
-        if(err.msg && err.msg.photo && Array.isArray(err.msg.photo) && err.msg.photo[0] &&
-         typeof(err.msg.photo[0]) == "string"){
-          msg = err.msg.photo[0]
-        }
-        dispatch(setLoaderVisible(false));
-        ToastError(msg)
+        ToastError(err?.msg)
         setLoading(false)
       }
     }
@@ -231,9 +219,7 @@ export default function EditPhoto({navigation}) {
                   ) : (
                     <Button 
                       title="save"
-                      onPress={() => {
-                          updateImage()
-                        }} 
+                      onPress={updateImage} 
                       containerStyle={styles.saveBtnStyle} 
                       textStyle={styles.saveBtnText} 
                       />

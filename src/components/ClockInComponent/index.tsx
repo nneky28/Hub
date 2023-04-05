@@ -30,11 +30,11 @@ const ClockINContainer = () => {
   
     const {
       data: config,
-    } = useFetchAttendanceConfig() as useFetchAttendanceConfigProps
+    } = useFetchAttendanceConfig("main") as useFetchAttendanceConfigProps
     const {
       data: status,
       isFetching: fetchingStatus
-    } = useFetchAttendanceStatus() as useFetchAttendanceStatusProps
+    } = useFetchAttendanceStatus("main") as useFetchAttendanceStatusProps
   
     const {
       data: type
@@ -53,16 +53,17 @@ const ClockINContainer = () => {
     }, [type, status])
   
     useEffect(() => {
-      setInterval(() => {
+      let interval = setInterval(() => {
         setCurrent(moment().format("HH : mm"))
       }, 1000);
+      return ()=> clearInterval(interval)
     }, [])
   
     const submitHandler = async () => {
       try {
         if (status?.is_clocked_in) {
-          let user : StoredAboutMeProps | null | false = await getData("about_me")
-          if(!user || !user?.id) return
+          let user : StoredAboutMeProps | null | false | string = await getData("about_me")
+          if(typeof user === "string" || !user || !user?.id) return
           dispatch(setLoaderVisible(true))
           let fd = {
             employee: user.id,

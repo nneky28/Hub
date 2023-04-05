@@ -3,7 +3,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Benefits from '../screens/Benefits';
 import Compensation from '../screens/Compensation';
@@ -34,7 +33,7 @@ import OnboardingTask from '../screens/OnboardingTask/Index'
 import HomeScreen from '../screens/OnboardingTask/HomeScreen';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
-import { getData, ToastSuccess, storeData } from '../utills/Methods';
+import { getData, ToastSuccess, storeData, useAppSelector, useAppDispatch } from '../utills/Methods';
 import codePush from 'react-native-code-push';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -47,11 +46,11 @@ import { CustomFallBackScreen } from '../utills/components';
 import { AppState, Linking, Platform } from 'react-native';
 import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible, setSecurityVisible } from '../Redux/Actions/Config';
-import { focusManager, QueryClient, useQueryClient } from 'react-query';
+import { focusManager,useQueryClient } from 'react-query';
 import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
-  IAUUpdateKind,
+  IAUUpdateKind, StartUpdateOptions,
 } from 'sp-react-native-in-app-updates';
 import PayslipHistory from '../screens/PayslipHistory';
 import PayslipBreakDown from '../screens/PayslipBreakDown';
@@ -74,22 +73,22 @@ const Tab = createBottomTabNavigator();
 
 
 const Routes = () => {
-  const route = useSelector((state) => state.Auth.route);
-  const auth = useSelector((state) => state.Auth)
-  const navigation = useNavigation()
-  const dispatch = useDispatch();
+  const route = useAppSelector((state) => state.Auth.route);
+  const auth = useAppSelector((state) => state.Auth)
+  const navigation = useNavigation<any>()
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient()
   const [backgroundEventDetails,setBackgroundEventDetails] = React.useState<EventDetail>()
   const {
     data : config,
-  } = useFetchAttendanceConfig() as useFetchAttendanceConfigProps
+  } = useFetchAttendanceConfig(route) as useFetchAttendanceConfigProps
   const {
     data : about
-  } = useFetchAboutMe() as useFetchAboutMeProps
+  } = useFetchAboutMe(route) as useFetchAboutMeProps
 
   const {
     data : status,
-  } = useFetchAttendanceStatus() as useFetchAttendanceStatusProps
+  } = useFetchAttendanceStatus(route) as useFetchAttendanceStatusProps
 
   const logoutMethod = async () => {
     try {
@@ -128,8 +127,8 @@ const Routes = () => {
   const notifeeBackgroundEventHandler = () => {
     return AppState.addEventListener("change",async nextAppState =>{
       if (nextAppState === "active" && auth?.route === "main") {
-        let detail : EventDetail | null | false = await getData("backgroundEventDetails")
-        if(!detail || !detail?.notification) return
+        let detail : EventDetail | null | false | string = await getData("backgroundEventDetails")
+        if(typeof detail === "string" || !detail || !detail?.notification) return
         let resp = screenDeterminant(detail)
         await storeData("backgroundEventDetails",{})
         setBackgroundEventDetails(detail)
@@ -143,6 +142,7 @@ const Routes = () => {
       if (nextAppState === "active" && auth?.route === "main") {
         let token = await getData("token")
         let res = await getData("lastActiveMoment")
+        if(typeof res !== "string") return
         focusManager.setFocused(true)
         if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
         dispatch(setSecurityVisible(true))
@@ -156,13 +156,24 @@ const Routes = () => {
       if(
         !config?.data?.start_date || 
         !moment(config?.data?.start_date).isBefore(moment()) || 
-        status?.is_clocked_in || !about?.employee_job?.arrival_time ||
-        moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))
+        !about?.employee_job?.arrival_time 
       ){
         return
       }
-      let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes").valueOf()
-      onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
+      if(
+        status?.is_clocked_in &&
+        moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))
+      ){
+        //IF CLOCKED IN AND IT IS PAST THE CLOCK IN TIME, SET A REMINDER FOR TOMORROW
+        let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").subtract(5,"minutes").valueOf()
+        return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
+      }
+      if(!status?.is_clocked_in && !moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))){
+        //IF USER IS NOT CLOCKED IN AND IT IS NOT YET TIME
+        //NOTIFEE ON IOS IGNORES THE START DATE OF TRIGGERED NOTIFICATION
+        let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes").valueOf()
+        onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
+      }
     }catch(err){
 
     }
@@ -208,7 +219,7 @@ const Routes = () => {
       if (!result.shouldUpdate) {
         return
       }
-      const updateOptions = Platform.select({
+      const updateOptions : StartUpdateOptions | undefined = Platform.select({
         ios: {
           title: 'Update available',
           message: "There is a new version of MyEdge available on the App Store, do you want to update it?",
@@ -220,6 +231,7 @@ const Routes = () => {
           updateType: IAUUpdateKind.IMMEDIATE,
         },
       });
+      if(!updateOptions) return
       inAppUpdates.startUpdate(updateOptions);
     } catch (err) {
     }
@@ -228,7 +240,7 @@ const Routes = () => {
   useEffect(() => {
     inAppUpdatesCheck()
     Crashes.setListener({
-      shouldProcess: function (report) {
+      shouldProcess: function () {
         return true; // return true if the crash report should be processed, otherwise false.
       },
       // Other callbacks must also be defined at the same time if used.
@@ -244,7 +256,7 @@ const Routes = () => {
       route === "splash" ? (
         <Stack.Navigator
           initialRouteName="Splash"
-          screenOptions={{ headerMode: false }}>
+          screenOptions={{ headerShown : false }}>
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="Onboard" component={Onboard} />
         </Stack.Navigator>
@@ -252,7 +264,7 @@ const Routes = () => {
         (
           <DrawerStack.Navigator
             screenListeners={{
-              state: async (e) => {
+              state: async () => {
                 let timeout = await getData("logout_time")
                 //It takes about 15 days before token expires.
                 if (timeout && (moment(timeout).diff(moment(), "days") > 15)) return logoutMethod()
@@ -261,7 +273,7 @@ const Routes = () => {
                   return logoutMethod()
                 }
                 storeData("lastActiveMoment", moment().toISOString())
-                let res = await APIFunction.unseen_count()
+                let res = await APIFunction.unseen_count() as {count? : number}
                 dispatch(login({ ...auth, notifications: res.count }));
               },
             }}
@@ -283,7 +295,7 @@ const Routes = () => {
                       {() => (
                         <Stack.Navigator
                           initialRouteName="Dashboard"
-                          screenOptions={{ headerMode: false }}>
+                          screenOptions={{ headerShown : false }}>
                           <Stack.Screen name="Dashboard" component={Dashboard} />
                           <Stack.Screen name="Todos" component={Todos} />
                           <Stack.Screen name="People" component={People} />
@@ -295,7 +307,7 @@ const Routes = () => {
                     <Tab.Screen name="Menu">
                       {() => (
                         <Stack.Navigator
-                          screenOptions={{ headerMode: false }}
+                          screenOptions={{ headerShown : false }}
                         >
                           <Stack.Screen name="Task" component={Task} />
                           <Stack.Screen name="Time off" component={TimeOff} />
@@ -317,7 +329,7 @@ const Routes = () => {
                       {() => (
                         <Stack.Navigator
                           initialRouteName="People"
-                          screenOptions={{ headerMode: false }}>
+                          screenOptions={{ headerShown : false }}>
                           <Stack.Screen name="People" component={People} />
                           <Stack.Screen name="MemberProfile" component={MemberProfile} />
                         </Stack.Navigator>
@@ -327,7 +339,7 @@ const Routes = () => {
                       {() => (
                         <Stack.Navigator
                           initialRouteName="Profile"
-                          screenOptions={{ headerMode: false }}>
+                          screenOptions={{ headerShown : false }}>
                           <Stack.Screen name="temp" component={ScreenTemplate} />
                           <Stack.Screen name="Profile" component={Profile} />
                           <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -351,7 +363,7 @@ const Routes = () => {
         route === "onboard" ? (
           <Stack.Navigator
             initialRouteName="LandingPage"
-            screenOptions={{ headerMode: false }}
+            screenOptions={{ headerShown : false }}
           >
             <Stack.Screen name="LandingPage" component={LandingPage} />
             <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
@@ -364,7 +376,7 @@ const Routes = () => {
           (
             <Stack.Navigator
               initialRouteName="Welcome"
-              screenOptions={{ headerMode: false }}>
+              screenOptions={{ headerShown : false }}>
               <Stack.Screen name="Welcome" component={Welcome} />
               <Stack.Screen name="Login" component={Login} />
             </Stack.Navigator>

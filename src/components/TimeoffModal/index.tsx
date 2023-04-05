@@ -5,7 +5,7 @@ import AppColors from "../../utills/AppColors";
 import { getData, ToastSuccess } from "../../utills/Methods";
 import { TimeOffModalData, TimeoffModalProps, useFetchAboutMeData } from "./types";
 import Modal from "react-native-modal"
-import { Keyboard, KeyboardAvoidingView, Platform,View} from "react-native";
+import { Keyboard,View} from "react-native";
 import styles from "./styles"
 import { Container, H1, P } from "../../utills/components";
 import Button from "../Button";
@@ -39,8 +39,8 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         if (failed) {
           return setError("All fields are required")
         };
-        let about : useFetchAboutMeData | null | false = await getData("about_me")
-        if(!about || !about?.id || !timeoff_id) return
+        let about : useFetchAboutMeData | null | false | string = await getData("about_me")
+        if(typeof about === "string" || !about || !about?.id || !timeoff_id) return
         let fd = {
             id : about?.id,
           ...data, timeoff: timeoff_id,
@@ -69,15 +69,12 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         animationIn="fadeInUp"
         animationOut="fadeInDown"
         swipeThreshold={0.3}
-        style={{justifyContent: 'flex-end', margin: 0}}
+        style={{justifyContent: 'flex-end', margin: 0,flex : 1}}
         isVisible={isVisible}
+        avoidKeyboard={true}
     >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{justifyContent: "flex-end" }} 
-        >
-            <View style={styles.container}
-                onStartShouldSetResponder={handleUnhandledTouches}
+        <View style={styles.container}
+               onStartShouldSetResponder={handleUnhandledTouches}
             >
                 
                 <Container width={90} alignSelf="center">
@@ -119,7 +116,6 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
                     />
                 </Container>
             </View>
-        </KeyboardAvoidingView>
       </Modal>
     );
   }

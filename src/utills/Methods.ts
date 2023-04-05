@@ -69,7 +69,7 @@ export const storeData = async (key : string, value : any) => {
   }
 };
 
-export const getData = async (key : string) : Promise<{[index : string] : any} | null |  false> => {
+export const getData = async (key : string) : Promise<{[index : string] : any} | null |  false | string> => {
   try {
     const jsonValue = await AsyncStorage.getItem(`@${key}`);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
