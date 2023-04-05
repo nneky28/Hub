@@ -161,10 +161,9 @@ const Routes = () => {
         return
       }
       if(
-        status?.is_clocked_in &&
         moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))
       ){
-        //IF CLOCKED IN AND IT IS PAST THE CLOCK IN TIME, SET A REMINDER FOR TOMORROW
+        //IF IT IS PAST THE CLOCK IN TIME, SET A REMINDER FOR TOMORROW
         let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").subtract(5,"minutes").valueOf()
         return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
       }
