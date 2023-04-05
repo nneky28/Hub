@@ -17,7 +17,6 @@ export const requestUserPermission = async () => {
         await messaging().registerDeviceForRemoteMessages();
         // Get the token
         const token = await messaging().getToken();
-        console.log("TOKEN",token)
         let fd = {
             user_type : "employee",
             registration_id : token
