@@ -1,7 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Text } from 'react-native';
 import AppColors from '../../utills/AppColors';
+import {TouchableRipple} from "react-native-paper"
 import styles from './styles';
+import { ButtonProps } from './types';
 
 const Button = ({
   title,
@@ -9,22 +11,24 @@ const Button = ({
   disabled = false,
   isLoading = false,
   loaderColor = AppColors.white,
-  activeOpacity = 0.7,
-  containerStyle = {},
-  textStyle = {},
-}) => {
+  containerStyle,
+  textStyle,
+} : ButtonProps) => {
   return (
-    <TouchableOpacity
+    <TouchableRipple
       onPress={onPress}
       disabled={disabled || isLoading}
-      activeOpacity={activeOpacity}
-      style={[styles.container, containerStyle]}>
+      style={[styles.container, containerStyle]}
+      tvParallaxProperties={undefined}
+      hasTVPreferredFocus={undefined}
+
+    >
       {isLoading ? (
         <ActivityIndicator color={loaderColor} size="small" />
       ) : (
         <Text style={[styles.text, textStyle]} numberOfLines={1}>{title}</Text>
       )}
-    </TouchableOpacity>
+    </TouchableRipple>
   );
 };
 

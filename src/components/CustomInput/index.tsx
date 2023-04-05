@@ -4,7 +4,7 @@ import { TextInput } from 'react-native-paper';
 import { height, width } from 'react-native-dimension';
 import { Container } from '../../utills/components';
 import { FontFamily } from '../../utills/FontFamily';
-import { KeyboardTypeOptions } from 'react-native';
+import { KeyboardTypeOptions, ViewStyle } from 'react-native';
 
 interface Props{
   placeholder? : string,
@@ -23,10 +23,10 @@ interface Props{
   secureTextEntry? : boolean
   right? : React.ReactNode,
   maxLength? : number,
-  editable?: boolean,
-  style: any[],
-  autoFocus: boolean,
-  multiline:boolean
+  editable? : boolean,
+  style? : ViewStyle,
+  autoFocus? : boolean,
+  multiline? :boolean
 }
 
 const CustomInput: React.FC<Props> = (props) => {

@@ -7,7 +7,7 @@ import { rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
-import { ReportModal, RestrictionModal, TimeoffModal, WarningModal } from '../../components/ContactModal';
+import { ReportModal, RestrictionModal,WarningModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
@@ -15,14 +15,18 @@ import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
 import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { ClockINContainer, Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
-import { Capitalize, getData, getGreetingTime, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getData, getGreetingTime, getStoredBusiness, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useQueryClient } from 'react-query';
+import TimeoffModal from '../../components/TimeoffModal';
+import CustomCalendarModal from '../../components/CustomCalendarModal';
+import { DateData } from 'react-native-calendars/src/types';
+import ClockINContainer from '../../components/ClockInComponent';
 const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
 
@@ -52,7 +56,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [active, setActive] = React.useState([]);
   const [requests, setRequests] = React.useState([]);
   const [modal, setModal] = React.useState(false);
-  const [current, setCurrent] = useState(null);
+  const [current, setCurrent] = useState();
   const [show, setShow] = useState(false);
   const [del, setDelete] = useState(null);
   const [cancel, setCancel] = useState(false);
@@ -70,6 +74,13 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [visible, setVisible] = React.useState(false)
   const [employee_pk, setEmployeePK] = React.useState(null)
   const [category, setCategory] = React.useState("timeoff")
+  const [appear,setAppear] = React.useState(false)
+  const [action,setAction] = React.useState("")
+  const [requestData,setRequestData] = React.useState({
+    start_date : "",
+    end_date : "",
+    reason : ""
+  })
 
   const {
     data: outData,
@@ -155,7 +166,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       fetchingHistory || fetchingReq ||
       fetchingUpcoming
     ) {
-      dispatch(setLoaderVisible(true))
+      //dispatch(setLoaderVisible(true))
       return setLoading(true)
     }
     dispatch(setLoaderVisible(false))
@@ -241,11 +252,6 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const closeWeb = () => {
     setWeb(false)
   }
-  const closeAndRefresh = () => {
-    queryClient.invalidateQueries("employee_timeoff")
-    queryClient.invalidateQueries("employee_timeoff_taken")
-    queryClient.invalidateQueries("employee_timeoff_reqs")
-  }
 
 
 
@@ -263,6 +269,21 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     }
   }
 
+  const onDayPress = (param : DateData)=>{
+    if(action === "start_date") return setRequestData({
+      ...requestData,start_date : param?.dateString
+    })
+    if(action === "end_date") setRequestData({
+      ...requestData,end_date : param?.dateString
+    })
+  }
+  const datePickerHandler = (type : string) => {
+    setAction(type)
+    setAppear(true)
+  }
+  const hideCalendarHandler = () => {
+    setAppear(false)
+  }
   const timeoffResponseHandler = () => {
 
     var margin = 30;
@@ -286,6 +307,9 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
       setIndex(0)
       setMargin(width(0.1))
     }
+  }
+  const onChangeText = (value : string) => {
+    setRequestData({...requestData,reason : value})
   }
   useEffect(() => {
     timeoffResponseHandler()
@@ -495,12 +519,27 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                 </ScrollView>
               )
             }
-            <TimeoffModal
-              isVisible={modal}
-              onHide={() => setModal(false)}
-              closeAndRefresh={closeAndRefresh}
-              timeoff_id={current} active={active}
-            />
+            {
+              appear ? <CustomCalendarModal 
+                show={appear}
+                onDayPress={onDayPress}
+                date={action === "start_date" ? requestData?.start_date : action === "end_date" ? requestData?.end_date : ""}
+                onHide={hideCalendarHandler}
+              /> : null
+            }
+            {
+              !appear && modal ?  <TimeoffModal
+                isVisible={modal}
+                onHide={() => {
+                  setModal(false)
+                }}
+                timeoff_id={current} 
+                datePickerHandler={datePickerHandler}
+                onChangeText={onChangeText}
+                data={requestData}
+              /> : null
+            }
+           
             <WarningModal
               isVisible={show}
               onHide={() => {

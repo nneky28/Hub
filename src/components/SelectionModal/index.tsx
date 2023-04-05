@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ActivityIndicator,
+  FlatList,
   Image,
   Text,
   TouchableOpacity,
@@ -8,51 +8,62 @@ import {
 } from 'react-native';
 import styles from './styles';
 import Modal from 'react-native-modal';
-import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import { Images } from '../../component2/image/Image';
-import { getData, getStoredBusiness } from '../../utills/Methods';
 import { useFetchOnboarding } from '../../utills/api';
-import { clockRunning } from 'react-native-reanimated';
-import { STABLE_BUSINESS_ID } from '../../utills/Constants';
+import { SelectionModalProps, TextWithIconProps } from './types';
+import { Container } from '../../utills/components';
 
-const SelectionModal = ({ isVisible, onHide, navigation }) => {
-  const [selected, setSelected] = useState('Task');
-  const [business_id, setBusinessID] = React.useState("")
-
-  const Task_Name = "Task"
-
+const SelectionModal = ({ isVisible, onHide, navigation } : SelectionModalProps) => {
+  const [selected, setSelected] = useState('');
   const {
     data: onboarding,
-  } = useFetchOnboarding(Task_Name)
+  } = useFetchOnboarding("Task")
 
-  const getBusinessID = async () => {
-    let biz = await getStoredBusiness()
-    setBusinessID(biz?.business_id)
-  }
-  useEffect(() => {
-    getBusinessID()
-  }, [])
+  const screenList = [
+    {
+      text : "Task",
+      icon : Images.TaskIcon,
+      fill : Images.TaskFillIcon
+    },
+    {
+      text : "Time off",
+      icon : Images.RadioIcon,
+      fill : Images.RadioFillIcon
+    },
+    {
+      text : "Benefits",
+      icon : Images.BenefitIcon,
+      fill : Images.BenefitFillIcon
+    },
+    {
+      text : "Payslip",
+      icon : Images.PayslipIcon,
+      fill : Images.PayFillIcon
+    },
+    {
+      text : "Documents",
+      icon : Images.DocumentIcon,
+      fill : Images.DocumentFillIcon
+    },
+    {
+      text : "Trainings",
+      icon : Images.TrainingIcon,
+      fill : Images.TrainingFillIcon
+    }
+  ]
 
-  useEffect(() => {
-  }, [selected])
-
-  const TextWithIcon = ({ text, icon, fill, onboarded }) => {
+  const TextWithIcon = ({ text, icon, fill} : TextWithIconProps) => {
 
     return (
       <TouchableOpacity
         onPress={() => {
+          setSelected(text)
           if (text === "Task" && !onboarding?.[0]?.has_completed_mobile_onboarding) {
             onHide();
             return navigation.navigate("Menu", { screen: "TaskOnboarding" })
           }
-          if (text === "Task" && onboarding?.[0]?.has_completed_mobile_onboarding) {
-            onHide()
-            return navigation.navigate("Menu", { screen: "Task" })
-          }
-          setSelected(text)
           navigation.navigate('Menu', { screen: text })
-          //navigation.navigate(text)
           onHide();
         }}
         style={styles.textIconContainer}>
@@ -75,6 +86,13 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
     );
   };
 
+  const renderItem = ({item} : {item : TextWithIconProps}) => {
+    return <TextWithIcon 
+      {...item}
+    />
+  }
+  const keyExtractor = (item : TextWithIconProps,i : number) => `${item}${i}`.toString()
+  const ItemSeparatorComponent = () => <Container  backgroundColor='transparent' marginBottom={2} />
   return (
     <Modal
       onBackButtonPress={onHide}
@@ -90,18 +108,15 @@ const SelectionModal = ({ isVisible, onHide, navigation }) => {
       style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <View style={styles.row}>
-          <TextWithIcon text="Payslip" icon={Images.PayslipIcon} fill={Images.PayFillIcon} />
-          <TextWithIcon text="Documents" icon={Images.DocumentIcon} fill={Images.DocumentFillIcon} />
-          <TextWithIcon text="Trainings" icon={Images.TrainingIcon} fill={Images.TrainingFillIcon} />
-        </View>
-        <View style={styles.row}>
-          {
-            business_id !== STABLE_BUSINESS_ID ? <TextWithIcon text="Task" icon={Images.TaskIcon} fill={Images.TaskFillIcon} /> : null
-          }
-          <TextWithIcon text="Time off" icon={Images.RadioIcon} fill={Images.RadioFillIcon} />
-          <TextWithIcon text="Benefits" icon={Images.BenefitIcon} fill={Images.BenefitFillIcon} />
-        </View>
+        <FlatList 
+          data={screenList}
+          contentContainerStyle={styles.contentContainerStyle}
+          columnWrapperStyle={styles.columnWrapperStyle}
+          numColumns={3}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+        />
       </View>
     </Modal>
   );

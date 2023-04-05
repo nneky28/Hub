@@ -1,15 +1,18 @@
 import { useFocusEffect } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
+import { DateData } from 'react-native-calendars/src/types'
 import { height, totalSize, width } from 'react-native-dimension'
 import { useQueryClient } from 'react-query'
 import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
-import { TimeoffModal, WarningModal } from '../../components/ContactModal'
+import { WarningModal } from '../../components/ContactModal'
+import CustomCalendarModal from '../../components/CustomCalendarModal'
 import PersonCard from '../../components/PersonCard'
 import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import SearchBox from '../../components/SearchBox'
 import { TimeoffVertical } from '../../components/Timeoff'
+import TimeoffModal from '../../components/TimeoffModal'
 import TrainingList from '../../components/TrainingList'
 import { APIFunction, deleteAPIs, getAPIs, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffReqs, useFetchEmployeeTimeOffTaken } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
@@ -18,7 +21,7 @@ import { BackHandler, Container, CustomRefreshControl, LottieIcon, PageLoader, R
 import { celebrations, whosOut } from '../../utills/data/celebrations'
 import { persons } from '../../utills/data/persons'
 import tasksData from '../../utills/data/tasksData'
-import { getData, getStoredBusiness, getTimeOffsFunction, ToastError, ToastSuccess } from '../../utills/Methods'
+import { getData, getStoredBusiness, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
 
 
@@ -32,7 +35,7 @@ export default function TimeOff({navigation}) {
     const [tabs,setTabs] = useState([]);
     const [loading,setLoading] = useState(true);
     const [modal,setModal] = useState(false);
-    const [current,setCurrent] = useState(null);
+    const [current,setCurrent] = useState();
     const [process,setProcess] = useState(true)
     const [show,setShow] = useState(false);
     const [del,setDelete] = useState(null);
@@ -40,6 +43,13 @@ export default function TimeOff({navigation}) {
     const [text,setText] = useState("");
     const [employee_pk, setEmployeePK] = React.useState(null)
     const queryClient = useQueryClient()
+    const [appear,setAppear] = React.useState(false)
+    const [action,setAction] = React.useState("")
+    const [requestData,setRequestData] = React.useState({
+        start_date : "",
+        end_date : "",
+        reason : ""
+    })
 
     const {
         data : timeoffData,
@@ -125,6 +135,25 @@ export default function TimeOff({navigation}) {
         queryClient.invalidateQueries("employee_timeoff")
         queryClient.invalidateQueries("employee_timeoff_taken")
         queryClient.invalidateQueries("employee_timeoff_reqs")
+    }
+
+    const onDayPress = (param : DateData)=>{
+        if(action === "start_date") return setRequestData({
+          ...requestData,start_date : param?.dateString
+        })
+        if(action === "end_date") setRequestData({
+          ...requestData,end_date : param?.dateString
+        })
+      }
+      const datePickerHandler = (type : string) => {
+        setAction(type)
+        setAppear(true)
+      }
+      const hideCalendarHandler = () => {
+        setAppear(false)
+      }
+    const onChangeText = (value : string) => {
+        setRequestData({...requestData,reason : value})
     }
 
     useEffect(()=>{
@@ -261,16 +290,26 @@ export default function TimeOff({navigation}) {
                         </View>
                     )
                 }
-            <TimeoffModal 
-                isVisible={modal} 
-                onHide={()=>setModal(false)}
-                closeAndRefresh={() => {
-                    setModal(false)
-                    ToastSuccess("Request has been submitted for processing")
-                    refreshHandler();
-                }} 
-                timeoff_id={current} active={active}
-            />
+            {
+              appear ? <CustomCalendarModal 
+                show={appear}
+                onDayPress={onDayPress}
+                date={action === "start_date" ? requestData?.start_date : action === "end_date" ? requestData?.end_date : ""}
+                onHide={hideCalendarHandler}
+              /> : null
+            }
+            {
+              !appear && modal ?  <TimeoffModal
+                isVisible={modal}
+                onHide={() => {
+                  setModal(false)
+                }}
+                timeoff_id={current} 
+                datePickerHandler={datePickerHandler}
+                onChangeText={onChangeText}
+                data={requestData}
+              /> : null
+            }
             <WarningModal 
               isVisible={show}
               onHide={()=>{

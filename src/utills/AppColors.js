@@ -17,6 +17,7 @@ const AppColors = {
   lightGreen: '#E0EEF0',
   grayBorder: '#E1E1E1',
   red: '#E70000',
+  red2 : "#FF6666",
   pink: '#FF7372',
   lightPink: '#FFE7E7',
   darkGray: '#A8A8A8',

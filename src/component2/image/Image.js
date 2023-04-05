@@ -107,7 +107,8 @@ export const Images = {
   yellowBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4028.png",
   greenBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026.png",
   TaskTickIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+9823.png",
-  UndoBtn: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Frame+9720.png"
+  UndoBtn: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Frame+9720.png",
+  ClockIn : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Time+off+Illustration.png"
 
 }
 
