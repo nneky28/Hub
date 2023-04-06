@@ -52,7 +52,13 @@ import {
   GET_EMPLOYEE_STATISTICS,
   GET_TEAM_STATISTICS,
   GET_ACTIVITY,
-  GET_COMMENTS
+  GET_COMMENTS,
+  EmergencyContactProps,
+  EditPassword,
+  OnboardingProps,
+  CommentProps,
+  TaskStatusProps,
+  TaskProps
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -62,8 +68,9 @@ export const employees_me = (business_id:string) => `/c/${business_id}/employees
 export const APIFunction = {
   employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
   team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
-  basic_details: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  login: async (fd?:any) => {
+  basic_details: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/basic_detail/`,
+  
+  login: async (fd?:RegisterTokenLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
   next_of_kins: async (id:number) => {
@@ -91,21 +98,22 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/emergency-contact/`)
   },
-  update_emergency: async (fd:any, id:number) => {
+  update_emergency: async (fd:EmergencyContactProps, id:number) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-emergency-contact/`, fd)
   },
-  update_photo: (business_id :string|number, id:number) => `/c/${business_id}/employees/${id}/update-photo/`,
+  update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
+  
   edit: async (fd:any, id:any) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${id}/`, fd);
   },
-  trainings: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/training/`,
-  training_hist: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/training/history/`,
-  timeoff: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
-  timeoff_reqs: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
-  timeoff_taken: (business_id:any, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
-  delete_timeoff: (business_id:any, id:number, timeoff_id:any) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
+  training_hist: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/history/`,
+  timeoff: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
+  timeoff_reqs: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
+  timeoff_taken: (business_id:string, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
+  delete_timeoff: (business_id:string, id:number, timeoff_id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
 
   employee_timeoff: async (id : number) => {
     let biz = await getStoredBusiness();
@@ -136,7 +144,8 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/notifications/unseen_count/`)
   },
-  change_password: async (fd:any) => postAPIs(`/accounts/auth/password/change/`, fd),
+  change_password: async (fd: EditPassword) => postAPIs(`/accounts/auth/password/change/`, fd),
+  
   pension_providers: async () => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/pension_providers/`)
@@ -145,7 +154,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/banks/`)
   },
-  update_next_of_kin: async (fd:any, id:number) => {
+  update_next_of_kin: async (fd:EmergencyContactProps, id:number) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-next-of-kin/`, fd)
   },
@@ -178,7 +187,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/onboarding_tasks/?is_completed=${completed}`)
   },
-  toggle_completed: async (employee_id:number, task_id:number, fd:number) => {
+  toggle_completed: async (employee_id:number, task_id:number, fd:any) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/employees/${employee_id}/onboarding_tasks/${task_id}/toggle_completed/`, fd)
   },
@@ -232,11 +241,11 @@ export const APIFunction = {
   error_report: async (fd:any) => {
     return postNoToken('/mobile_error_report', fd)
   },
-  post_onboarding: async (fd:any) => {
+  post_onboarding: async (fd:OnboardingProps) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/app_onboarding/`, fd)
   },
-  update_onboarding: async (fd:any) => {
+  update_onboarding: async (fd:OnboardingProps) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/app_onboarding/${fd.id}/`, fd)
   },
@@ -245,7 +254,7 @@ export const APIFunction = {
     let user = await getStoreAboutMe()
     return getAPIs(`/c/${biz?.business_id}/app_onboarding/?${type}&employee_id=${user?.id}`)
   },
-  post_task: async (fd:any) => {
+  post_task: async (fd:TaskProps) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app/`, fd)
   },
@@ -253,11 +262,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/sub_tasks_app/`, fd)
   },
-  post_comment: async (fd:any) => {
+  post_comment: async (fd:CommentProps) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app_comments/`, fd)
   },
-  update_status: async (fd:any) => {
+  update_status: async (fd:TaskStatusProps) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
@@ -439,27 +448,27 @@ export const useFetchPayslipInfo = (date:string, id:number) => {
   })
 }
 
-export const useFetchPayrollHistory = (year:any) => {
+export const useFetchPayrollHistory = (year:number) => {
   return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year), {
-    enabled: year !== null && year !== undefined && year !== ""
+    enabled: !!year 
   })
 }
 
-export const useFetchAssets = (employee_pk:any) => {
+export const useFetchAssets = (employee_pk:number) => {
   return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk), {
-    enabled: employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
+    enabled:!! employee_pk 
   })
 }
 
-export const useFetchBenefits = (employee_pk:any) => {
+export const useFetchBenefits = (employee_pk:number) => {
   return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk), {
-    enabled: employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
+    enabled: !!employee_pk 
   })
 }
 
 export const useFetchWhosOut = (category = "timeoff") => {
   return useQuery([WHOS_OUT, category], () => APIFunction.whos_out(category), {
-    enabled: category !== null && category !== undefined && category !== ""
+    enabled: !!category
   })
 }
 
@@ -478,18 +487,18 @@ export const useFetchAnniversary = (status:string, page = 1) => {
 
 
 
-export const useFetchKin = (employee_id:any) => {
+export const useFetchKin = (employee_id:number) => {
   return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id), {
     enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== ""
+     !! employee_id 
     )
   })
 }
 
-export const useFetchEmergency = (employee_id:any) => {
+export const useFetchEmergency = (employee_id:number) => {
   return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id), {
     enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== ""
+      !!employee_id 
     )
   })
 }
@@ -752,7 +761,7 @@ export const deleteAPIs = async (path : string) => {
   });
 };
 
-export const putAPIs = async (path:string, fd?:number) => {
+export const putAPIs = async (path:string, fd?:{[index:string]:any}) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({

@@ -107,6 +107,7 @@ export type StoredUserProps = {
     first_name? : string
     last_name? : string
     profiles? : []
+    
 }
 
 export type StoredAboutMeProps = useFetchAboutMeData
