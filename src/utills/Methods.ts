@@ -54,8 +54,8 @@ export type getStoredBusinessProps = {
   logo? : string
 }
 export const getStoredBusiness = async () : Promise<getStoredBusinessProps | null>  => {
-  let user : StoredUserProps | false | null = await getData("user");
-  if(!user || !user?.employee_user_memberships?.[0]) return null
+  let user : StoredUserProps | false | null | string = await getData("user");
+  if(typeof user === "string" || !user || !user?.employee_user_memberships?.[0] ) return null
   return user?.employee_user_memberships?.[0];
 }
 

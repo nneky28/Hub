@@ -165,18 +165,6 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
 
 
 
-    // const handleChecked = (item) => {
-    //     setSelectedIDs((prev) => [...prev, item.id])
-    //     showFlashMessage({
-    //         title: `Sub task marked as completed`,
-    //         duration: 5000,
-    //         type: 'task',
-    //         statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
-    //         backgroundColor: AppColors.newYellow
-    //     })
-    // }
-
-
     const handleChecked = React.useCallback((item) => {
         setSelectedIDs((prev) => [...prev, item.id])
         showFlashMessage({
@@ -187,38 +175,6 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
             backgroundColor: AppColors.newYellow
         })
     }, [setSelectedIDs]);
-
-    // const handleChecked = (item) => {
-    //     console.log("ITEM", item)
-    //     const alreadyCompleted = selectedIDs.includes(item.id);
-    //     if (alreadyCompleted) {
-    //         handleUncomplete(item);
-    //     } else {
-    //         setSelectedIDs((prev) => [...prev, item.id]);
-    //         showFlashMessage({
-    //             title: `Sub task marked as completed`,
-    //             duration: 5000,
-    //             type: 'task',
-    //             statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
-    //             backgroundColor: AppColors.newYellow
-    //         });
-    //         const fd = {
-    //             assigned_to: item?.assigned_by?.id,
-    //             id: item.id,
-    //             status: "Completed",
-    //         };
-    //         subTaskEditHandler(fd)
-    //             .then((res) => {
-    //                 console.log("res", res);
-    //                 storeData("task claim", res);
-    //                 queryClient.invalidateQueries();
-    //             })
-    //             .catch((error) => {
-    //                 console.error(error);
-    //             });
-    //     }
-    // };
-
 
 
 

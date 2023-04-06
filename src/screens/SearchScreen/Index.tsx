@@ -45,7 +45,7 @@ const PeopleList: React.FC<Props> = ({ navigation }) => {
 
     const {
         data: teamData,
-    } = useFetchTeams(teamPage, id)
+    } = useFetchTeams(teamPage)
 
     const {
         data: departmentData,
@@ -152,13 +152,13 @@ const PeopleList: React.FC<Props> = ({ navigation }) => {
         setSearch(item)
         setPage(1)
     }
+    
     const aboutMe = async () => {
         let details = await getData("about_me");
       setMyTeam(details?.department);
     };
 
   
-
     useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])

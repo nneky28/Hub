@@ -7,7 +7,13 @@ import { useFetchAboutMeData } from "../components/TimeoffModal/types"
 export const CLOCK_IN_ALERT = "clock_in_alert"
 export const TIME_OFF_REQUEST = "time_off_request"
 
-
+// export type MainNavigationProps = CompositeNavigationProp<
+//     BottomTabNavigationProp<TabScreenList>,
+//     CompositeNavigationProp<
+//         StackNavigationProp<MainStackList>,
+//         DrawerNavigationProp<DrawerStackList>
+//     >
+// >
 
 
 export type PushNotificationData = {
@@ -40,6 +46,7 @@ export type StoredUserProps = {
     first_name? : string
     last_name? : string
     profiles? : []
+    
 }
 
 export type StoredAboutMeProps = useFetchAboutMeData

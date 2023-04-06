@@ -13,12 +13,23 @@ import { Images } from '../../component2/image/Image';
 import { useFetchOnboarding } from '../../utills/api';
 import { SelectionModalProps, TextWithIconProps } from './types';
 import { Container } from '../../utills/components';
+import { getData } from '../../utills/Methods';
+
 
 const SelectionModal = ({ isVisible, onHide, navigation } : SelectionModalProps) => {
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState('Task');
+  const [employee_pk, setEmployeePK] = useState(0);
+
+  const getInfo = async () => {
+    try {
+        let about_me = await getData('about_me');
+        setEmployeePK(about_me?.id)
+    } catch (err) { }
+};
+
   const {
     data: onboarding,
-  } = useFetchOnboarding("Task")
+  } = useFetchOnboarding("Task",employee_pk)
 
   const screenList = [
     {
@@ -53,6 +64,9 @@ const SelectionModal = ({ isVisible, onHide, navigation } : SelectionModalProps)
     }
   ]
 
+  useEffect(() => {
+    getInfo()
+}, [])
   const TextWithIcon = ({ text, icon, fill} : TextWithIconProps) => {
 
     return (

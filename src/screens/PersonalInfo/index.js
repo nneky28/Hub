@@ -42,8 +42,7 @@ export default function PersonalInfo({ navigation }) {
             if (failed) return ToastError(msg)
             setLoading(true)
             setLoading(true);
-            // let token = await getData("token");
-            // let user =  await getData("user");
+
             let about = await getData("about_me");
             let fd = {
                 "title": "",

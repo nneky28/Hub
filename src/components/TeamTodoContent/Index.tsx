@@ -13,7 +13,7 @@ import AppColors from '../../utills/AppColors';
 import { width, height } from 'react-native-dimension';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
-import { APIFunction, } from '../../utills/api';
+import { APIFunction, useFetchAboutMe, } from '../../utills/api';
 import { storeData, getData, Capitalize } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -22,6 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import CommonStyles from '../../utills/CommonStyles';
 import { UnCompletedModal, ActionModal } from '../ContactModal';
 import { useNavigation } from '@react-navigation/native';
+import { useFetchAboutMeProps } from '../TimeoffModal/types';
 
 
 
@@ -44,12 +45,16 @@ type Props = {
         mutateAsync,
         isLoading,
     } = useMutation(APIFunction.update_status)
-    const deleteTask = useMutation(APIFunction.delete_task)
+      const deleteTask = useMutation(APIFunction.delete_task)
+
+      const {
+        data : about
+      } = useFetchAboutMe("main") as useFetchAboutMeProps
 
     const onPressHandler = async (action:string) => {
-        let employee = await getData("about_me")
+
         let fd = {
-            assigned_to: employee?.id,
+            assigned_to: about?.id,
             id: item.id,
             status: action,
         }
