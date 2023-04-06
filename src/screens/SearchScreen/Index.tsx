@@ -2,7 +2,7 @@ import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, Se
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
 import { CloseHandler, Container, P,  H1 } from '../../utills/components';
-import { SearchBoxIOSWithout, SearchBoxWithout } from '../../components/SearchBox/index';
+import SearchBox,{SearchBoxIOS} from '../../components/SearchBox/index';
 import CommonStyles from '../../utills/CommonStyles';
 import AppColors from '../../utills/AppColors';
 import PersonListComp, { DeptListComp } from '../../components/PersonListComp/index';
@@ -22,17 +22,17 @@ interface Props {
 
 
 const PeopleList: React.FC<Props> = ({ navigation }) => {
-  const [myTeam, setMyTeam] = useState({})
+  const [myTeam, setMyTeam] = useState({name:''})
   const [item, setItem] = useState<Array<any>>([]);
   const [teamItem, setTeamItem] = useState<Array<any>>([]);
   const [page, setPage] = useState<number>(1);
-  const [teamPage, setTeamPage] = useState<number>(1);
+  const [teamPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
-  const [id, setId] = useState<boolean>(false);
+  const [id] = useState<boolean>(false);
   const [tab, setTab] = useState<string>("Employees");
-  const [deptPage, setDeptPage] = useState<number>(1);
+  const [deptPage] = useState<number>(1);
   const [departments, setDepartments] = useState<Array<any>>([]);
-  const [searchDeptTerm, setSearchDeptTerm] = useState<string>("");
+  const [searchDeptTerm] = useState<string>("");
   const combinedState = [...teamItem, ...item];
 
 
@@ -45,7 +45,7 @@ const PeopleList: React.FC<Props> = ({ navigation }) => {
 
     const {
         data: teamData,
-    } = useFetchTeams(teamPage, id)
+    } = useFetchTeams(teamPage)
 
     const {
         data: departmentData,
@@ -152,13 +152,13 @@ const PeopleList: React.FC<Props> = ({ navigation }) => {
         setSearch(item)
         setPage(1)
     }
+    
     const aboutMe = async () => {
         let details = await getData("about_me");
       setMyTeam(details?.department);
     };
 
   
-
     useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
@@ -212,7 +212,7 @@ console.log("myTeam",myTeam)
                 {
                     Platform.OS === "android" ? (
                         <View style={styles.searchBoxContainer}>
-                            <SearchBoxWithout
+                            <SearchBox
                                 title="Search by name"
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}
@@ -221,7 +221,7 @@ console.log("myTeam",myTeam)
                         </View>
                     ) : Platform.OS === 'ios' ? (
                         <View style={styles.searchBoxContainer}>
-                            <SearchBoxIOSWithout
+                            <SearchBoxIOS
                                 title="Search by name"
                                 containerStyle={styles.searchBoxStyle}
                                 onSubmitEditing={handleSearch}

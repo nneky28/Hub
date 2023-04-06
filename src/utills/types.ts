@@ -140,6 +140,15 @@ export type HTagProps = {
   export interface KeyboardAwareWrapperProps {
     children : React.ReactNode
   }
+  export type currentCompanyType = {
+    isAvailable : boolean,
+    storeData : {
+        business_id: string
+        business_name: string
+        created: moment.Moment
+        logo: string | null
+    }
+}
   
 
 export type DatePickerModalProps = {

@@ -1,22 +1,72 @@
 import axios from "axios";
-import moment from "moment";
-import { getData, getStoredBusiness, storeData } from "./Methods";
+import { getData, getStoredBusiness } from "./Methods";
 import { useQuery, useInfiniteQuery } from "react-query"
 import Config from "react-native-config";
-import { ABOUT_ME, RegisterTokenLoad, RequestTimeoffPayload } from "./payload";
+import {
+  ABOUT_ME,
+  currentCompanyType,
+  EmployeeProfileProps,
+  EMPLOYEE_TIMEOFF,
+  EMPLOYEE_TIMEOFF_TAKEN,
+  PAYROLL_YEARS,
+  RegisterTokenLoad,
+  RequestTimeoffPayload,
+  EMPLOYEE_TIMEOFF_REQS,
+  ATTENDANCE_CONFIG,
+  ATTENDANCE_STATUS,
+  LOCATION_TYPE,
+  PAYSLIP_INFO,
+  PAYROLL_HISTORY,
+  MY_BUSINESS_ASSETS,
+  BENEFITS,
+  WHOS_OUT,
+  BIRTHDAYS,
+  JOB_ANNIVERSARY,
+  NEXT_OF_KINS,
+  EMERGENCY,
+  BANKS,
+  PENSION_PROVIDERS,
+  GET_ONBOARDING,
+  GET_USERS,
+  GET_TEAMS,
+  GET_DEPARTMENTS,
+  GET_ALL_TASK,
+  GET_ALL_TODOS,
+  GET_DUETODAY,
+  GET_UPCOMING,
+  GET_OVERDUE,
+  GET_ALL_SENT,
+  GET_SENT_DUETODAY,
+  GET_SENT_UPCOMING,
+  GET_SENT_OVERDUE,
+  GET_PERSONAL_TASKS,
+  GET_PERSONAL_DUE,
+  GET_PERSONAL_UPCOMING,
+  GET_PERSONAL_OVERDUE,
+  GET_TEAM_TASKS,
+  GET_TEAM_DUETODAY,
+  GET_TEAM_UPCOMING,
+  GET_TEAM_OVERDUE,
+  GET_TASK_STATISTICS,
+  GET_SENT_STATISTICS,
+  GET_EMPLOYEE_STATISTICS,
+  GET_TEAM_STATISTICS,
+  GET_ACTIVITY,
+  GET_COMMENTS
+} from "./payload";
 
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
 
-export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
+export const employees_me = (business_id:any) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
-  employees: (business_id, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
-  team_members: (business_id, id, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
-  basic_details: (business_id, id) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  login: async (fd) => {
+  employees: (business_id:any, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
+  team_members: (business_id:any, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
+  basic_details: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/basic_detail/`,
+  login: async (fd:any) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
-  next_of_kins: async (id) => {
+  next_of_kins: async (id:number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/next-of-kin/`)
   },
@@ -41,21 +91,21 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/emergency-contact/`)
   },
-  update_emergency: async (fd, id) => {
+  update_emergency: async (fd:any, id:number) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-emergency-contact/`, fd)
   },
-  update_photo: (business_id, id) => `/c/${business_id}/employees/${id}/update-photo/`,
-  edit: async (fd, id) => {
+  update_photo: (business_id :string|number, id:number) => `/c/${business_id}/employees/${id}/update-photo/`,
+  edit: async (fd:any, id:any) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${id}/`, fd);
   },
-  trainings: (business_id, id) => `/c/${business_id}/employees/${id}/training/`,
-  training_hist: (business_id, id) => `/c/${business_id}/employees/${id}/training/history/`,
-  timeoff: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff/`,
-  timeoff_reqs: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
-  timeoff_taken: (business_id, id, status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
-  delete_timeoff: (business_id, id, timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  trainings: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/training/`,
+  training_hist: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/training/history/`,
+  timeoff: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
+  timeoff_reqs: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
+  timeoff_taken: (business_id:any, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
+  delete_timeoff: (business_id:any, id:number, timeoff_id:any) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
 
   employee_timeoff: async (id : number) => {
     let biz = await getStoredBusiness();
@@ -66,7 +116,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/timeoff_requests/`, fd)
   },
-  employee_timeoff_taken: async (id, status) => {
+  employee_timeoff_taken: async (id:number, status:string) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
   },
@@ -74,7 +124,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_requests/`)
   },
-  job_anniversary: async (status, page = 1) => {
+  job_anniversary: async (status:string, page = 1) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
   },
@@ -82,11 +132,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/notifications/?page=${page}`)
   },
-  unseen_count: async (page = 1) => {
+  unseen_count: async () => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/notifications/unseen_count/`)
   },
-  change_password: async (fd) => postAPIs(`/accounts/auth/password/change/`, fd),
+  change_password: async (fd:any) => postAPIs(`/accounts/auth/password/change/`, fd),
   pension_providers: async () => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/pension_providers/`)
@@ -95,11 +145,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/banks/`)
   },
-  update_next_of_kin: async (fd, id) => {
+  update_next_of_kin: async (fd:any, id:number) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-next-of-kin/`, fd)
   },
-  update_pension: async (fd) => {
+  update_pension: async(fd?:any) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
@@ -108,11 +158,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/me/`);
   },
-  read_notification: async (id) => {
+  read_notification: async (id:number) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/notifications/${id}/read/`)
   },
-  bank_verification: async (fd) => {
+  bank_verification: async (fd?:any) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/banks/account_number_validation/`, fd)
   },
@@ -120,30 +170,30 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/notifications/seen_all/`)
   },
-  remove_photo: async (employee_id) => {
+  remove_photo: async (employee_id:number) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${employee_id}/delete-photo/`)
   },
-  employee_tasks: async (employee_id, completed = false) => {
+  employee_tasks: async (employee_id:number, completed = false) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/onboarding_tasks/?is_completed=${completed}`)
   },
-  toggle_completed: async (employee_id, task_id, fd) => {
+  toggle_completed: async (employee_id:number, task_id:number, fd:number) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/employees/${employee_id}/onboarding_tasks/${task_id}/toggle_completed/`, fd)
   },
-  employee_doc: async (id) => {
+  employee_doc: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/documents/`)
   },
-  report_asset: async (fd, id) => {
+  report_asset: async (fd:any, id:number) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/asset-management/assets/${id}/issues/report/`, fd)
   },
   user_info: async () => {
     return getAPIs(`/accounts/auth/user/`)
   },
-  onboarded: async (employee_id) => {
+  onboarded: async (employee_id:number) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/employees/${employee_id}/complete_user_onboarding/`)
   },
@@ -155,19 +205,19 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/v2/attendance/status/`)
   },
-  employee_clock_in: async (fd) => {
+  employee_clock_in: async (fd:any) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/v2/attendance/clock_in/`, fd)
   },
-  employee_clock_out: async (fd) => {
+  employee_clock_out: async (fd:any) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/v2/attendance/clock_out/`, fd)
   },
-  payslip_info: async (date, payroll_id) => {
+  payslip_info: async (date:string, payroll_id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employee_payroll_month_history/${date}/payslip/?payroll=${payroll_id}`)
   },
-  payroll_history: async (year) => {
+  payroll_history: async (year:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employee_payroll_year_history/?year=${year}`)
   },
@@ -179,44 +229,44 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/v2/attendance/location_type/`)
   },
-  error_report: async (fd) => {
+  error_report: async (fd:any) => {
     return postNoToken('/mobile_error_report', fd)
   },
-  post_onboarding: async (fd) => {
+  post_onboarding: async (fd:any) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/app_onboarding/`, fd)
   },
-  update_onboarding: async (fd) => {
+  update_onboarding: async (fd:any) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/app_onboarding/${fd.id}/`, fd)
   },
-  get_onboarding: async (type) => {
-    let about_me = await getData("about_me")
-    let id = await about_me?.id
+  get_onboarding: async (type:string) => {
+    let {user} = await getData("about_me") as currentCompanyType
+    let id = await user?.id
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/app_onboarding/?${type}&employee_id=${id}`)
   },
-  post_task: async (fd) => {
+  post_task: async (fd:any) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app/`, fd)
   },
-  post_sub_Task: async (fd) => {
+  post_sub_Task: async (fd:any) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/sub_tasks_app/`, fd)
   },
-  post_comment: async (fd) => {
+  post_comment: async (fd:any) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app_comments/`, fd)
   },
-  update_status: async (fd) => {
+  update_status: async (fd:any) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
-  delete_task: async (fd) => {
+  delete_task: async (fd:any) => {
     let biz = await getStoredBusiness()
     return deleteAPIs(`/c/${biz?.business_id}/tasks_app/${fd}/`)
   },
-  update_sub_task: async (fd) => {
+  update_sub_task: async (fd:any) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/sub_tasks_app/${fd.id}/`, fd)
   },
@@ -224,7 +274,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
   },
-  get_all_task: async (id) => {
+  get_all_task: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
@@ -241,41 +291,37 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=overdue`)
   },
 
-  get_team_statistics: async (id) => {
+  get_team_statistics: async (id:any) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?department_id=${id}`)
   },
-  get_team_duetoday: async (id) => {
+  get_team_duetoday: async (id:any) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=duetoday`)
   },
-  get_team_upcoming: async (id) => {
+  get_team_upcoming: async (id:any) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=upcoming`)
   },
-  get_team_overdue: async (id) => {
+  get_team_overdue: async (id:any) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=overdue`)
   },
 
-  get_personal_tasks: async (id) => {
+  get_personal_tasks: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}`)
   },
 
-  get_personal_due: async (id) => {
+  get_personal_due: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=duetoday`)
   },
-  get_personal_upcoming: async (id) => {
+  get_personal_upcoming: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=upcoming`)
   },
-  get_personal_overdue: async (id) => {
+  get_personal_overdue: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=overdue`)
   },
@@ -289,14 +335,13 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me_and_sent`)
   },
 
-  get_employee_statistics: async (id) => {
+  get_employee_statistics: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
   },
 
-  get_team_tasks: async (id) => {
+  get_team_tasks: async (id:any) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}`)
   },
   get_all_sent: async () => {
@@ -315,29 +360,29 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=overdue`)
   },
-  get_activity: async (id) => {
+  get_activity: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
   },
-  get_comments: async (id) => {
+  get_comments: async (id:any) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
   },
 
-  departments: async (page, search) => {
-    const user = await getData('user')
+  departments: async (page:number, search:string) => {
+    const {user} = await getData('user') as currentCompanyType
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}`)
   },
   get_users: async (page = 1, search = "") => {
-    let user = await getData("user");
+  const {user }= await getData("user") as currentCompanyType
     const business_id = user?.employee_user_memberships?.[0]?.business_id
     return getAPIs(`/c/${business_id}/employees/?page=${page}&search=${search}`)
   },
   get_teams: async (page = 1) => {
-    const user = await getData('user')
+    const{ user} = await getData('user') as currentCompanyType
     const business_id = user?.employee_user_memberships?.[0]?.business_id
-    const about_me = await getData("about_me")
+    const {about_me} = await getData("about_me") as EmployeeProfileProps
     const id = about_me?.id
     return getAPIs(`/c/${business_id}/employees/${id}/team_members/?page=${page}`)
   },
@@ -353,273 +398,266 @@ export const useFetchAboutMe = (tab : string) => {
   })
 }
 
-export const useFetchEmployeeTimeOff = (id) => {
-  return useQuery(["employee_timeoff", id], () => APIFunction.employee_timeoff(id), {
+export const useFetchEmployeeTimeOff = (id:number) => {
+  return useQuery([EMPLOYEE_TIMEOFF, id], () => APIFunction.employee_timeoff(id), {
     enabled: !!id
   })
 }
 
-export const useFetchEmployeeTimeOffTaken = (id, status) => {
-  return useQuery(["employee_timeoff_taken", id, status], () => APIFunction.employee_timeoff_taken(id, status), {
+export const useFetchEmployeeTimeOffTaken = (id:number, status:string) => {
+  return useQuery([EMPLOYEE_TIMEOFF_TAKEN, id, status], () => APIFunction.employee_timeoff_taken(id, status), {
     enabled: !!id && !!status
   })
 }
 
-export const useFetchEmployeeTimeOffReqs = (id) => {
-  return useQuery(["employee_timeoff_reqs", id], () => APIFunction.employee_timeoff_reqs(id), {
+export const useFetchEmployeeTimeOffReqs = (id:number) => {
+  return useQuery([EMPLOYEE_TIMEOFF_REQS, id], () => APIFunction.employee_timeoff_reqs(id), {
     enabled: !!id
   })
 }
 
 export const useFetchPayrollYears = () => {
-  return useQuery("payroll_years", APIFunction.payroll_years)
+  return useQuery(PAYROLL_YEARS, APIFunction.payroll_years)
 }
 
 export const useFetchAttendanceConfig = (tab : string) => {
-  return useQuery(["attendance_config"], () => APIFunction.attendance_config(),{
+  return useQuery([ATTENDANCE_CONFIG], () => APIFunction.attendance_config(),{
     enabled : tab === "main"
   })
 }
 export const useFetchAttendanceStatus = (tab : string) => {
-  return useQuery("attendance_status", APIFunction.attendance_status,{
+  return useQuery(ATTENDANCE_STATUS, APIFunction.attendance_status,{
     enabled : tab === "main"
   })
 }
 export const useFetchLocationType = () => {
-  return useQuery("location_type", APIFunction.location_type)
+  return useQuery(LOCATION_TYPE, APIFunction.location_type)
 }
 
-export const useFetchPayslipInfo = (date, id) => {
-  return useQuery(["payslip_info", date, id], () => APIFunction.payslip_info(date, id), {
+export const useFetchPayslipInfo = (date:string, id:number) => {
+  return useQuery([PAYSLIP_INFO, date, id], () => APIFunction.payslip_info(date, id), {
     enabled: date !== null && date !== undefined && id !== null && id !== undefined
   })
 }
 
-export const useFetchPayrollHistory = (year) => {
-  return useQuery(["payroll_history", year], () => APIFunction.payroll_history(year), {
+export const useFetchPayrollHistory = (year:any) => {
+  return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year), {
     enabled: year !== null && year !== undefined && year !== ""
   })
 }
 
-export const useFetchAssets = (employee_pk) => {
-  return useQuery(["my_business_assests", employee_pk], () => APIFunction.my_business_assests(employee_pk), {
+export const useFetchAssets = (employee_pk:any) => {
+  return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk), {
     enabled: employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
   })
 }
 
-export const useFetchBenefits = (employee_pk) => {
-  return useQuery(["benefits", employee_pk], () => APIFunction.benefits(employee_pk), {
+export const useFetchBenefits = (employee_pk:any) => {
+  return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk), {
     enabled: employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
   })
 }
 
 export const useFetchWhosOut = (category = "timeoff") => {
-  return useQuery(["whos_out", category], () => APIFunction.whos_out(category), {
+  return useQuery([WHOS_OUT, category], () => APIFunction.whos_out(category), {
     enabled: category !== null && category !== undefined && category !== ""
   })
 }
 
 
-export const useFetchBirthdays = (status) => {
-  return useQuery(["birthdays", status], () => APIFunction.birthdays(status), {
+export const useFetchBirthdays = (status:string) => {
+  return useQuery([BIRTHDAYS, status], () => APIFunction.birthdays(status), {
     enabled: status !== null && status !== undefined && status !== ""
   })
 }
 
-export const useFetchAnniversary = (status, page = 1) => {
-  return useQuery(["job_anniversary", status, page], () => APIFunction.job_anniversary(status, page), {
+export const useFetchAnniversary = (status:string, page = 1) => {
+  return useQuery([JOB_ANNIVERSARY, status, page], () => APIFunction.job_anniversary(status, page), {
     enabled: status !== null && status !== undefined && status !== ""
   })
 }
 
-export const useFetchTasks = (employee_id, completed) => {
-  return useQuery(["employee_tasks", employee_id, completed], () => APIFunction.employee_tasks(employee_id, completed), {
-    enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== "" &&
-      completed !== null && completed !== undefined && completed !== ""
-    )
-  })
-}
 
-export const useFetchKin = (employee_id) => {
-  return useQuery(["next_of_kins", employee_id], () => APIFunction.next_of_kins(employee_id), {
+
+export const useFetchKin = (employee_id:any) => {
+  return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id), {
     enabled: (
       employee_id !== null && employee_id !== undefined && employee_id !== ""
     )
   })
 }
 
-export const useFetchEmergency = (employee_id) => {
-  return useQuery(["emergency", employee_id], () => APIFunction.emergency(employee_id), {
+export const useFetchEmergency = (employee_id:any) => {
+  return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id), {
     enabled: (
       employee_id !== null && employee_id !== undefined && employee_id !== ""
     )
   })
 }
 
-export const useFetchBanking = (employee_id) => {
-  return useQuery("banks", APIFunction.banks)
+export const useFetchBanking = () => {
+  return useQuery(BANKS, APIFunction.banks)
 }
 
 export const useFetchProviders = () => {
-  return useQuery("pension_providers", APIFunction.pension_providers)
+  return useQuery(PENSION_PROVIDERS, APIFunction.pension_providers)
 }
 
-export const useFetchOnboarding = (type) => {
-  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding(type), {
+export const useFetchOnboarding = (type:string) => {
+  return useQuery([GET_ONBOARDING], () => APIFunction.get_onboarding(type), {
     enabled: !!type
   }
 
   )
 }
-export const useFetchEmployees = (page, search) => {
-  return useInfiniteQuery(['get_users', page, search], () => APIFunction.get_users(page, search), {
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.next
+export const useFetchEmployees = (page:number, search:string) => {
+  return useInfiniteQuery([GET_USERS, page, search], () => APIFunction.get_users(page, search), {
+    getNextPageParam: () => {
+      // return lastPage.next
     }
   }
   )
 }
 
-export const useFetchTeams = (page, id) => {
-  return useInfiniteQuery(['get_teams', page, id], () => APIFunction.get_teams(page, id), {
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.next
+export const useFetchTeams = (page:number) => {
+  return useInfiniteQuery([GET_TEAMS, page], () => APIFunction.get_teams(page), {
+    getNextPageParam: () => {
+      // return lastPage.next
     }
   }
   )
 }
-export const useFetchDepartments = (page, search) => {
-  return useInfiniteQuery(["get_departments", page, search], () => APIFunction.departments(page, search), {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next
+export const useFetchDepartments = (page:number, search:string) => {
+  return useInfiniteQuery([GET_DEPARTMENTS, page, search], () => APIFunction.departments(page, search), {
+    getNextPageParam: () => {
+      // return lastPage.next
     }
   })
 }
-export const useFetchTodos = (tab, index) => {
-  return useInfiniteQuery(['get_to_dos', tab], () => APIFunction.get_to_dos(tab, index), {
-    enabled: index === 0 && index !== null && index !== undefined
-  })
-}
-export const useFetchAllTask = (id) => {
-  return useInfiniteQuery(['get_all_task', id], () => APIFunction.get_all_task(id), {
+export const useFetchAllTask = (id:number) => {
+  return useInfiniteQuery([GET_ALL_TASK, id], () => APIFunction.get_all_task(id), {
     enabled: id !== null && id !== undefined
   })
 }
-export const useFetchDueToday = (tab, index) => {
-  return useInfiniteQuery(['get_duetoday', tab], () => APIFunction.get_duetoday(tab, index), {
+
+export const useFetchTodos = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_ALL_TODOS, tab], () => APIFunction.get_to_dos(), {
+    enabled: index === 0 && index !== null && index !== undefined
+  })
+}
+
+export const useFetchDueToday = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_DUETODAY, tab], () => APIFunction.get_duetoday(), {
     enabled: index == 0 && tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
-export const useFetchUpcoming = (tab, index) => {
-  return useInfiniteQuery(['get_upcoming', tab], () => APIFunction.get_upcoming(tab, index), {
+export const useFetchUpcoming = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_UPCOMING, tab], () => APIFunction.get_upcoming(), {
     enabled: index === 0 && tab === "Upcoming" && tab !== null && tab !== undefined
   })
 }
-export const useFetchOverDue = (tab, index) => {
-  return useInfiniteQuery(['get_overdue', tab], () => APIFunction.get_overdue(tab, index), {
+export const useFetchOverDue = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_OVERDUE, tab], () => APIFunction.get_overdue(), {
     enabled: index === 0 && tab === "Overdue" && tab !== null && tab !== undefined
   })
 }
-export const useFetchAllSent = (tab, index) => {
-  return useInfiniteQuery(['get_all_sent', tab], () => APIFunction.get_all_sent(tab, index), {
+export const useFetchAllSent = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_ALL_SENT, tab], () => APIFunction.get_all_sent(), {
     enabled: index === 1 && index !== null && index !== undefined
   })
 }
-export const useFetchAllSentDue = (tab, index) => {
-  return useInfiniteQuery(['get_sent_duetoday', tab], () => APIFunction.get_sent_duetoday(tab, index), {
+export const useFetchAllSentDue = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_SENT_DUETODAY, tab], () => APIFunction.get_sent_duetoday(), {
     enabled: index === 1 && tab === "Due Today" && tab !== null && tab !== undefined
   })
 }
-export const useFetchAllSentUpcoming = (tab, index) => {
-  return useInfiniteQuery(['get_sent_upcoming', tab], () => APIFunction.get_sent_upcoming(tab, index), {
+export const useFetchAllSentUpcoming = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_SENT_UPCOMING, tab], () => APIFunction.get_sent_upcoming(), {
     enabled: index === 1 && tab === "Upcoming" && tab !== null && tab !== undefined
   })
 }
-export const useFetchAllSentOverdue = (tab, index) => {
-  return useInfiniteQuery(['get_sent_overdue', tab], () => APIFunction.get_sent_overdue(tab, index), {
+export const useFetchAllSentOverdue = (tab:string, index:number) => {
+  return useInfiniteQuery([GET_SENT_OVERDUE, tab], () => APIFunction.get_sent_overdue(), {
     enabled: index === 1 && tab === "Overdue" && tab !== null && tab !== undefined
   })
 }
-export const useFetchPersonalTask = (tab, id) => {
-  return useInfiniteQuery(['get_personal_tasks', id], () => APIFunction.get_personal_tasks(id), {
+export const useFetchPersonalTask = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_PERSONAL_TASKS, id], () => APIFunction.get_personal_tasks(id), {
     enabled: tab === "All" && id !== null && id !== undefined,
   })
 }
-export const useFetchPersonalDue = (tab, id) => {
-  return useInfiniteQuery(['get_personal_due', id], () => APIFunction.get_personal_due(id), {
+export const useFetchPersonalDue = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_PERSONAL_DUE, id], () => APIFunction.get_personal_due(id), {
     enabled: tab === "Due Today" && id !== null && id !== undefined,
   })
 }
-export const useFetchPersonalUpcoming = (tab, id) => {
-  return useInfiniteQuery(['get_personal_upcoming', id], () => APIFunction.get_personal_upcoming(id), {
+export const useFetchPersonalUpcoming = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_PERSONAL_UPCOMING, id], () => APIFunction.get_personal_upcoming(id), {
     enabled: tab === "Upcoming" && id !== null && id !== undefined,
   })
 }
-export const useFetchPersonalOverdue = (tab, id) => {
-  return useInfiniteQuery(['get_personal_overdue', id], () => APIFunction.get_personal_overdue(id), {
+export const useFetchPersonalOverdue = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_PERSONAL_OVERDUE, id], () => APIFunction.get_personal_overdue(id), {
     enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
-export const useFetchTeamTask = (tab, id) => {
-  return useInfiniteQuery(['get_team_tasks', id], () => APIFunction.get_team_tasks(id), {
+export const useFetchTeamTask = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_TEAM_TASKS, id], () => APIFunction.get_team_tasks(id), {
     enabled: tab === "All" && id !== null && id !== undefined
   })
 }
 
-export const useFetchTeamDuetoday = (tab, id) => {
-  return useInfiniteQuery(['get_team_duetoday', id], () => APIFunction.get_team_duetoday(id), {
+export const useFetchTeamDuetoday = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_TEAM_DUETODAY, id], () => APIFunction.get_team_duetoday(id), {
     enabled: tab === "Due Today" && id !== null && id !== undefined
   })
 }
-export const useFetchMyTeamUpcoming = (tab, id) => {
-  return useInfiniteQuery(['get_team_upcoming', id], () => APIFunction.get_team_upcoming(id), {
+export const useFetchMyTeamUpcoming = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_TEAM_UPCOMING, id], () => APIFunction.get_team_upcoming(id), {
     enabled: tab === "Upcoming" && id !== null && id !== undefined,
 
   })
 }
-export const useFetchMyTeamOverdue = (tab, id) => {
-  return useInfiniteQuery(['get_team_overdue', id], () => APIFunction.get_team_overdue(id), {
+export const useFetchMyTeamOverdue = (tab:string, id:number) => {
+  return useInfiniteQuery([GET_TEAM_OVERDUE, id], () => APIFunction.get_team_overdue(id), {
     enabled: tab === "Overdue" && id !== null && id !== undefined,
   })
 }
 
 export const useFetchStatistics = () => {
-  return useQuery("get_task_statistics", APIFunction.get_task_statistics)
+  return useQuery(GET_TASK_STATISTICS, APIFunction.get_task_statistics)
 }
 export const useFetchSentStatistics = () => {
-  return useQuery("get_sent_statistics", APIFunction.get_sent_statistics)
+  return useQuery(GET_SENT_STATISTICS, APIFunction.get_sent_statistics)
 }
 
-export const useFetchPeopleStatics = (id) => {
-  return useQuery(["get_employee_statistics", id], () => APIFunction.get_employee_statistics(id), {
+export const useFetchPeopleStatics = (id:number) => {
+  return useQuery([GET_EMPLOYEE_STATISTICS, id], () => APIFunction.get_employee_statistics(id), {
     enabled: id !== null && id !== undefined
   },
 
   )
 }
-export const useFetchTeamStatistics = (id) => {
-  return useQuery(["get_team_statistics", id], () => APIFunction.get_team_statistics(id), {
+export const useFetchTeamStatistics = (id:number) => {
+  return useQuery([GET_TEAM_STATISTICS, id], () => APIFunction.get_team_statistics(id), {
     enabled: id !== null && id !== undefined
   },)
 }
 
-export const useFetchActivities = (id) => {
-  return useInfiniteQuery(["get_activity", id], () => APIFunction.get_activity(id), {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next
+export const useFetchActivities = (id:number) => {
+  return useInfiniteQuery([GET_ACTIVITY, id], () => APIFunction.get_activity(id), {
+    getNextPageParam: () => {
+      // return lastPage.next
     }
   })
 }
-export const useFetchComments = (id) => {
-  return useInfiniteQuery(["get_comments", id], () => APIFunction.get_comments(id), {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next
+export const useFetchComments = (id:number) => {
+  return useInfiniteQuery([GET_COMMENTS, id], () => APIFunction.get_comments(id), {
+    getNextPageParam: () => {
+      // return lastPage.next
     }
   })
 }
-
-
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
@@ -715,7 +753,7 @@ export const deleteAPIs = async (path : string) => {
   });
 };
 
-export const putAPIs = async (path, fd) => {
+export const putAPIs = async (path:string, fd?:number) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -747,7 +785,7 @@ export const putAPIs = async (path, fd) => {
   });
 };
 
-export const postNoToken = (path, fd) => {
+export const postNoToken = (path:string, fd?:any) => {
   return new Promise((resolve, reject) => {
     axios
       .post(`${endPoint}${path}`, fd, {
@@ -770,7 +808,7 @@ export const postNoToken = (path, fd) => {
   });
 };
 
-export const storeFile = async (path, token, fd) => {
+export const storeFile = async (path:string, fd?:any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -803,7 +841,7 @@ export const storeFile = async (path, token, fd) => {
   });
 };
 
-export const storeFilePut = async (path, token, fd) => {
+export const storeFilePut = async (path:string, fd?:any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -836,19 +874,19 @@ export const storeFilePut = async (path, token, fd) => {
   });
 };
 
-const refreshToken = async () => {
-  try {
-    let refresh = await getData("refresh")
-    let res = await axios.post(`${endPoint}/accounts/auth/token/refresh/`,
-      {
-        "refresh": refresh
-      }
-    );
-    await storeData('token_expiry', moment(new Date()).add(60, 'minutes'))
-    await storeData("token", res.data.access)
-  } catch (err) {
-  }
-}
+// const refreshToken = async () => {
+//   try {
+//     let refresh = await getData("refresh")
+//     let res = await axios.post(`${endPoint}/accounts/auth/token/refresh/`,
+//       {
+//         "refresh": refresh
+//       }
+//     );
+//     await storeData('token_expiry', moment(new Date()).add(60, 'minutes'))
+//     await storeData("token", res.data.access)
+//   } catch (err) {
+//   }
+// }
 
 
 // ~/Desktop/myedge-mobile/.git/MERGE_MSG
