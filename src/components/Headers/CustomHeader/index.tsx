@@ -9,10 +9,10 @@ import { HeaderWithBackButtonProps, HomePageHeaderProps } from './types';
 import { width } from 'react-native-dimension';
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useNavigation } from '@react-navigation/native';
-// import { MainNavigationProps } from '../../../Routes/types';
+import { RootNavigationProps } from '../../../Routes/types';
 
 export function HomePageHeader(props : HomePageHeaderProps) {
-  // const navigation = useNavigation<MainNavigationProps>()
+  const navigation = useNavigation<RootNavigationProps>()
   return (
     <View style={styles.header}>
         <View style={styles.row}>
@@ -92,7 +92,7 @@ export function HeaderWithBackButton(props : HeaderWithBackButtonProps) {
               size={width(5)}
               color={AppColors.titlecolor}
               name={props.rightIcon}
-              style={props.iconStyle}
+              //style={props.iconStyle}
             />
           </TouchableWrapper> : null
         }
