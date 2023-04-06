@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getData, getStoredBusiness } from "./Methods";
+import { getData, getStoreAboutMe, getStoredBusiness } from "./Methods";
 import { useQuery, useInfiniteQuery } from "react-query"
 import Config from "react-native-config";
 import {
@@ -241,10 +241,9 @@ export const APIFunction = {
     return putAPIs(`/c/${biz?.business_id}/app_onboarding/${fd.id}/`, fd)
   },
   get_onboarding: async (type:string) => {
-    let {user} = await getData("about_me") as currentCompanyType
-    let id = await user?.id
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/app_onboarding/?${type}&employee_id=${id}`)
+    let user = await getStoreAboutMe()
+    return getAPIs(`/c/${biz?.business_id}/app_onboarding/?${type}&employee_id=${user?.id}`)
   },
   post_task: async (fd:any) => {
     let biz = await getStoredBusiness();
@@ -398,20 +397,20 @@ export const useFetchAboutMe = (tab : string) => {
   })
 }
 
-export const useFetchEmployeeTimeOff = (id:number) => {
-  return useQuery([EMPLOYEE_TIMEOFF, id], () => APIFunction.employee_timeoff(id), {
+export const useFetchEmployeeTimeOff = (id:number | string) => {
+  return useQuery([EMPLOYEE_TIMEOFF, id], () => APIFunction.employee_timeoff(id as number), {
     enabled: !!id
   })
 }
 
-export const useFetchEmployeeTimeOffTaken = (id:number, status:string) => {
-  return useQuery([EMPLOYEE_TIMEOFF_TAKEN, id, status], () => APIFunction.employee_timeoff_taken(id, status), {
+export const useFetchEmployeeTimeOffTaken = (id:number | string, status:string) => {
+  return useQuery([EMPLOYEE_TIMEOFF_TAKEN, id, status], () => APIFunction.employee_timeoff_taken(id as number, status), {
     enabled: !!id && !!status
   })
 }
 
-export const useFetchEmployeeTimeOffReqs = (id:number) => {
-  return useQuery([EMPLOYEE_TIMEOFF_REQS, id], () => APIFunction.employee_timeoff_reqs(id), {
+export const useFetchEmployeeTimeOffReqs = (id:number | string) => {
+  return useQuery([EMPLOYEE_TIMEOFF_REQS, id], () => APIFunction.employee_timeoff_reqs(id as number), {
     enabled: !!id
   })
 }

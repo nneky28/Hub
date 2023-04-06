@@ -13,11 +13,11 @@ import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
 import Todo from '../../components/Todo';
-import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchTasks, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
+import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
-import { Capitalize, getData, getGreetingTime, getStoredBusiness, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getData, getGreetingTime, getStoreAboutMe, getStoredBusiness, getStoredBusinessProps, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Images } from '../../component2/image/Image';
@@ -27,6 +27,7 @@ import TimeoffModal from '../../components/TimeoffModal';
 import CustomCalendarModal from '../../components/CustomCalendarModal';
 import { DateData } from 'react-native-calendars/src/types';
 import ClockINContainer from '../../components/ClockInComponent';
+import { useFetchAboutMeData } from '../../components/TimeoffModal/types';
 const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
 
 
@@ -50,7 +51,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const queryClient = useQueryClient()
   const [margin, setMargin] = useState(0.1);
   const [index, setIndex] = useState(0);
-  const [business, setBusiness] = React.useState(null);
+  const [business, setBusiness] = React.useState<getStoredBusinessProps>();
   const [loading, setLoading] = React.useState(true);
   const [available, setAvailable] = React.useState([]);
   const [active, setActive] = React.useState([]);
@@ -63,7 +64,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const [text, setText] = useState("");
   const [tab, setTab] = React.useState("Leave")
   const [web, setWeb] = React.useState(false)
-  const [web_url, setWebUrl] = React.useState(null)
+  const [web_url, setWebUrl] = React.useState<string>()
   const [report, setReport] = React.useState(false)
   const [asset, setAsset] = React.useState(null)
   const [tasks, setTasks] = React.useState([])
@@ -72,7 +73,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const isSecurityVisible = useSelector(state => state.Config.isSecurityVisible)
   const [processing, setProcessing] = React.useState(false)
   const [visible, setVisible] = React.useState(false)
-  const [employee_pk, setEmployeePK] = React.useState(null)
+  const [employee_pk, setEmployeePK] = React.useState<number>()
   const [category, setCategory] = React.useState("timeoff")
   const [appear,setAppear] = React.useState(false)
   const [action,setAction] = React.useState("")
@@ -105,44 +106,34 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const {
     data: timeoffData,
     isFetching: fetchingTimeoff
-  } = useFetchEmployeeTimeOff(employee_pk)
+  } = useFetchEmployeeTimeOff(employee_pk || "")
 
   const {
     data: activeData,
     isFetching: fetchingActive
-  } = useFetchEmployeeTimeOffTaken(employee_pk, "active")
+  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "active")
 
   const {
     data: upcomingData,
     isFetching: fetchingUpcoming
-  } = useFetchEmployeeTimeOffTaken(employee_pk, "upcoming")
+  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "upcoming")
 
   const {
     data: historyData,
     isFetching: fetchingHistory
-  } = useFetchEmployeeTimeOffTaken(employee_pk, "history")
+  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "history")
 
   const {
     data: reqData,
     isFetching: fetchingReq
-  } = useFetchEmployeeTimeOffReqs(employee_pk)
-
-  const {
-    data: taskData,
-    isLoading: taskLoading
-  } = useFetchTasks(employee_pk)
-
-  const mapDataToState = () => {
-    if (taskLoading && taskData?.results && Array.isArray(taskData?.results)) {
-      setTasks(taskData?.results)
-    }
-  }
+  } = useFetchEmployeeTimeOffReqs(employee_pk || "")
 
   const getInfo = async () => {
     try {
-      let about_me = await getData("about_me");
-      setEmployeePK(about_me?.id)
+      let about_me = await getStoreAboutMe();
       let biz = await getStoredBusiness();
+      if(!about_me?.id || !biz) return
+      setEmployeePK(about_me?.id)
       setBusiness(biz);
     } catch (err) {
 
@@ -152,10 +143,6 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   useEffect(() => {
     getInfo()
   }, [])
-
-  useEffect(() => {
-    mapDataToState()
-  }, [taskData])
 
   useEffect(() => {
     if (
@@ -182,7 +169,8 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
 
 
 
-  const goToWeb = (url) => {
+  const goToWeb = (url? : string) => {
+    if(!url) return
     setWebUrl(url)
     setWeb(true)
   }

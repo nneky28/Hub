@@ -52,6 +52,13 @@ export const GET_COMMENTS= "get_comments"
 
 
 
+//ONBOARDING TYPES
+
+export const TASK_ONBOARDING = "Task"
+
+
+
+
 
 //PAYLOAD TYPES 
 export type RegisterTokenLoad = {

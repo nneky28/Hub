@@ -56,7 +56,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 
-const Index = ({ navigation, route }) => {
+const TaskHome = ({ navigation, route }) => {
     const [employee_pk, setEmployeePK] = useState(null);
     const [business, setBusiness] = useState(null);
     const [tab, setTab] = useState('All');
@@ -865,4 +865,4 @@ const Index = ({ navigation, route }) => {
         </React.Fragment>
     );
 };
-export default Index;
+export default TaskHome;

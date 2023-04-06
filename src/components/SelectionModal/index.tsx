@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   Image,
@@ -11,59 +11,69 @@ import Modal from 'react-native-modal';
 import AppColors from '../../utills/AppColors';
 import { Images } from '../../component2/image/Image';
 import { useFetchOnboarding } from '../../utills/api';
-import { SelectionModalProps, TextWithIconProps } from './types';
+import { SelectionModalProps, TextWithIconProps, useFetchAppOnboardingProps } from './types';
 import { Container } from '../../utills/components';
+import { useNavigation } from '@react-navigation/native';
+import { RootNavigationProps } from '../../Routes/types';
+import { TASK_ONBOARDING } from '../../utills/payload';
 
-const SelectionModal = ({ isVisible, onHide, navigation } : SelectionModalProps) => {
+const SelectionModal = ({ isVisible, onHide} : SelectionModalProps) => {
   const [selected, setSelected] = useState('');
+  const navigation = useNavigation<RootNavigationProps>()
   const {
     data: onboarding,
-  } = useFetchOnboarding("Task")
+  } = useFetchOnboarding(TASK_ONBOARDING) as useFetchAppOnboardingProps
 
-  const screenList = [
+  const screenList : TextWithIconProps[]  = [
     {
+      screen : "TaskHome",
       text : "Task",
       icon : Images.TaskIcon,
       fill : Images.TaskFillIcon
     },
     {
-      text : "Time off",
+      screen : "TimeOff",
+      text : "TimeOff",
       icon : Images.RadioIcon,
       fill : Images.RadioFillIcon
     },
     {
+      screen : "Benefits",
       text : "Benefits",
       icon : Images.BenefitIcon,
       fill : Images.BenefitFillIcon
     },
     {
+      screen : "PayslipHistory",
       text : "Payslip",
       icon : Images.PayslipIcon,
       fill : Images.PayFillIcon
     },
     {
+      screen : "Documents",
       text : "Documents",
       icon : Images.DocumentIcon,
       fill : Images.DocumentFillIcon
     },
     {
+      screen : "Trainings",
       text : "Trainings",
       icon : Images.TrainingIcon,
       fill : Images.TrainingFillIcon
     }
   ]
 
-  const TextWithIcon = ({ text, icon, fill} : TextWithIconProps) => {
+  const TextWithIcon = ({ screen, text, icon, fill} : TextWithIconProps) => {
 
     return (
       <TouchableOpacity
         onPress={() => {
           setSelected(text)
-          if (text === "Task" && !onboarding?.[0]?.has_completed_mobile_onboarding) {
+          if (screen === "TaskHome" && !onboarding?.[0]?.has_completed_mobile_onboarding) {
             onHide();
             return navigation.navigate("Menu", { screen: "TaskOnboarding" })
           }
-          navigation.navigate('Menu', { screen: text })
+          navigation.navigate('Menu', { screen })
           onHide();
         }}
         style={styles.textIconContainer}>

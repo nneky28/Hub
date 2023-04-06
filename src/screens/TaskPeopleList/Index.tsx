@@ -21,7 +21,7 @@ interface Props {
   
 
 
-const PeopleList: React.FC<Props> = ({ navigation }) => {
+const TaskPeopleList = ({ navigation }) => {
   const [myTeam, setMyTeam] = useState({name : ""})
   const [item, setItem] = useState<Array<any>>([]);
   const [teamItem, setTeamItem] = useState<Array<any>>([]);
@@ -287,7 +287,7 @@ console.log("myTeam",myTeam)
 
     )
 }
-export default PeopleList
+export default TaskPeopleList
 
 
 

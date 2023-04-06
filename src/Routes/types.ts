@@ -1,4 +1,73 @@
+import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs"
+import { DrawerNavigationProp, DrawerScreenProps } from "@react-navigation/drawer"
+import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
 import { useFetchAboutMeData } from "../components/TimeoffModal/types"
+
+type ParamsType = {
+    [key : string] : unknown
+}
+
+//NAVIGATION TYPES
+
+export type HomeScreenList = {
+    Dashboard : undefined
+    Notifications : undefined
+}
+
+export type PeopleScreenList = {
+    People : undefined
+    MemberProfile : ParamsType
+}
+
+export type ProfileScreenList = {
+    PersonalInfo : undefined
+    EditProfile : undefined
+    Profile : undefined
+    ScreenTemplate : undefined
+    EditPhoto : undefined
+    Compensation : undefined
+    Settings : undefined
+    NextKin : undefined
+    Emergency : undefined
+    PensionInfo : undefined
+}
+
+export type MenuScreenList = {
+    TimeOff : undefined
+    PayslipBreakDown : ParamsType | undefined
+    Benefits : undefined
+    Documents : undefined
+    Trainings : undefined
+    TaskOnboarding : undefined
+    CreateTask : undefined
+    TeamTaskHome : ParamsType | undefined
+    TaskPeopleList : undefined
+    TaskLandingPage : undefined
+    TaskHome : undefined
+    PayslipHistory : undefined
+}
+
+export type TabScreenList = {
+    Home : NavigatorScreenParams<HomeScreenList>
+    Menu : NavigatorScreenParams<MenuScreenList>
+    People : NavigatorScreenParams<PeopleScreenList>
+    Profile : NavigatorScreenParams<ProfileScreenList>
+}
+
+export type DrawerStackList = {
+    App : undefined
+    Settings : undefined
+}
+
+export type RootScreenProps = CompositeScreenProps<
+    BottomTabScreenProps<TabScreenList>,
+    DrawerScreenProps<DrawerStackList>
+>
+
+export type RootNavigationProps = CompositeNavigationProp<
+    BottomTabNavigationProp<TabScreenList>,
+    DrawerNavigationProp<DrawerStackList>
+>
 
 
 
@@ -6,14 +75,6 @@ import { useFetchAboutMeData } from "../components/TimeoffModal/types"
 
 export const CLOCK_IN_ALERT = "clock_in_alert"
 export const TIME_OFF_REQUEST = "time_off_request"
-
-// export type MainNavigationProps = CompositeNavigationProp<
-//     BottomTabNavigationProp<TabScreenList>,
-//     CompositeNavigationProp<
-//         StackNavigationProp<MainStackList>,
-//         DrawerNavigationProp<DrawerStackList>
-//     >
-// >
 
 
 export type PushNotificationData = {

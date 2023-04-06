@@ -37,7 +37,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 
 
-const Index = ({ route }) => {
+const TaskDetails = ({ route }) => {
     const { id, title } = route?.params
     const navigation = useNavigation();
     const spinValue = new Animated.Value(0);
@@ -516,5 +516,5 @@ const Index = ({ route }) => {
     )
 }
 
-export default Index
+export default TaskDetails
 

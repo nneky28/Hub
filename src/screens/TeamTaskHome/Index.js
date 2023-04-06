@@ -29,7 +29,7 @@ import CommonStyles from '../../utills/CommonStyles';
 
 
 
-const Index = ({ route }) => {
+const TeamTaskHome = ({ route }) => {
     const { item, departments } = route.params
     const [tab, setTab] = useState('All');
     const [show, setShow] = useState(false);
@@ -423,4 +423,4 @@ const Index = ({ route }) => {
         </ScreenWrapper>
     )
 }
-export default Index;
+export default TeamTaskHome;

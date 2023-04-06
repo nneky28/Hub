@@ -4,33 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import Loader from '../components/Loader';
-import Benefits from '../screens/Benefits';
-import Compensation from '../screens/Compensation';
-import Dashboard from '../screens/Dashboard';
-import Documents from '../screens/Documents';
 import EditPhoto from '../screens/EditPhoto';
-import EditProfile from '../screens/EditProfile';
 import Login from '../screens/Login';
 import Welcome from '../screens/Welcome';
-import MemberProfile from '../screens/MemberProfile';
-import Notifications from '../screens/Notifications';
-import People from '../screens/People';
 import PersonalInfo from '../screens/PersonalInfo';
-import Profile from '../screens/Profile';
-import ScreenTemplate from '../screens/ScreenTemplate';
-import TimeOff from '../screens/TimeOff';
-import Todos from '../screens/Todos';
 import Splash from '../screens/Splash';
 import Onboard from '../screens/Onboard/onboard';
-import Training from '../screens/Training';
 import Settings from '../screens/Settings';
-import Task from '../screens/Task/Index'
-import CreateTask from '../screens/CreateTask/Index'
-import SearchScreen from '../screens/SearchScreen/Index'
-import TeamProfile from '../screens/TeamProfile/Index'
-import TaskMainPage from '../screens/TaskMainPage/Index'
-import OnboardingTask from '../screens/OnboardingTask/Index'
-import HomeScreen from '../screens/OnboardingTask/HomeScreen';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
 import { getData, ToastSuccess, storeData, useAppSelector, useAppDispatch } from '../utills/Methods';
@@ -52,8 +32,6 @@ import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
   IAUUpdateKind, StartUpdateOptions,
 } from 'sp-react-native-in-app-updates';
-import PayslipHistory from '../screens/PayslipHistory';
-import PayslipBreakDown from '../screens/PayslipBreakDown';
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 import { notifeeEventHandler, onCreateScheduledNotification, onDisplayNotification, requestUserPermission, screenDeterminant } from '../utills/push_functions';
@@ -63,6 +41,10 @@ import notifee, { EventDetail, EventType } from '@notifee/react-native';
 import { useFetchAttendanceConfigProps, useFetchAttendanceStatusProps } from '../components/ClockInComponent/types';
 import { useFetchAboutMeProps } from '../components/TimeoffModal/types';
 import { Images } from '../component2/image/Image';
+import HomeStackNavigator from './HomeStackNavigator';
+import MenuStackNavigator from './MenuStackNavigator';
+import PeopleStackNavigator from './PeopleStackNavigator';
+import ProfileStackNavigator from './ProfileStackNavigator';
 
 const inAppUpdates = new SpInAppUpdates(
   false // isDebug
@@ -292,64 +274,22 @@ const Routes = () => {
                   >
                     <Tab.Screen name="Home">
                       {() => (
-                        <Stack.Navigator
-                          initialRouteName="Dashboard"
-                          screenOptions={{ headerShown : false }}>
-                          <Stack.Screen name="Dashboard" component={Dashboard} />
-                          <Stack.Screen name="Todos" component={Todos} />
-                          <Stack.Screen name="People" component={People} />
-                          <Stack.Screen name="MemberProfile" component={MemberProfile} />
-                          <Stack.Screen name="Notifications" component={Notifications} />
-                        </Stack.Navigator>
+                        <HomeStackNavigator />
                       )}
                     </Tab.Screen>
                     <Tab.Screen name="Menu">
                       {() => (
-                        <Stack.Navigator
-                          screenOptions={{ headerShown : false }}
-                        >
-                          <Stack.Screen name="Task" component={Task} />
-                          <Stack.Screen name="Time off" component={TimeOff} />
-                          <Stack.Screen name="Payslip" component={PayslipHistory} />
-                          <Stack.Screen name="PayslipBreakDown" component={PayslipBreakDown} />
-                          <Stack.Screen name="Benefits" component={Benefits} />
-                          <Stack.Screen name="Documents" component={Documents} />
-                          <Stack.Screen name="Trainings" component={Training} />
-                          <Stack.Screen name="TaskOnboarding" component={OnboardingTask} />
-                          <Stack.Screen name="onBoardHome" component={HomeScreen} />
-                          <Stack.Screen name="CreateTask" component={CreateTask} />
-                          <Stack.Screen name="search" component={SearchScreen} />
-                          <Stack.Screen name="profile" component={TeamProfile} />
-                          <Stack.Screen name="TaskView" component={TaskMainPage} />
-                        </Stack.Navigator>
+                        <MenuStackNavigator />
                       )}
                     </Tab.Screen>
                     <Tab.Screen name="People">
                       {() => (
-                        <Stack.Navigator
-                          initialRouteName="People"
-                          screenOptions={{ headerShown : false }}>
-                          <Stack.Screen name="People" component={People} />
-                          <Stack.Screen name="MemberProfile" component={MemberProfile} />
-                        </Stack.Navigator>
+                        <PeopleStackNavigator />
                       )}
                     </Tab.Screen>
                     <Tab.Screen name="Profile">
                       {() => (
-                        <Stack.Navigator
-                          initialRouteName="Profile"
-                          screenOptions={{ headerShown : false }}>
-                          <Stack.Screen name="temp" component={ScreenTemplate} />
-                          <Stack.Screen name="Profile" component={Profile} />
-                          <Stack.Screen name="EditProfile" component={EditProfile} />
-                          <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
-                          <Stack.Screen name="EditPhoto" component={EditPhoto} />
-                          <Stack.Screen name="Compensation" component={Compensation} />
-                          <Stack.Screen name="Settings" component={Settings} />
-                          <Stack.Screen name="NextKin" component={NextKin} />
-                          <Stack.Screen name="Emergency" component={Emergency} />
-                          <Stack.Screen name="PensionInfo" component={PensionInfo} />
-                        </Stack.Navigator>
+                        <ProfileStackNavigator />
                       )}
                     </Tab.Screen>
                   </Tab.Navigator>

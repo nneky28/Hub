@@ -20,7 +20,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { useQueryClient } from 'react-query'
 
 
-export default function NextKin({navigation,route}) {
+export default function Emergency({navigation,route}) {
     const dispatch = useDispatch()
     const auth = useSelector(state=>state.Auth)
     const queryClient = useQueryClient()
