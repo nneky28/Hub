@@ -4,21 +4,6 @@ import AppColors from '../../../utills/AppColors';
 import { FontFamily } from '../../../utills/FontFamily';
 
 const styles = StyleSheet.create({
-  // container: {
-  //   height: height(8),
-  //   paddingHorizontal: width(5),
-  //   justifyContent: 'center',
-  //   backgroundColor: AppColors.white,
-  // },
-  // headerContainer: {
-  //   height: height(8),
-  //   paddingHorizontal: width(5),
-  //   justifyContent: 'center',
-  //   backgroundColor: AppColors.white,
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  // },
   header: {
     width: width(100),
     paddingHorizontal: width(5),
