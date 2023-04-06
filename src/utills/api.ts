@@ -58,12 +58,12 @@ import {
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
 
-export const employees_me = (business_id:any) => `/c/${business_id}/employees/me/`;
+export const employees_me = (business_id:string) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
-  employees: (business_id:any, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
-  team_members: (business_id:any, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
-  basic_details: (business_id:any, id:number) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  login: async (fd:any) => {
+  employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
+  team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
+  basic_details: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/basic_detail/`,
+  login: async (fd?:any) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
   next_of_kins: async (id:number) => {
