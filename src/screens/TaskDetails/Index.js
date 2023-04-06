@@ -3,19 +3,22 @@ import {
     Animated,
     Easing,
     LayoutAnimation,
-    TextInput
+    TextInput,
+    ScrollView,
+    Platform
 } from 'react-native'
 import Modal from 'react-native-modal';
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
 import Button from '../../components/Button'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { P, H1, Container, Rounded, CloseHandler, ImgPlaceholder, SizedBox } from '../../utills/components';
 import { Images } from '../../component2/image/Image';
 import { CompletedModal, SubTaskActionModal } from '../../components/ContactModal';
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import { useFetchActivities, useUpdate, updateSubTask, useFetchComments } from '../../utills/api';
+import { useFetchActivities, useUpdate, updateSubTask, useFetchComments, useFetchAllTask } from '../../utills/api';
 import ActivityCard from '../../components/ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
 import { Field, Formik } from 'formik';
@@ -34,8 +37,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 
 
-const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
-    // console.log("Subtask item", item)
+const TaskDetails = ({ route }) => {
+    const { id, title } = route?.params
     const navigation = useNavigation();
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState([])
@@ -55,27 +58,46 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
     const [addctrlBtn, setAddCtrlBtn] = useState(true)
     const [subContainer, setSubContainer] = useState(false)
     const [showForm, setShowForm] = useState(false)
-    const [employee_pk, setEmployeePK] = useState(null);
     const [myComment, setMyComment] = useState(null)
+    const [item, setItem] = useState({})
+    const [subTasks, setSubTasks] = useState([])
+    const [employee_pk, setEmployeePK] = useState(null);
 
 
     const {
         data: logs,
         isLoading: loading
-    } = useFetchActivities(item.id)
+    } = useFetchActivities(id)
 
     const {
         data: allComments,
         isLoading: loadingComments
-    } = useFetchComments(item.id)
+    } = useFetchComments(id)
+
     const {
         mutateAsync: subTaskEditHandler,
         isLoading: isLoadingSubtask
     } = useMutation(APIFunction.update_sub_task)
 
+
+    const {
+        data: allTask,
+        isLoading: loadingAllTask,
+    } = useFetchAllTask(id)
+
+    const __flattenArr = () => {
+        if (allTask?.pages) {
+            const flattenedArray = Object.values(allTask.pages).flatMap(item => {
+                return item;
+            });
+            setItem(flattenedArray[0]);
+
+        }
+    };
+
     const flattenAndMapData = (data) => {
         let flattenedArr = [];
-        if (data && data.pages && Array.isArray(data.pages)) {
+        if (data && data?.pages && Array.isArray(data?.pages)) {
             flattenedArr = data.pages;
         }
         flattenedArr = flattenedArr.map((res) => {
@@ -91,6 +113,32 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
             });
         return flattenedArr;
     };
+
+    const renderItem = ({ item, index }) => {
+        return (
+            <View style={styles.rowSection}>
+                <View style={CommonStyles.rowJustifySpaceBtw}>
+                    {item?.comment_by?.photo ? (
+                        <Image
+                            source={{ uri: item?.comment_by?.photo }}
+                            style={styles.avatarStyle}
+                        />
+                    ) : (
+                        <ImgPlaceholder
+                            text={`${item ? item.comment_by?.first_name[0] : ''} ${item ? item.comment_by?.last_name[0] : ''
+                                }`}
+                            size={10}
+                        />
+                    )}
+                    <View style={styles.textCon}>
+                        <P numberOfLines={1} style={styles.titleText}>
+                            {item && item?.comment}
+                        </P>
+                    </View>
+                </View>
+            </View>
+        )
+    }
 
     const handleSubmit = async () => {
         try {
@@ -163,89 +211,39 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
     } = useMutation(APIFunction.post_comment)
 
 
-
-
-    const handleChecked = React.useCallback((item) => {
-        setSelectedIDs((prev) => [...prev, item.id])
-        showFlashMessage({
-            title: `Sub task marked as completed`,
-            duration: 5000,
-            type: 'task',
-            statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
-            backgroundColor: AppColors.newYellow
-        })
-    }, [setSelectedIDs]);
-
-
-
-    const handleComplete = async () => {
-        let employee = await getData("about_me")
-        let fd = {
-            assigned_to: item?.id,
-            id: item.id,
+    const handleComplete = async (subtaskId) => {
+        const subtasks = Object.values(item?.sub_tasks_tasksapp).map((obj, i) => {
+            return {
+                id: item?.sub_tasks_tasksapp[i]?.id,
+            };
+        });
+        const fd = {
+            id: subtaskId,
+            assigned_by: item?.created_by?.id,
+            task: item.id,
             status: "Completed",
-        }
+        };
+
         let res = await subTaskEditHandler(fd)
-        console.log('res', res)
-        await storeData('task claim', res)
         queryClient.invalidateQueries()
+        if (res) {
+            await storeData("selectedIDS", res)
+            const checked = [...selectedIDs, subtaskId]
+            setSelectedIDs(checked);
+            showFlashMessage({
+                title: ` sub Task marked as Succesfull `,
+                duration: 3000,
+                type: 'task',
+                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+                backgroundColor: AppColors.newYellow,
+            });
+        }
     }
 
-    const handleUncomplete = (item) => {
-        const filtered = selectedIDs.filter((id) => id !== item.id)
-        setSelectedIDs(filtered)
-    }
-
-    const _subTask = () => {
-        let text = "task" + count
-        setSubtask([...subTask, text])
-        setCount(count + 1)
-
-    }
-    const handleDelete = (index) => {
-        let arr = [...subTask]
-        arr.splice(index, 1)
-        setSubtask(arr)
-    }
-    const overDue = moment(item?.due_date).isBefore(new Date())
-    const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
-
-
-    const renderItem = ({ item, index }) => {
-        return (
-            <View style={styles.rowSection}>
-                <View style={CommonStyles.rowJustifySpaceBtw}>
-                    {item?.comment_by?.photo ? (
-                        <Image
-                            source={{ uri: item?.comment_by?.photo }}
-                            style={styles.avatarStyle}
-                        />
-                    ) : (
-                        <ImgPlaceholder
-                            text={`${item ? item.comment_by?.first_name[0] : ''} ${item ? item.comment_by?.last_name[0] : ''
-                                }`}
-                            size={10}
-                        />
-                    )}
-                    <View style={styles.textCon}>
-                        <P numberOfLines={1} style={styles.titleText}>
-                            {item && item?.comment}
-                        </P>
-                    </View>
-                </View>
-            </View>
-        )
-    }
-    const getInfo = async () => {
-        try {
-            let about_me = await getData('about_me');
-            setEmployeePK(about_me);
-        } catch (err) { }
+    const handleUncomplete = (id) => {
+        setSelectedIDs(selectedIDs.filter((selectedID) => selectedID !== id));
     };
 
-    useEffect(() => {
-        getInfo()
-    }, [])
 
     const formattedTitle = (title) => {
         if (!title) return '';
@@ -274,72 +272,96 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
         setData(flattenedComments);
     }, [allComments]);
 
+    useEffect(() => {
+        __flattenArr()
+    }, [allTask])
+
+    useEffect(() => {
+        handleComplete()
+    }, [])
+    const getInfo = async () => {
+        try {
+            let about_me = await getData('about_me');
+            setEmployeePK(about_me);
+        } catch (err) { }
+    };
+
+    useEffect(() => {
+        const loadSelectedIDs = async () => {
+            const storedIDs = await getData("selectedIDS");
+            setSelectedIDs(storedIDs || []);
+        };
+
+        loadSelectedIDs();
+    }, []);
+
+    useEffect(() => {
+        const saveSelectedIDs = async () => {
+            await storeData('selectedIDS', selectedIDs);
+        };
+
+        saveSelectedIDs();
+    }, [selectedIDs]);
+
+    const overDue = moment(item?.[0]?.due_date).isBefore(new Date())
+    const dueToday = moment(item?.[0]?.due_date).isSame(new Date(), 'day');
 
     return (
-        <Modal
-            onBackButtonPress={onHide}
-            onModalHide={onHide}
-            animationInTiming={500}
-            animationOutTiming={10}
-            backdropOpacity={0.2}
-            onBackdropPress={onHide}
-            animationIn="fadeInUp"
-            animationOut="fadeInDown"
-            swipeThreshold={0.3}
-            style={styles.genContainer}
-            isVisible={isVisible}>
+        <View style={styles.mainContainer}>
+            <View style={styles.container}>
+                <View style={styles.row}>
+                    <View style={{ width: width(70) }}>
+                        <H1 numberOfLines={1}>{item?.title}</H1>
+                    </View>
+                    <View style={{ paddingHorizontal: width(5) }}>
+                        <CloseHandler position={'center'} onPress={() => navigation.goBack()} size={ICON_BUTTON_SIZE} />
+                    </View>
+                </View>
+
+                <View style={styles.row1}>
+                    <P style={styles.flagText}>Due: </P>
+                    {dueToday ? <React.Fragment>
+                        <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                        <Entypo name="dot-single" size={18} color={AppColors.black} />
+                        <P style={styles.flagText}>DueToday</P>
+                    </React.Fragment> : overDue ? <React.Fragment>
+                        <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                        <Entypo name="dot-single" size={18} color={AppColors.black} />
+                        <P color={AppColors.red} fontSize={3.1}>Overdue</P>
+                    </React.Fragment> : <React.Fragment>
+                        <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
+                        <Entypo name="dot-single" size={18} color={AppColors.black} />
+                        <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
+                    </React.Fragment>}
+                </View>
+                <View style={styles.addBtn}>
+                    {
+                        title === 'Completed' ? null :
+                            <Button
+                                title="Edit Task"
+                                containerStyle={styles.buttonStyle}
+                                textStyle={styles.buttonText}
+                                onPress={() => {
+                                    navigation.navigate("CreateTask", { item })
+                                }}
+                            />
+                    }
+                </View>
+                <View style={styles.line} />
+            </View>
             <ScreenWrapper scrollEnabled={true}>
-                <View style={styles.mainContainer}>
-                    <View style={styles.container}>
-                        <View style={styles.row}>
-                            <View style={{ width: width(70) }}>
-                                <H1 numberOfLines={1}>{Capitalize(item?.title)}</H1>
-                            </View>
-                            <View style={{ paddingHorizontal: width(5) }}>
-                                <CloseHandler position={'center'} onPress={onHide} size={ICON_BUTTON_SIZE} />
-                            </View>
-                        </View>
-
-                        <View style={styles.row1}>
-                            <P style={styles.flagText}>Due: </P>
-                            {dueToday ? <React.Fragment>
-                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                                <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                <P style={styles.flagText}>DueToday</P>
-                            </React.Fragment> : overDue ? <React.Fragment>
-                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                                <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                <P color={AppColors.red} fontSize={3.1}>Overdue</P>
-                            </React.Fragment> : <React.Fragment>
-                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                                <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
-                            </React.Fragment>}
-                        </View>
-                        {
-                            title === 'Completed' ? null :
-                                <Button
-                                    title="Edit Task"
-                                    containerStyle={styles.buttonStyle}
-                                    textStyle={styles.buttonText}
-                                    onPress={() => {
-                                        navigation.navigate("CreateTask", { item, isVisible, setDisplay })
-                                        onHide()
-                                    }}
-                                />
-                        }
-                        <View style={styles.line} />
-
+                <View style={styles.genContainer}>
+                    <View>
 
                         {
                             !item?.description ? <View style={{ paddingVertical: height(2) }}>
-                                <H1 >No description for this Task</H1>
+                                <H1 >No Description for this Task</H1>
                             </View> :
                                 <View style={styles.descriptionCon}>
                                     <H1 color={AppColors.black1}>Task Description</H1>
                                     <View style={styles.con}>
                                         <P style={styles.description}>
-                                            {item.description}
+                                            {item?.description}
                                         </P>
                                     </View>
                                 </View>
@@ -362,41 +384,50 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
                         </View>
 
                         <View>
-
                             {
-                                item?.sub_tasks_tasksapp?.length !== 0 &&
-                                <>
-                                    <H1 style={{ marginTop: height(2) }}>SubTasks</H1>
-                                    <View style={styles.subTaskContainer}>
-                                        <View style={CommonStyles.row}>
-                                            <FlatList
-                                                data={Object.values(item?.sub_tasks_tasksapp)}
-                                                renderItem={({ item, index }) =>
-                                                    <>
-                                                        <View style={CommonStyles.row}>
-                                                            {selectedIDs.includes(item.id) ? <TouchableOpacity onPress={() => handleUncomplete(item)}>
-                                                                <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
-                                                            </TouchableOpacity> :
-                                                                <TouchableOpacity onPress={() => handleChecked(item)}>
-                                                                    <Image
-                                                                        source={{ uri: Images.SubTaskBox }}
-                                                                        style={styles.leftIcon} />
-                                                                </TouchableOpacity>}
+                                !item?.sub_tasks_tasksapp ? null :
+                                    item?.sub_tasks_tasksapp?.length !== 0 &&
+                                    <>
+                                        <H1 style={{ marginTop: height(2) }}>SubTasks</H1>
+                                        <View style={styles.subTaskContainer}>
+                                            <View style={CommonStyles.row}>
+                                                <FlatList
+                                                    data={Object.values(item?.sub_tasks_tasksapp ?? {}) ?? []}
+                                                    renderItem={({ item, index }) => (
+                                                        <>
+                                                            <View style={CommonStyles.row}>
+                                                                {selectedIDs.includes(item.id) ? (
+                                                                    <TouchableOpacity onPress={() => handleUncomplete(item.id)}>
+                                                                        <Ionicons name="checkbox-outline" size={18} color={AppColors.black} />
+                                                                    </TouchableOpacity>
+                                                                ) : (
+                                                                    <TouchableOpacity onPress={() => handleComplete(item.id)}>
+                                                                        <Image source={{ uri: Images.SubTaskBox }} style={styles.leftIcon} />
+                                                                    </TouchableOpacity>
+                                                                )}
+                                                                <TouchableOpacity onPress={() => handleComplete(item.id)}>
+                                                                    <Text
+                                                                        numberOfLines={1}
+                                                                        style={[
+                                                                            styles.subTitle,
+                                                                            { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null },
+                                                                        ]}
+                                                                    >
+                                                                        {item.title}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                            {index <= 15 ? <View style={styles.line1} /> : null}
+                                                        </>
+                                                    )}
+                                                    keyExtractor={(item, index) => item.id.toString()}
+                                                />
 
-                                                            <Text
-                                                                numberOfLines={1}
-                                                                style={[styles.subTitle, { textDecorationLine: selectedIDs.includes(item.id) ? "line-through" : null }]}>{item.title}</Text>
-                                                        </View>
-                                                        {index <= 15 ? <View style={styles.line1} /> : null}
-                                                    </>
-                                                }
-                                                keyExtractor={(item, index) => index.toString()}
-                                            />
+                                            </View>
+
+
                                         </View>
-
-
-                                    </View>
-                                </>
+                                    </>
                             }
                         </View>
                         <View style={styles.descriptionCon}>
@@ -416,6 +447,7 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
                         style={[styles.leftIcon, { transform: [{ rotate: spin }] }]}
                     />
                 </TouchableOpacity>
+                {/* <ScrollView></ScrollView> */}
                 {
                     show &&
                     <View>
@@ -468,7 +500,7 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
                                     <View style={styles.textContainer1}>
                                         <TextInput
                                             style={styles.Input}
-                                            placeholder="Add a comment"
+                                            placeholder={"Add a comment"}
                                             value={comment}
                                             onSubmitEditing={handleSubmit}
                                             onChangeText={text => setComment(text)}
@@ -480,12 +512,9 @@ const Index = ({ isVisible, onHide, item, title, setDisplay }) => {
                     </View>
                 }
             </ScreenWrapper>
-
-        </Modal>
-
-
+        </View>
     )
 }
 
-export default Index
+export default TaskDetails
 

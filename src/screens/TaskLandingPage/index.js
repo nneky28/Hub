@@ -12,7 +12,7 @@ import AnimatedView from '../../components/AnimatedView/index';
 import { Images } from '../../component2/image/Image';
 
 
-const HomeScreen = () => {
+const TaskLandingPage = () => {
     const [index, setIndex] = useState(0);
     const [empty, setEmpty] = useState(true)
     const [video, setVideo] = useState(true)
@@ -116,7 +116,7 @@ const HomeScreen = () => {
     )
 }
 
-export default HomeScreen
+export default TaskLandingPage
 
 const styles = StyleSheet.create({
     emptyState: {

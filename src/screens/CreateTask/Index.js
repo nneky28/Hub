@@ -29,7 +29,7 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 
 
 
-const Index = ({ route }) => {
+const CreateTask = ({ route }) => {
     const { item } = route?.params || {}
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -399,6 +399,6 @@ const Index = ({ route }) => {
 
 
 
-export default Index
+export default CreateTask
 
 

@@ -96,7 +96,7 @@ const styles = {
 
 
 
-const Index = ({ navigation }) => {
+const TaskOnboarding = ({ navigation }) => {
 
     const swiperRef = useRef(null);
     const dispatch = useDispatch();
@@ -216,4 +216,4 @@ const Index = ({ navigation }) => {
     )
 }
 
-export default Index
+export default TaskOnboarding

@@ -47,7 +47,18 @@ export const GET_TEAM_STATISTICS = 'get_team_statistics';
 export const GET_ACTIVITY = 'get_activity';
 export const GET_COMMENTS = 'get_comments';
 
-//PAYLOAD TYPES
+
+
+
+//ONBOARDING TYPES
+
+export const TASK_ONBOARDING = "Task"
+
+
+
+
+
+//PAYLOAD TYPES 
 export type RegisterTokenLoad = {
   user_type: 'business_user' | 'employee';
   registration_id: string;

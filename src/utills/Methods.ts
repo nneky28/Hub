@@ -4,6 +4,7 @@ import moment from 'moment';
 import { showMessage } from 'react-native-flash-message';
 
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import { useFetchAboutMeData } from '../components/TimeoffModal/types';
 import type { RootState,AppDispatch } from '../Redux';
 import { StoredUserProps } from '../Routes/types';
 
@@ -53,10 +54,17 @@ export type getStoredBusinessProps = {
   currency? : string
   logo? : string
 }
+
 export const getStoredBusiness = async () : Promise<getStoredBusinessProps | null>  => {
   let user : StoredUserProps | false | null | string = await getData("user");
   if(typeof user === "string" || !user || !user?.employee_user_memberships?.[0] ) return null
   return user?.employee_user_memberships?.[0];
+}
+
+export const getStoreAboutMe = async () : Promise<useFetchAboutMeData | null>  => {
+  let user : useFetchAboutMeData | false | null | string = await getData("about_me");
+  if(typeof user === "string" || !user ) return null
+  return user;
 }
 
 export const storeData = async (key : string, value : any) => {
