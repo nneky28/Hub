@@ -22,7 +22,7 @@ interface Props {
 
 
 const PeopleList: React.FC<Props> = ({ navigation }) => {
-  const [myTeam, setMyTeam] = useState({name:''})
+  const [myTeam, setMyTeam] = useState({name : ""})
   const [item, setItem] = useState<Array<any>>([]);
   const [teamItem, setTeamItem] = useState<Array<any>>([]);
   const [page, setPage] = useState<number>(1);

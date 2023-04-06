@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import {SafeAreaView, StatusBar, View} from 'react-native';
+import React from 'react';
+import {SafeAreaView, StatusBar,StatusBarProps, View} from 'react-native';
 import styles from './styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useIsFocused} from '@react-navigation/native';
 import AppColors from '../../utills/AppColors';
-import {height, width} from 'react-native-dimension';
-import { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import {height} from 'react-native-dimension';
+import { ScreenWrapperProps } from './types';
+
 const ScreenWrapper = ({
-  allowScrollToPosition = false,
   children,
   statusBarColor = AppColors.white,
   transclucent = false,
@@ -17,17 +16,23 @@ const ScreenWrapper = ({
   footerUnScrollable = () => null,
   barStyle = 'dark-content',
   backgroundColor = AppColors.white,
-}) => {
-  function FocusAwareStatusBar(props) {
+}:ScreenWrapperProps ) => {
+  function FocusAwareStatusBar(props:StatusBarProps) {
     const isFocused = useIsFocused();
     return isFocused ? <StatusBar {...props} /> : null;
   }
   const content = () => {
-    const scrollRef = useRef(null);
-    const scrollPosition = useSelector(state => state.Config.scrollPosition);
-    if(allowScrollToPosition){
-      scrollRef.current?.scrollToPosition(0, scrollPosition.y, true)
-    }
+    // const scrollRef = useRef(null);
+    // const scrollPosition = useSelector(state => state.Config.scrollPosition);
+    // if(allowScrollToPosition){
+    //   scrollRef.current?.scrollToPosition(0, scrollPosition.y, true)
+    // }
+    // const scrollRef = useRef<null | { scrollToPosition: (x: number, y: number, animated: boolean) => void }>(null);
+    // const scrollPosition = useSelector((state: { Config: { scrollPosition: { x: number, y: number } } }) => state.Config.scrollPosition);
+    // const allowScrollToPosition = true; // or wherever this value comes from
+    // if (allowScrollToPosition) {
+    //   scrollRef.current?.scrollToPosition(0, scrollPosition.y, true);
+    // }
     return (
       <View style={styles.container}>
         <FocusAwareStatusBar
@@ -35,6 +40,7 @@ const ScreenWrapper = ({
           backgroundColor={statusBarColor}
           translucent={transclucent}
         />
+        <>    
         {!transclucent && (
           <SafeAreaView
             style={(styles.container, {backgroundColor: statusBarColor})}
@@ -43,10 +49,9 @@ const ScreenWrapper = ({
         {headerUnScrollable()}
         {scrollEnabled ? (
           <KeyboardAwareScrollView
-            ref={scrollRef}
+            // ref={scrollRef}
             style={[styles.container, {backgroundColor: backgroundColor}]}
             contentContainerStyle={[
-              styles.contentContainer,
               {paddingVertical: height(2)},
             ]}
             keyboardShouldPersistTaps="handled"
@@ -63,7 +68,8 @@ const ScreenWrapper = ({
             {children}
           </View>
         )}
-        {footerUnScrollable()}
+          {footerUnScrollable()}
+        </>
       </View>
     );
   };
