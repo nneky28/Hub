@@ -103,7 +103,7 @@ export default function PersonalInfo({ navigation }) {
 
     const getProfile = async () => {
         try {
-            let profile = await getData("profile");
+            // let profile = await getData("profile");
             if (profile && profile.about) {
                 setData(
                     {

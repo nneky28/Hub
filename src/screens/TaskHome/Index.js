@@ -206,17 +206,17 @@ const TaskHome = ({ navigation, route }) => {
     const {
         data: dueTasks,
         isLoading: loadingDueTask
-    } = useFetchDueToday(tab, index);
+    } = useFetchDueToday(tab, index, "duetoday");
 
     const {
         data: upcomingTasks,
         isLoading: loadingUpcoming
-    } = useFetchUpcoming(tab, index);
+    } = useFetchDueToday(tab, index, "upcoming");
 
     const {
         data: overdueTasks,
         isLoading: loadingOverdue
-    } = useFetchOverDue(tab, index);
+    } = useFetchDueToday(tab, index, "overdue");
 
     // all sent here
     const {
