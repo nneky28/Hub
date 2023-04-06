@@ -274,7 +274,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
   },
-  get_all_task: async (id:any) => {
+  get_all_task: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
@@ -291,37 +291,37 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=overdue`)
   },
 
-  get_team_statistics: async (id:any) => {
+  get_team_statistics: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?department_id=${id}`)
   },
-  get_team_duetoday: async (id:any) => {
+  get_team_duetoday: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=duetoday`)
   },
-  get_team_upcoming: async (id:any) => {
+  get_team_upcoming: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=upcoming`)
   },
-  get_team_overdue: async (id:any) => {
+  get_team_overdue: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=overdue`)
   },
 
-  get_personal_tasks: async (id:any) => {
+  get_personal_tasks: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}`)
   },
 
-  get_personal_due: async (id:any) => {
+  get_personal_due: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=duetoday`)
   },
-  get_personal_upcoming: async (id:any) => {
+  get_personal_upcoming: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=upcoming`)
   },
-  get_personal_overdue: async (id:any) => {
+  get_personal_overdue: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=overdue`)
   },
@@ -335,12 +335,12 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me_and_sent`)
   },
 
-  get_employee_statistics: async (id:any) => {
+  get_employee_statistics: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
   },
 
-  get_team_tasks: async (id:any) => {
+  get_team_tasks: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}`)
   },
@@ -360,11 +360,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=overdue`)
   },
-  get_activity: async (id:any) => {
+  get_activity: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
   },
-  get_comments: async (id:any) => {
+  get_comments: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
   },

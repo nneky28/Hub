@@ -2,18 +2,17 @@
 import React from 'react';
 import {Image, View,Text} from 'react-native';
 import styles from './styles';
-import AppColors from '../../utills/AppColors';
-import { BackHandler, TouchableWrapper,Container } from  '../../utills/components';
-import { Capitalize } from '../../../module/src/dependency/UtilityFunctions';
+import AppColors from '../../../utills/AppColors';
+import { BackHandler, TouchableWrapper,Container,H1,P } from  '../../../utills/components';
+import { Capitalize } from '../../../utills/Methods';
 import { HeaderWithBackButtonProps, HomePageHeaderProps } from './types';
-import { H1, P } from '../../../module/src/components/component';
 import { width } from 'react-native-dimension';
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useNavigation } from '@react-navigation/native';
 // import { MainNavigationProps } from '../../../Routes/types';
 
 export function HomePageHeader(props : HomePageHeaderProps) {
-  const navigation = useNavigation<MainNavigationProps>()
+  // const navigation = useNavigation<MainNavigationProps>()
   return (
     <View style={styles.header}>
         <View style={styles.row}>
