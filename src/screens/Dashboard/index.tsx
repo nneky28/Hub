@@ -1,82 +1,74 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, RefreshControl, Text, TouchableOpacity, View, Platform, Linking } from 'react-native';
-import { height, width } from 'react-native-dimension';
+import { Image, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
+import { width } from 'react-native-dimension';
 import { ScrollView } from 'react-native-gesture-handler';
-import { rightIcon } from '../../assets/images';
 import AnimatedView from '../../components/AnimatedView';
 import AssetsList from '../../components/AssetsList';
 import BenifitList from '../../components/BenifitList';
-import { ReportModal, RestrictionModal,WarningModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { showFlashMessage } from '../../components/SuccessFlash';
 import TasksList from '../../components/TasksList';
 import Timeoff from '../../components/Timeoff';
-import Todo from '../../components/Todo';
-import { APIFunction, deleteAPIs, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
+import { APIFunction, useFetchAssets, useFetchBenefits, useFetchWhosOut, useFetchBirthdays, useFetchAnniversary, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffTaken, useFetchEmployeeTimeOffReqs } from '../../utills/api';
 import AppColors, { ColorList } from '../../utills/AppColors';
-import { Container, CustomWebView, H1, ImageWrap, P, PageLoader, Reload, Rounded, SizedBox, TouchWrap } from '../../utills/components';
+import { Container, CustomWebView, H1, ImageWrap, PageLoader, Rounded} from '../../utills/components';
 import tasksData from '../../utills/data/tasksData';
-import { Capitalize, getData, getGreetingTime, getStoreAboutMe, getStoredBusiness, getStoredBusinessProps, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getStoreAboutMe, getStoredBusiness, getStoredBusinessProps, ToastError, ToastSuccess, useAppSelector } from '../../utills/Methods';
 import styles from './styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Images } from '../../component2/image/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import TimeoffModal from '../../components/TimeoffModal';
 import CustomCalendarModal from '../../components/CustomCalendarModal';
 import { DateData } from 'react-native-calendars/src/types';
 import ClockINContainer from '../../components/ClockInComponent';
-import { useFetchAboutMeData } from '../../components/TimeoffModal/types';
-const LocationEnabler = Platform.OS === "android" ? require('react-native-location-enabler') : {};
+import { RootScreenProps } from '../../Routes/types';
+import { useFetchAnniversaryProps, useFetchAssetsProps, useFetchBenefitsProps, useFetchBirthdaysProps, useFetchEmployeeTimeOffData, useFetchEmployeeTimeOffProps, useFetchEmployeeTimeOffReqsData, useFetchEmployeeTimeOffReqsProps, useFetchEmployeeTimeOffTakenData, useFetchEmployeeTimeOffTakenProps, useFetchWhosOutProps } from './types';
+import WarningModal from '../../components/WarningModal';
 
 
 
-export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
+export default function Dashboard({ navigation: { navigate, toggleDrawer } } : RootScreenProps) {
 
   const {
     data: activeBD,
-    isLoading: activeBDLoading,
     isFetching: activeBDFetching
-  } = useFetchBirthdays("active")
+  } = useFetchBirthdays("active") as useFetchBirthdaysProps
 
   const {
     data: activeANN,
-    isLoading: activeANNLoading,
     isFetching: activeANNFetching
-  } = useFetchAnniversary("active")
+  } = useFetchAnniversary("active") as useFetchAnniversaryProps
 
-  const navigation = useNavigation()
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const [margin, setMargin] = useState(0.1);
   const [index, setIndex] = useState(0);
   const [business, setBusiness] = React.useState<getStoredBusinessProps>();
   const [loading, setLoading] = React.useState(true);
-  const [available, setAvailable] = React.useState([]);
-  const [active, setActive] = React.useState([]);
-  const [requests, setRequests] = React.useState([]);
+  const [available, setAvailable] = React.useState<useFetchEmployeeTimeOffData[]>([]);
+  const [active, setActive] = React.useState<useFetchEmployeeTimeOffTakenData[]>([]);
+  const [requests, setRequests] = React.useState<useFetchEmployeeTimeOffReqsData[]>([]);
   const [modal, setModal] = React.useState(false);
-  const [current, setCurrent] = useState();
+  const [current, setCurrent] = useState<number>();
   const [show, setShow] = useState(false);
-  const [del, setDelete] = useState(null);
-  const [cancel, setCancel] = useState(false);
+  const [del, setDelete] = useState<useFetchEmployeeTimeOffReqsData>();
   const [text, setText] = useState("");
   const [tab, setTab] = React.useState("Leave")
   const [web, setWeb] = React.useState(false)
   const [web_url, setWebUrl] = React.useState<string>()
-  const [report, setReport] = React.useState(false)
-  const [asset, setAsset] = React.useState(null)
-  const [tasks, setTasks] = React.useState([])
-  const [task, setTask] = React.useState(null)
-  const auth = useSelector(state => state.Auth)
-  const isSecurityVisible = useSelector(state => state.Config.isSecurityVisible)
-  const [processing, setProcessing] = React.useState(false)
-  const [visible, setVisible] = React.useState(false)
+  const auth = useAppSelector(state => state.Auth)
+  const isSecurityVisible = useAppSelector(state => state.Config.isSecurityVisible)
   const [employee_pk, setEmployeePK] = React.useState<number>()
   const [category, setCategory] = React.useState("timeoff")
   const [appear,setAppear] = React.useState(false)
   const [action,setAction] = React.useState("")
+
+  const {
+    mutateAsync,
+    isLoading : isDeleting
+  } = useMutation(APIFunction.delete_timeoff)
+
   const [requestData,setRequestData] = React.useState({
     start_date : "",
     end_date : "",
@@ -86,47 +78,48 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const {
     data: outData,
     isLoading: whosoutLoading
-  } = useFetchWhosOut(category)
+  } = useFetchWhosOut(category) as useFetchWhosOutProps
 
   const {
     data: upcomingBD,
     isFetching: upcomingBDFetching
-  } = useFetchBirthdays("upcoming")
+  } = useFetchBirthdays("upcoming") as useFetchBirthdaysProps
 
   const {
     data: assets,
     isFetching: assetFetching
-  } = useFetchAssets(employee_pk)
+  } = useFetchAssets(employee_pk) as useFetchAssetsProps
 
   const {
     data: benefits,
     isFetching: benefitFetching
-  } = useFetchBenefits(employee_pk)
+  } = useFetchBenefits(employee_pk) as useFetchBenefitsProps
 
   const {
     data: timeoffData,
     isFetching: fetchingTimeoff
-  } = useFetchEmployeeTimeOff(employee_pk || "")
+  } = useFetchEmployeeTimeOff(employee_pk || "") as useFetchEmployeeTimeOffProps
 
   const {
     data: activeData,
     isFetching: fetchingActive
-  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "active")
+  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "active") as useFetchEmployeeTimeOffTakenProps
+
 
   const {
     data: upcomingData,
     isFetching: fetchingUpcoming
-  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "upcoming")
+  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "upcoming") as useFetchEmployeeTimeOffTakenProps
 
   const {
     data: historyData,
     isFetching: fetchingHistory
-  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "history")
+  } = useFetchEmployeeTimeOffTaken(employee_pk || "", "history") as useFetchEmployeeTimeOffTakenProps
 
   const {
     data: reqData,
     isFetching: fetchingReq
-  } = useFetchEmployeeTimeOffReqs(employee_pk || "")
+  } = useFetchEmployeeTimeOffReqs(employee_pk || "") as useFetchEmployeeTimeOffReqsProps
 
   const getInfo = async () => {
     try {
@@ -175,63 +168,30 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     setWeb(true)
   }
 
-  const getWhosOut = (param) => {
-    try {
-      if (param === "Training") {
-        return setTab(param)
-      }
-      let categ = param == "Remote Work" ? "work_from_home" : "timeoff";
-      setCategory(categ)
-      setTab(param)
-    } catch (err) {
-      ToastError(err.msg)
+  const getWhosOut = (param : string) => {
+    if (param === "Training") {
+      return setTab(param)
     }
-  }
-
-  const markAsCompleted = async () => {
-    try {
-      let about = await getData("about_me")
-      setProcessing(true)
-      await APIFunction.toggle_completed(about.id, task.id, { is_completed: !task.is_completed })
-      let arr = [...tasks].filter(item => item.id !== task.id)
-      setProcessing(false)
-      setShow(false)
-      setTasks([...arr])
-      showFlashMessage({ title: "Marked as done" })
-    } catch (err) {
-      showFlashMessage({ title: "Marked as done", type: "error" })
-    }
-  }
-
-  const openWarningModal = (data) => {
-    try {
-      setTask(data)
-      setText(`Are you sure you have completed "${data?.title}"?`)
-      setShow(true)
-    } catch (err) {
-    }
+    let categ = param == "Remote Work" ? "work_from_home" : "timeoff";
+    setCategory(categ)
+    setTab(param)
   }
 
   const cancelRequest = async () => {
     try {
-      setCancel(true)
-      let about = await getData("about_me")
-      let biz = await getStoredBusiness();
-      let cancel_url = APIFunction.delete_timeoff(biz.business_id, about.id, del.id);
-      let res = await deleteAPIs(cancel_url);
+      if(!del || !del?.id) return
+      await mutateAsync(del.id)
       let filtered = requests.filter(item => item.id !== del.id);
       setRequests(filtered)
       setShow(false);
-      setCancel(false);
       return ToastSuccess("Request has been canceled");
-    } catch (err) {
-      setCancel(false);
+    } catch (err : any) {
       setShow(false);
-      ToastError(err.msg)
+      ToastError(err?.msg)
     }
   }
 
-  const setButtons = (i) => {
+  const setButtons = (i : number) => {
     setIndex(i);
     var margin = i * 30;
     if (margin == 0) margin = 0.1;
@@ -241,20 +201,9 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     setWeb(false)
   }
 
-
-
   const refreshDashboard = () => {
     getInfo()
     queryClient.invalidateQueries("")
-  }
-
-  const openReport = (item) => {
-    try {
-      setReport(true)
-      setAsset(item)
-    } catch (err) {
-      ToastError(err.msg)
-    }
   }
 
   const onDayPress = (param : DateData)=>{
@@ -273,11 +222,10 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
     setAppear(false)
   }
   const timeoffResponseHandler = () => {
-
     var margin = 30;
     setMargin(width(margin));
     setIndex(1)
-    let arr = []
+    let arr : useFetchEmployeeTimeOffTakenData[] = []
     if (timeoffData?.results && Array.isArray(timeoffData?.results)) {
       setAvailable(timeoffData?.results)
     }
@@ -299,17 +247,41 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
   const onChangeText = (value : string) => {
     setRequestData({...requestData,reason : value})
   }
+
+  const showModalHandler = (timeoff_id : number, item : useFetchEmployeeTimeOffData, tab_name : string) => {
+    if (tab_name == "active") {
+      setText("Are you sure you want to end this leave?")
+      setDelete(item);
+      return setShow(true);
+    }
+    if (tab_name === "request") {
+      setDelete(item);
+      setText("Are you sure you want to cancel this request?")
+      return setShow(true);
+    }
+    
+    if (item.total_days_taken !== undefined && item.total_days_taken !== undefined && item.max_days_allowed &&
+      item.total_days_taken >= 0 &&
+      item.total_days_taken <
+      item.max_days_allowed) {
+      setCurrent(timeoff_id)
+      return setModal(true)
+    }
+  }
+
+  const onHideHandler = () => {
+    setShow(false)
+  }
+
   useEffect(() => {
     timeoffResponseHandler()
   }, [timeoffData, activeData, reqData, historyData])
-
+  
   return (
     <ScreenWrapper scrollEnabled={false}
       statusBarColor={AppColors.lightGreen}
     >
-      {
-        web ? <CustomWebView show={web} setShow={closeWeb} web_url={web_url} /> : (
-          <React.Fragment>
+      <React.Fragment>
             <Container
               backgroundColor={AppColors.lightGreen}
             >
@@ -334,7 +306,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                 </View>
                 <TouchableOpacity
                   onPress={() => {
-                    navigate("Notifications")
+                    navigate("Home",{screen : "Notifications"})
                   }}
                 >
                   <React.Fragment>
@@ -381,37 +353,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                   <React.Fragment>
 
                     <ClockINContainer />
-
-                    {
-                      tasks && Array.isArray(tasks) && tasks.length > 0 ?
-                        (
-                          <View style={styles.toDoContainer}>
-                            <View style={styles.row1}>
-                              <Text numberOfLines={1} style={styles.text3}>
-                                Tasks
-                              </Text>
-                              <TouchableOpacity
-                                activeOpacity={0.8}
-                                onPress={() => {
-                                  navigate("Todos")
-                                }}
-                                style={styles.row}>
-                                <Text style={styles.text4}>See all task</Text>
-                                <Image
-                                  resizeMode="contain"
-                                  source={rightIcon}
-                                  style={styles.icon}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                            <View style={styles.line} />
-                            <Todo data={[...tasks].splice(0, 2)}
-                              openWarningModal={openWarningModal}
-                            />
-                          </View>
-                        ) : null
-                    }
-                    <Container marginTop={tasks && Array.isArray(tasks) && tasks.length > 1 ? 2 : 0}>
+                    <Container>
                       <Text numberOfLines={1} style={styles.timeOffText}>
                         Time Off
                       </Text>
@@ -443,26 +385,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                               : requests && Array.isArray(requests) ? requests : []
                         }
                         tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
-                        showModal={(timeoff_id, item, tab_name) => {
-                          if (tab_name == "active") {
-                            setText("Are you sure you want to end this leave?")
-                            setDelete(item);
-                            return setShow(true);
-                          }
-                          if (tab_name === "request") {
-                            setDelete(item);
-                            setText("Are you sure you want to cancel this request?")
-                            return setShow(true);
-                          }
-
-                          if (item && item.max_days_allowed &&
-                            item.total_days_taken >= 0 &&
-                            item.total_days_taken <
-                            item.max_days_allowed) {
-                            setCurrent(timeoff_id)
-                            return setModal(true)
-                          }
-                        }}
+                        showModal={showModalHandler}
                       />
                     </View>
                     {
@@ -473,9 +396,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                             {assets?.results && Array.isArray(assets?.results) && assets?.results.length > 1 ? `(${assets?.results.length})` : ""}
                           </Text>
                           <View>
-                            <AssetsList data={assets?.results}
-                              onPressHandler={openReport}
-                            />
+                            <AssetsList data={assets?.results} />
                           </View>
                         </React.Fragment>
                       ) : null
@@ -493,7 +414,8 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                         </React.Fragment>
                       ) : null
                     }
-                    <TasksList data={tasksData}
+                    <TasksList 
+                      data={tasksData}
                       whos_out={tab !== "Training" && outData?.results && Array.isArray(outData?.results) ? outData?.results : []}
                       birthdays={activeBD?.results && Array.isArray(activeBD?.results) ? activeBD?.results : []}
                       upcoming_birthdays={upcomingBD?.results && Array.isArray(upcomingBD?.results) ? upcomingBD?.results : []}
@@ -527,32 +449,25 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } }) {
                 data={requestData}
               /> : null
             }
-           
-            <WarningModal
+           {
+             show ? <WarningModal
               isVisible={show}
-              onHide={() => {
-                setCancel(false)
-                setProcessing(false)
-                setShow(false)
-              }}
-              question={text}
-              performAction={["Are you sure you want to end this leave?", "Are you sure you want to cancel this request?"].includes(text) ? cancelRequest : markAsCompleted}
-              loading={cancel || processing}
-              btnText={["Are you sure you want to end this leave?", "Are you sure you want to cancel this request?"].includes(text) ? "Cancel Request" : "Mark as Completed"}
-            />
-
-            <ReportModal
-              isVisible={report}
-              onHide={() => {
-                setReport(false)
-                setAsset(null)
-              }}
-              asset={asset}
-              btnText={"Submit Report"}
-            />
+              onHide={onHideHandler}
+              title={"Are you sure?"}
+              sub_title={text}
+              onPressHandler={cancelRequest}
+              loading={isDeleting}
+              submitBtnText={"Yes, I am sure"}
+              cancelBtnText={"No, go back"}
+              icon={'alert-circle'}
+              iconColor={AppColors.red2}
+            /> : null
+           }
+            
+            {
+            web && web_url ? <CustomWebView show={web} setShow={closeWeb} web_url={web_url} /> : null
+          }
           </React.Fragment>
-        )
-      }
 
     </ScreenWrapper>
   );

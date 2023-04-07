@@ -1,28 +1,19 @@
-import moment from 'moment';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, Keyboard } from 'react-native';
+import { StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import { height, width } from 'react-native-dimension';
-import { useSelector } from 'react-redux';
-import {
-  categoryFillIcon,
-  categoryIcon, homeFillIcon,
-  homeIcon, notificationFillIcon,
-  notificationIcon,
-  profileFillIcon,
-  profileIcon
-} from '../assets/images';
-import { Images } from '../component2/image/Image';
 import SelectionModal from '../components/SelectionModal';
 import AppColors from '../utills/AppColors';
-import { Container, H1, Rounded } from '../utills/components';
+import { Container, P } from '../utills/components';
 import { FontFamily } from '../utills/FontFamily';
+import { useAppSelector } from '../utills/Methods';
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 
-function TabBar({ state, descriptors, navigation }) {
-  const isBottomTabBarVisible = useSelector(state => state.Config.isBottomTabBarVisible);
-  const auth = useSelector(state => state.Auth);
+function TabBar({ state, descriptors,navigation} : BottomTabBarProps) {
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(true);
+  const isBottomTabBarVisible = useAppSelector(state => state.Config.isBottomTabBarVisible);
 
 
 
@@ -54,15 +45,15 @@ function TabBar({ state, descriptors, navigation }) {
           {/* tabBarHideOnKeyboard: true, */}
           {state.routes.map((route, index) => {
             const { options } = descriptors[route.key];
-            const label =
-              options.tabBarLabel !== undefined
-                ? options.tabBarLabel
-                : options.title !== undefined
-                  ? options.title
-                  : route.name;
+            const label = route.name;
+              // options.tabBarLabel !== undefined
+              //   ? options.tabBarLabel
+              //   : options.title !== undefined
+              //     ? options.title
+              //     : 
+              //     route.name;
 
             const isFocused = state.index === index;
-
             const onPress = () => {
               if (route.name === 'Menu')
                 setModal(true);
@@ -74,7 +65,7 @@ function TabBar({ state, descriptors, navigation }) {
                 });
                 if (!isFocused && !event.defaultPrevented) {
                   // The `merge: true` option makes sure that the params inside the tab screen are preserved
-                  navigation.navigate({ name: route.name, merge: true });
+                  navigation.navigate(route.name);
                 }
               }
             };
@@ -87,23 +78,23 @@ function TabBar({ state, descriptors, navigation }) {
                 target: route.key,
               });
             };
-            var image;
-            var image1;
+            var icon = "";
+            var fill = "";
             if (index == 0) {
-              image = Images.HomeIcon;
-              image1 = Images.HomeFillIcon;
+              icon = "home-outline"
+              fill = "home"
             }
             if (index == 1) {
-              image = Images.MenuIcon;
-              image1 = Images.MenuFillIcon;
+              icon = "grid-outline"
+              fill = "grid"
             }
             if (index == 2) {
-              image = Images.PeopleIcon;
-              image1 = Images.PeopleFillIcon;
+              icon = "people-outline"
+              fill = "people"
             }
             if (index == 3) {
-              image = Images.ProfileIcon;
-              image1 = Images.ProfileFillIcon;
+              icon = "person-outline"
+              fill = "person"
             }
 
 
@@ -120,23 +111,16 @@ function TabBar({ state, descriptors, navigation }) {
                 style={styles.container}
                 key={index}
               >
-                <Image
-                  resizeMode="contain"
-                  source={isFocused ? { uri: image1 } : { uri: image }}
-                  style={styles.image}
+                <Ionicons name={isFocused ? fill : icon} 
+                  size={width(5.5)}
+                  color={isFocused ? AppColors.green : AppColors.black2}
                 />
-                <Text
-                  style={[
-                    { color: isFocused ? AppColors.green : AppColors.black2 },
-                    styles.text,
-                  ]}>
-                  {label}
-                </Text>
+                <P color={isFocused ? AppColors.green : AppColors.black2}>{label}</P>
               </TouchableOpacity>
             );
           })}
         </Container>
-        <SelectionModal navigation={navigation} isVisible={modal} onHide={() => setModal(false)} />
+        <SelectionModal isVisible={modal} onHide={() => setModal(false)} />
       </>
 
     );
@@ -157,7 +141,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: height(0.5),
+    paddingBottom: height(0.5),
+    paddingTop : height(1),
     backgroundColor: AppColors.white,
     ...AppColors.shadowStyles,
   },

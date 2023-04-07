@@ -113,7 +113,11 @@ export const APIFunction = {
   timeoff: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
   timeoff_reqs: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id:string, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
-  delete_timeoff: (business_id:string, id:number, timeoff_id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  delete_timeoff: async (timeoff_id:number) => {
+    const user = await getStoreAboutMe()
+    const biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz?.business_id}/employees/${user?.id}/timeoff_requests/${timeoff_id}/`)
+  },
 
   employee_timeoff: async (id : number) => {
     let biz = await getStoredBusiness();
@@ -454,14 +458,14 @@ export const useFetchPayrollHistory = (year:number) => {
   })
 }
 
-export const useFetchAssets = (employee_pk:number) => {
-  return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk), {
-    enabled:!! employee_pk 
+export const useFetchAssets = (employee_pk?:number) => {
+  return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk as number), {
+    enabled: !!employee_pk 
   })
 }
 
-export const useFetchBenefits = (employee_pk:number) => {
-  return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk), {
+export const useFetchBenefits = (employee_pk?:number) => {
+  return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk as number), {
     enabled: !!employee_pk 
   })
 }
