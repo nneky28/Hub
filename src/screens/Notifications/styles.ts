@@ -2,7 +2,6 @@ import {StyleSheet} from 'react-native';
 import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
-import { alignItems } from 'styled-system';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -107,7 +106,6 @@ const styles = StyleSheet.create({
       width: width(4.5)
   }, 
   iconAndTextContainer:{
-      justifyContent: 'center',
       alignItems: 'center',
       justifyContent: 'space-evenly',
       height: height(6)

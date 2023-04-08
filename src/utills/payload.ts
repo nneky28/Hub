@@ -46,6 +46,7 @@ export const GET_EMPLOYEE_STATISTICS = 'get_employee_statistics';
 export const GET_TEAM_STATISTICS = 'get_team_statistics';
 export const GET_ACTIVITY = 'get_activity';
 export const GET_COMMENTS = 'get_comments';
+export const NOTIFICATIONS = "notifications"
 
 
 

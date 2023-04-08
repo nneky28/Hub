@@ -60,7 +60,8 @@ import {
   TaskStatusProps,
   TaskProps,
   LoginLoad,
-  RemoveDeviceTokenLoad
+  RemoveDeviceTokenLoad,
+  NOTIFICATIONS
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -499,17 +500,13 @@ export const useFetchAnniversary = (status:string, page = 1) => {
 
 export const useFetchKin = (employee_id:number) => {
   return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id), {
-    enabled: (
-     !! employee_id 
-    )
+    enabled: !! employee_id
   })
 }
 
 export const useFetchEmergency = (employee_id:number) => {
   return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id), {
-    enabled: (
-      !!employee_id 
-    )
+    enabled: !!employee_id 
   })
 }
 
@@ -545,6 +542,17 @@ export const useFetchTeams = (page:number) => {
   }
   )
 }
+
+export const useFetchNotifications = (page:number) => {
+  return useInfiniteQuery([NOTIFICATIONS, page], () => APIFunction.notifications(page), {
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
+    }
+  }
+  )
+}
+
+
 export const useFetchDepartments = (page:number, search:string) => {
   return useInfiniteQuery([GET_DEPARTMENTS, page, search], () => APIFunction.departments(page, search), {
     getNextPageParam: () => {
@@ -630,6 +638,7 @@ export const useFetchTeamDuetoday = (tab:string, id:number) => {
     enabled: tab === "Due Today" && id !== null && id !== undefined
   })
 }
+
 export const useFetchMyTeamUpcoming = (tab:string, id:number) => {
   return useInfiniteQuery([GET_TEAM_UPCOMING, id], () => APIFunction.get_team_upcoming(id), {
     enabled: tab === "Upcoming" && id !== null && id !== undefined,
@@ -679,6 +688,7 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+  console.log("getAPIs",_token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
