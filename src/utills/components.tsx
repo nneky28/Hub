@@ -20,22 +20,19 @@ import DatePicker from 'react-native-date-picker';
 import { WebView } from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
-import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
+import { Capitalize, storeData, ToastSuccess } from './Methods';
 import { APIFunction} from './api';
 import { setLoaderVisible } from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
-import { useMutation, useQueryClient } from 'react-query';
-import Geolocation from 'react-native-geolocation-service'
-import CustomButton from '../component2/button/Button';
+import { useMutation } from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
-import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps, ContainerProps, HTagProps, CustomCalenderProps } from './types';
+import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps, ContainerProps, HTagProps, CustomCalenderProps, CustomWebViewProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SearchBox from '../components/SearchBox';
 import Button from '../components/Button';
@@ -49,39 +46,47 @@ import { CordType } from './types';
 const winDimensions = Dimensions.get("window")
 const winWidth = winDimensions.width;
 
-export const PageLoader = (props={}) => {
+export const PageLoader = () => {
   return (
-    [...'123567'].map((item) => (
-      <ContentLoader
-        key={item}
-        viewBox="0 0 778 116" width={350} height={100} {...props}
-        backgroundColor={AppColors.gray1}
-      >
-        <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
-        <Rect x="28" y="29" rx="0" ry="0" width="258" height="32" />
-        <Rect x="28" y="71" rx="0" ry="0" width="465" height="32" />
-        <Rect x="434" y="94" rx="0" ry="0" width="0" height="0" />
-        <Rect x="29" y="116" rx="0" ry="0" width="749" height="32" />
-      </ContentLoader>
-    ))
-  )
-}
+    <React.Fragment>
+          {
+              [...'123567'].map((item) => (
+                <ContentLoader
+                  key={item}
+                  viewBox="0 0 778 116" width={350} height={100}
+                  backgroundColor={AppColors.gray1}
+                >
+                  <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
+                  <Rect x="28" y="29" rx="0" ry="0" width="258" height="32" />
+                  <Rect x="28" y="71" rx="0" ry="0" width="465" height="32" />
+                  <Rect x="434" y="94" rx="0" ry="0" width="0" height="0" />
+                  <Rect x="29" y="116" rx="0" ry="0" width="749" height="32" />
+                </ContentLoader>
+              ))
+            
+          }
+    </React.Fragment>
+)}
 
-export const Reload = (props={}) => {
+export const Reload = () => {
   return (
-    [...'1'].map((item) => (
-      <ContentLoader
-        key={item}
-        viewBox="0 0 778 116" width={350} height={100}{...props}
-        backgroundColor={AppColors.gray1}
-      >
-        <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
-        <Rect x="28" y="29" rx="0" ry="0" width="258" height="32" />
-        <Rect x="28" y="71" rx="0" ry="0" width="465" height="32" />
-        <Rect x="434" y="94" rx="0" ry="0" width="0" height="0" />
-        <Rect x="29" y="116" rx="0" ry="0" width="749" height="32" />
-      </ContentLoader>
-    ))
+    <React.Fragment>
+          {
+                [...'1'].map((item) => (
+                  <ContentLoader
+                    key={item}
+                    viewBox="0 0 778 116" width={350} height={100}
+                    backgroundColor={AppColors.gray1}
+                  >
+                    <Rect x="37" y="34" rx="0" ry="0" width="0" height="0" />
+                    <Rect x="28" y="29" rx="0" ry="0" width="258" height="32" />
+                    <Rect x="28" y="71" rx="0" ry="0" width="465" height="32" />
+                    <Rect x="434" y="94" rx="0" ry="0" width="0" height="0" />
+                    <Rect x="29" y="116" rx="0" ry="0" width="749" height="32" />
+                  </ContentLoader>
+                ))
+          }
+    </React.Fragment>
   )
 }
 
@@ -872,9 +877,9 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
           sub_text={"This issue has been reported and our developers are working to resolve it.Please press refresh to login again."}
         />
         <Container marginTop={5}>
-          <CustomButton
-            btnText={'Refresh Now'}
-            handelButtonPress={logoutMethod}
+          <Button
+            title={'Refresh Now'}
+            onPress={logoutMethod}
           />
         </Container>
       </Container>

@@ -58,7 +58,10 @@ import {
   OnboardingProps,
   CommentProps,
   TaskStatusProps,
-  TaskProps
+  TaskProps,
+  LoginLoad,
+  RemoveDeviceTokenLoad,
+  NOTIFICATIONS
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -70,7 +73,7 @@ export const APIFunction = {
   team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
   basic_details: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/basic_detail/`,
   
-  login: async (fd?:RegisterTokenLoad) => {
+  login: async (fd?:LoginLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
   next_of_kins: async (id:number) => {
@@ -113,7 +116,11 @@ export const APIFunction = {
   timeoff: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
   timeoff_reqs: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id:string, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
-  delete_timeoff: (business_id:string, id:number, timeoff_id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+  delete_timeoff: async (timeoff_id:number) => {
+    const user = await getStoreAboutMe()
+    const biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz?.business_id}/employees/${user?.id}/timeoff_requests/${timeoff_id}/`)
+  },
 
   employee_timeoff: async (id : number) => {
     let biz = await getStoredBusiness();
@@ -398,6 +405,10 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/firebase_notifications/`,fd)
   },
+  remove_device_token : async (fd : RemoveDeviceTokenLoad) => {
+    let biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz?.business_id}/firebase_notifications/custom_destroy/`,fd)
+  },
 }
 
 export const useFetchAboutMe = (tab : string) => {
@@ -454,14 +465,14 @@ export const useFetchPayrollHistory = (year:number) => {
   })
 }
 
-export const useFetchAssets = (employee_pk:number) => {
-  return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk), {
-    enabled:!! employee_pk 
+export const useFetchAssets = (employee_pk?:number) => {
+  return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk as number), {
+    enabled: !!employee_pk 
   })
 }
 
-export const useFetchBenefits = (employee_pk:number) => {
-  return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk), {
+export const useFetchBenefits = (employee_pk?:number) => {
+  return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk as number), {
     enabled: !!employee_pk 
   })
 }
@@ -489,17 +500,13 @@ export const useFetchAnniversary = (status:string, page = 1) => {
 
 export const useFetchKin = (employee_id:number) => {
   return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id), {
-    enabled: (
-     !! employee_id 
-    )
+    enabled: !! employee_id
   })
 }
 
 export const useFetchEmergency = (employee_id:number) => {
   return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id), {
-    enabled: (
-      !!employee_id 
-    )
+    enabled: !!employee_id 
   })
 }
 
@@ -535,6 +542,17 @@ export const useFetchTeams = (page:number) => {
   }
   )
 }
+
+export const useFetchNotifications = (page:number) => {
+  return useInfiniteQuery([NOTIFICATIONS, page], () => APIFunction.notifications(page), {
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
+    }
+  }
+  )
+}
+
+
 export const useFetchDepartments = (page:number, search:string) => {
   return useInfiniteQuery([GET_DEPARTMENTS, page, search], () => APIFunction.departments(page, search), {
     getNextPageParam: () => {
@@ -620,6 +638,7 @@ export const useFetchTeamDuetoday = (tab:string, id:number) => {
     enabled: tab === "Due Today" && id !== null && id !== undefined
   })
 }
+
 export const useFetchMyTeamUpcoming = (tab:string, id:number) => {
   return useInfiniteQuery([GET_TEAM_UPCOMING, id], () => APIFunction.get_team_upcoming(id), {
     enabled: tab === "Upcoming" && id !== null && id !== undefined,
@@ -669,6 +688,7 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+  console.log("getAPIs",_token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -729,7 +749,7 @@ export const postAPIs = async (path : string, fd? : any) => {
   });
 };
 
-export const deleteAPIs = async (path : string) => {
+export const deleteAPIs = async (path : string,fd? : any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios.delete(
@@ -738,7 +758,8 @@ export const deleteAPIs = async (path : string) => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${_token}`
-        }
+        },
+        data : fd
       }
     )
       .then(result => {

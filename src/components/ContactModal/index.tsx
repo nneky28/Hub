@@ -1,33 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity, Alert
+  Text, View, Share, Linking, TouchableOpacity
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
+import { unCheckRectIcon } from '../../assets/images';
 import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
-import { Field, Formik } from 'formik';
-import CustomText from '../../component2/customText/CustomText';
-import CustomButton from '../../component2/button/Button';
-import CustomInput from '../CustomInput';
-import CustomDatePicker from '../CustomDatePicker';
-import moment from 'moment';
-import { useDispatch } from 'react-redux';
-import { setLoaderVisible } from '../../Redux/Actions/Config';
-import { APIFunction, postAPIs } from '../../utills/api';
-import { getData, ToastError, storeData, getStoredBusiness } from '../../utills/Methods';
-import { Container, CustomCalender, EmptyStateWrapper, H1, LottieIcon, P, SizedBox, TouchWrap, TouchableWrapper } from '../../utills/components';
-import Warningjson from '../../assets/lottie/warning.json'
-import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { getData } from '../../utills/Methods';
+import { Container, EmptyStateWrapper, P, TouchableWrapper } from '../../utills/components';
 import AppColors from '../../utills/AppColors';
-import { showFlashMessage } from '../SuccessFlash';
 import { Images } from '../../component2/image/Image';
 import { height, width } from 'react-native-dimension';
-import { useQueryClient } from 'react-query';
-// import TaskViewMore from '../TaskViewMore/index'
-import CreateTask from '../../screens/CreateTask/Index'
 import { useNavigation } from '@react-navigation/native';
 import { nextProps, prevProps } from './types';
+import Button from '../Button';
 
 
 
@@ -179,21 +165,21 @@ export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
           {/* <TouchableOpacity onPress={onHide}>
               <H1>Cancel</H1>
             </TouchableOpacity> */}
-          <CustomButton
-            handelButtonPress={onPressHandler}
-            btnStyle={{
+          <Button
+            onPress={onPressHandler}
+            containerStyle={{
               width: width(70),
             }}
-            btnText={"Turn on"}
+            title={"Turn on"}
           />
-          <CustomButton
-            handelButtonPress={onHide}
-            btnStyle={{
+          <Button
+            onPress={onHide}
+            containerStyle={{
               width: width(70),
               marginTop: height(2),
               backgroundColor: AppColors.white
             }}
-            btnText={"Cancel"}
+            title={"Cancel"}
             textStyle={{
               color: AppColors.black
             }}
@@ -205,166 +191,6 @@ export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
 };
 
 
-
-const __ReportModal = ({ isVisible, onHide, asset }) => {
-  const dispatch = useDispatch();
-  const defaultColor = "";
-  const [message, setMessage] = React.useState("")
-  useEffect(() => {
-    setMessage("")
-  }, [isVisible])
-  const handleSubmit = async () => {
-    try {
-      let failed = false;
-      if (!message || (message === "") || (message.trim() === "")) failed = true;
-      if (failed) {
-        return showFlashMessage({ type: "error", title: "Message field is required" })
-      };
-      dispatch(setLoaderVisible(true));
-      let fd = { message: message, date: moment().format("YYYY-MM-DD") }
-      await APIFunction.report_asset(fd, asset.id)
-      dispatch(setLoaderVisible(false));
-      showFlashMessage({ title: "Issue has been reported to HR" })
-      onHide()
-    } catch (err) {
-      dispatch(setLoaderVisible(false));
-      return showFlashMessage({ type: "error", title: err.msg })
-    }
-  }
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1, justifyContent: "flex-end" }}
-      >
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.inner}>
-            <View style={styles.bodyWrap}>
-              <Formik>
-                <React.Fragment>
-                  <Container marginLeft={4}
-                    width={10}
-                  >
-                    <TouchWrap onPress={onHide}>
-                      <P>Close</P>
-                    </TouchWrap>
-                  </Container>
-                  <View
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginTop: 25,
-                    }}>
-                    <CustomText
-                      textSize={20}
-                      textWeight={'bold'}
-                      displayText={'Report Issue'}
-                      textStyle={{
-                        marginTop: -3,
-                      }}
-                    />
-                  </View>
-                  <Field
-                    component={CustomInput}
-                    name="message"
-                    placeholder="Message"
-                    keyboardType="default"
-                    value={message}
-                    onChangeData={(value) => {
-                      setMessage(value)
-                    }}
-                    height={10}
-                    multiline={true}
-                    color={AppColors.black}
-                  />
-                  <View style={{ width: '100%', padding: '5%' }}>
-                    <CustomButton
-                      btnText={'Submit'}
-                      handelButtonPress={handleSubmit}
-                    />
-                  </View>
-                </React.Fragment>
-              </Formik>
-            </View>
-          </ScrollView>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
-  );
-};
-
-
-
-const __WarningModal = ({ isVisible, onHide, onPressHandle, question, performAction, loading, btnText }) => {
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
-      <View style={styles.container}>
-        <View style={{
-          padding: 20,
-          width: "100%"
-        }}>
-          <View style={{
-            alignItems: "center"
-          }}>
-            <LottieIcon
-              icon={Warningjson}
-              size={100}
-            />
-          </View>
-          <H1 textAlign="center" fontSize={3}>{question}</H1>
-          <SizedBox />
-          {
-            loading ? (
-              <ActivityIndicator
-                color={AppColors.pink}
-              />
-            ) : (
-              <CustomButton
-                btnText={btnText || "Cancel Request"}
-                btnStyle={{
-                  backgroundColor: "#FF7372",
-                  width: "100%",
-                  textAlign: "center"
-                }}
-                handelButtonPress={() => {
-                  performAction();
-                }}
-              />
-            )
-          }
-          {/* <SizedBox /> */}
-        </View>
-      </View>
-    </Modal>
-  );
-};
 
 
 
@@ -566,7 +392,6 @@ const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
 const areEqual = (prevProps : prevProps, nextProps : nextProps) => {
   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
 }
-export const WarningModal = React.memo(__WarningModal, areEqual)
-export const ReportModal = React.memo(__ReportModal, areEqual)
+
 export { DocumentModal, FilterModal, ActionModal, UnCompletedModal, SentActionModal };
 export default ContactModal;

@@ -32,7 +32,8 @@ export function HomePageHeader(props : HomePageHeaderProps) {
 export function HeaderWithBackButton(props : HeaderWithBackButtonProps) {
   if(props.rightText || props?.bottomText) return (
     <Container 
-        paddingVertical={3}
+        paddingTop={3}
+        paddingBottom={3}
         borderBottomWidth={2}
         borderColor={AppColors.grayBorder}
         verticalAlignment='center'
@@ -67,7 +68,8 @@ export function HeaderWithBackButton(props : HeaderWithBackButtonProps) {
   return (
     <Container 
         direction='row' 
-        paddingVertical={3}
+        paddingTop={3}
+        paddingBottom={3}
         borderBottomWidth={2}
         borderColor={AppColors.grayBorder}
         verticalAlignment='center'

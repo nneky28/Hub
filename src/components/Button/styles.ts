@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {width} from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
+import { FontFamily } from '../../utills/FontFamily';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,6 +18,7 @@ const styles = StyleSheet.create({
   text: {
     color: AppColors.white,
     fontSize: width(4),
+    fontFamily : FontFamily.BlackSansSemiBold
   },
 });
 export default styles;

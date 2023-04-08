@@ -1,6 +1,7 @@
 import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import { DrawerNavigationProp, DrawerScreenProps } from "@react-navigation/drawer"
 import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
 import { useFetchAboutMeData } from "../components/TimeoffModal/types"
 
 type ParamsType = {
@@ -32,6 +33,11 @@ export type ProfileScreenList = {
     PensionInfo : undefined
 }
 
+export type AuthScreenList = {
+    Welcome : undefined
+    Login : undefined
+}
+
 export type MenuScreenList = {
     TimeOff : undefined
     PayslipBreakDown : ParamsType | undefined
@@ -45,6 +51,14 @@ export type MenuScreenList = {
     TaskLandingPage : undefined
     TaskHome : undefined
     PayslipHistory : undefined
+}
+
+export type OnboardScreenList = {
+    LandingPage : undefined
+    PersonalInfo : undefined
+    Emergency : undefined
+    NextKin : undefined
+    PensionInfo : undefined
 }
 
 export type TabScreenList = {
@@ -68,6 +82,12 @@ export type RootNavigationProps = CompositeNavigationProp<
     BottomTabNavigationProp<TabScreenList>,
     DrawerNavigationProp<DrawerStackList>
 >
+
+export type RootMenuNavigationProps = StackNavigationProp<MenuScreenList>
+
+export type RootAuthScreenProps = StackScreenProps<AuthScreenList>
+
+export type RootOnboardScreenProps = StackScreenProps<OnboardScreenList>
 
 
 

@@ -28,6 +28,11 @@ declare module 'react-native-freshchat-sdk' {
   export {Freshchat}
 }
 
+declare module 'react-native-swipeable'{
+  let Swipeable : any
+  export default Swipeable
+}
+
 declare module 'react-native-smooth-pincode-input'{
   let SmoothPinCodeInput : any
   export default SmoothPinCodeInput
