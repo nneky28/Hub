@@ -453,7 +453,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } } : R
              show ? <WarningModal
               isVisible={show}
               onHide={onHideHandler}
-              title={"Are you sure?"}
+              title={"Cancel Request?"}
               sub_title={text}
               onPressHandler={cancelRequest}
               loading={isDeleting}

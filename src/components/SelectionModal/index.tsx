@@ -33,7 +33,7 @@ const SelectionModal = ({ isVisible, onHide} : SelectionModalProps) => {
     },
     {
       screen : "TimeOff",
-      text : "TimeOff",
+      text : "Time Off",
       icon : Images.RadioIcon,
       fill : Images.RadioFillIcon
     },
