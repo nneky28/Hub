@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {useDispatch,useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -7,49 +7,69 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {Fragment} from 'react';
 import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
-import {login, logout} from '../Redux/Actions/Auth';
+import {login} from '../Redux/Actions/Auth';
 import {Images} from "../component2/image/Image"
 import { FontFamily } from '../utills/FontFamily';
-import { Capitalize, getData, ToastSuccess } from '../utills/Methods';
+import { Capitalize, getStoredUser, ToastSuccess, useAppSelector } from '../utills/Methods';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Container, H1, ImageWrap, Rounded, TouchWrap } from '../utills/components';
-import { useQueryClient } from 'react-query';
+import { Container, H1, ImageWrap, Rounded } from '../utills/components';
+import { useMutation, useQueryClient } from 'react-query';
 import { setSecurityVisible } from '../Redux/Actions/Config';
-const Drawer = ({navigation, ...props}) => {
+import { APIFunction } from '../utills/api';
+import { StoredUserProps, UserMembershipProps } from './types';
+import messaging from '@react-native-firebase/messaging';
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
+
+const Drawer = (props : DrawerContentComponentProps) => {
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient()
-  const auth = useSelector((state)=>state.Auth);
-  const [about,setAbout] =  React.useState(null);
-  const [user,setUser] = React.useState(null);
-  const [bizs,setBiz] = React.useState(null);
+  const auth = useAppSelector((state)=>state.Auth);
+  const [user,setUser] = React.useState<StoredUserProps>();
+  const [bizs,setBiz] = React.useState<UserMembershipProps[]>();
+  const {
+    mutateAsync,
+    isLoading
+  } = useMutation(APIFunction.remove_device_token)
+
   const logoutMethod = async () => {
-    let keys = await AsyncStorage.getAllKeys()
-    keys.splice(keys.indexOf(`@${user?.email}`),1)
-    await AsyncStorage.multiRemove(keys);
-    navigation.closeDrawer();
-    queryClient.invalidateQueries("")
-    dispatch(setSecurityVisible(false))
-    dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
-    ToastSuccess("Successfully logged out")
+    try{
+      let token = await messaging().getToken()
+      let fd = {
+        registration_id  : token
+      }
+      await mutateAsync(fd)
+    }finally{
+      let keys = await AsyncStorage.getAllKeys()
+      let arr = [...keys]
+      arr.splice(keys.indexOf(`@${user?.email?.replaceAll("_","")}`),1)
+      await AsyncStorage.multiRemove(keys);
+      props.navigation.closeDrawer();
+      queryClient.invalidateQueries("")
+      dispatch(setSecurityVisible(false))
+      dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
+      ToastSuccess("Successfully logged out")
+    }
   };
+
+
   const getUserDetails = async () => {
-    let about_me = await getData("about_me");
-    let user = await getData("user");
+    let user = await getStoredUser();
+    if(!user) return
     let biz = user?.employee_user_memberships &&
     Array.isArray(user?.employee_user_memberships) ? user.employee_user_memberships : [];
     setBiz(biz);
     setUser(user);
-    setAbout(about_me);
   }
   useEffect(()=>{
     getUserDetails();
   },[])
-  const BusinessBox = ({item}) => {
+  const BusinessBox = ({item} : {item : UserMembershipProps}) => {
     return (
       <TouchableOpacity style={styles.itemContainer} activeOpacity={0.8}>
         <View style={styles.row}>
@@ -77,7 +97,10 @@ const Drawer = ({navigation, ...props}) => {
       </TouchableOpacity>
     );
   };
-  const ItemWithText = ({icon, text, onPress}) => {
+
+  const RenderItem  = ({item} : {item : UserMembershipProps , index : number})=><BusinessBox item={item} />
+  
+  const ItemWithText = ({icon, text, onPress} : {icon : {uri : string}, text : string, onPress : () => void}) => {
     return (
       <TouchableOpacity
         style={styles.row1}
@@ -88,6 +111,8 @@ const Drawer = ({navigation, ...props}) => {
       </TouchableOpacity>
     );
   };
+  const keyExtractor = (item : UserMembershipProps,i : number) => `${item}${i}`.toString()
+
   return (
     <Fragment>
       {/* <Text style={styles.text}></Text> */}
@@ -104,19 +129,23 @@ const Drawer = ({navigation, ...props}) => {
         <FlatList
           data={bizs ? bizs : []}
           extraData={bizs ? bizs : []}
-          keyExtractor={() => Math.random()}
+          keyExtractor={keyExtractor}
           contentContainerStyle={styles.itemList}
           ItemSeparatorComponent={() => <View style={{marginTop: height(2)}} />}
           showsVerticalScrollIndicator={false}
-          renderItem={({item,index})=><BusinessBox item={item} index={index}/>}
+          renderItem={RenderItem}
         />
       </View>
       <View style={[styles.line, {backgroundColor: AppColors.gray1}]} />
       <ItemWithText icon={{uri : Images.Settings}} text="Change Password" onPress={()=>{
-          navigation.navigate("Settings")
+          props.navigation.navigate("Settings")
         }}
       />
-      <ItemWithText onPress={logoutMethod} icon={{uri : Images.Signout}} text="Sign Out" />
+      {
+        isLoading ? <Container alignSelf='center' marginTop={2}>
+          <ActivityIndicator color={AppColors.green} />
+        </Container> : <ItemWithText onPress={logoutMethod} icon={{uri : Images.Signout}} text="Sign Out" />
+      }
     </Fragment>
   );
 };

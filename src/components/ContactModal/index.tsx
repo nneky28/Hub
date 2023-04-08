@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, View, ScrollView, Share, Linking, KeyboardAvoidingView, TouchableOpacity, Alert
+  Text, View, Share, Linking, TouchableOpacity
 } from 'react-native';
 import Modal from 'react-native-modal';
-import { deleteIcon, downloadIcon, shareIcon, unCheckRectIcon } from '../../assets/images';
+import { unCheckRectIcon } from '../../assets/images';
 import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
-import { Field, Formik } from 'formik';
-import CustomText from '../../component2/customText/CustomText';
-import CustomButton from '../../component2/button/Button';
-import CustomInput from '../CustomInput';
-import moment from 'moment';
-import { useDispatch } from 'react-redux';
-import { setLoaderVisible } from '../../Redux/Actions/Config';
-import { APIFunction } from '../../utills/api';
 import { getData } from '../../utills/Methods';
-import { Container, EmptyStateWrapper, P, TouchWrap, TouchableWrapper } from '../../utills/components';
+import { Container, EmptyStateWrapper, P, TouchableWrapper } from '../../utills/components';
 import AppColors from '../../utills/AppColors';
-import { showFlashMessage } from '../SuccessFlash';
 import { Images } from '../../component2/image/Image';
 import { height, width } from 'react-native-dimension';
-import CreateTask from '../../screens/CreateTask/Index'
 import { useNavigation } from '@react-navigation/native';
 import { nextProps, prevProps } from './types';
+import Button from '../Button';
 
 
 
@@ -174,21 +165,21 @@ export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
           {/* <TouchableOpacity onPress={onHide}>
               <H1>Cancel</H1>
             </TouchableOpacity> */}
-          <CustomButton
-            handelButtonPress={onPressHandler}
-            btnStyle={{
+          <Button
+            onPress={onPressHandler}
+            containerStyle={{
               width: width(70),
             }}
-            btnText={"Turn on"}
+            title={"Turn on"}
           />
-          <CustomButton
-            handelButtonPress={onHide}
-            btnStyle={{
+          <Button
+            onPress={onHide}
+            containerStyle={{
               width: width(70),
               marginTop: height(2),
               backgroundColor: AppColors.white
             }}
-            btnText={"Cancel"}
+            title={"Cancel"}
             textStyle={{
               color: AppColors.black
             }}

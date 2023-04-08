@@ -21,7 +21,6 @@ import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
 import { Field, Formik } from 'formik'
 import CustomInput from '../../components/CustomInput'
-import CustomButton from '../../component2/button/Button';
 import { setLoaderVisible } from '../../Redux/Actions/Config'
 import { useDispatch } from 'react-redux'
 import { ActivityIndicator } from 'react-native-paper'
@@ -131,14 +130,6 @@ export default function Setting({navigation}) {
                             secureTextEntry={true}
                         />
                         <Container>
-                    {/* <AppButton 
-                        text={"SUBMIT"}
-                        color={AppColors.white}
-                        onPress={()=>{
-                            changePassword()
-                        }}
-                        //loading={loading}
-                    /> */}
                 </Container>
                     </Container>
                 </Formik>

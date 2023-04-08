@@ -67,6 +67,12 @@ export const getStoreAboutMe = async () : Promise<useFetchAboutMeData | null>  =
   return user;
 }
 
+export const getStoredUser = async () : Promise<StoredUserProps | null>  => {
+  let user : StoredUserProps | false | null | string = await getData("user");
+  if(typeof user === "string" || !user ) return null
+  return user;
+}
+
 export const storeData = async (key : string, value : any) => {
   try {
     const jsonValue = JSON.stringify(value);

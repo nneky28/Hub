@@ -4,12 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import Loader from '../components/Loader';
-import EditPhoto from '../screens/EditPhoto';
-import Login from '../screens/Login';
-import Welcome from '../screens/Welcome';
-import PersonalInfo from '../screens/PersonalInfo';
 import Splash from '../screens/Splash';
-import Onboard from '../screens/Onboard/onboard';
 import Settings from '../screens/Settings';
 import Drawer from './Drawer';
 import TabBar from './TabBar';
@@ -18,13 +13,9 @@ import codePush from 'react-native-code-push';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from '../Redux/Actions/Auth';
-import NextKin from '../screens/NextKin';
-import Emergency from '../screens/Emergency';
-import PensionInfo from '../screens/PensionInfo';
 import { APIFunction, useFetchAboutMe, useFetchAttendanceConfig, useFetchAttendanceStatus } from '../utills/api';
 import { CustomFallBackScreen } from '../utills/components';
 import { AppState, Linking, Platform } from 'react-native';
-import LandingPage from '../screens/LandingPage';
 import { setLoaderVisible, setSecurityVisible } from '../Redux/Actions/Config';
 import { focusManager,useQueryClient } from 'react-query';
 import ErrorBoundary from 'react-native-error-boundary'
@@ -35,7 +26,7 @@ import SpInAppUpdates, {
 import SecurityModal from '../components/SecurityModal';
 import Config from "react-native-config"
 import { notifeeEventHandler, onCreateScheduledNotification, onDisplayNotification, requestUserPermission, screenDeterminant } from '../utills/push_functions';
-import { CLOCK_IN_ALERT, PushNotificationData } from './types';
+import { CLOCK_IN_ALERT, PushNotificationData, RootNavigationProps } from './types';
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventDetail, EventType } from '@notifee/react-native';
 import { useFetchAttendanceConfigProps, useFetchAttendanceStatusProps } from '../components/ClockInComponent/types';
@@ -45,6 +36,8 @@ import HomeStackNavigator from './HomeStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
 import PeopleStackNavigator from './PeopleStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
+import AuthStackNavigator from './AuthStackNavigator';
+import OnboardingStackNavigator from './OnboardingStackNavigator';
 
 const inAppUpdates = new SpInAppUpdates(
   false // isDebug
@@ -57,7 +50,7 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   const route = useAppSelector((state) => state.Auth.route);
   const auth = useAppSelector((state) => state.Auth)
-  const navigation = useNavigation<any>()
+  const navigation = useNavigation<RootNavigationProps>()
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient()
   const [backgroundEventDetails,setBackgroundEventDetails] = React.useState<EventDetail>()
@@ -75,7 +68,8 @@ const Routes = () => {
   const logoutMethod = async () => {
     try {
       let keys = await AsyncStorage.getAllKeys()
-      //keys.splice(keys.indexOf(`@${auth?.user?.email}`), 1)
+      let arr = [...keys]
+      arr.splice(keys.indexOf(`@${auth?.user?.email?.replaceAll("_","")}`), 1)
       AsyncStorage.multiRemove(keys);
       dispatch(setLoaderVisible(false))
       queryClient.invalidateQueries("")
@@ -112,6 +106,7 @@ const Routes = () => {
         let detail : EventDetail | null | false | string = await getData("backgroundEventDetails")
         if(typeof detail === "string" || !detail || !detail?.notification) return
         let resp = screenDeterminant(detail)
+        if(!resp?.stack || !resp?.screen) return
         await storeData("backgroundEventDetails",{})
         setBackgroundEventDetails(detail)
         navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
@@ -126,7 +121,7 @@ const Routes = () => {
         let res = await getData("lastActiveMoment")
         if(typeof res !== "string") return
         focusManager.setFocused(true)
-        if (!token || !moment().isAfter(moment(res).add(1, "minute"))) return
+        if (!token || !moment().isAfter(moment(res).add(5, "minute"))) return
         dispatch(setSecurityVisible(true))
       }
     })
@@ -169,10 +164,10 @@ const Routes = () => {
       if(route !== "main") return
       if(type === EventType.PRESS){
         let resp = screenDeterminant(detail)
-        if(!resp?.stack) return
+        if(!resp?.stack || !resp?.screen) return
         return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
       }
-      await notifeeEventHandler(type,detail)
+      await notifeeEventHandler(type)
     })
     return unsubscribe
   },[route])
@@ -239,7 +234,6 @@ const Routes = () => {
           initialRouteName="Splash"
           screenOptions={{ headerShown : false }}>
           <Stack.Screen name="Splash" component={Splash} />
-          <Stack.Screen name="Onboard" component={Onboard} />
         </Stack.Navigator>
       ) : route === "main" ?
         (
@@ -300,25 +294,10 @@ const Routes = () => {
           </DrawerStack.Navigator>
         ) :
         route === "onboard" ? (
-          <Stack.Navigator
-            initialRouteName="LandingPage"
-            screenOptions={{ headerShown : false }}
-          >
-            <Stack.Screen name="LandingPage" component={LandingPage} />
-            <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
-            <Stack.Screen name="EditPhoto" component={EditPhoto} />
-            <Stack.Screen name="Emergency" component={Emergency} />
-            <Stack.Screen name="NextKin" component={NextKin} />
-            <Stack.Screen name="PensionInfo" component={PensionInfo} />
-          </Stack.Navigator>
+          <OnboardingStackNavigator />
         ) :
           (
-            <Stack.Navigator
-              initialRouteName="Welcome"
-              screenOptions={{ headerShown : false }}>
-              <Stack.Screen name="Welcome" component={Welcome} />
-              <Stack.Screen name="Login" component={Login} />
-            </Stack.Navigator>
+            <AuthStackNavigator />
           )}
       </ErrorBoundary>
   );

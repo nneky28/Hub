@@ -20,17 +20,14 @@ import DatePicker from 'react-native-date-picker';
 import { WebView } from 'react-native-webview';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
-import { Capitalize, getData, getGreetingTime, storeData, ToastError, ToastSuccess } from './Methods';
+import { Capitalize, storeData, ToastSuccess } from './Methods';
 import { APIFunction} from './api';
 import { setLoaderVisible } from '../Redux/Actions/Config';
 import { BASE_URL, ICON_BUTTON_SIZE } from './Constants';
 import { useNavigation } from '@react-navigation/native';
-import { useMutation, useQueryClient } from 'react-query';
-import Geolocation from 'react-native-geolocation-service'
-import CustomButton from '../component2/button/Button';
+import { useMutation } from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
-import { showFlashMessage } from '../components/SuccessFlash';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -880,9 +877,9 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
           sub_text={"This issue has been reported and our developers are working to resolve it.Please press refresh to login again."}
         />
         <Container marginTop={5}>
-          <CustomButton
-            btnText={'Refresh Now'}
-            handelButtonPress={logoutMethod}
+          <Button
+            title={'Refresh Now'}
+            onPress={logoutMethod}
           />
         </Container>
       </Container>

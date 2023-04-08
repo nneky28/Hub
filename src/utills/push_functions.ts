@@ -87,7 +87,7 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
     }
   }
 
-  export const notifeeEventHandler = async (type : EventType,detail : EventDetail) => {
+  export const notifeeEventHandler = async (type : EventType) => {
     try{
       if(type === EventType.DELIVERED) return
     }catch(err){
@@ -97,10 +97,10 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
     const {data} : PushNotificationData = detail?.notification || {}
     if(data?.type === TIME_OFF_REQUEST){
         return {
-            screen : "Time off",
+            screen : "TimeOff",
             stack : "Menu",
             params : undefined
-        }
+        } as const
     }
   }
 

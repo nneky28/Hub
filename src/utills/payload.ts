@@ -146,3 +146,12 @@ export type EmergencyContactProps = {
     relationship: string;
   };
 };
+
+export type LoginLoad = {
+  email : string
+  password : string
+}
+
+export type RemoveDeviceTokenLoad = {
+  registration_id : string
+}

@@ -58,7 +58,9 @@ import {
   OnboardingProps,
   CommentProps,
   TaskStatusProps,
-  TaskProps
+  TaskProps,
+  LoginLoad,
+  RemoveDeviceTokenLoad
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -70,7 +72,7 @@ export const APIFunction = {
   team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
   basic_details: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/basic_detail/`,
   
-  login: async (fd?:RegisterTokenLoad) => {
+  login: async (fd?:LoginLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
   next_of_kins: async (id:number) => {
@@ -401,6 +403,10 @@ export const APIFunction = {
   register_device_token : async (fd : RegisterTokenLoad) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/firebase_notifications/`,fd)
+  },
+  remove_device_token : async (fd : RemoveDeviceTokenLoad) => {
+    let biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz?.business_id}/firebase_notifications/custom_destroy/`,fd)
   },
 }
 
@@ -733,7 +739,7 @@ export const postAPIs = async (path : string, fd? : any) => {
   });
 };
 
-export const deleteAPIs = async (path : string) => {
+export const deleteAPIs = async (path : string,fd? : any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios.delete(
@@ -742,7 +748,8 @@ export const deleteAPIs = async (path : string) => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${_token}`
-        }
+        },
+        data : fd
       }
     )
       .then(result => {
