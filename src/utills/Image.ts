@@ -107,6 +107,7 @@ export const Images = {
   UndoBtn: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Frame+9720.png",
   ClockIn : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Time+off+Illustration.png",
   people : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Layer_1.png",
+  payroll : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+26.png",
 
 }
 

@@ -453,14 +453,14 @@ export const useFetchLocationType = () => {
   return useQuery(LOCATION_TYPE, APIFunction.location_type)
 }
 
-export const useFetchPayslipInfo = (date:string, id:number) => {
-  return useQuery([PAYSLIP_INFO, date, id], () => APIFunction.payslip_info(date, id), {
-    enabled: date !== null && date !== undefined && id !== null && id !== undefined
+export const useFetchPayslipInfo = (date:string, id:number | string) => {
+  return useQuery([PAYSLIP_INFO, date, id], () => APIFunction.payslip_info(date, id as number), {
+    enabled: !!date && !!id
   })
 }
 
-export const useFetchPayrollHistory = (year:number) => {
-  return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year), {
+export const useFetchPayrollHistory = (year:number | string) => {
+  return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year as number), {
     enabled: !!year 
   })
 }
