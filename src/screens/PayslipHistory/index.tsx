@@ -16,8 +16,6 @@ export default function PayslipHistory() {
     isLoading : loading
   } = useFetchPayrollHistory(year || "") as useFetchPayrollHistoryProps
 
-  console.log("history",history)
-
   const {
     data : years,
     isLoading : loadingYears

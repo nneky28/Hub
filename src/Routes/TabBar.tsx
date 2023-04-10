@@ -55,7 +55,6 @@ function TabBar({ state, descriptors,navigation} : BottomTabBarProps) {
 
             const isFocused = state.index === index;
             const onPress = () => {
-              console.log("onPress",route)
               if (route.name === 'Menu')
                 setModal(true);
               else {

@@ -20,8 +20,6 @@ export default function PayslipBreakDown({route} : RootScreenProps) {
     data : payslip,
     isLoading : loading
   } = useFetchPayslipInfo(payroll?.period_start_date || "",payroll?.id || "") as useFetchPayslipInfoProps
-
-  console.log("useFetchPayslipInfo",payslip)
   // useEffect(()=>{
   //  dispatch(setLoaderVisible(loading))
   // },[loading])
