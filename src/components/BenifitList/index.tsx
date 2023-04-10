@@ -1,19 +1,27 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FlatList, Image, Linking, Text, View } from 'react-native';
 import { width } from 'react-native-dimension';
-import { Modal } from 'react-native-paper';
-import { rightIcon, twoMenIcon } from '../../assets/images';
 import { Images } from '../../component2/image/Image';
-import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
 import { Container, EmptyStateWrapper } from '../../utills/components';
-import { Capitalize, getData } from '../../utills/Methods';
+import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
-const BenifitList = ({data, horizontal,benefits,goToWeb}) => {
+import { twoMenIcon } from '../../assets/images';
+
+
+
+type Props = {
+  data: any;
+  horizontal?: boolean;
+  benefits: any;
+  goToWeb?: (url: string) => void;
+};
+
+const BenifitList : React.FC<Props> = ({ data, horizontal = false, benefits, goToWeb }) => {
   let color = "";
 
-  ListEmptyComponent = () => {
+ const ListEmptyComponent = () => {
     return(
       <EmptyStateWrapper 
         icon={Images.EmptyBenefits}
@@ -27,7 +35,7 @@ const BenifitList = ({data, horizontal,benefits,goToWeb}) => {
     <FlatList
     data={benefits}
     ItemSeparatorComponent={() => <View style={horizontal ? styles.margin : CommonStyles.marginTop_2} />}
-    keyExtractor={(i) => String(Math.random())}
+    keyExtractor={() => String(Math.random())}
     contentContainerStyle={styles.flatList}
     showsHorizontalScrollIndicator={false}
     nestedScrollEnabled={true}

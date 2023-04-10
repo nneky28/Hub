@@ -1,47 +1,49 @@
 
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, Keyboard, Platform, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
-import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
+import {  Keyboard, Text, TouchableOpacity, View } from 'react-native'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import { APIFunction, useFetchBanking, useFetchProviders, } from '../../utills/api'
+import { APIFunction, useFetchAboutMe, useFetchBanking, useFetchProviders, } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import { BackHandler, Container, H1, ItemListModal, P, useDebounce } from '../../utills/components'
+import { BackHandler, Container, H1, ItemListModal,useDebounce } from '../../utills/components'
 import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods'
 import styles from './styles'
-import { Field, Formik } from 'formik'
+import { Field } from 'formik'
 import CustomInput from '../../components/CustomInput'
-import { setLoaderVisible } from '../../Redux/Actions/Config'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import CustomModalDropdown from '../../components/CustomModalDropdown'
 import { ActivityIndicator } from 'react-native-paper'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import { width } from 'react-native-dimension'
+import { useFetchAboutMeProps } from '../../components/TimeoffModal/types'
 
+interface Data {
+    [key: string]: string | null;
+    account_name:null;
+    account_number: string;
+    pension_number: string;
+    bank: string;
+    provider: string;
+  }
+  interface IndexProps {
+    navigation: any;
+  }
 
-export default function PensionInfo({ navigation }) {
-    const dispatch = useDispatch()
-    const [data, setData] = useState({
+ const Index : React.FC<IndexProps> = ({ navigation }) => {
+    const [data, setData] = useState<Data>({
         account_name: null,
         account_number: "",
         pension_number: "",
         bank: "",
         provider: ""
     });
-
-    // const [providers,setProviders] = useState([]);
-    // const [banks,setBanks] = useState([])
-    // const [bankHolder,setBankHolder] = useState([]);
-    // const [provHolder,setProvHolder] = useState([]);
+     
     const [disabled, setDisabled] = useState(false)
     const auth = useSelector(state => state.Auth)
-
-
     const [visible, setVisible] = React.useState(false)
     const [open, setOpen] = React.useState(false)
     const [reload, setReload] = React.useState("")
     const reloadTerm = useDebounce(reload, 200)
-    const queryClient = useQueryClient()
-    const storedEmployee = useSelector(state => state.Employee)
+  
 
     const {
         mutateAsync: updatePension,
@@ -62,8 +64,11 @@ export default function PensionInfo({ navigation }) {
         isFetching: fetchingProviders
     } = useFetchProviders()
 
-
-    const handleSubmit = async (param) => {
+    const {
+        data : profile
+    } = useFetchAboutMe("main") as useFetchAboutMeProps
+     
+    const handleSubmit = async (param:any) => {
         try {
             let required = data?.account_number || data?.bank ?
                 ["account_number", "bank"] : []
@@ -74,10 +79,7 @@ export default function PensionInfo({ navigation }) {
             let msg = ""
             for (let req of required) {
                 if (
-                    !data[req] || data[req] === "" || data[req].toString().trim() === ""
-
-                    // || (disabled && data[req] === "Banks")
-                    // || (!disabled && data[req] === "Providers")
+                    !data[req] || data[req] === "" || data[req]?.toString().trim() === ""
                 ) {
                     failed = true
                     msg = `${Capitalize(req.replace("_", " "))} is required`
@@ -118,42 +120,41 @@ export default function PensionInfo({ navigation }) {
                 }
                 fd["is_pension_applicable"] = true
             }
-            let profile = await getData("profile")
-            let res = await updatePension({ ...fd, id: profile.about.id })
-            storeData("about_me", res)
-            storeData("profile", { ...profile, about: res })
-            ToastSuccess("Record has been saved");
+        
+            let res = await updatePension({ ...fd, id: profile?.id })
+            if (res) {     
+                ToastSuccess("Record has been saved");
+               }
             if (auth.route !== "main") {
                 return navigation.navigate("EditPhoto")
             }
             return navigation.goBack()
-        } catch (err) {
+        } catch (err:any) {
             ToastError(err.msg)
         }
     }
 
     const fetchRecord = async () => {
         try {
-            let about = await getData("about_me");
             setData({
-                account_name: about?.bank_account?.account_name || "",
-                account_number: about?.bank_account?.account_number || "",
-                bank_code: about?.bank_account?.bank?.code || "",
-                pension_number: about?.pension?.pension_number || "",
-                bank: about?.bank_account?.bank?.id || "",
-                provider: about?.pension?.provider?.id || "",
-                bank_name: about?.bank_account?.bank?.name || "",
-                prov_name: about?.pension?.provider?.name || "",
+                account_name: profile?.bank_account?.account_name || "",
+                account_number: profile?.bank_account?.account_number || "",
+                bank_code: profile?.bank_account?.bank?.code || "",
+                pension_number: profile?.pension?.pension_number || "",
+                bank: profile?.bank_account?.bank?.id || "",
+                provider: profile?.pension?.provider?.id || "",
+                bank_name: profile?.bank_account?.bank?.name || "",
+                prov_name: profile?.pension?.provider?.name || "",
             })
-            about?.bank_account?.account_name ? setDisabled(false) : setDisabled(true)
-        } catch (err) {
+            profile?.bank_account?.account_name ? setDisabled(false) : setDisabled(true)
+        } catch (err:any) {
             ToastError(err.msg)
         }
     }
 
     useEffect(() => {
         fetchRecord()
-    }, [])
+    }, [profile])
 
 
     useEffect(() => {
@@ -182,7 +183,7 @@ export default function PensionInfo({ navigation }) {
             <Container
                 flex={1}
             >
-                <Formik>
+                {/* <Formik> */}
                     <Container>
                         <Container
                             paddingHorizontal={5}
@@ -195,40 +196,31 @@ export default function PensionInfo({ navigation }) {
                             <View style={styles.line} />
                         </Container>
                         {
-                            !disabled ? (
-                                <Field
-                                    component={CustomInput}
-                                    name="account_number"
-                                    placeholder="Account Name"
-                                    value={data.account_name}
-                                    color={AppColors.black}
-                                    editable={false}
-                                />
+                            !disabled ? (   
+                            <CustomInput
+                             placeholder="Account Name"
+                             value={data.account_name ?? ''}
+                             editable={false}
+                             onChangeData={() => null}
+                            />
                             ) : null
-                        }
-                        <Field
-                            component={CustomModalDropdown}
-                            name="bank"
-                            placeholder="Bank"
-                            defaultValue={data.bank_name || ""}
-                            setOpen={setOpen}
-                            color={AppColors.black}
-                        />
-                        <Field
-                            component={CustomInput}
-                            name="account_number"
-                            placeholder="Account Number"
-                            value={data.account_number}
-                            onChangeData={async (value) => {
-                                setData({ ...data, account_number: value })
-                                setDisabled(true)
-                                setReload(value)
-                            }}
-                            color={AppColors.black}
-                            keyboardType={'numeric'}
-                            maxLength={10}
-                        />
-
+                    }
+                    <CustomModalDropdown
+                           placeholder="Bank"
+                           defaultValue={data.bank_name || ""}
+                           setOpen={setOpen}
+                    />
+                    <CustomInput
+                           placeholder="Account Number"
+                           value={data.account_number}
+                           onChangeData={async (value) => {
+                               setData({ ...data, account_number: value })
+                               setDisabled(true)
+                               setReload(value)
+                           }}
+                           keyboardType={'numeric'}
+                           maxLength={10}
+                    />
                         <Container
                             paddingHorizontal={5}
                             marginTop={2}
@@ -238,30 +230,29 @@ export default function PensionInfo({ navigation }) {
                                 Pension Information
                             </Text>
                             <View style={styles.line} />
-                        </Container>
-                        <Field
-                            component={CustomModalDropdown}
-                            name="provider_name"
-                            placeholder="Pension Provider"
-                            defaultValue={data.prov_name || ""}
-                            setOpen={setVisible}
-                        />
-                        <Field
-                            component={CustomInput}
-                            name="pension_number"
-                            placeholder="Pension Number"
-                            value={data.pension_number}
-                            onChangeData={async (value) => setData({ ...data, pension_number: value })}
-                            color={AppColors.black}
-                            keyboardType={'numeric'}
-                        />
-
                     </Container>
-                </Formik>
+                    
+                    <CustomModalDropdown
+                           placeholder="Pension Provider"
+                           defaultValue={data.prov_name || ""}
+                           setOpen={setVisible}
+                    />
+                        
+                    <CustomInput
+                           placeholder="Pension Number"
+                           value={data.pension_number}
+                           onChangeData={async (value) => setData({ ...data, pension_number: value })}
+                           keyboardType={'numeric'}
+                    />
+                     
+                    </Container>
+                {/* </Formik> */}
+                <>
                 {
                     open ? <ItemListModal
-                        data={banks}
-                        setOpen={setOpen} open={open}
+                        data={banks as Array<{id: string, name: string}>}
+                            setOpen={setOpen}
+                            open={open}
                         onPressHandler={(value) => {
                             let load = { ...data, bank: value }
                             setData(load)
@@ -278,7 +269,7 @@ export default function PensionInfo({ navigation }) {
                             ) {
                                 return false
                             }
-                            handleSubmit()
+                            handleSubmit({})
 
                         }}
 
@@ -287,11 +278,13 @@ export default function PensionInfo({ navigation }) {
                         sub_text={"They will show up here when you have."}
                     /> : null
                 }
+                </>
 
             </Container>
+            <>
             {
                 visible ? <ItemListModal
-                    data={providers}
+                    data={providers as Array<{id: string, name: string}>}
                     setOpen={setVisible} open={visible}
                     onPressHandler={(item) => {
                         let load = {
@@ -306,9 +299,11 @@ export default function PensionInfo({ navigation }) {
                     loading={fetchingProviders}
                 /> : null
             }
+            </>
+            <>
             {
                 open ? <ItemListModal
-                    data={banks}
+                    data={banks  as Array<{id: string, name: string}>}
                     setOpen={() => setOpen(false)} open={open}
                     onPressHandler={(item) => {
                         let load = {
@@ -326,7 +321,9 @@ export default function PensionInfo({ navigation }) {
                     loading={fetchingBanks}
                 /> : null
             }
+            </>
         </ScreenWrapper>
     )
 }
 
+export default Index;

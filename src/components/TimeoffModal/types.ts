@@ -13,7 +13,7 @@ export type TimeoffModalProps = {
 }
 type WorkDays = "Monday"| "Tuesday"| "Wednesday"| "Thursday"| "Friday"| "Saturday"| "Sunday"
 export type useFetchAboutMeData = {
-    id?: number
+    id?: number|null
     employee_id? : 11
     photo? : string,
     title? : string,

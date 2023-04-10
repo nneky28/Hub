@@ -471,7 +471,7 @@ export const useFetchAssets = (employee_pk?:number) => {
   })
 }
 
-export const useFetchBenefits = (employee_pk?:number) => {
+export const useFetchBenefits = (employee_pk?:number|null) => {
   return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk as number), {
     enabled: !!employee_pk 
   })

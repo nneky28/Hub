@@ -13,7 +13,7 @@ import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
 import { APIFunction, useFetchAboutMe } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
 import { BackHandler, DatePickerModal, KeyboardAwareWrapper } from '../../utills/components';
-import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
 
 interface Data {
@@ -100,9 +100,9 @@ const Index : React.FC<IndexProps> = ({ navigation }) => {
                     "city": data.city || "",
                     "postal_code": data.postal_code || ""
                 },
-                id:profile?.id
+             
             }
-            let res = await mutateAsync(fd);
+            let res = await mutateAsync({...fd,id:profile?.id});
             if (res) { 
                 ToastSuccess("Profile Updated")
              }

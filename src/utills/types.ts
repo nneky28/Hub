@@ -33,8 +33,8 @@ export type BackHandlerProps = {
   position? : "flex-start" | "center" | "flex-end"
 }
 export type CustomWebViewProps = {
-  web_url : string
-  show : boolean
+  web_url : string|null
+  show? : boolean
   setShow : () => void
 }
 export type OnboardModalProps = {
@@ -223,17 +223,17 @@ export type DateModeProps = "text-field" | "calendar"
   }
 
  export type ItemListModalProps = {
-  setOpen : () => void,
-  loading : boolean,
+  setOpen? : (param : boolean) => void,
+  loading? : boolean,
   data : readonly any[],
   open : boolean,
   onPressHandler : (param : any) => void,
   header_1 : string,
   header_2 : string,
   sub_text : string,
-  getMore : boolean,
-  setPage : (param : number) => void,
-  page : number,
+  getMore? : boolean,
+  setPage? : (param : number) => void,
+  page? : number,
   saving? : boolean,
   type? : string,
   buttonTitle? : string,
