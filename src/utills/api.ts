@@ -172,7 +172,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
-  about_me: async (biz_id = null) => {
+  about_me: async (biz_id? : string) => {
     if(biz_id) return await getAPIs(`/c/${biz_id}/employees/me/`);
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/me/`);
