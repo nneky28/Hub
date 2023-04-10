@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, StyleSheet, Platform, RefreshControl, TextInput, PermissionsAndroid, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
+import { ImageBackground, Text, Platform, RefreshControl, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "../component2/image/Image"
 import {
@@ -18,7 +18,7 @@ import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import { WebView } from 'react-native-webview';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../Redux/Actions/Auth';
 import { Capitalize, storeData, ToastSuccess } from './Methods';
 import { APIFunction} from './api';
@@ -32,7 +32,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import CommonStyles from './CommonStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ReactNativeModal from 'react-native-modal'
-import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps, ContainerProps, HTagProps, CustomCalenderProps, CustomWebViewProps } from './types';
+import { ImgPlaceholderProps,  LottieIconProps, PTagProps,DatePickerModalProps, UserPINComponentProps, ItemListModalProps, ListComponentProps, ContainerProps, HTagProps, CustomCalenderProps, CustomWebViewProps, SizedBoxProps, CustomFallBackScreenProps, TouchableWrapperProps, EmptyStateWrapperProps, ImageWrapProps, AppButtonProp, TouchWrapProps, RoundedProps, onNavigationStateChangeProps, OnboardModalProps, BackHandlerProps } from './types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SearchBox from '../components/SearchBox';
 import Button from '../components/Button';
@@ -41,6 +41,7 @@ import CustomInput from '../components/CustomInput';
 import { useAppSelector } from './Methods';
 import { scrollToPosition } from '../Redux/Actions/Config';
 import { CordType } from './types';
+import { useFetchAboutMeData } from '../components/TimeoffModal/types';
 
 
 const winDimensions = Dimensions.get("window")
@@ -126,9 +127,9 @@ export const P = (props : PTagProps) => (
       {
         fontSize: props.fontSize ? width(props.fontSize) : width(3.5),
         fontFamily: FontFamily.BlackSansRegular,
-        textAlign: props.textAlign,
+        textAlign: props?.textAlign,
         color: props.color || AppColors.black,
-        marginTop: props?.marginTop ? height(props?.marginTop) : null
+        marginTop: props?.marginTop ? height(props?.marginTop) : undefined
         //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
       },
       props.style
@@ -149,8 +150,8 @@ export const H1 = (props: HTagProps) => (
         textDecorationLine: props.underline || "none",
         textDecorationColor: props.lineColor,
         textDecorationStyle: "solid",
-        marginLeft: props?.marginLeft ? width(props?.marginLeft) : null,
-        marginTop: props?.marginTop ? height(props?.marginTop) : null
+        marginLeft: props?.marginLeft ? width(props?.marginLeft) : undefined,
+        marginTop: props?.marginTop ? height(props?.marginTop) : undefined
       },
       props.style
     ]}
@@ -169,7 +170,7 @@ export const SizedBox = ({...props}:SizedBoxProps) => (
   />
 )
 
-export const useDebounce = (value:any, delay:any) => {
+export const useDebounce = (value:string | number, delay:number) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(
@@ -373,7 +374,7 @@ export const Container = (props : ContainerProps) => (
         flex: props.flex || 0,
         flexDirection: props.direction,
         width: props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
-        padding: props.padding ? width(props.padding) : null,
+        padding: props.padding ? width(props.padding) : undefined,
         height: props?.height,
         //? height(props.height) : null,
         justifyContent:
@@ -382,14 +383,13 @@ export const Container = (props : ContainerProps) => (
             : props.verticalAlignment,
         alignItems:
           props.direction === "row"
-            ? props.verticalAlignment
-            : props.horizontalAlignment,
+            ? props.verticalAlignment : props.horizontalAlignment,
         paddingHorizontal: props.paddingHorizontal ? width(props.paddingHorizontal) : width(0),
         marginTop: props.marginTop ? height(props.marginTop) : 0,
         marginBottom: props.marginBottom ? height(props.marginBottom) : 0,
         marginLeft: props.marginLeft ? width(props.marginLeft) : 0,
         paddingTop: props.paddingTop ? height(props.paddingTop) : 0,
-        paddingBottom: props.paddingBottom ? height(props.paddingBottom) : null,
+        paddingBottom: props.paddingBottom ? height(props.paddingBottom) : undefined,
         paddingVertical: props.paddingVertical ? height(props.paddingVertical) : undefined,
         paddingRight: props.paddingRight ? width(props.paddingRight) : 0,
         paddingLeft: props.paddingLeft ? width(props.paddingLeft) : 0,
@@ -467,7 +467,7 @@ export const TouchWrap = (props:TouchWrapProps) => (
       {
         alignItems: "center",
         justifyContent: "center",
-        width: props.width ? width(props.width) : null,
+        width: props.width ? width(props.width) : undefined,
         height: props.height ? height(props.height) : height(6)
       },
       props.style
@@ -480,7 +480,7 @@ export const TouchWrap = (props:TouchWrapProps) => (
 )
 export const Width = (val:any) => {
   let res;
-  val === undefined || null ? (res = null) : (res = (val / 100) * winWidth);
+  val === undefined || null ? (res = undefined) : (res = (val / 100) * winWidth);
   return res;
 };
 export const Rounded = (props:RoundedProps) => (
@@ -488,7 +488,7 @@ export const Rounded = (props:RoundedProps) => (
     style={{
       width: Width(props.size || 15),
       height: Width(props.size || 15),
-      borderRadius: 50,
+      borderRadius: width(props?.radius || 50),
       backgroundColor: props.backgroundColor || AppColors.green,
       justifyContent: "center",
       alignItems: "center"
@@ -661,7 +661,7 @@ const onNavigationStateChange = async ({param, dispatch, auth}:onNavigationState
   try {
     let split = param.url && typeof (param.url) == "string" ? param.url.split("&business_id") : []
     if (split.length === 1) return
-    var regexp = /[?&]([^=#]+)=([^&#]*)/g, payload = {}, check;
+    var regexp = /[?&]([^=#]+)=([^&#]*)/g, payload : {[index : string] : string} = {}, check;
     while (check = regexp.exec(param.url)) {
       payload[check[1]] = check[2];
     }
@@ -675,10 +675,9 @@ const onNavigationStateChange = async ({param, dispatch, auth}:onNavigationState
     //   // Save token for native requests & move to the next screen
     // }
     dispatch(setLoaderVisible(true))
-    await storeData("token", payload.token)
-    let about_me = await APIFunction.about_me(payload.business_id)
+    await storeData("token", payload?.token)
+    let about_me = await APIFunction.about_me(payload?.business_id) as useFetchAboutMeData
     let user = await APIFunction.user_info()
-    let refresh = null;
     let data = {
       access_token: payload.token,
       refresh_token: null,
@@ -687,18 +686,18 @@ const onNavigationStateChange = async ({param, dispatch, auth}:onNavigationState
     await storeData("refresh", data.refresh_token);
     await storeData("about_me", about_me)
     await storeData("user", data.user);
-    await storeData("logout_time", moment(new Date()).add(2, 'hours'));
+    await storeData("logout_time", moment(new Date()).add(360, 'hours'));
     await storeData('token_expiry', moment(new Date()).add(60, 'minutes'))
     ToastSuccess("Login was successful")
     //dispatch(setLoaderVisible(false));
-    return dispatch(login({ ...auth, onboard: false, url: null, user: { userName: "Joe", ...data.user }, route: "onboard", isLogin: true }));
+    return dispatch(login({ ...auth, onboard: false, url: null, user: about_me, route: "onboard", isLogin: true }));
   } catch (err) {
   }
 };
 
 export const OnboardModal = (props:OnboardModalProps) => {
   const dispatch = useDispatch()
-  const auth = useSelector(state => state.Auth)
+  const auth = useAppSelector(state => state.Auth)
   return (
     <Modal visible={props.visible}>
       <Container
@@ -722,7 +721,7 @@ export const OnboardModal = (props:OnboardModalProps) => {
         <WebView
           source={{ uri: `${BASE_URL}${props.url}` }}
           style={{ marginTop: 20 }}
-          onNavigationStateChange={(param) => onNavigationStateChange(param, dispatch, auth)}
+          onNavigationStateChange={(param) => onNavigationStateChange({param, dispatch, auth})}
           startInLoadingState={true}
           renderLoading={() => <Container paddingVertical={4}>
             <ActivityIndicator
@@ -844,7 +843,9 @@ export const NotifyHandler = ({ onPress }:BackHandlerProps) => {
 }
 
 export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
-  const reportError = useMutation((load) => APIFunction.error_report(load))
+  const {
+    mutateAsync : reportError
+  } = useMutation(APIFunction.error_report)
   const logoutMethod = async () => {
     try {
       let keys = await AsyncStorage.getAllKeys()
@@ -858,7 +859,7 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
     let fd = {
       report: JSON.stringify(`${props?.error}${props?.error?.toString()}`)
     }
-    reportError.mutateAsync(fd)
+    reportError(fd)
   }
   useEffect(() => {
     reportMainError()
@@ -1049,36 +1050,5 @@ export const KeyboardAwareWrapper = ({children,scrollable,style} : KeyboardAware
       </KeyboardAwareScrollView>
   )
 }
-
-// generating dates in iso 
-
-// for length of the number structure
-// export const padStart = ({ value, maxLength, fillingValue }:
-//   { value: string | number, maxLength: number, fillingValue: string | number }) => {
-//   return `${value}`.padStart(maxLength,`${fillingValue}`.trim())
-// }
-// export const rawDate = ({ date }: { date?: string | number | Date; }={}) :Date=> {
-//   return date ? new Date(date) : new Date();
-// }
-
-// export const rawDateObject = ({ date }: { date?: string | number | Date; } = {}):
-//   { year: string, month: string; day: string; weekDay: string; hour: string; minutes: string; seconds: string; milliseconds: string; } => {
-  
-//   const now = rawDate({ date });
-//   const year = now.getFullYear().toString();
-//   const month = padStart({ value: now.getMonth() +1,maxLength:2,fillingValue:0 })
-//   const day = padStart({ value: now.getDate(), maxLength: 2, fillingValue: 0 })
-//   const weekDay = padStart({ value: now.getDay(), maxLength: 2, fillingValue: 0 })
-//   const hour = padStart({ value: now.getHours(), maxLength: 2, fillingValue: 0 })
-//   const minutes = padStart({ value: now.getMinutes(), maxLength: 2, fillingValue: 0 })
-//   const seconds = padStart({ value: now.getSeconds(), maxLength: 2, fillingValue: 0 })
-//   const milliseconds = padStart({ value: now.getMilliseconds(),maxLength:3,fillingValue:0 })
-//   return {year,month,day,weekDay,hour,minutes,seconds,milliseconds} 
-// }
-
-// export const GenerateIsoDates = ({ date }: { date?: string | number | Date; }={}) :string=> {
-//   const { year, month, day, hour, minutes, seconds, milliseconds } = rawDateObject({ date });
-//   return `${year}-${month}-${day}T${hour}:${minutes}:${seconds}.${milliseconds}Z`;
-// }
 
 
