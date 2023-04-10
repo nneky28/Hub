@@ -18,14 +18,14 @@ export type useFetchAboutMeData = {
     photo? : string,
     title? : string,
     title_display? : string
-    first_name?: string
-    middle_name?: string
-    last_name?:string,
-    email? : string
+    first_name: string
+    middle_name: string
+    last_name:string,
+    email : string
     hire_date? : string
-    marital_status?: string
+    marital_status: string
     marital_status_display? : string
-    gender? : string 
+    gender : string 
     gender_display? : string
     nationality?:string,
     employee_job? : {
@@ -52,7 +52,7 @@ export type useFetchAboutMeData = {
     }
     phone_number1?: string,
     phone_number2?: string,
-    birth_date?: string,
+    birth_date: string,
     type?: string,
     type_display?: string,
     level?: string,
@@ -77,7 +77,7 @@ export type useFetchAboutMeData = {
     },
     department?: {
         id?: number,
-        name?: string,
+        name: string,
     },
     region?: {
         id?: number,

@@ -152,14 +152,14 @@ export type HTagProps = {
   
 
 export type DatePickerModalProps = {
-    show : boolean
-    setShow : (param : boolean) => void
+    show? : boolean
+    setShow? : (param : boolean) => void
     type? : string
-    current : string
+    current? : string
     header? : string
-    mode : "time" | "date" | "datetime"
+    mode? : "time" | "date" | "datetime"
    
-    onChangeData : (param : string | Date) => void
+    onChangeData? : (param : string | Date) => void
 }
 export type CustomCalenderProps = {
     setShow : (param : false | DateData) => void

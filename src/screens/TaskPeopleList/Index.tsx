@@ -9,6 +9,7 @@ import PersonListComp, { DeptListComp } from '../../components/PersonListComp/in
 import { useFetchEmployees, useFetchTeams, useFetchDepartments } from '../../utills/api';
 import {  getData } from '../../utills/Methods';
 import { height, width } from 'react-native-dimension';
+import { useFetchAboutMeData } from '../../components/TimeoffModal/types';
 
 
 
@@ -21,14 +22,13 @@ interface Props {
   
 
 
-const TaskPeopleList = ({ navigation }) => {
+const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
   const [myTeam, setMyTeam] = useState({name : ""})
   const [item, setItem] = useState<Array<any>>([]);
   const [teamItem, setTeamItem] = useState<Array<any>>([]);
   const [page, setPage] = useState<number>(1);
   const [teamPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
-  const [id] = useState<boolean>(false);
   const [tab, setTab] = useState<string>("Employees");
   const [deptPage] = useState<number>(1);
   const [departments, setDepartments] = useState<Array<any>>([]);
@@ -53,26 +53,25 @@ const TaskPeopleList = ({ navigation }) => {
         isFetchingNextPage: fetchingNextDepartments,
     } = useFetchDepartments(deptPage, searchDeptTerm)
 
-
+   
     const RenderItem = ({ item }:{item:any}) => {
         return (
           <PersonListComp
             item={item}
             onPressHandle={() =>
-              navigation.navigate("profile", { item })
+                navigation.navigate("Menu", { screen: "TeamTaskHome", params: { item: item } })
+
             }
           />
         );
       };
     
-    
-    
       const RenderDept = ({ item }:{item:any}) => {
         return (
           <DeptListComp
             item={item}
-            onPressHandle={() =>
-              navigation.navigate("profile", { item, departments })
+                onPressHandle={() =>
+                    navigation.navigate("Menu", { screen: "TeamTaskHome", params: {item, departments} })
             }
           />
         );
@@ -153,12 +152,15 @@ const TaskPeopleList = ({ navigation }) => {
         setPage(1)
     }
     
-    const aboutMe = async () => {
-        let details = await getData("about_me");
-      setMyTeam(details?.department);
-    };
-
   
+      const aboutMe = async () => {
+        const about = await getData("about_me") as useFetchAboutMeData | null;
+        if (!about || !about) return; 
+        if (about.department) {
+          setMyTeam(about.department);
+        }
+      };
+      
     useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
@@ -172,13 +174,11 @@ const TaskPeopleList = ({ navigation }) => {
         aboutMe()
     }, [tab])
 
-console.log("myTeam",myTeam)
+
     return (
         <View
             style={styles.wrapper}>
-            {
-                loading && <ActivityIndicator size={width(10)} color={AppColors.green} />
-            }
+         
 
             <View style={styles.containerView}>
                 <View style={styles.header}>
@@ -231,7 +231,7 @@ console.log("myTeam",myTeam)
                         </View>
                     ) : null
                 }
-
+          
                 {
                     tab === "Employees" ?
                         <View>
@@ -263,6 +263,10 @@ console.log("myTeam",myTeam)
                                       onPressHandle={() => null}
                                 />
                             </View>
+                            {
+                loading && <ActivityIndicator size={width(10)} color={AppColors.green} />
+            }
+
                             <View style={[CommonStyles.marginBottom_2, CommonStyles.marginTop_1, CommonStyles.marginLeft_5,]}>
                                 <H1 fontSize={3.3}>Department</H1>
                             </View>

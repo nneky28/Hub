@@ -104,7 +104,7 @@ const TaskHome = ({ navigation, route }) => {
     );
     const RenderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('search')}>
+            <TouchableOpacity onPress={() => navigation.navigate("Menu", { screen: "TaskPeopleList" })}>
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         );
@@ -141,22 +141,22 @@ const TaskHome = ({ navigation, route }) => {
                             : index === 0 && actionTitle === "To-Do" && tab === "Upcoming"
                                 ? "have no Upcoming task."
                                 : index === 0 && actionTitle === "To-Do" && tab
-                                    ? `have no task ${tab}.`
+                                    ? `have no task ${tab.toLowerCase()}.`
                                     : index === 0 ? "have no Completed task." : null}
 
                         {index === 1 && actionTitle === "To-Do" && tab === "All"
                             ? "No sent task TO-DO"
                             : index === 1 && actionTitle === "To-Do" && tab
-                                ? `No sent task is ${tab}`
+                                ? `No sent task is ${tab.toLowerCase()}`
                                 : index === 1 && actionTitle === "Completed"
-                                    ? `No sent task is ${actionTitle}`
+                                    ? `No sent task is ${actionTitle.toLowerCase()}`
                                     : null}
 
                         {index === 2 && actionTitle === "To-Do" && tab === "All"
                             ? "no task To-Do"
                             : index === 2 && actionTitle === "To-Do" && tab
-                                ? `has no task ${tab}`
-                                : index === 2 ? `no task ${actionTitle}` : null}
+                                ? `has no task ${tab.toLowerCase()}`
+                                : index === 2 ? `no task ${actionTitle.toLowerCase()}` : null}
                     </Text>
                 </View>
             </View>
@@ -206,18 +206,18 @@ const TaskHome = ({ navigation, route }) => {
     const {
         data: dueTasks,
         isLoading: loadingDueTask
-    } = useFetchDueToday(tab, index, "duetoday");
+    } = useFetchDueToday(tab, index);
 
     const {
         data: upcomingTasks,
         isLoading: loadingUpcoming
-    } = useFetchDueToday(tab, index, "upcoming");
+    } = useFetchUpcoming(tab, index);
 
     const {
         data: overdueTasks,
         isLoading: loadingOverdue
-    } = useFetchDueToday(tab, index, "overdue");
-
+    } = useFetchOverDue(tab, index);
+    console.log("OverdueTasks", overdueTasks,)
     // all sent here
     const {
         data: allSentTasks,
@@ -554,7 +554,7 @@ const TaskHome = ({ navigation, route }) => {
                     return (
                         <AddButton
                             style={styles.addButton}
-                            onPress={() => navigation.navigate("CreateTask")}
+                            onPress={() => navigation.navigate("Menu", { screen: "CreateTask" })}
                         />
                     );
                 }}>
@@ -607,7 +607,8 @@ const TaskHome = ({ navigation, route }) => {
                                 <TouchableOpacity
                                     style={styles.searchView}
                                     onPress={() =>
-                                        navigation.navigate('search')
+                                        // navigation.navigate('search')
+                                        navigation.navigate("Menu", { screen: "TaskPeopleList" })
                                     }>
                                     <Image
                                         source={{ uri: Images.SearchIcon }}
@@ -722,7 +723,7 @@ const TaskHome = ({ navigation, route }) => {
                                                         resizeMode='cover'
                                                         imageStyle={{
                                                             borderRadius: width(4),
-                                                            height: height(8)
+                                                            // height: height(8)
                                                         }}
                                                         style={styles.clipped}
                                                     />

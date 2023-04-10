@@ -14,7 +14,7 @@ import { width, height } from 'react-native-dimension';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, useFetchAboutMe, } from '../../utills/api';
-import { storeData, getData, Capitalize } from '../../utills/Methods';
+import { storeData, Capitalize } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { Images } from '../../component2/image/Image';
