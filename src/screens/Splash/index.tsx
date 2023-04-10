@@ -5,7 +5,7 @@ import { login } from '../../Redux/Actions/Auth';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import { getStoreAboutMe, storeData } from '../../utills/Methods';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import styles from "./styles"
 import { setSecurityVisible } from '../../Redux/Actions/Config';
 import { getBuildNumber } from 'react-native-device-info';

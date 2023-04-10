@@ -15,7 +15,7 @@ import tasksData from '../../utills/data/tasksData';
 import { Capitalize, ToastError, ToastSuccess, useAppSelector } from '../../utills/Methods';
 import styles from './styles';
 import { useDispatch } from 'react-redux';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useMutation, useQueryClient } from 'react-query';
 import TimeoffModal from '../../components/TimeoffModal';
@@ -26,6 +26,7 @@ import { RootScreenProps } from '../../Routes/types';
 import { useFetchAnniversaryProps, useFetchAssetsProps, useFetchBenefitsProps, useFetchBirthdaysProps, useFetchEmployeeTimeOffData, useFetchEmployeeTimeOffProps, useFetchEmployeeTimeOffReqsData, useFetchEmployeeTimeOffReqsProps, useFetchEmployeeTimeOffTakenData, useFetchEmployeeTimeOffTakenProps, useFetchWhosOutProps } from './types';
 import WarningModal from '../../components/WarningModal';
 import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
+import { RenderItemVerticalParams } from '../../components/Timeoff/types';
 
 
 
@@ -246,28 +247,34 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } } : R
     setRequestData({...requestData,reason : value})
   }
 
-  const showModalHandler = (timeoff_id : number, item : useFetchEmployeeTimeOffData, tab_name : string) => {
-    if (tab_name == "active") {
-      setText("Are you sure you want to end this leave?")
-      setDelete(item);
+  const showModalHandler = (param : RenderItemVerticalParams) => {
+    if (param?.status == "active") {
+      // setText("Are you sure you want to end this leave?")
+      // setDelete(param?.item);
       return setShow(true);
     }
-    if (tab_name === "request") {
-      setDelete(item);
+    if (param?.status === "request") {
+      setDelete(param?.item);
       setText("Are you sure you want to cancel this request?")
       return setShow(true);
     }
     
-    if (item.total_days_taken !== undefined && item.total_days_taken !== undefined && item.max_days_allowed &&
-      item.total_days_taken >= 0 &&
-      item.total_days_taken <
-      item.max_days_allowed) {
-      setCurrent(timeoff_id)
+    if (param?.status === "balance" && param?.item?.total_days_taken !== undefined && param?.item?.total_days_taken !== undefined && param?.item?.max_days_allowed &&
+      param?.item?.total_days_taken >= 0 &&
+      param?.item.total_days_taken <
+      param?.item?.max_days_allowed) {
+      setCurrent(param?.item?.id)
       return setModal(true)
     }
   }
 
   const onHideHandler = () => {
+    setRequestData({
+      start_date : "",
+      end_date : "",
+      reason : ""
+    })
+    setModal(false)
     setShow(false)
   }
 
@@ -373,15 +380,15 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } } : R
                     </View>
                     <View>
                       <Timeoff
-                        data={
+                        load={
                           index == 0
                             ? active && Array.isArray(active) ? active : []
                             : index == 1
                               ? available && Array.isArray(available) ? available : []
                               : requests && Array.isArray(requests) ? requests : []
                         }
-                        tab={index === 0 ? "active" : index === 1 ? "available" : "request"}
-                        showModal={showModalHandler}
+                        data={index === 0 ? "active" : index === 1 ? "balance" : "request"}
+                        onItemPress={showModalHandler}
                       />
                     </View>
                     {
@@ -436,9 +443,7 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } } : R
             {
               !appear && modal ?  <TimeoffModal
                 isVisible={modal}
-                onHide={() => {
-                  setModal(false)
-                }}
+                onHide={onHideHandler}
                 timeoff_id={current} 
                 datePickerHandler={datePickerHandler}
                 onChangeText={onChangeText}

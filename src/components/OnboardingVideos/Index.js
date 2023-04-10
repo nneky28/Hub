@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react'
 import styles from './styles'
 import { CloseHandler, Container, P } from '../../utills/components';
 import AppColors from '../../utills/AppColors';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 
 
 const Index = ({ visible, onHide }) => {

@@ -15,7 +15,7 @@ import CustomList from '../../components/CustomList/Index'
 import { APIFunction, } from '../../utills/api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useMutation, useQueryClient } from 'react-query';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import CommonStyles from '../../utills/CommonStyles';
 import { height, width } from 'react-native-dimension';
 import { TextInput } from "react-native-paper"

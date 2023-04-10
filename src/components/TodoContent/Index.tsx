@@ -8,7 +8,7 @@ import {
 import React, { useState} from 'react'
 import { H1, P, TouchableWrapper} from '../../utills/components'
 import styles from './styles'
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import AppColors from '../../utills/AppColors';
 import { ActionModal, UnCompletedModal, SentActionModal } from '../ContactModal';
 import moment from 'moment';

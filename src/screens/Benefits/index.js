@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core';
 import React, { useCallback, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { leftIcon } from '../../assets/images';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import BenifitList from '../../components/BenifitList';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { APIFunction, getAPIs, useFetchBenefits } from '../../utills/api';

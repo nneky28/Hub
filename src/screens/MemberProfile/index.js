@@ -14,7 +14,7 @@ import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods
 import styles from './styles';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import Teamjson from '../../assets/lottie/teams.json'
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 
 
 

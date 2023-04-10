@@ -13,7 +13,7 @@ import {Fragment} from 'react';
 import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import {login} from '../Redux/Actions/Auth';
-import {Images} from "../component2/image/Image"
+import {Images} from "../utills/Image"
 import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getStoredUser, ToastSuccess, useAppSelector } from '../utills/Methods';
 import AsyncStorage from '@react-native-async-storage/async-storage';

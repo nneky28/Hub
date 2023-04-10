@@ -23,7 +23,7 @@ import {
 import { Capitalize } from '../../utills/Methods';
 import numeral from 'numeral'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import CommonStyles from '../../utills/CommonStyles';
 
 

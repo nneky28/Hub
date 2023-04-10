@@ -1,48 +1,36 @@
-import { useFocusEffect } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { DateData } from 'react-native-calendars/src/types'
-import { height, totalSize, width } from 'react-native-dimension'
-import { useQueryClient } from 'react-query'
-import { categoryIcon1, downIcon, filterIcon, leftIcon, listingIcon } from '../../assets/images'
-import { WarningModal } from '../../components/ContactModal'
+import { useMutation} from 'react-query'
 import CustomCalendarModal from '../../components/CustomCalendarModal'
-import PersonCard from '../../components/PersonCard'
-import PersonListComp from '../../components/PersonListComp'
+import { HomePageHeader } from '../../components/Headers/CustomHeader'
 import ScreenWrapper from '../../components/ScreenWrapper'
-import SearchBox from '../../components/SearchBox'
 import { TimeoffVertical } from '../../components/Timeoff'
+import { RenderItemVerticalParams} from '../../components/Timeoff/types'
 import TimeoffModal from '../../components/TimeoffModal'
-import TrainingList from '../../components/TrainingList'
-import { APIFunction, deleteAPIs, getAPIs, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffReqs, useFetchEmployeeTimeOffTaken } from '../../utills/api'
+import WarningModal from '../../components/WarningModal'
+import { APIFunction, useFetchEmployeeTimeOff, useFetchEmployeeTimeOffReqs, useFetchEmployeeTimeOffTaken } from '../../utills/api'
 import AppColors from '../../utills/AppColors'
-import CommonStyles from '../../utills/CommonStyles'
-import { BackHandler, Container, CustomRefreshControl, LottieIcon, PageLoader, Reload, SizedBox } from '../../utills/components'
-import { celebrations, whosOut } from '../../utills/data/celebrations'
-import { persons } from '../../utills/data/persons'
-import tasksData from '../../utills/data/tasksData'
-import { getData, getStoredBusiness, ToastError, ToastSuccess } from '../../utills/Methods'
+import { Container, PageLoader, TouchableWrapper } from '../../utills/components'
+import { Images } from '../../utills/Image'
+import { getStoreAboutMe, ToastError, ToastSuccess } from '../../utills/Methods'
+import { useFetchEmployeeTimeOffData, useFetchEmployeeTimeOffProps, useFetchEmployeeTimeOffReqsData, useFetchEmployeeTimeOffReqsProps, useFetchEmployeeTimeOffTakenData, useFetchEmployeeTimeOffTakenProps } from '../Dashboard/types'
 import styles from './styles'
 
 
-export default function TimeOff({navigation}) {
+export default function TimeOff() {
     
     var [selected, setSelected] = useState('Available');
-    const [requests,setRequests] = useState(null);
-    const [available,setAvailable] = useState(null);
-    const [active,setActive] = useState(null);
-    const [history,setHistory] = useState(null);
-    const [tabs,setTabs] = useState([]);
-    const [loading,setLoading] = useState(true);
+    const [requests,setRequests] = useState<useFetchEmployeeTimeOffReqsData[]>();
+    const [available,setAvailable] = useState<useFetchEmployeeTimeOffData[]>();
+    const [active,setActive] = useState<useFetchEmployeeTimeOffTakenData[]>();
+    const [history,setHistory] = useState<useFetchEmployeeTimeOffTakenData[]>();
     const [modal,setModal] = useState(false);
-    const [current,setCurrent] = useState();
-    const [process,setProcess] = useState(true)
+    const [current,setCurrent] = useState<number>();
     const [show,setShow] = useState(false);
-    const [del,setDelete] = useState(null);
-    const [cancel,setCancel] =  useState(false);
+    const [del,setDelete] = useState<useFetchEmployeeTimeOffReqsData>();
     const [text,setText] = useState("");
-    const [employee_pk, setEmployeePK] = React.useState(null)
-    const queryClient = useQueryClient()
+    const [employee_pk, setEmployeePK] = React.useState<number>()
     const [appear,setAppear] = React.useState(false)
     const [action,setAction] = React.useState("")
     const [requestData,setRequestData] = React.useState({
@@ -52,90 +40,83 @@ export default function TimeOff({navigation}) {
     })
 
     const {
+        mutateAsync,
+        isLoading : isDeleting
+      } = useMutation(APIFunction.delete_timeoff)
+
+    const {
         data : timeoffData,
         isFetching : fetchingTimeoff
-      } = useFetchEmployeeTimeOff(employee_pk)
+      } = useFetchEmployeeTimeOff(employee_pk || "") as useFetchEmployeeTimeOffProps
     
       const {
         data : activeData,
         isFetching : fetchingActive
-      } = useFetchEmployeeTimeOffTaken(employee_pk,"active")
+      } = useFetchEmployeeTimeOffTaken(employee_pk || "","active") as useFetchEmployeeTimeOffTakenProps
     
       const {
         data : upcomingData,
         isFetching : fetchingUpcoming
-      } = useFetchEmployeeTimeOffTaken(employee_pk,"upcoming")
+      } = useFetchEmployeeTimeOffTaken(employee_pk || "","upcoming") as useFetchEmployeeTimeOffTakenProps
     
       const {
         data : historyData,
         isFetching : fetchingHistory
-      } = useFetchEmployeeTimeOffTaken(employee_pk,"history")
+      } = useFetchEmployeeTimeOffTaken(employee_pk || "","history") as useFetchEmployeeTimeOffTakenProps
     
       const {
         data : reqData,
         isFetching : fetchingReq
-      } = useFetchEmployeeTimeOffReqs(employee_pk)
+      } = useFetchEmployeeTimeOffReqs(employee_pk || "") as useFetchEmployeeTimeOffReqsProps
 
     const getUserInfo = async () => {
         try {
-            let about_me = await getData("about_me");
+            let about_me = await getStoreAboutMe();
             setEmployeePK(about_me?.id)
         } catch (err) {
 
         }
     }
 
-    const cancelRequest = async () => {
-        try{
-          setCancel(true)
-          let about = await getData("about_me")
-          let biz = await getStoredBusiness();
-          let cancel_url = APIFunction.delete_timeoff(biz.business_id,about.id,del.id);
-          let res = await deleteAPIs(cancel_url);
-          let filtered = requests.filter(item=>item.id !== del.id);
-          setRequests(filtered);
+      const cancelRequest = async () => {
+        try {
+          if(!del || !del?.id || !Array.isArray(requests)) return
+          await mutateAsync(del.id)
+          let filtered = requests.filter(item => item.id !== del.id);
+          setRequests(filtered)
           setShow(false);
-          setCancel(false);
           return ToastSuccess("Request has been canceled");
-        }catch(err){
-          setCancel(false);
+        } catch (err : any) {
           setShow(false);
-          ToastError(err.msg)
+          ToastError(err?.msg)
         }
       }
 
     const mapArrToState = async () => {
-        let menu = []
-        let active_arr = []
+        let active_arr : useFetchEmployeeTimeOffTakenData[] = []
         if(timeoffData?.results && Array.isArray(timeoffData?.results)){
             setAvailable(timeoffData?.results)
-            menu.push("Available")
         }
         if(activeData?.results && Array.isArray(activeData?.results)){
             active_arr = [...active_arr,...activeData?.results]
-            menu.push("Active")
         }
         if(upcomingData?.results && Array.isArray(upcomingData?.results)){
             active_arr = [...active_arr,...upcomingData?.results]
-            !menu.includes("Active") ?  menu.push("Active") : null
         }
         if(reqData?.results && Array.isArray(reqData?.results)){
             setRequests(reqData?.results)
-            menu.push("Requests")
         }
         if(historyData?.results && Array.isArray(historyData?.results)){
-            setHistory(history?.results)
-            menu.push("History")
+            setHistory(historyData?.results)
         }
-        setTabs(menu)
         setActive(active_arr)
     }
 
-    const refreshHandler = () => {
-        queryClient.invalidateQueries("employee_timeoff")
-        queryClient.invalidateQueries("employee_timeoff_taken")
-        queryClient.invalidateQueries("employee_timeoff_reqs")
-    }
+    // const refreshHandler = () => {
+    //     queryClient.invalidateQueries(EMPLOYEE_TIMEOFF)
+    //     queryClient.invalidateQueries(EMPLOYEE_TIMEOFF_TAKEN)
+    //     queryClient.invalidateQueries(EMPLOYEE_TIMEOFF_REQS)
+    // }
 
     const onDayPress = (param : DateData)=>{
         if(action === "start_date") return setRequestData({
@@ -144,17 +125,51 @@ export default function TimeOff({navigation}) {
         if(action === "end_date") setRequestData({
           ...requestData,end_date : param?.dateString
         })
-      }
-      const datePickerHandler = (type : string) => {
+    }
+
+    const datePickerHandler = (type : string) => {
         setAction(type)
         setAppear(true)
-      }
-      const hideCalendarHandler = () => {
+    }
+    const hideCalendarHandler = () => {
         setAppear(false)
-      }
+    }
+
     const onChangeText = (value : string) => {
         setRequestData({...requestData,reason : value})
     }
+
+    const onHideHandler = () => {
+        setRequestData({
+            start_date : "",
+            end_date : "",
+            reason : ""
+        })
+        setModal(false)
+        setShow(false)
+      }
+    
+    const onItemPressHandler = (param : RenderItemVerticalParams) => {
+        if (param.status === "active") {
+          setText("Are you sure you want to end this leave?")
+         // setDelete(param?.item);
+          //setShow(true);
+          return
+        }
+        if (param?.status === "request") {
+          setDelete(param?.item);
+          setText("Are you sure you want to cancel this request?")
+          return setShow(true);
+        }
+        if (param?.status === "balance" && param?.item?.id && param?.item?.total_days_taken !== undefined && param?.item?.total_days_taken !== undefined && param?.item?.max_days_allowed &&
+        param?.item?.total_days_taken >= 0 &&
+        param?.item?.total_days_taken <
+        param?.item?.max_days_allowed
+        ) {
+          setCurrent(param?.item?.id)
+          return setModal(true)
+        }
+      }
 
     useEffect(()=>{
         getUserInfo()
@@ -166,130 +181,88 @@ export default function TimeOff({navigation}) {
 
     return (
         <ScreenWrapper scrollEnabled={false}>
-            <View style={styles.header}>
-                <BackHandler />
-                <Text numberOfLines={1} style={styles.screenTitle}>
-                    Time Off
-                </Text>
-            </View>
-            <View style={styles.line} />
+            <React.Fragment>
+            <HomePageHeader 
+                image={Images.people}
+                header={"Time Off"}
+            />
             {
-                    (
-                        fetchingActive || fetchingHistory
-                        || fetchingReq || fetchingUpcoming || fetchingTimeoff   
-                    ) ? (
-                        <PageLoader />
-                    ) : (
-                        <View
-                            style={styles.mainViewContainer}
-                        >
-                            {
-                                tabs.length > 0 && <Container
-                                    style={styles.scrollViewContainer}
-                                >
-                                {['Active', 'Available','Requests', 'History'].filter(tab=>{
-                                    return tabs.includes(tab)
-                                }).map((item,index) => (
-                                <TouchableOpacity 
+                fetchingActive || fetchingHistory
+                || fetchingReq || fetchingUpcoming || fetchingTimeoff ?  <PageLoader /> : <Container style={styles.mainViewContainer}>
+
+                    <Container
+                        style={styles.scrollViewContainer}
+                    >
+                        {['Active', 'Available','Requests', 'History'].map((item,index) => (
+                            <TouchableWrapper 
                                 onPress={() => setSelected(item)}
                                 key={index}
-                                >
-                                    <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
-                                    {selected == item && <View style={styles.animated} />}
-                                </TouchableOpacity>
-                                ))}
-                            </Container>
-                            }
-                            {
-                                tabs && Array.isArray(tabs) && tabs.length > 0 && <View style={styles.line2} />
-                            }
-                            <ScrollView
-                                showsVerticalScrollIndicator={false}
-                                refreshControl={<CustomRefreshControl 
-                                    onRefresh={refreshHandler}
-                                    loading={fetchingActive}
-                                />}
+                                isText
+                                style={selected === item ? styles.selected_tab : styles.deselected_tab}
+                                
                             >
+                                <Text style={[styles.heading, selected == item && styles.selectedHeading]}>{item}</Text>
+                            </TouchableWrapper>
+                            ))}
+                    </Container>
 
-                                            {selected === 'Active' &&
-                                                <>
-                                                    <SizedBox height={2} />
-                                                    <View style={styles.headingContainer}>
-                                                        <Text style={styles.heading}>Active and upcoming</Text>
-                                                    </View>
-                                                    <SizedBox height={2} />
-                                                    <TimeoffVertical
-                                                        tab={"active"}
-                                                        data={'active'}
-                                                        load={active}
-                                                        setModal={(item)=>{
-                                                            setText("Are you sure you want to end this leave?")
-                                                            setDelete(item);
-                                                            return setShow(true);
-                                                        }}
-                                                    />
-                                                </>
-                                            }
-                                            {selected === 'Requests' &&
-                                                <React.Fragment>
-                                                    <View style={styles.headingContainer}>
-                                                        <Text style={styles.heading}></Text>
-                                                    </View>
-                                                    <TimeoffVertical
-                                                        tab={"request"}
-                                                        data={'request'}
-                                                        load={requests}
-                                                        setModal={(item)=>{
-                                                            setDelete(item);
-                                                            setText("Are you sure you want to cancel this request?")
-                                                            return setShow(true);
-                                                        }}
-                                                    />
-                                                </React.Fragment>
-                                            }
-                                            {selected === "History" &&
-                                                <React.Fragment>
-                                                    <View style={styles.headingContainer}>
-                                                        <Text style={styles.heading}></Text>
-                                                    </View>
-                                                    <TimeoffVertical
-                                                        tab={"history"}
-                                                        data={'fewDays'}
-                                                        load={history}
-                                                        setModal={(id)=>{
-                                                            // setCurrent(id)
-                                                            // setModal(true)
-                                                        }}
-                                                    />
-                                                </React.Fragment>
-                                            }
-                                            {selected === "Available" &&
-                                                <React.Fragment>
-                                                    <View style={styles.headingContainer}>
-                                                        <Text style={styles.heading}></Text>
-                                                    </View>
-                                                    <TimeoffVertical
-                                                        data={'balance'}
-                                                        load={available}
-                                                        tab={"active"}
-                                                        setModal={(id,item)=>{
-                                                            if(
-                                                                item && item.max_days_allowed && 
-                                                                item.total_days_taken >= 0 && 
-                                                                item.total_days_taken < 
-                                                                item.max_days_allowed
-                                                            ){
-                                                                setCurrent(id)
-                                                                setModal(true)
-                                                            }
-                                                        }}
-                                                    />
-                                                </React.Fragment>
-                                            }
-                            </ScrollView>
+                {selected === 'Active' &&
+                    <>
+                       
+                        <View style={styles.headingContainer}>
+                            <Text style={styles.heading}>Active and upcoming</Text>
                         </View>
-                    )
+                        <TimeoffVertical
+                            data={'active'}
+                            load={active && Array.isArray(active) ? active : []}
+                            header_1={"You have no active"}
+                            header_2={"timeoff."}
+                        />
+                    </>
                 }
+
+                    {selected === 'Requests' &&
+                        <React.Fragment>
+                            <View style={styles.headingContainer}>
+                                <Text style={styles.heading}></Text>
+                            </View>
+                            <TimeoffVertical
+                                data={'request'}
+                                header_1={"You have no pending"}
+                                header_2={"timeoff request."}
+                                load={requests && Array.isArray(requests) ? requests : []}
+                                onItemPress={onItemPressHandler}
+                            />
+                        </React.Fragment>
+                    }
+                    {selected === "History" &&
+                        <React.Fragment>
+                            <View style={styles.headingContainer}>
+                                <Text style={styles.heading}></Text>
+                            </View>
+                            <TimeoffVertical
+                                data={'fewDays'}
+                                header_1={"You have no timeoff"}
+                                header_2={"history."}
+                                load={history && Array.isArray(history) ? history : []}
+                            />
+                        </React.Fragment>
+                    }
+                    {selected === "Available" &&
+                        <React.Fragment>
+                            <View style={styles.headingContainer} />
+                            <TimeoffVertical
+                                data={'balance'}
+                                load={available && Array.isArray(available) ? available : []}
+                                header_1={"You have no available"}
+                                header_2={"timeoff policy."}
+                                onItemPress={onItemPressHandler}
+                            />
+                        </React.Fragment>
+                    }
+
+                </Container>
+            }
             {
               appear ? <CustomCalendarModal 
                 show={appear}
@@ -301,24 +274,29 @@ export default function TimeOff({navigation}) {
             {
               !appear && modal ?  <TimeoffModal
                 isVisible={modal}
-                onHide={() => {
-                  setModal(false)
-                }}
+                onHide={onHideHandler}
                 timeoff_id={current} 
                 datePickerHandler={datePickerHandler}
                 onChangeText={onChangeText}
                 data={requestData}
               /> : null
             }
-            <WarningModal 
-              isVisible={show}
-              onHide={()=>{
-                setShow(false)
-              }}
-              question={text}
-              performAction={cancelRequest}
-              loading={cancel}
-            />
+            {
+                show ?  <WarningModal
+                isVisible={show}
+                onHide={onHideHandler}
+                title={"Cancel Request?"}
+                sub_title={text}
+                onPressHandler={cancelRequest}
+                loading={isDeleting}
+                submitBtnText={"Yes, I am sure"}
+                cancelBtnText={"No, go back"}
+                icon={'alert-circle'}
+                iconColor={AppColors.red2}
+              />  : null
+            }
+           
+            </React.Fragment>
         </ScreenWrapper>
     )
 }

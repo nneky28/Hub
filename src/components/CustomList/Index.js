@@ -8,7 +8,7 @@ import { width, height } from 'react-native-dimension';
 import styles from './styles'
 import CommonStyles from '../../utills/CommonStyles';
 import { useFetchDepartments, useFetchEmployees } from '../../utills/api';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { showFlashMessage } from '../SuccessFlash/index';
 
 

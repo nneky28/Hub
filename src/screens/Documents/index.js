@@ -10,7 +10,7 @@ import { BackHandler, Container, H1, ImageWrap, LottieIcon, P, PageLoader, Sized
 import { documents } from '../../utills/data/documents';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { useFocusEffect } from '@react-navigation/core';
 import { Capitalize, getData, ToastError } from '../../utills/Methods';
 import { APIFunction } from '../../utills/api';

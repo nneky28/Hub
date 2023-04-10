@@ -9,7 +9,7 @@ import {
 import styles from './styles';
 import Modal from 'react-native-modal';
 import AppColors from '../../utills/AppColors';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { useFetchOnboarding } from '../../utills/api';
 import { SelectionModalProps, TextWithIconProps, useFetchAppOnboardingProps } from './types';
 import { Container } from '../../utills/components';

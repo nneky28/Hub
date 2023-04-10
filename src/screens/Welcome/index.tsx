@@ -4,7 +4,7 @@ import AppColors from '../../utills/AppColors';
 import { Container, EmptyStateWrapper, H1, OnboardModal, SizedBox } from '../../utills/components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BASE_URL } from '../../utills/Constants';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { useAppSelector } from '../../utills/Methods';
 import styles from "./styles"
 import { RootAuthScreenProps } from '../../Routes/types';

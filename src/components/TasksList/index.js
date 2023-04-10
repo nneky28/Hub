@@ -27,7 +27,7 @@ import { useNavigation } from '@react-navigation/core';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
 import { ActivityIndicator } from 'react-native-paper';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 
 if (
   Platform.OS === 'android' &&

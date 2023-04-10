@@ -7,7 +7,7 @@ import styles from './styles';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { BackHandler, Container, EmptyStateWrapper, H1, P } from '../../utills/components';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import ModalDropdown from 'react-native-modal-dropdown';
 import CommonStyles from '../../utills/CommonStyles';
 import { height, width } from 'react-native-dimension';

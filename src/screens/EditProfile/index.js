@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { width } from 'react-native-dimension';
 import { cameraIcon, leftIcon } from '../../assets/images';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TextWithIcon from '../../components/TextWithIcon';
 import AppColors, { ColorList } from '../../utills/AppColors';

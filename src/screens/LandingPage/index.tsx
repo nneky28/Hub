@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 import { useFetchAboutMe } from '../../utills/api';
 import { ToastSuccess,Capitalize, getStoredBusiness, useAppSelector, getStoredBusinessProps, useAppDispatch } from '../../utills/Methods';
 import { Container, EmptyStateWrapper, H1, P, PageLoader } from '../../utills/components';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../../components/Button';
 import styles from "./style"

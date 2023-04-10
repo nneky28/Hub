@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import styles from './styles';
 import moment from "moment"
 

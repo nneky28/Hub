@@ -11,7 +11,7 @@ import { payslips } from '../../utills/data/payslips';
 import styles from './styles';
 import Emptyjson from '../../assets/lottie/empty.json'
 import AppColors from '../../utills/AppColors';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 
 
 export default function Payslips({navigation}) {

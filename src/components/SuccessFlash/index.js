@@ -4,7 +4,7 @@ import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 import { showMessage } from 'react-native-flash-message';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { FontFamily } from '../../utills/FontFamily';
 import { H1, TouchableWrapper } from '../../utills/components';
 

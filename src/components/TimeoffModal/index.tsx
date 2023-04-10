@@ -11,6 +11,7 @@ import { Container, H1, P } from "../../utills/components";
 import Button from "../Button";
 import CustomDatePicker from "../CustomDatePicker";
 import CustomInput from "../CustomInput";
+import { EMPLOYEE_TIMEOFF, EMPLOYEE_TIMEOFF_REQS, EMPLOYEE_TIMEOFF_TAKEN } from "../../utills/payload";
 
 const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,onChangeText } : TimeoffModalProps ) => {
     const [error,setError] = React.useState("")
@@ -48,9 +49,9 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         setError("")
         await mutateAsync(fd)
         ToastSuccess("Request has been submitted for processing")
-        queryClient.invalidateQueries("employee_timeoff")
-        queryClient.invalidateQueries("employee_timeoff_taken")
-        queryClient.invalidateQueries("employee_timeoff_reqs")
+        queryClient.invalidateQueries(EMPLOYEE_TIMEOFF)
+        queryClient.invalidateQueries(EMPLOYEE_TIMEOFF_TAKEN)
+        queryClient.invalidateQueries(EMPLOYEE_TIMEOFF_REQS)
         onHide()
       } catch (err : any) {
         return setError(err?.msg)

@@ -20,7 +20,7 @@ import Teamjson from '../../assets/lottie/teams.json'
 import { Capitalize, getData, getStoredBusiness, storeData, ToastError } from '../../utills/Methods'
 import { APIFunction, getAPIs } from '../../utills/api'
 import moment from 'moment'
-import { Images } from '../../component2/image/Image'
+import { Images } from '../../utills/Image'
 import { ActivityIndicator } from 'react-native-paper'
 import { ICON_BUTTON_SIZE } from '../../utills/Constants'
 

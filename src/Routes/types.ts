@@ -89,6 +89,9 @@ export type RootAuthScreenProps = StackScreenProps<AuthScreenList>
 
 export type RootOnboardScreenProps = StackScreenProps<OnboardScreenList>
 
+export type RootHomeScreenProps = StackScreenProps<HomeScreenList>
+
+
 
 
 //PUSH NOTIFICAITON TYPES

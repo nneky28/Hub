@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { searchIcon } from '../../assets/images';
 import { setBottomTabBarVisible } from '../../Redux/Actions/Config';
 import AppColors from '../../utills/AppColors';
-import { Images } from "../../component2/image/Image"
+import { Images } from "../../utills/Image"
 import styles from './styles';
 import { SearchBoxIconRightProps, SearchBoxProps } from './types';
 
