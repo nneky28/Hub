@@ -26,6 +26,8 @@ export type useFetchAboutMeData = {
     marital_status?: string
     marital_status_display? : string
     gender? : string 
+    business_name? : string
+    business_logo? : string
     gender_display? : string
     nationality?:string,
     employee_job? : {

@@ -365,6 +365,6 @@ export type ImageWrapProps = {
 export type RoundedProps = {
   size? : number
   backgroundColor? : string
-  children : React.ReactNode
+  children? : React.ReactNode
   radius? : number
 }
