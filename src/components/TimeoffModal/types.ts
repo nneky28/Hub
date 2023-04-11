@@ -25,13 +25,9 @@ export type useFetchAboutMeData = {
     hire_date? : string
     marital_status: string
     marital_status_display? : string
-<<<<<<< HEAD
     gender : string 
-=======
-    gender? : string 
     business_name? : string
     business_logo? : string
->>>>>>> c7724b57d875180ae83635c5eb9c721444796272
     gender_display? : string
     nationality?:string,
     employee_job? : {

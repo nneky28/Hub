@@ -7,12 +7,7 @@ import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
 import { BackHandler, Container, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
 import styles from './styles';
-<<<<<<< HEAD:src/screens/Documents/index.tsx
-import { Images } from '../../component2/image/Image';
-=======
-import Emptyjson from '../../assets/lottie/empty.json'
 import { Images } from '../../utills/Image';
->>>>>>> c7724b57d875180ae83635c5eb9c721444796272:src/screens/Documents/index.js
 import { useFocusEffect } from '@react-navigation/core';
 import { Capitalize, ToastError } from '../../utills/Methods';
 import {useFetchAboutMe, useFetchDoc } from '../../utills/api';
@@ -24,7 +19,7 @@ import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
 type Document = {
     id: number;
     name: string;
-    file: string;
+    file: string;             
     created_at: string;
     updated_at: string;
     file_type: string;
@@ -34,7 +29,7 @@ type Document = {
     const [modal, setModal] = useState<boolean>(false);
     const [documents, setDocuments] = useState<Document[]>([]);
     const [document, setDocument] = useState<Document | null>(null);
-    const [holders, setHolders] = useState<Document[]>([]);
+    const [holders, setHolders] = useState<Document[]>([]);                 
 
 
       const {
@@ -45,7 +40,7 @@ type Document = {
           data:doc,
           isLoading:loading
       } = useFetchDoc(profile?.id);
-      
+
       console.log("doc",doc)
 
     const getDocuments = async () => {
