@@ -161,7 +161,7 @@ export default function People({navigation} : RootScreenProps) {
                     
                 } : null,
             ].filter((item) : item is Celebrations =>!!item);
-            setCelebrations(celeb)
+            return setCelebrations(celeb)
         }
 
         if(selected === "Who's Out" && outData?.results && Array.isArray(outData?.results)){

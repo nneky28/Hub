@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
     alignItems: 'center',
+    flex : 1
   },
   titleContainer: {
     alignSelf: 'center', 
@@ -106,7 +107,6 @@ const styles = StyleSheet.create({
     marginTop: height(2)
   },
   saveBtnStyle: {
-    backgroundColor: AppColors.white,
     width: width(20),
     height: height(5),
     alignItems: 'flex-end',

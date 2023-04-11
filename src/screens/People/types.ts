@@ -1,5 +1,6 @@
 
 export type useFetchEmployeesData = {
+    id? : number
     department? : {
         id? : number
         name? : string
@@ -8,7 +9,6 @@ export type useFetchEmployeesData = {
     email? : string
     employee_id? : string
     first_name? : string
-    id? : string
     job? : {
         id? : number
         title? : string

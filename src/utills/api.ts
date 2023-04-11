@@ -61,7 +61,8 @@ import {
   LoginLoad,
   RemoveDeviceTokenLoad,
   NOTIFICATIONS,
-  DOCUMENT
+  DOCUMENT,
+  BASIC_DETAILS
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -70,19 +71,17 @@ export const endPoint = Config.API_URL;
 export const employees_me = (business_id:string) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
   employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
-  team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
-  basic_details: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  
+  team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,  
   login: async (fd?:LoginLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
-  // next_of_kins : async (id : number) => {
-  //   const {storeData} = await GetPersistData("Currentcompany") as currentCompanyType;
-  //   return getAPIs(`/c/${storeData.business_id}/employees/${id}/next-of-kin/`)
-  // },
   next_of_kins: async (id:number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/next-of-kin/`)
+  },
+  basic_details: async (id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/basic_detail/`)
   },
   whos_out: async (category : string) => {
     let biz = await getStoredBusiness();
@@ -424,6 +423,12 @@ export const useFetchEmployeeTimeOff = (id:number | string) => {
   })
 }
 
+export const useFetchEmployeeBasicDetails = (id?:number) => {
+  return useQuery([BASIC_DETAILS, id], () => APIFunction.basic_details(id as number), {
+    enabled: !!id
+  })
+}
+
 export const useFetchEmployeeTimeOffTaken = (id:number | string, status:string) => {
   return useQuery([EMPLOYEE_TIMEOFF_TAKEN, id, status], () => APIFunction.employee_timeoff_taken(id as number, status), {
     enabled: !!id && !!status
@@ -701,7 +706,6 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
-  console.log("getAPIs",path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
