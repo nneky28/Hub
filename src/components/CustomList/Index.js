@@ -14,7 +14,7 @@ import { showFlashMessage } from '../SuccessFlash/index';
 
 
 const CustomList = ({ open, setOpen, onPressHandler }) => {
-
+    
     const [tab, setTab] = useState('Employees');
     const [options, setOptions] = useState(true)
     const [deptPage, setDeptPage] = useState(1)

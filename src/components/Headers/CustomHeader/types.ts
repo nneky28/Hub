@@ -49,4 +49,14 @@ export type HomePageHeaderProps = {
     imageStyle? : ImageStyle
     header : string
     headerStyle? : TextStyle
+    rightIcon? : never
+    onPressHandler? : never
+} | {
+    image : string
+    imageStyle? : ImageStyle
+    header : string
+    headerStyle? : TextStyle
+    rightIcon : string
+    rightIconColor? : string
+    onPressHandler : () => void
 }

@@ -1,5 +1,13 @@
 export type useFetchWhosOutData = {
-
+    employee? : {
+        first_name? : string
+        last_name? : string
+        job?: {
+            title? : string
+        }
+    }
+    photo? : string
+    title? : string
 }
 
 export type useFetchWhosOutProps = {
@@ -12,7 +20,13 @@ export type useFetchWhosOutProps = {
 }
 
 export type useFetchBirthdaysData = {
-    
+    first_name? : string
+    job? : {
+        title? : string
+        id? : string
+    }
+    birth_date? : string
+    photo?: string
 }
 export type useFetchBirthdaysProps = {
     data? : {
@@ -131,12 +145,18 @@ export type useFetchEmployeeTimeOffReqsProps = {
 }
 
 export type useFetchAnniversaryData = {
-    
+    first_name? : string
+    num_years_spent? : number
+    photo? : string
+    hire_date? : string
+    job? : {
+        title? : string
+    }
 }
 
 export type useFetchAnniversaryProps = {
     data? : {
-        results? : useFetchAnniversaryData
+        results? : useFetchAnniversaryData[]
     }
     isLoading : boolean
     isFetching : boolean

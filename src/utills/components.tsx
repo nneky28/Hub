@@ -170,7 +170,7 @@ export const SizedBox = ({...props}:SizedBoxProps) => (
   />
 )
 
-export const useDebounce = (value:string | number, delay:number) => {
+export const useDebounce = (value:string, delay:number) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(

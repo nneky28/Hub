@@ -39,6 +39,13 @@ const styles = StyleSheet.create({
     width : width(70),
     justifyContent : "center",
     alignItems : "center"
+  },
+  right_icon_button : {
+    alignItems: "center",
+    width : width(12),
+    height : width(12),
+    borderRadius : width(50),
+    justifyContent : "center"
   }
 });
 

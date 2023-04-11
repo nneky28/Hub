@@ -26,6 +26,7 @@ export default function SearchBox({ title, containerStyle, onSubmitEditing, ...i
                 placeholder={title}
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
+                cursorColor={AppColors.black}
                 onChangeText={onSubmitEditing}
                 onSubmitEditing={(value) => {
                     if (typeof (value) === "object") return
@@ -53,6 +54,7 @@ export const SearchBoxIOS = ({ title, containerStyle, onSubmitEditing}:SearchBox
                 placeholder={title}
                 placeholderTextColor={AppColors.black3}
                 keyboardType='default'
+                cursorColor={AppColors.black}
                 onChangeText={onSubmitEditing}
                 onSubmitEditing={(value) => {
                     if (typeof (value) === "object") return

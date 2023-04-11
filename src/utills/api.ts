@@ -26,7 +26,7 @@ import {
   BANKS,
   PENSION_PROVIDERS,
   GET_ONBOARDING,
-  GET_USERS,
+  GET_EMPLOYEES,
   GET_TEAMS,
   GET_DEPARTMENTS,
   GET_ALL_TASK,
@@ -393,9 +393,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_users: async (page = 1, search = "") => {
+  get_employees: async (page = 1, search = "",limit = 20) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },
   get_teams: async (page = 1) => {
     let biz = await getStoredBusiness()
@@ -492,13 +492,13 @@ export const useFetchWhosOut = (category = "timeoff") => {
 
 export const useFetchBirthdays = (status:string) => {
   return useQuery([BIRTHDAYS, status], () => APIFunction.birthdays(status), {
-    enabled: status !== null && status !== undefined && status !== ""
+    enabled: !!status
   })
 }
 
 export const useFetchAnniversary = (status:string, page = 1) => {
   return useQuery([JOB_ANNIVERSARY, status, page], () => APIFunction.job_anniversary(status, page), {
-    enabled: status !== null && status !== undefined && status !== ""
+    enabled: !!status
   })
 }
 
@@ -535,8 +535,9 @@ export const useFetchOnboarding = (type:string) => {
 
   )
 }
-export const useFetchEmployees = (page: number, search: string) => {
-  return useInfiniteQuery([GET_USERS, page, search], () => APIFunction.get_users(page, search), {
+export const useFetchEmployees = (tab:string,page: number, search: string) => {
+  return useInfiniteQuery([GET_EMPLOYEES,page, search], () => APIFunction.get_employees(page, search), {
+    enabled : !!tab,
     getNextPageParam: (lastPage:any) => {
       return lastPage.next
     }
@@ -545,10 +546,11 @@ export const useFetchEmployees = (page: number, search: string) => {
 }
 
 
-export const useFetchTeams = (page:number) => {
+export const useFetchTeams = (tab : string,page:number) => {
   return useInfiniteQuery([GET_TEAMS, page], () => APIFunction.get_teams(page), {
+    enabled : !!tab, 
     getNextPageParam: (lastPage:any) => {
-      return lastPage.next
+      return lastPage?.next
     }
   }
   )
@@ -699,6 +701,7 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+  console.log("getAPIs",path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

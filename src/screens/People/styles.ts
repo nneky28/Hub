@@ -35,22 +35,8 @@ const styles = StyleSheet.create({
     color: AppColors.black1,
     fontFamily: FontFamily.BlackSansBold,
   },
-  selectedHeading: {
-    fontSize: width(3.4),
-    paddingRight: width(5),
-    color: AppColors.green, 
-    fontFamily: FontFamily.BlackSansSemiBold,
-  },
-  heading: {
-    fontSize: width(3.4),
-    color: AppColors.black1,
-    paddingHorizontal: width(7),
-    fontFamily: FontFamily.BlackSansRegular,
-  },
   scrollViewContainer: {
-    paddingTop: height(2), 
-    width: width(95), 
-    justifyContent: 'space-evenly'
+    paddingTop: height(1)
   },
   line: {
     width: '100%',
@@ -119,7 +105,6 @@ const styles = StyleSheet.create({
   iconAndTextContainer:{
       justifyContent: 'center',
       alignItems: 'center',
-      justifyContent: 'space-evenly',
       height: height(6)
   },
   heading2: {
@@ -199,5 +184,30 @@ const styles = StyleSheet.create({
     width: width(90), 
     alignSelf: 'flex-start'
   },
+  selected_tab : {
+    borderBottomWidth  : width(0.4),
+    borderColor : AppColors.green
+  },
+  deselected_tab : {
+    borderBottomWidth  : width(0.4),
+    borderColor : AppColors.grayBorder
+  },
+  selectedHeading: {
+    color: AppColors.green, 
+   fontFamily: FontFamily.BlackSansBold
+  },
+  heading: {
+    fontSize: width(3.4),
+    color: AppColors.black1,
+    fontFamily: FontFamily.BlackSansRegular
+  },
+  column_wrapper : {
+    justifyContent: 'space-between', 
+    width: width(90)
+  },
+  contentContainerStyle : {
+    marginTop : height(1),
+    paddingBottom : height(40)
+  }
 });
 export default styles;

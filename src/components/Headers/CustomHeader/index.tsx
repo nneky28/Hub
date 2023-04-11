@@ -6,27 +6,40 @@ import AppColors from '../../../utills/AppColors';
 import { BackHandler, TouchableWrapper,Container,H1,P } from  '../../../utills/components';
 import { Capitalize } from '../../../utills/Methods';
 import { HeaderWithBackButtonProps, HomePageHeaderProps } from './types';
-//import { width } from 'react-native-dimension';
-//import Ionicons from "react-native-vector-icons/Ionicons"
+import { width } from 'react-native-dimension';
 import { useNavigation } from '@react-navigation/native';
 import { RootNavigationProps } from '../../../Routes/types';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, IconButton } from 'react-native-paper';
 
 export function HomePageHeader(props : HomePageHeaderProps) {
   const navigation = useNavigation<RootNavigationProps>()
   return (
     <View style={styles.header}>
-        <View style={styles.row}>
-            <TouchableWrapper onPress={() => navigation.toggleDrawer()}>
-                <Image 
-                    source={{uri : props.image}}
-                    style={[styles.app_icon,props.imageStyle]}
-                />
-            </TouchableWrapper>
-            <Text numberOfLines={1} style={[styles.text1,props?.headerStyle]}>
-                {props.header}
-            </Text>
-        </View>
+        <Container width={90} alignSelf="center" direction="row" horizontalAlignment='space-between' verticalAlignment='center'>
+            <Container direction="row" verticalAlignment='center' width={60}>
+              <TouchableWrapper onPress={() => navigation.toggleDrawer()}>
+                  <Image 
+                      source={{uri : props.image}}
+                      style={[styles.app_icon,props.imageStyle]}
+                  />
+              </TouchableWrapper>
+              <Text numberOfLines={1} style={[styles.text1,props?.headerStyle]}>
+                  {props.header}
+              </Text>
+            </Container>
+            {
+              props?.rightIcon ? <IconButton
+                onPress={props.onPressHandler}
+                rippleColor={AppColors.whiteBase}
+                size={width(6)}
+                color={props?.rightIconColor || AppColors.green}
+                icon={props?.rightIcon} 
+                style={styles.right_icon_button}
+                hasTVPreferredFocus={undefined} 
+                tvParallaxProperties={undefined}              
+            /> : null
+            }
+        </Container>
     </View>
   );
 }
