@@ -72,7 +72,7 @@ export default function TimeOff() {
     const getUserInfo = async () => {
         try {
             let about_me = await getStoreAboutMe();
-            setEmployeePK(about_me?.id)
+            if(about_me?.id) setEmployeePK(about_me?.id)
         } catch (err) {
 
         }

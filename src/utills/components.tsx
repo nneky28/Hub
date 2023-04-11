@@ -237,7 +237,7 @@ export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
 
   const onSubmitEditing = (text : string) => {
     setSearch(text)
-    if(!handleSearch) return
+    if(!handleSearch || !setPage) return
     setPage(1)
     handleSearch({
       type,
@@ -297,7 +297,7 @@ export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
                       />}
                       onEndReachedThreshold={0.1}
                       onEndReached={()=>{
-                        if(!getMore) return
+                        if(!getMore || !setPage || !page) return
                         setPage(page + 1)
                       }}
                       ListFooterComponent={()=>{

@@ -96,68 +96,70 @@ export default function Login(props : RootScreenProps) {
   return (
     <ScreenWrapper>
       <KeyboardAwareWrapper>
-          <View
-            style={styles.main_container}
-          >
-            <Container
-              width={35}
-              style={styles.img_container}
-            >
+          <React.Fragment>
+              <View
+                style={styles.main_container}
+              >
+                <Container
+                  width={35}
+                  style={styles.img_container}
+                >
 
-              <ImageWrap
-                url={Images.AppLogo}
-                height={5}
-                fit={"contain"}
-              />
-            </Container>
-            <H1 fontSize={6} marginTop={1} marginBottom={3}>Welcome</H1>
-            <CustomInput 
-              placeholder="Email"
-              value={data.email}
-              onChangeData={(value) => {
-                setData({ ...data, email: value })
-              }}
-              keyboardType={"email-address"}
-            />
-            <CustomInput 
-              placeholder="Password"
-              secureTextEntry={secure}
-              onChangeData={(value) => setData({ ...data, password: value })}
-              value={data?.password}
-              keyboardType={'default'}
-              right={<TextInput.Icon 
-                name={secure ? "eye" : "eye-off"} style={CommonStyles.marginTop_2}
-                color={AppColors.black1}
-                onPress={() => setSecure(!secure)}
-                tvParallaxProperties={undefined}
-                hasTVPreferredFocus={undefined}
+                  <ImageWrap
+                    url={Images.AppLogo}
+                    height={5}
+                    fit={"contain"}
+                  />
+                </Container>
+                <H1 fontSize={6} marginTop={1} marginBottom={3}>Welcome</H1>
+                <CustomInput 
+                  placeholder="Email"
+                  value={data.email}
+                  onChangeData={(value) => {
+                    setData({ ...data, email: value })
+                  }}
+                  keyboardType={"email-address"}
+                />
+                <CustomInput 
+                  placeholder="Password"
+                  secureTextEntry={secure}
+                  onChangeData={(value) => setData({ ...data, password: value })}
+                  value={data?.password}
+                  keyboardType={'default'}
+                  right={<TextInput.Icon 
+                    name={secure ? "eye" : "eye-off"} style={CommonStyles.marginTop_2}
+                    color={AppColors.black1}
+                    onPress={() => setSecure(!secure)}
+                    tvParallaxProperties={undefined}
+                    hasTVPreferredFocus={undefined}
 
-              />}
-            />
+                  />}
+                />
 
-            <Container marginTop={3}
-              width={90}>
-              <Button
-                title={'Sign In'}
-                onPress={loginMethod}
-                containerStyle={styles.button}
-                isLoading={loading}
-              />
-            </Container>
-            <SizedBox height={1} />
-            <TouchableWrapper
-              isText
-              onPress={() => setShow(true)}
-              width={90}
-            >
-              <H1 color={AppColors.green}>Forgot Password?</H1>
-            </TouchableWrapper>
-            <SizedBox size={25} />
-            <P color={AppColors.black2} marginBottom={2}>MyEdge is part of BizEdge Productivity Tool.</P>
-          </View>
-          {auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url} /> : null}
-          {show ? <CustomWebView web_url={`${BASE_URL}forgot-password`} setShow={()=>setShow(false)} show={show} /> : null}
-        </KeyboardAwareWrapper>
+                <Container marginTop={3}
+                  width={90}>
+                  <Button
+                    title={'Sign In'}
+                    onPress={loginMethod}
+                    containerStyle={styles.button}
+                    isLoading={loading}
+                  />
+                </Container>
+                <SizedBox height={1} />
+                <TouchableWrapper
+                  isText
+                  onPress={() => setShow(true)}
+                  width={90}
+                >
+                  <H1 color={AppColors.green}>Forgot Password?</H1>
+                </TouchableWrapper>
+                <SizedBox size={25} />
+                <P color={AppColors.black2} marginBottom={2}>MyEdge is part of BizEdge Productivity Tool.</P>
+              </View>
+              {auth.onboard && auth.url ? <OnboardModal visible={auth.onboard} url={auth.url} /> : null}
+              {show ? <CustomWebView web_url={`${BASE_URL}forgot-password`} setShow={()=>setShow(false)} show={show} /> : null}
+          </React.Fragment>    
+      </KeyboardAwareWrapper>
     </ScreenWrapper>
   );
 }

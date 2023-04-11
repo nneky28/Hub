@@ -699,11 +699,6 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
-<<<<<<< HEAD
-  console.log("getAPIs",_token)
-  console.log("getAPIs",path)
-=======
->>>>>>> c7724b57d875180ae83635c5eb9c721444796272
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

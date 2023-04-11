@@ -2,8 +2,8 @@ import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { APIFunction } from "../../utills/api";
 import AppColors from "../../utills/AppColors";
-import { getData, ToastSuccess } from "../../utills/Methods";
-import { TimeOffModalData, TimeoffModalProps, useFetchAboutMeData } from "./types";
+import { getStoreAboutMe, ToastSuccess } from "../../utills/Methods";
+import { TimeOffModalData, TimeoffModalProps} from "./types";
 import Modal from "react-native-modal"
 import { Keyboard,View} from "react-native";
 import styles from "./styles"
@@ -40,8 +40,8 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         if (failed) {
           return setError("All fields are required")
         };
-        let about : useFetchAboutMeData | null | false | string = await getData("about_me")
-        if(typeof about === "string" || !about || !about?.id || !timeoff_id) return
+        let about = await getStoreAboutMe()
+        if(!about || !about?.id || !timeoff_id) return
         let fd = {
             id : about?.id,
           ...data, timeoff: timeoff_id,
