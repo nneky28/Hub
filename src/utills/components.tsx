@@ -1019,7 +1019,7 @@ export const UserPINComponent = (props : UserPINComponentProps) => {
 }
 
 interface KeyboardAwareWrapperProps {
-  children : React.ReactNode
+  children?: JSX.Element|JSX.Element[];
   scrollable? : boolean
   style? : ViewStyle
 }

@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
         height: height(14),
         width: width(28)
     },
-    clipped: { resizeMode: 'cover', height: height(8), },
+    clipped: { resizeMode: 'cover', height: height(7.5), },
 
     clippedCon: { top: height(1.2) },
     count: {

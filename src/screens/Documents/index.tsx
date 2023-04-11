@@ -1,48 +1,71 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, Image, Platform, Text, TouchableOpacity, View } from 'react-native';
-import { leftIcon, HorDotIcon, fileIcon } from '../../assets/images';
-import ContactModal, { DocumentModal } from '../../components/ContactModal';
+import  { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, Container, H1, ImageWrap, LottieIcon, P, PageLoader, SizedBox } from '../../utills/components';
-import { documents } from '../../utills/data/documents';
+import { BackHandler, Container, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
 import styles from './styles';
+<<<<<<< HEAD:src/screens/Documents/index.tsx
+import { Images } from '../../component2/image/Image';
+=======
 import Emptyjson from '../../assets/lottie/empty.json'
 import { Images } from '../../utills/Image';
+>>>>>>> c7724b57d875180ae83635c5eb9c721444796272:src/screens/Documents/index.js
 import { useFocusEffect } from '@react-navigation/core';
-import { Capitalize, getData, ToastError } from '../../utills/Methods';
-import { APIFunction } from '../../utills/api';
+import { Capitalize, ToastError } from '../../utills/Methods';
+import {useFetchAboutMe, useFetchDoc } from '../../utills/api';
 import moment from 'moment';
 import { width } from 'react-native-dimension';
+import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
 
 
+type Document = {
+    id: number;
+    name: string;
+    file: string;
+    created_at: string;
+    updated_at: string;
+    file_type: string;
+    url: string;
+  };
+  export default function Documents() {
+    const [modal, setModal] = useState<boolean>(false);
+    const [documents, setDocuments] = useState<Document[]>([]);
+    const [document, setDocument] = useState<Document | null>(null);
+    const [holders, setHolders] = useState<Document[]>([]);
 
-export default function Documents({navigation}) {
-    const [modal, setModal] = useState(false);
-    const [documents,setDocuments] = React.useState([])
-    const [loading,setLoading] = React.useState(true)
-    const [document,setDocument] = React.useState(null)
-    const [holders,setHolders] = React.useState([])
+
+      const {
+          data: profile
+      } = useFetchAboutMe('main') as useFetchAboutMeProps;  
+
+      const {
+          data:doc,
+          isLoading:loading
+      } = useFetchDoc(profile?.id);
+      
+      console.log("doc",doc)
+
     const getDocuments = async () => {
         try{
-            setLoading(true)
-            let about = await getData("about_me")
-            let res =  await APIFunction.employee_doc(about.id)
-            if(res && res.results && Array.isArray(res.results)){
-                setDocuments(res.results)
-                setHolders(res.results)
+            const res =  Array.isArray((doc as {results: Array<any>}).results)
+            ? (doc as {results: Array<any>}).results
+            : []
+
+            if(res){
+                setDocuments(res)
+                setHolders(res)
             }else{
                 setDocuments([])
                 setHolders([])
             }
-            setLoading(false)
-        }catch(err){
+        } catch (err:any){
             ToastError(err.msg)
         }
     }
-    const handleSearch = (text) => {
+    const handleSearch = (text:string) => {
         if (text.length > 0){
             let filtered = documents.filter(item => {
                 return (item && item.file && item.file.toLowerCase() && item.file.toLowerCase().includes(text.toLowerCase()))
@@ -55,11 +78,11 @@ export default function Documents({navigation}) {
     useFocusEffect(
         React.useCallback(()=>{
             getDocuments()
-        },[])
+        }, [doc])
+        
     )
-    const ListComponent = ({item}) => {
-        return(
-            
+    const ListComponent = ({ item }: { item: Document }) => {
+        return(     
             <>
             <TouchableOpacity 
             onPress={() => {
@@ -100,14 +123,16 @@ export default function Documents({navigation}) {
                                     onSubmitEditing={handleSearch}
                                 />
                             ) : (
-                                <SearchBoxIOS title="Search for document"/>
+                            <SearchBoxIOS title="Search for document"
+                            onSubmitEditing={handleSearch}
+                            />
                             )
                         }
                         {
                 !loading && documents && Array.isArray(documents) && documents.length > 0  ? (
                         <FlatList
                             data={documents}
-                            keyExtractor={(item,i) => i.toString()}
+                            keyExtractor={(i) => i.toString()}
                             renderItem={ListComponent}
                             ItemSeparatorComponent={() => <View />}
                             showsVerticalScrollIndicator={false}
@@ -118,9 +143,13 @@ export default function Documents({navigation}) {
             }
                     </View>
                 
+            <>
             {
                 loading ? <PageLoader /> : null
             }
+            </>
+
+            <>
             {
                 !loading && documents && Array.isArray(documents) && documents.length === 0  ? <Container
                 marginTop={8}
@@ -145,6 +174,7 @@ export default function Documents({navigation}) {
                     <P color={AppColors.black2}>When you do, they will show up here.</P>
                 </Container> : null
             }
+            </>
             <DocumentModal isVisible={modal} onHide={() => setModal(false)} document={document}/>
         </ScreenWrapper>  
     );

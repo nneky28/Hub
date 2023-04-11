@@ -30,7 +30,7 @@ import CommonStyles from '../../utills/CommonStyles';
 
 
 const TeamTaskHome = ({ route }) => {
-    const { item, departments } = route.params
+    const { item, departments } = route.params || {}
     const [tab, setTab] = useState('All');
     const [show, setShow] = useState(false);
     const [count, setCount] = useState(0);
@@ -129,7 +129,7 @@ const TeamTaskHome = ({ route }) => {
             <View style={styles.emptyState}>
                 <View>
                     <P style={styles.emptyText}>{departments ? (`${item?.name}`) : item?.first_name}</P>
-                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab === 'All' ? ' task To-Do.' : actionTitle === "To-Do" && tab ? (`task ${tab}`) : (actionTitle === "In Progress" ? "task In Progress." : `${actionTitle} Task.`)}</P>
+                    <P style={styles.emptyText}> has no {actionTitle === "To-Do" && tab === 'All' ? ' task To-Do.' : actionTitle === "To-Do" && tab ? (`task ${tab.toLowerCase()}`) : (actionTitle === "In Progress" ? "task In Progress." : `${actionTitle.toLowerCase()} Task.`)}</P>
                 </View>
             </View>
         );
@@ -351,7 +351,6 @@ const TeamTaskHome = ({ route }) => {
                                                     resizeMode='cover'
                                                     imageStyle={{
                                                         borderRadius: width(4),
-                                                        height: height(8)
                                                     }}
                                                 />
                                             </View>

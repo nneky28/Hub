@@ -24,7 +24,7 @@ type PersonListCompProps = {
 
 type DeptListCompProps = {
   item: {
-    name: string;
+    name?: string| null
   };
   onPressHandle: () => void;
 };

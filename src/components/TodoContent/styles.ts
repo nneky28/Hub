@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native"
 import { height, width } from 'react-native-dimension';
-import { backgroundColor } from "styled-system";
 import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
