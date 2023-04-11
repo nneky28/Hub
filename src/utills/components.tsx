@@ -12,7 +12,7 @@ import AppColors, { ColorList } from './AppColors';
 import { View, Dimensions, Modal } from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
-import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, IconButton, TouchableRipple } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
@@ -777,26 +777,31 @@ export const CustomWebView = (props:CustomWebViewProps) => (
 export const BackHandler = ({ onPress, position }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
-    <TouchableWrapper
-      size={ICON_BUTTON_SIZE}
-      onPress={() => {
-        if (onPress) return onPress()
-        if (!navigation.canGoBack()) return
-        navigation.goBack()
-      }}
-      style={{
-        alignItems: position || "flex-start",
-      }}
-    >
-      <ImageWrap
+    <IconButton
+        size={ICON_BUTTON_SIZE}
+        onPress={() => {
+          if (onPress)
+            return onPress();
+          if (!navigation.canGoBack())
+            return;
+          navigation.goBack();
+        } }
+        style={{
+          alignItems: position || "flex-start",
+        }}
+        icon={"arrow-back"} 
+        hasTVPreferredFocus={undefined} 
+        tvParallaxProperties={undefined}    
+      />
+  )
+}
+ {/* <ImageWrap
         url={Images.BackArrow}
         fit={"contain"}
         height={5}
         width={5}
       />
-    </TouchableWrapper>
-  )
-}
+    </IconButton> */}
 export const CloseHandler = ({ onPress }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
