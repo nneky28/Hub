@@ -774,11 +774,11 @@ export const CustomWebView = (props:CustomWebViewProps) => (
   </Modal>
 )
 
-export const BackHandler = ({ onPress, position }:BackHandlerProps) => {
+export const BackHandler = ({ onPress,style}:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
     <IconButton
-        size={ICON_BUTTON_SIZE}
+        size={width(ICON_BUTTON_SIZE)}
         onPress={() => {
           if (onPress)
             return onPress();
@@ -786,12 +786,14 @@ export const BackHandler = ({ onPress, position }:BackHandlerProps) => {
             return;
           navigation.goBack();
         } }
-        style={{
-          alignItems: position || "flex-start",
-        }}
-        icon={"arrow-back"} 
+        style={[
+          styles.back_button,
+          style
+        ]}
+        icon={"arrow-left"} 
         hasTVPreferredFocus={undefined} 
         tvParallaxProperties={undefined}    
+        rippleColor={AppColors.whiteBase}
       />
   )
 }

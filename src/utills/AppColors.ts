@@ -36,14 +36,14 @@ const AppColors = {
   blackgray: "#C4C4C4",
   green4 : "#D6F2F5",
   smallShadow: {
-    shadowColor: this.gray,
+    shadowColor: '#FAFAFA',
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 1.1,
   },
   bigShadow: {
-    shadowColor: this.gray,
+    shadowColor: '#FAFAFA',
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,

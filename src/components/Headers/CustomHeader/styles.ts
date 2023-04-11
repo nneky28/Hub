@@ -34,6 +34,11 @@ const styles = StyleSheet.create({
     height : height(5),
     width : width(10),
     resizeMode : "contain"
+  },
+  header_container : {
+    width : width(70),
+    justifyContent : "center",
+    alignItems : "center"
   }
 });
 

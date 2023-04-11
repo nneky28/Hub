@@ -85,11 +85,9 @@ export type EmployeeProfileProps = {
   };
 };
 export type EditPassword = {
-  data: {
-    old_password: string;
-    new_password: string;
-    confirm_password: string;
-  };
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
 };
 export type EditPension = {
   data: {
