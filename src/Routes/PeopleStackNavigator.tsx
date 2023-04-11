@@ -8,9 +8,9 @@ const PeopleStackNavigator = () => {
     const Stack = createStackNavigator<PeopleScreenList>(); 
     return(
         <Stack.Navigator
-            initialRouteName="People"
+            initialRouteName="PeopleHome"
             screenOptions={{ headerShown : false }}>
-            <Stack.Screen name="People" component={People} />
+            <Stack.Screen name="PeopleHome" component={People} />
             <Stack.Screen name="MemberProfile" component={MemberProfile} />
         </Stack.Navigator>
     )

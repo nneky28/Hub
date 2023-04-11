@@ -26,7 +26,7 @@ import {
   BANKS,
   PENSION_PROVIDERS,
   GET_ONBOARDING,
-  GET_USERS,
+  GET_EMPLOYEES,
   GET_TEAMS,
   GET_DEPARTMENTS,
   GET_ALL_TASK,
@@ -61,7 +61,8 @@ import {
   LoginLoad,
   RemoveDeviceTokenLoad,
   NOTIFICATIONS,
-  DOCUMENT
+  DOCUMENT,
+  BASIC_DETAILS
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -70,19 +71,17 @@ export const endPoint = Config.API_URL;
 export const employees_me = (business_id:string) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
   employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
-  team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
-  basic_details: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  
+  team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,  
   login: async (fd?:LoginLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
-  // next_of_kins : async (id : number) => {
-  //   const {storeData} = await GetPersistData("Currentcompany") as currentCompanyType;
-  //   return getAPIs(`/c/${storeData.business_id}/employees/${id}/next-of-kin/`)
-  // },
   next_of_kins: async (id:number) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/next-of-kin/`)
+  },
+  basic_details: async (id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/basic_detail/`)
   },
   whos_out: async (category : string) => {
     let biz = await getStoredBusiness();
@@ -393,9 +392,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_users: async (page = 1, search = "") => {
+  get_employees: async (page = 1, search = "",limit = 20) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },
   get_teams: async (page = 1) => {
     let biz = await getStoredBusiness()
@@ -420,6 +419,12 @@ export const useFetchAboutMe = (tab : string) => {
 
 export const useFetchEmployeeTimeOff = (id:number | string) => {
   return useQuery([EMPLOYEE_TIMEOFF, id], () => APIFunction.employee_timeoff(id as number), {
+    enabled: !!id
+  })
+}
+
+export const useFetchEmployeeBasicDetails = (id?:number) => {
+  return useQuery([BASIC_DETAILS, id], () => APIFunction.basic_details(id as number), {
     enabled: !!id
   })
 }
@@ -492,13 +497,13 @@ export const useFetchWhosOut = (category = "timeoff") => {
 
 export const useFetchBirthdays = (status:string) => {
   return useQuery([BIRTHDAYS, status], () => APIFunction.birthdays(status), {
-    enabled: status !== null && status !== undefined && status !== ""
+    enabled: !!status
   })
 }
 
 export const useFetchAnniversary = (status:string, page = 1) => {
   return useQuery([JOB_ANNIVERSARY, status, page], () => APIFunction.job_anniversary(status, page), {
-    enabled: status !== null && status !== undefined && status !== ""
+    enabled: !!status
   })
 }
 
@@ -535,8 +540,9 @@ export const useFetchOnboarding = (type:string) => {
 
   )
 }
-export const useFetchEmployees = (page: number, search: string) => {
-  return useInfiniteQuery([GET_USERS, page, search], () => APIFunction.get_users(page, search), {
+export const useFetchEmployees = (tab:string,page: number, search: string) => {
+  return useInfiniteQuery([GET_EMPLOYEES,page, search], () => APIFunction.get_employees(page, search), {
+    enabled : !!tab,
     getNextPageParam: (lastPage:any) => {
       return lastPage.next
     }
@@ -545,10 +551,11 @@ export const useFetchEmployees = (page: number, search: string) => {
 }
 
 
-export const useFetchTeams = (page:number) => {
+export const useFetchTeams = (tab : string,page:number) => {
   return useInfiniteQuery([GET_TEAMS, page], () => APIFunction.get_teams(page), {
+    enabled : !!tab, 
     getNextPageParam: (lastPage:any) => {
-      return lastPage.next
+      return lastPage?.next
     }
   }
   )

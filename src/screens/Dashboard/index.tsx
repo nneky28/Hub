@@ -127,9 +127,8 @@ export default function Dashboard({ navigation: { navigate, toggleDrawer } } : R
   } = useFetchEmployeeTimeOffReqs(employee_pk || "") as useFetchEmployeeTimeOffReqsProps
 
   const getInfo = async () => {
-    if(!about_me) return
+    if(!about_me?.id) return
     setEmployeePK(about_me?.id)
-      //setBusiness(biz);
   }
 
   useEffect(() => {

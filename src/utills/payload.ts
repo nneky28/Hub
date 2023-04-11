@@ -2,6 +2,7 @@
 export const ABOUT_ME = 'about_me';
 export const USER = 'user';
 export const EMPLOYEE_TIMEOFF = 'employee_timeoff';
+export const BASIC_DETAILS = "basic_details"
 export const EMPLOYEE_TIMEOFF_TAKEN = 'employee_timeoff_taken';
 export const EMPLOYEE_TIMEOFF_REQS = 'employee_timeoff_reqs';
 export const PAYROLL_YEARS = 'payroll_years';
@@ -20,7 +21,7 @@ export const EMERGENCY = 'emergency';
 export const BANKS = 'banks';
 export const PENSION_PROVIDERS = 'pension_providers';
 export const GET_ONBOARDING = 'get_onboarding';
-export const GET_USERS = 'get_users';
+export const GET_EMPLOYEES = 'get_employees';
 export const GET_TEAMS = 'get_teams';
 export const GET_DEPARTMENTS = 'get_departments';
 export const GET_ALL_TASK = 'get_all_task';
@@ -86,11 +87,9 @@ export type EmployeeProfileProps = {
   };
 };
 export type EditPassword = {
-  data: {
-    old_password: string;
-    new_password: string;
-    confirm_password: string;
-  };
+  old_password: string;
+  new_password: string;
+  confirm_password: string;
 };
 export type EditPension = {
   data: {

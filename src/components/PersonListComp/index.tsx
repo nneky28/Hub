@@ -9,18 +9,9 @@ import CommonStyles from '../../utills/CommonStyles';
 import { H1, ImgPlaceholder} from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import styles from './styles';
+import { PersonListCompProps } from './types';
 
-type PersonListCompProps = {
-  item: {
-    photo: string;
-    first_name: string;
-    last_name: string;
-    job: {
-      title: string;
-    };
-  };
-  onPressHandle: () => void;
-};
+
 
 type DeptListCompProps = {
   item: {
@@ -31,12 +22,12 @@ type DeptListCompProps = {
 
 const PersonListComp: React.FC<PersonListCompProps> = ({
   item,
-  onPressHandle,
+  onPressHandler,
 }) => {
   return (
     <TouchableOpacity
       style={[styles.listItemContainer]}
-      onPress={onPressHandle}
+      onPress={onPressHandler}
     >
       <View style={CommonStyles.rowJustifySpaceBtw}>
         {item.photo ? (
@@ -45,7 +36,7 @@ const PersonListComp: React.FC<PersonListCompProps> = ({
           <ImgPlaceholder
             text={`${item?.first_name?.[0] ? Capitalize(item?.first_name?.[0]) : ''}${
               item?.last_name?.[0] ? `${Capitalize(item?.last_name?.[0])}` : ''
-            }`}
+            }`.trim()}
             size={12}
           />
         )}

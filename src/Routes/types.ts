@@ -16,7 +16,7 @@ export type HomeScreenList = {
 }
 
 export type PeopleScreenList = {
-    People : undefined
+    PeopleHome : undefined
     MemberProfile : ParamsType
 }
 

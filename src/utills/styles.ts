@@ -18,6 +18,13 @@ const styles = StyleSheet.create({
           borderColor : AppColors.grayBorder,
           paddingHorizontal : width(2)
           
+      },
+      back_button : {
+        alignItems: "center",
+        width : width(12),
+        height : width(12),
+        borderRadius : width(50),
+        justifyContent : "center"
       }
 })
 

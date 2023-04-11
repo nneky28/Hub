@@ -12,7 +12,7 @@ import AppColors, { ColorList } from './AppColors';
 import { View, Dimensions, Modal } from 'react-native';
 import { FontFamily } from './FontFamily';
 import { height, width } from 'react-native-dimension';
-import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { ActivityIndicator, IconButton, TouchableRipple } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
@@ -170,7 +170,7 @@ export const SizedBox = ({...props}:SizedBoxProps) => (
   />
 )
 
-export const useDebounce = (value:string | number, delay:number) => {
+export const useDebounce = (value:string, delay:number) => {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(
@@ -237,7 +237,7 @@ export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
 
   const onSubmitEditing = (text : string) => {
     setSearch(text)
-    if(!handleSearch) return
+    if(!handleSearch || !setPage) return
     setPage(1)
     handleSearch({
       type,
@@ -297,7 +297,7 @@ export const ItemListModal = ({setOpen,loading,data,open,onPressHandler,
                       />}
                       onEndReachedThreshold={0.1}
                       onEndReached={()=>{
-                        if(!getMore) return
+                        if(!getMore || !setPage || !page) return
                         setPage(page + 1)
                       }}
                       ListFooterComponent={()=>{
@@ -774,29 +774,36 @@ export const CustomWebView = (props:CustomWebViewProps) => (
   </Modal>
 )
 
-export const BackHandler = ({ onPress, position }:BackHandlerProps) => {
+export const BackHandler = ({ onPress,style}:BackHandlerProps) => {
   const navigation = useNavigation()
   return (
-    <TouchableWrapper
-      size={ICON_BUTTON_SIZE}
-      onPress={() => {
-        if (onPress) return onPress()
-        if (!navigation.canGoBack()) return
-        navigation.goBack()
-      }}
-      style={{
-        alignItems: position || "flex-start",
-      }}
-    >
-      <ImageWrap
+    <IconButton
+        size={width(ICON_BUTTON_SIZE)}
+        onPress={() => {
+          if (onPress)
+            return onPress();
+          if (!navigation.canGoBack())
+            return;
+          navigation.goBack();
+        } }
+        style={[
+          styles.back_button,
+          style
+        ]}
+        icon={"arrow-left"} 
+        hasTVPreferredFocus={undefined} 
+        tvParallaxProperties={undefined}    
+        rippleColor={AppColors.whiteBase}
+      />
+  )
+}
+ {/* <ImageWrap
         url={Images.BackArrow}
         fit={"contain"}
         height={5}
         width={5}
       />
-    </TouchableWrapper>
-  )
-}
+    </IconButton> */}
 export const CloseHandler = ({ onPress }:BackHandlerProps) => {
   const navigation = useNavigation()
   return (

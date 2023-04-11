@@ -19,11 +19,13 @@ const styles = StyleSheet.create({
     },
     inputStyle: {
         width: width(90),
+        color : AppColors.black
     },
     inputStyleIOS: {
         width: width(90),
         textAlignVertical: "center",
-        marginLeft: 5
+        marginLeft: 5,
+        color : AppColors.black
     },
     text1: {
         fontSize: width(2.75),

@@ -30,7 +30,7 @@ export type SizedBoxProps = {
 }
 export type BackHandlerProps = {
   onPress? : () => void
-  position? : "flex-start" | "center" | "flex-end"
+  style? : ViewStyle
 }
 export type CustomWebViewProps = {
   web_url : string|null

@@ -1,15 +1,13 @@
 import React from 'react';
 import { FlatList, Image, Linking, Text, View } from 'react-native';
 import { width } from 'react-native-dimension';
-import { Modal } from 'react-native-paper';
-import { twoMenIcon } from '../../assets/images';
 import { Images } from '../../utills/Image';
-import { APIFunction, getAPIs } from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
 import { Container, EmptyStateWrapper } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
+import { twoMenIcon } from '../../assets/images';
 
 
 
