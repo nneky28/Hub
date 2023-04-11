@@ -60,7 +60,8 @@ import {
   TaskProps,
   LoginLoad,
   RemoveDeviceTokenLoad,
-  NOTIFICATIONS
+  NOTIFICATIONS,
+  DOCUMENT
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -473,6 +474,11 @@ export const useFetchAssets = (employee_pk?:number) => {
 
 export const useFetchBenefits = (employee_pk?:number|null) => {
   return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk as number), {
+    enabled: !!employee_pk 
+  })
+}
+export const useFetchDoc = (employee_pk?:number|null) => {
+  return useQuery([DOCUMENT, employee_pk], () => APIFunction.employee_doc(employee_pk as number), {
     enabled: !!employee_pk 
   })
 }
