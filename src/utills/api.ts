@@ -454,14 +454,14 @@ export const useFetchLocationType = () => {
   return useQuery(LOCATION_TYPE, APIFunction.location_type)
 }
 
-export const useFetchPayslipInfo = (date:string, id:number) => {
-  return useQuery([PAYSLIP_INFO, date, id], () => APIFunction.payslip_info(date, id), {
-    enabled: date !== null && date !== undefined && id !== null && id !== undefined
+export const useFetchPayslipInfo = (date:string, id:number | string) => {
+  return useQuery([PAYSLIP_INFO, date, id], () => APIFunction.payslip_info(date, id as number), {
+    enabled: !!date && !!id
   })
 }
 
-export const useFetchPayrollHistory = (year:number) => {
-  return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year), {
+export const useFetchPayrollHistory = (year:number | string) => {
+  return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year as number), {
     enabled: !!year 
   })
 }
@@ -699,8 +699,11 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+<<<<<<< HEAD
   console.log("getAPIs",_token)
   console.log("getAPIs",path)
+=======
+>>>>>>> c7724b57d875180ae83635c5eb9c721444796272
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

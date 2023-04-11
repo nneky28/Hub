@@ -13,17 +13,18 @@ import {Fragment} from 'react';
 import AppColors, { ColorList } from '../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import {login} from '../Redux/Actions/Auth';
-import {Images} from "../component2/image/Image"
+import {Images} from "../utills/Image"
 import { FontFamily } from '../utills/FontFamily';
 import { Capitalize, getStoredUser, ToastSuccess, useAppSelector } from '../utills/Methods';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, H1, ImageWrap, Rounded } from '../utills/components';
 import { useMutation, useQueryClient } from 'react-query';
 import { setSecurityVisible } from '../Redux/Actions/Config';
-import { APIFunction } from '../utills/api';
+import { APIFunction, useFetchAboutMe } from '../utills/api';
 import { StoredUserProps, UserMembershipProps } from './types';
 import messaging from '@react-native-firebase/messaging';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { useFetchAboutMeProps } from '../components/TimeoffModal/types';
 
 const Drawer = (props : DrawerContentComponentProps) => {
 
@@ -32,6 +33,11 @@ const Drawer = (props : DrawerContentComponentProps) => {
   const auth = useAppSelector((state)=>state.Auth);
   const [user,setUser] = React.useState<StoredUserProps>();
   const [bizs,setBiz] = React.useState<UserMembershipProps[]>();
+  const {
+    data : about
+  } = useFetchAboutMe("main") as useFetchAboutMeProps
+
+
   const {
     mutateAsync,
     isLoading
@@ -61,14 +67,17 @@ const Drawer = (props : DrawerContentComponentProps) => {
   const getUserDetails = async () => {
     let user = await getStoredUser();
     if(!user) return
-    let biz = user?.employee_user_memberships &&
-    Array.isArray(user?.employee_user_memberships) ? user.employee_user_memberships : [];
-    setBiz(biz);
+    if(about){
+      setBiz([{
+        logo : about?.business_logo,
+        business_name: about?.business_name
+      }])
+    }
     setUser(user);
   }
   useEffect(()=>{
     getUserDetails();
-  },[])
+  },[about])
   const BusinessBox = ({item} : {item : UserMembershipProps}) => {
     return (
       <TouchableOpacity style={styles.itemContainer} activeOpacity={0.8}>

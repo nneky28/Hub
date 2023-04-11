@@ -1,6 +1,5 @@
 import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
-import Timeoff from "../components/Timeoff"
 import Benefits from "../screens/Benefits"
 import CreateTask from "../screens/CreateTask/Index"
 import Documents from "../screens/Documents"
@@ -13,6 +12,7 @@ import TaskPeopleList from "../screens/TaskPeopleList/Index"
 import TeamTaskHome from "../screens/TeamTaskHome/Index"
 import Training from "../screens/Training"
 import { MenuScreenList } from "./types"
+import TimeOff from "../screens/TimeOff"
 
 const MenuStackNavigator = () =>{
     const Stack = createStackNavigator<MenuScreenList>()
@@ -23,7 +23,7 @@ const MenuStackNavigator = () =>{
             }}
         >
             <Stack.Screen name="TaskHome" component={TaskHome} />
-            <Stack.Screen name="TimeOff" component={Timeoff} />
+            <Stack.Screen name="TimeOff" component={TimeOff} />
             <Stack.Screen name="PayslipHistory" component={PayslipHistory} />
             <Stack.Screen name="PayslipBreakDown" component={PayslipBreakDown} />
             <Stack.Screen name="Benefits" component={Benefits} />

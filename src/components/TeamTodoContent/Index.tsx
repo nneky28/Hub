@@ -17,7 +17,7 @@ import { APIFunction, useFetchAboutMe, } from '../../utills/api';
 import { storeData, Capitalize } from '../../utills/Methods';
 import { showFlashMessage } from '../SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CommonStyles from '../../utills/CommonStyles';
 import { UnCompletedModal, ActionModal } from '../ContactModal';

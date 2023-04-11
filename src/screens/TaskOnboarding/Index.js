@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { View, Image } from 'react-native'
 import Swiper from 'react-native-swiper'
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';

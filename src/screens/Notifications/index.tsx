@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Image, SectionList } from 'react-native'
+import { View, Text, Image, SectionList, BackHandler } from 'react-native'
 import ScreenWrapper from '../../components/ScreenWrapper'
 import styles from './styles'
 import CommonStyles from '../../utills/CommonStyles';
@@ -12,14 +12,14 @@ import {Capitalize} from '../../utills/Methods';
 import moment from 'moment'
 import Swipeable from 'react-native-swipeable';
 import { showFlashMessage } from '../../components/SuccessFlash'
-import { Images } from '../../component2/image/Image'
+import { Images } from '../../utills/Image'
 import { HeaderWithBackButton } from '../../components/Headers/CustomHeader';
-import { RootScreenProps } from '../../Routes/types';
+import { RootHomeScreenProps } from '../../Routes/types';
 import { FormattedData, GroupedFormattedData, NotificationData, NotificationItemProps, useFetchNotificationData, useFetchNotificationProps } from './types';
 
 
 
-export default function Notifications({navigation} : RootScreenProps) {
+export default function Notifications({navigation} : RootHomeScreenProps) {
     const [notifications,setNotification] = React.useState<readonly NotificationData[]>([]);
     const [loading,setLoading] = React.useState(true);
     const [page] = React.useState(1)
@@ -125,6 +125,14 @@ export default function Notifications({navigation} : RootScreenProps) {
         getNotifications()  
     },[data])
 
+    useEffect(()=>{
+        const backHandler = BackHandler.addEventListener("hardwareBackPress",()=>{
+            navigation.replace("Dashboard")
+            return true
+        })
+        return ()=>backHandler.remove()
+    },[])
+
     const markAsRead = async (id : number,index : number) => {
         let holders = [...notifications]
         let arr = [...notifications]
@@ -194,7 +202,7 @@ export default function Notifications({navigation} : RootScreenProps) {
     }
 
     const onPressHandler = () => {
-        navigation.goBack()
+        navigation.replace("Dashboard")
     }
 
     const ItemSeperatorComponent = () => <View style={{margin: width(1)}} />

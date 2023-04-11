@@ -9,7 +9,7 @@ import AppColors from '../../utills/AppColors';
 import { FontFamily } from '../../utills/FontFamily';
 import { NotifyHandler } from '../../utills/components';
 import AnimatedView from '../../components/AnimatedView/index';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 
 
 const TaskLandingPage = () => {

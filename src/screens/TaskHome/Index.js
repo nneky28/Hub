@@ -26,7 +26,7 @@ import MyTeamCard from '../../components/MyTeamCard/Index';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index';
 import TeamTodoContent from '../../components/TeamTodoContent/Index';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import numeral from 'numeral';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import {

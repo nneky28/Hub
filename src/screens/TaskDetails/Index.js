@@ -13,7 +13,7 @@ import styles from './styles';
 import Button from '../../components/Button'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { P, H1, Container, Rounded, CloseHandler, ImgPlaceholder, SizedBox } from '../../utills/components';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { CompletedModal, SubTaskActionModal } from '../../components/ContactModal';
 import { ICON_BUTTON_SIZE } from '../../utills/Constants';
 import { useNavigation } from '@react-navigation/native';

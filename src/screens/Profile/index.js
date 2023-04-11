@@ -7,7 +7,7 @@ import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { downIcon, leftIcon, settingIcon } from '../../assets/images';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import Button from '../../components/Button';
 import ContactModal from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';

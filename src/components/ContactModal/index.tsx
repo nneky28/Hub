@@ -9,7 +9,7 @@ import styles from './styles';
 import { getData } from '../../utills/Methods';
 import { Container, EmptyStateWrapper, P, TouchableWrapper } from '../../utills/components';
 import AppColors from '../../utills/AppColors';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import { height, width } from 'react-native-dimension';
 import { useNavigation } from '@react-navigation/native';
 import { nextProps, prevProps } from './types';

@@ -6,7 +6,7 @@ import { H1, P,Container, PageLoader} from '../../../utills/components';
 import { useDispatch, useSelector } from 'react-redux';
 import AppColors from '../../../utills/AppColors';
 import { TouchableWrapper, UserPINComponent } from '../../../utills/components';
-import { Images } from '../../../component2/image/Image';
+import { Images } from '../../../utills/Image';
 import { ICON_BUTTON_SIZE } from '../../../utills/Constants';
 import { getData, storeData } from '../../../utills/Methods';
 import CryptoJS from 'crypto-js';

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 import { leftIcon, lockIcon } from '../../assets/images';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import CommonStyles from '../../utills/CommonStyles';
 import { ImageWrap } from '../../utills/components';
 import styles from './styles';

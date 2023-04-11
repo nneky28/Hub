@@ -3,7 +3,7 @@ import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
 import { ImageBackground, Text, Platform, RefreshControl, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
-import { Images } from "../component2/image/Image"
+import { Images } from "./Image"
 import {
   Circle,
   Rect,

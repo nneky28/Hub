@@ -1,4 +1,4 @@
-import { Images } from '../../component2/image/Image';
+import { Images } from '../Image';
 
 export const profileData = [
     {

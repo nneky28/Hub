@@ -7,7 +7,12 @@ import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
 import { BackHandler, Container, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
 import styles from './styles';
+<<<<<<< HEAD:src/screens/Documents/index.tsx
 import { Images } from '../../component2/image/Image';
+=======
+import Emptyjson from '../../assets/lottie/empty.json'
+import { Images } from '../../utills/Image';
+>>>>>>> c7724b57d875180ae83635c5eb9c721444796272:src/screens/Documents/index.js
 import { useFocusEffect } from '@react-navigation/core';
 import { Capitalize, ToastError } from '../../utills/Methods';
 import {useFetchAboutMe, useFetchDoc } from '../../utills/api';

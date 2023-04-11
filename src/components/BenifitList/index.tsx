@@ -1,7 +1,14 @@
 import React from 'react';
 import { FlatList, Image, Linking, Text, View } from 'react-native';
 import { width } from 'react-native-dimension';
+<<<<<<< HEAD:src/components/BenifitList/index.tsx
 import { Images } from '../../component2/image/Image';
+=======
+import { Modal } from 'react-native-paper';
+import { rightIcon, twoMenIcon } from '../../assets/images';
+import { Images } from '../../utills/Image';
+import { APIFunction, getAPIs } from '../../utills/api';
+>>>>>>> c7724b57d875180ae83635c5eb9c721444796272:src/components/BenifitList/index.js
 import CommonStyles from '../../utills/CommonStyles';
 import { Container, EmptyStateWrapper } from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';

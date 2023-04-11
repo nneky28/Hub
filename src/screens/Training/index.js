@@ -19,7 +19,7 @@ import tasksData from '../../utills/data/tasksData'
 import { getData, ToastError } from '../../utills/Methods'
 import styles from './styles'
 import Empty from '../../assets/lottie/empty.json'
-import { Images } from '../../component2/image/Image'
+import { Images } from '../../utills/Image'
 
 
 

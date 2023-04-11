@@ -10,7 +10,7 @@ import { ToastError, ToastSuccess, storeData, validateEmail, useAppSelector } fr
 import moment from 'moment';
 import { Container, CustomWebView, H1, ImageWrap, KeyboardAwareWrapper, OnboardModal, P, SizedBox, TouchableWrapper } from '../../utills/components';
 import { BASE_URL } from '../../utills/Constants';
-import { Images } from "../../component2/image/Image"
+import { Images } from "../../utills/Image"
 import { useQueryClient } from 'react-query';
 import CommonStyles from '../../utills/CommonStyles';
 import Button from '../../components/Button';

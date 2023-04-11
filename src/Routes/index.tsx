@@ -31,7 +31,7 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, { EventDetail, EventType } from '@notifee/react-native';
 import { useFetchAttendanceConfigProps, useFetchAttendanceStatusProps } from '../components/ClockInComponent/types';
 import { useFetchAboutMeProps } from '../components/TimeoffModal/types';
-import { Images } from '../component2/image/Image';
+import { Images } from '../utills/Image';
 import HomeStackNavigator from './HomeStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
 import PeopleStackNavigator from './PeopleStackNavigator';

@@ -1,8 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 
-import React from 'react';
-import { Image, StyleSheet } from 'react-native';
-
 export const Images = {
   TimeoffIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/waiting_pcfzma.png",
   ErrorIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/251-2514375_free-high-quality-error-youtube-icon-png-2018-removebg-preview_s184ga.png",
@@ -24,7 +21,7 @@ export const Images = {
   ProfileFillIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/profile-fill_hk8oat.png",
   ProfileIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/profile_rouc3z.png",
   MenuIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/category_vjknog.png",
-  EyeIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/57-575491_open-eye-with-shine-open-eye-icon-png_wbz4fh.png",
+ // EyeIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/57-575491_open-eye-with-shine-open-eye-icon-png_wbz4fh.png",
   BenefitFillIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Vector+(5).png",
   TrainingFillIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Subtract.png",
   TaskIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Vector.png",
@@ -51,9 +48,9 @@ export const Images = {
   AppLogo: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/myedge_l7tjva.png",
   BackArrow: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/left_jzv37i.png",
   Listing: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/listings_elicuq.png",
-  ArrowDown: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/down_vbprxc.png",
+  //ArrowDown: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/down_vbprxc.png",
   SearchIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/search_lvuqco.png",
-  ArrowRight: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/right_l6fhzc.png",
+  //ArrowRight: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/right_l6fhzc.png",
   MapPIN: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/location_b1ivus.png",
   Settings: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/settings_rwobah.png",
   PhoneIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/myedge-mobile/phone_tljg31.png",
@@ -108,27 +105,9 @@ export const Images = {
   greenBox: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Rectangle+4026.png",
   TaskTickIcon: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+9823.png",
   UndoBtn: "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Frame+9720.png",
-  ClockIn : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Time+off+Illustration.png"
+  ClockIn : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Time+off+Illustration.png",
+  people : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Layer_1.png",
+  payroll : "https://bizedge-prod.s3.us-west-2.amazonaws.com/bizedge+mobile/Group+26.png",
 
 }
 
-
-
-
-const GenImage = (props) => {
-  return (
-    <Image
-      source={{ uri: props.ImageUri }}
-      style={props.imageStyle || styles.GenImageStyle}
-    />
-  );
-};
-
-export default GenImage;
-
-const styles = StyleSheet.create({
-  GenImageStyle: {
-    width: 134,
-    height: 134,
-  },
-});

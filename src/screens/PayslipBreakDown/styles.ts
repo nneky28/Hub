@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     height: height(5),
-    backgroundColor: AppColors.lightgrey,
     justifyContent: 'center',
     paddingLeft: width(3),
     borderTopStartRadius: width(3),
@@ -89,8 +88,7 @@ const styles = StyleSheet.create({
     marginHorizontal: width(5),
     marginVertical: height(0.5),
     elevation: width(0.2),
-    flex : 1,
-    borderColor: AppColors.greylinecolor,
+    flex : 1
   },
   empListView: {
     flexDirection: 'row',
@@ -110,7 +108,6 @@ const styles = StyleSheet.create({
   },
   separator: {
     borderWidth: width(0.1),
-    borderColor: AppColors.greylinecolor,
     marginHorizontal: width(2),
   },
   innerContainer: {
