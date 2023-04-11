@@ -82,6 +82,6 @@ export type WhosOutListItem = {
 export type WhosOutSection = {
     key: '1',
     date: 'Jan 12 - Jul 23',
-    heading: 'On leave',
+    heading: 'On Leave',
     data: WhosOutListItem[]
 }

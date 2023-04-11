@@ -180,7 +180,7 @@ export default function People({navigation} : RootScreenProps) {
                 {
                     key: '1',
                     date: 'Jan 12 - Jul 23',
-                    heading: 'On leave',
+                    heading: 'On Leave',
                     data: data
                 }
              ] : []
