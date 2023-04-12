@@ -28,7 +28,7 @@ interface Data {
     navigation: any;
   }
 
- const Index : React.FC<IndexProps> = ({ navigation }) => {
+ const PensionInfo = ({ navigation }) => {
     const [data, setData] = useState<Data>({
         account_name: null,
         account_number: "",
@@ -326,4 +326,4 @@ interface Data {
     )
 }
 
-export default Index;
+export default PensionInfo;

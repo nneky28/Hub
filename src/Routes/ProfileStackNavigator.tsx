@@ -9,6 +9,7 @@ import Compensation from "../screens/Compensation";
 import Setting from "../screens/Settings";
 import NextKin from "../screens/NextKin";
 import Emergency from "../screens/Emergency";
+import PensionInfo from "../screens/PensionInfo";
 
 const ProfileStackNavigator = () => {
     const Stack = createStackNavigator<ProfileScreenList>(); 
@@ -24,7 +25,7 @@ const ProfileStackNavigator = () => {
             <Stack.Screen name="Settings" component={Setting} />
             <Stack.Screen name="NextKin" component={NextKin} />
             <Stack.Screen name="Emergency" component={Emergency} />
-            <Stack.Screen name="PensionInfo" component={PersonalInfo} />
+            <Stack.Screen name="PensionInfo" component={PensionInfo} />
         </Stack.Navigator>
     )
 }
