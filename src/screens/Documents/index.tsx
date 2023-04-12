@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import  { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, EmptyStateWrapper, PageLoader } from '../../utills/components';
+import {  EmptyStateWrapper, PageLoader} from '../../utills/components';
 import styles from './styles';
 import { Images } from '../../utills/Image';
 import { Capitalize} from '../../utills/Methods';
@@ -12,16 +12,19 @@ import {useFetchAboutMe, useFetchDoc } from '../../utills/api';
 import moment from 'moment';
 import { width } from 'react-native-dimension';
 import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
-import { Document } from './type';
+import { Document, useFetchDocumentsProps } from './type';
+import { HeaderWithBackButton } from '../../components/Headers/CustomHeader';
+import { RootScreenProps } from '../../Routes/types';
 
 
 
-  export default function Documents() {
+
+
+  export default function Documents({navigation}:RootScreenProps) {
     const [modal, setModal] = useState<boolean>(false);
     const [documents, setDocuments] = useState<Document[]>([]);
     const [document, setDocument] = useState<Document | null>(null);
-    const [holders, setHolders] = useState<Document[]>([]);                 
-
+    const [holders,setHolders] = useState<Document[]>([]);                 
 
       const {
           data: profile
@@ -30,28 +33,21 @@ import { Document } from './type';
       const {
           data:doc,
           isLoading:loading
-      } = useFetchDoc(profile?.id);
+      } = useFetchDoc(profile?.id) as useFetchDocumentsProps
 
-      console.log("doc",doc)
 
-    // const getDocuments = async () => {
-    //     try{
-    //         const res =  Array.isArray((doc as {results: Array<any>}).results)
-    //         ? (doc as {results: Array<any>}).results
-    //         : []
-
-    //         if(res){
-    //             setDocuments(res)
-    //             setHolders(res)
-    //         }else{
-    //             setDocuments([])
-    //             setHolders([])
-    //         }
-    //     } catch (err:any){
-    //         ToastError(err.msg)
-    //     }
-    // }
-    const handleSearch = (text:string) => {
+      const getDocuments = () => {
+          let allDocument = doc?.results
+          if (allDocument && Array.isArray(allDocument)) {
+              setDocuments(allDocument)
+              setHolders(allDocument)
+          } else {
+            setDocuments([])
+            setHolders([])  
+          }
+      }
+  
+      const handleSearch = (text: string) => {
         if (text.length > 0){
             let filtered = documents.filter(item => {
                 return (item && item.file && item.file.toLowerCase() && item.file.toLowerCase().includes(text.toLowerCase()))
@@ -86,28 +82,31 @@ import { Document } from './type';
         </>
         );
     }
-    const ListEmptyComponent = () => {
+  
+      const ListEmptyComponent = () => {
+        // console.log("show here")
         return(
+            
           <EmptyStateWrapper 
-            icon={Images.EmptyBenefits}
+            icon={Images.EmptyDoc}
             header_1={"You do not have"} 
             header_2={"any document yet."}
             sub_text={"When you do, they will show up here."}
           />
         )
-      }
+    }
+      useEffect(() => (
+       getDocuments()   
+      ),[doc])
         
     return (
         <ScreenWrapper 
-            scrollEnabled={false}
-        >
-            <View style={styles.header}>
-                <BackHandler />
-                <Text numberOfLines={1} style={styles.screenTitle}>
-                    Documents
-                </Text>
-            </View>
-            <View style={styles.line} />
+            scrollEnabled={false}>
+          
+            <HeaderWithBackButton
+                headerText='Documents'
+                onPressHandler={() => navigation.goBack()} />
+            
                     <View style={styles.mainViewContainer}>
                         {
                             Platform.OS === "android" ? (
@@ -120,10 +119,9 @@ import { Document } from './type';
                             />
                             )
                         }
-                        {
-                !loading && doc && Array.isArray(doc?.results) && doc?.results.length > 0  ? (
+                    
                         <FlatList
-                            data={doc.results}
+                            data={documents}
                             keyExtractor={(i) => i.toString()}
                             renderItem={ListComponent}
                             ItemSeparatorComponent={() => <View />}
@@ -132,8 +130,7 @@ import { Document } from './type';
                             contentContainerStyle={CommonStyles.marginTop_2}
                             ListEmptyComponent={ListEmptyComponent}
                         />
-                        ) : null
-            }
+                        
                     </View>
                 
             <>
@@ -141,8 +138,6 @@ import { Document } from './type';
                 loading ? <PageLoader /> : null
             }
             </>
-
-        
             <DocumentModal isVisible={modal} onHide={() => setModal(false)} document={document}/>
         </ScreenWrapper>  
     );
