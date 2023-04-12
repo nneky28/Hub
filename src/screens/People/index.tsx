@@ -363,6 +363,7 @@ export default function People({navigation} : RootScreenProps) {
             <Container style={styles.scrollViewContainer}>
                 <ScrollView
                     horizontal={true}
+                    showsHorizontalScrollIndicator={false}
                 >
                     {tabs.map((item,index) => (
                         <TouchableWrapper 

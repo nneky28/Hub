@@ -23,7 +23,7 @@ export default function ListPayroll({item}) {
         <View style={styles.titleandperiod}>
           {
             item?.pay_date ? <Text style={styles.Titletext}>
-              Payslips for {moment(item.pay_date).format("MMM")}
+              Payslip for {moment(item.pay_date).format("MMM")}
             </Text> : null
           }
           {
