@@ -16,8 +16,8 @@ import { login } from '../Redux/Actions/Auth';
 import { APIFunction, useFetchAboutMe, useFetchAttendanceConfig, useFetchAttendanceStatus } from '../utills/api';
 import { CustomFallBackScreen } from '../utills/components';
 import { AppState, Linking, Platform } from 'react-native';
-import { setSecurityVisible } from '../Redux/Actions/Config';
-import { focusManager,useMutation,useQueryClient } from 'react-query';
+import { setLoaderVisible, setSecurityVisible } from '../Redux/Actions/Config';
+import { focusManager,useQueryClient } from 'react-query';
 import ErrorBoundary from 'react-native-error-boundary'
 import Crashes from 'appcenter-crashes';
 import SpInAppUpdates, {
@@ -54,11 +54,6 @@ const Routes = () => {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient()
   const [backgroundEventDetails,setBackgroundEventDetails] = React.useState<EventDetail>()
-
-  const {
-    mutateAsync
-  } = useMutation(APIFunction.remove_device_token)
-
   const {
     data : config,
   } = useFetchAttendanceConfig(route) as useFetchAttendanceConfigProps
@@ -71,21 +66,17 @@ const Routes = () => {
   } = useFetchAttendanceStatus(route) as useFetchAttendanceStatusProps
 
   const logoutMethod = async () => {
-    try{
-      let token = await messaging().getToken()
-      let fd = {
-        registration_id  : token
-      }
-      await mutateAsync(fd)
-    }finally{
+    try {
       let keys = await AsyncStorage.getAllKeys()
       let arr = [...keys]
-      arr.splice(keys.indexOf(`@${about?.email?.replaceAll("_","")}`),1)
-      await AsyncStorage.multiRemove(keys);
+      arr.splice(keys.indexOf(`@${auth?.user?.email?.replaceAll("_","")}`), 1)
+      AsyncStorage.multiRemove(keys);
+      dispatch(setLoaderVisible(false))
       queryClient.invalidateQueries("")
       dispatch(setSecurityVisible(false))
-      dispatch(login({...auth,onboard : false,url : null,route : "auth",isLogin : false}));
+      dispatch(login({ ...auth, route: "auth", isLogin: false }));
       ToastSuccess("Successfully logged out")
+    } catch (err) {
     }
   };
 
