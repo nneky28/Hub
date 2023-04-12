@@ -1,6 +1,6 @@
 export type BenefitListProps = {
     data: any;
     horizontal?: boolean;
-    benefits: any;
+    benefits: Array<any>;
     goToWeb?: (url: string) => void;
 }
