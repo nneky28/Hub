@@ -13,6 +13,7 @@ import {
   PageLoader,
 } from '../../utills/components';
 import styles from './styles';
+import { useFetchBenefitsProps } from '../Dashboard/types';
 
 
 export default function Benefits() {
@@ -20,10 +21,10 @@ export default function Benefits() {
   const [web_url, setWebUrl] = useState<string | null>(null);
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
-
-  const {data: benefits = {results: []}, isLoading} = useFetchBenefits(
-    profile?.id,
-  );
+  const {
+    data: benefits,
+    isLoading
+  } = useFetchBenefits(profile?.id) as useFetchBenefitsProps
 
   const goToWeb = (url: string | null) => {
     setWebUrl(url);
@@ -46,16 +47,18 @@ export default function Benefits() {
                 <Container width={90} marginTop={2}>
                   <H1 fontSize={3.4}>Company benefits you are enrolled on</H1>
                 </Container>
-                <BenifitList
-                  data={['#C2D4FF', '#99E6FF']}
-                  horizontal={false}
-                  benefits={
-                    Array.isArray((benefits as {results: Array<any>}).results)
-                      ? (benefits as {results: Array<any>}).results
-                      : []
+              {
+                     benefits?.results && Array.isArray(benefits?.results) && benefits?.results.length > 0 ? (
+                      <React.Fragment>
+                        <BenifitList
+                          data={['#C2D4FF', '#99E6FF']}
+                          horizontal={benefits?.results.length === 1 ? false : true}
+                          benefits={benefits?.results}
+                          goToWeb={goToWeb}
+                        />
+                      </React.Fragment>
+                    ) : null
                   }
-                  goToWeb={goToWeb}
-                />
               </React.Fragment>
             ) : null}
           </View>
