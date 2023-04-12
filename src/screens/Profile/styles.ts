@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: width(4.5),
     color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold
+    fontFamily: FontFamily.BlackSansBold,
+    marginTop : height(2)
   },
   designationText: {
     fontSize: width(3),
@@ -137,7 +138,6 @@ const styles = StyleSheet.create({
     height: height(5),
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-    backgroundColor: AppColors.gray,
     ...AppColors.noShadow,
   },
   saveBtnText: {

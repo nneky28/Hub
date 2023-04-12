@@ -1,6 +1,14 @@
 import { Images } from '../Image';
 
-export const profileData = [
+export type ProfileDataType = {
+    key: string
+    title: string
+    iconLeft: {uri : string},
+    data: string[],
+    iconRight: {uri : string}, 
+}
+
+export const profileData :  ProfileDataType[] = [
     {
         key: '1',
         title: 'Personal Information',

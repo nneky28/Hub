@@ -23,7 +23,7 @@ export type PeopleScreenList = {
 export type ProfileScreenList = {
     PersonalInfo : undefined
     EditProfile : undefined
-    Profile : undefined
+    ProfileHome : undefined
     ScreenTemplate : undefined
     EditPhoto : undefined
     Compensation : undefined

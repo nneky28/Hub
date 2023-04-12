@@ -1,10 +1,11 @@
 import { ImageStyle, TextStyle, ViewStyle } from "react-native";
+import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 
 export type HeaderWithBackButtonProps =  {
     headerContainerStyle? : ViewStyle
     headerText? : string
     headerTextStyle? : TextStyle
-    rightIcon? : string
+    rightIcon? : IconSource
     iconStyle? : TextStyle
     onPressHandler? : () => void
     subHeaderText? : string
@@ -56,7 +57,7 @@ export type HomePageHeaderProps = {
     imageStyle? : ImageStyle
     header : string
     headerStyle? : TextStyle
-    rightIcon : string
+    rightIcon : IconSource
     rightIconColor? : string
     onPressHandler : () => void
 }
