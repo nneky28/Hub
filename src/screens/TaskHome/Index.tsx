@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
-    RefreshControl,
     ActivityIndicator,
     ImageBackground,
 } from 'react-native';
@@ -14,21 +13,17 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import {
     H1,
     Container,
-    Rounded,
     PageLoader,
-    TouchableWrapper,
     ImgPlaceholder,
-    P,
 } from '../../utills/components';
 import { width, height } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
-import MyTeamCard from '../../components/MyTeamCard/Index';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index';
 import TeamTodoContent from '../../components/TeamTodoContent/Index';
 import { Images } from '../../utills/Image';
 import numeral from 'numeral';
-import AppColors, { ColorList } from '../../utills/AppColors';
+import AppColors from '../../utills/AppColors';
 import {
     useFetchStatistics,
     useFetchSentStatistics,
@@ -47,22 +42,22 @@ import {
     useFetchAllSentOverdue,
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { __flatten, getData, getStoredBusiness } from '../../utills/Methods';
-import CreateTask from '../CreateTask/Index';
-import AnimatedView from '../../components/AnimatedView';
+import { __flatten, getData, useAppSelector } from '../../utills/Methods';
 import { useQueryClient } from 'react-query';
 import { setCurrentTabIndex } from '../../Redux/Actions/Config';
 import { useSelector, useDispatch } from 'react-redux';
+import { RootScreenProps } from '../../Routes/types';
+import { HomePageHeader } from '../../components/Headers/CustomHeader';
+import { AddButtonProps } from './types';
+import { RenderItemVerticalParams } from '../../components/Timeoff/types';
 
 
 
-const TaskHome = ({ navigation, route }) => {
+const TaskHome = ({ navigation } : RootScreenProps) => {
     const [employee_pk, setEmployeePK] = useState(null);
-    const [business, setBusiness] = useState(null);
     const [tab, setTab] = useState('All');
     const [count, setCount] = useState(0);
     const [actionTitle, setActionTitle] = useState('To-Do');
-    const [moveTask, setMoveTask] = useState('My Tasks');
     const [data, setData] = useState([]);
     const [taskpage, setTaskPage] = useState(1);
     const [dueTodayPage, setDueTodayPage] = useState(1);
@@ -90,22 +85,24 @@ const TaskHome = ({ navigation, route }) => {
     const [tasks, setTasks] = useState([]);
     const [teamTask, setTeamTask] = useState([]);
     const [aboutMe, setAboutMe] = useState(null)
-    const index = useSelector(state => state.Config.currentTaskTabIndex)
+    const index = useAppSelector(state => state.Config.currentTaskTabIndex)
     const dispatch = useDispatch()
 
-    const setButtons = (i) => {
+    const tabs = ['My Tasks', 'Sent Tasks', 'My Team']
+
+    const setButtons = (i : number) => {
         dispatch(setCurrentTabIndex(i));
     };
 
-    const AddButton = ({ onPress, style }) => (
+    const AddButton = ({ onPress, style } : AddButtonProps) => (
         <TouchableOpacity style={style} onPress={onPress}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
     );
-    const RenderItem = ({ item }) => {
+    const RenderItem = ({ char } : RenderItemVerticalParams) => {
         return (
             <TouchableOpacity onPress={() => navigation.navigate("Menu", { screen: "TaskPeopleList" })}>
-                <ImgPlaceholder text={item} size={15} />
+                <ImgPlaceholder text={char} size={15} />
             </TouchableOpacity>
         );
     };
@@ -558,25 +555,16 @@ const TaskHome = ({ navigation, route }) => {
                         />
                     );
                 }}>
-                <View style={styles.mainViewContainer}>
-                    <View style={styles.header}>
-                        <TouchableOpacity
-                            onPress={() => navigation.toggleDrawer()}
-                            style={styles.logoBox}>
-                            <Image source={{ uri: Images.TaskLogo }} style={styles.logo} />
-                        </TouchableOpacity>
-                        <Text numberOfLines={1} style={styles.screenTitle}>
-                            Tasks
-                        </Text>
-                    </View>
-                    <View style={styles.line} />
-                </View>
+                <HomePageHeader 
+                    image={Images.TaskLogo}
+                    header="Tasks"
+                />
                 <ScrollView
                     style={[styles.scroll, CommonStyles.paddingBottom_10]}
                     showsVerticalScrollIndicator={false}>
 
                     <View style={styles.threeButtonCont}>
-                        {['My Tasks', 'Sent Tasks', 'My Team'].map((item, i) => (
+                        {tabs.map((item, i) => (
                             <TouchableOpacity
                                 onPress={() => {
                                     setButtons(i);

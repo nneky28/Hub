@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
-import { bottom } from 'styled-system';
 
 
 const styles = StyleSheet.create({
@@ -54,7 +53,6 @@ const styles = StyleSheet.create({
 
     scrollViewContainer: {
         marginTop: height(2),
-        justifyContent: 'space-evenly',
         flexDirection: 'row',
         justifyContent: 'space-around',
         borderWidth: 1,
