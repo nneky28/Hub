@@ -15,24 +15,10 @@ import {
 import styles from './styles';
 
 
-export default function Benefits() {
-  const [web, setWeb] = useState<boolean>(false);
-  const [web_url, setWebUrl] = useState<string | null>(null);
 
-  const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
-  const {data: benefits = {results: []}, isLoading} = useFetchBenefits(
-    profile?.id,
-  );
 
-  const goToWeb = (url: string | null) => {
-    setWebUrl(url);
-    setWeb(true);
-  };
-  const closeWeb = () => {
-    setWeb(false);
-  };
-  React.useEffect(() => {}, [profile]);
+  export default function Benefits() {
 
   return (
     <ScreenWrapper>

@@ -8,17 +8,12 @@ import { Capitalize } from '../../utills/Methods';
 import Button from '../Button';
 import styles from './styles';
 import { twoMenIcon } from '../../assets/images';
+import { BenefitListProps } from './type';
 
 
 
-type Props = {
-  data: any;
-  horizontal?: boolean;
-  benefits: any;
-  goToWeb?: (url: string) => void;
-};
 
-const BenifitList : React.FC<Props> = ({ data, horizontal = false, benefits, goToWeb }) => {
+const BenifitList : React.FC<BenefitListProps> = ({ data, horizontal = false, benefits, goToWeb }) => {
   let color = "";
 
  const ListEmptyComponent = () => {
@@ -49,11 +44,6 @@ const BenifitList : React.FC<Props> = ({ data, horizontal = false, benefits, goT
             <Container width={50} backgroundColor={"transparent"}>
               <View style={styles.row}>
                   <Text style={styles.text}>{item && item.plan ? Capitalize(item.plan) : ""}</Text>
-                  {/* <Image
-                    resizeMode="contain"
-                    source={rightIcon}
-                    style={styles.icon}
-                  /> */}
                 </View>
                 <Text style={styles.text1}>{item && item.provider ? Capitalize(item.provider) : ""}</Text>
             </Container>
