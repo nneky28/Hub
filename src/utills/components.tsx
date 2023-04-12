@@ -642,6 +642,7 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
 
                   <TouchableWrapper
                     onPress={()=>{
+                      if(!props.onChangeData) return
                       props.onChangeData(selected)
                     }}
                     isText
@@ -790,7 +791,7 @@ export const BackHandler = ({ onPress,style}:BackHandlerProps) => {
           styles.back_button,
           style
         ]}
-        icon={"arrow-left"} 
+        icon={"keyboard-backspace"} 
         hasTVPreferredFocus={undefined} 
         tvParallaxProperties={undefined}    
         rippleColor={AppColors.whiteBase}
@@ -1019,7 +1020,7 @@ export const UserPINComponent = (props : UserPINComponentProps) => {
 }
 
 interface KeyboardAwareWrapperProps {
-  children?: JSX.Element|JSX.Element[];
+  children : React.ReactNode
   scrollable? : boolean
   style? : ViewStyle
 }

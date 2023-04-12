@@ -33,7 +33,7 @@ export type BackHandlerProps = {
   style? : ViewStyle
 }
 export type CustomWebViewProps = {
-  web_url : string|null
+  web_url : string
   show? : boolean
   setShow : () => void
 }
@@ -193,7 +193,7 @@ export type HTagProps = {
 
 export type DatePickerModalProps = {
     show? : boolean
-    setShow? : (param : boolean) => void
+    setShow : (param : boolean) => void
     type? : string
     current? : string
     header? : string
@@ -223,7 +223,7 @@ export type DateModeProps = "text-field" | "calendar"
   }
 
  export type ItemListModalProps = {
-  setOpen? : (param : boolean) => void,
+  setOpen : () => void,
   loading? : boolean,
   data : readonly any[],
   open : boolean,
