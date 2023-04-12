@@ -99,8 +99,18 @@ export type useFetchAboutMeData = {
         start_date?: string,
         end_date?: string
     },
-    bank_account?: string,
-    pension?: string,
+    bank_account?: {
+        bank? : {
+            name? : string
+        }
+        account_number? : string
+    },
+    pension?: {
+        provider? : {
+            name? : string
+        }
+        pension_number? : string
+    },
     user_access_status?: string,
     completed_user_onboarding?: boolean,
     is_active?: boolean,

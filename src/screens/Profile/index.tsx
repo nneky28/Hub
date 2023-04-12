@@ -1,24 +1,28 @@
-import { useFocusEffect } from '@react-navigation/core';
 import moment from 'moment';
 import numeral from 'numeral';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Image, LayoutAnimation, Platform, ScrollView, Text, TouchableOpacity, UIManager, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { useQueryClient } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
-import { downIcon, leftIcon, settingIcon } from '../../assets/images';
+import { useDispatch } from 'react-redux';
+import { downIcon } from '../../assets/images';
 import { Images } from '../../utills/Image';
 import Button from '../../components/Button';
 import ContactModal from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { scrollToPosition } from '../../Redux/Actions/Config';
-import { APIFunction, getAPIs, useFetchBanking, useFetchEmergency, useFetchKin } from '../../utills/api';
-import { ColorList } from '../../utills/AppColors';
+import { useFetchAboutMe,useFetchEmergency, useFetchKin } from '../../utills/api';
+import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, Container, CustomRefreshControl, H1, ProfileLoader, Rounded } from '../../utills/components';
-import { profileData } from '../../utills/data/profileData';
-import { Capitalize, getData, storeData, ToastError } from '../../utills/Methods';
+import { Container, CustomRefreshControl,ImgPlaceholder, ProfileLoader } from '../../utills/components';
+import { profileData, ProfileDataType } from '../../utills/data/profileData';
+import { Capitalize, useAppSelector } from '../../utills/Methods';
 import styles from './styles';
+import { RootScreenProps } from '../../Routes/types';
+import { HomePageHeader } from '../../components/Headers/CustomHeader';
+import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
+import { Coordinates, TextWithButtonProps, TopBottomText, useFetchEmergencyProps, useFetchKinProps } from './types';
+import { BANKS, EMERGENCY, NEXT_OF_KINS } from '../../utills/payload';
 
 
 if (Platform.OS === 'android') {
@@ -27,17 +31,19 @@ if (Platform.OS === 'android') {
     }
   }
 
-export default function Profile({navigation}) {
+export default function Profile({navigation} : RootScreenProps) {
     const dispatch = useDispatch();
     const [modal, setModal] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
-    const [about,setAbout] = useState(null)
-    const [banking,setBanking] = useState(null);
-    const scrollRef = useRef(null);
-    const scrollPosition = useSelector(state => state.Config.scrollPosition);
-    const [cords,setCords] = React.useState([])
+    const scrollRef = useRef<ScrollView>(null);
+    const scrollPosition = useAppSelector(state => state.Config.scrollPosition);
+    const [cords,setCords] = React.useState<Coordinates>({})
     const queryClient = useQueryClient()
-    const [loading,setLoading] = React.useState(false)
+
+    const {
+      data : about,
+      isLoading : loading
+    } = useFetchAboutMe("main") as useFetchAboutMeProps
 
     useEffect(()=>{
       if(!scrollRef?.current?.scrollTo) return
@@ -45,76 +51,58 @@ export default function Profile({navigation}) {
     },[scrollPosition])
 
     useEffect(() => {
-      return dispatch(scrollToPosition({x: 0, y: 0}))
+      return () => {
+        dispatch(scrollToPosition({x: 0, y: 0}))
+      }
     }, []);
 
     const refreshHandler = async () => {
-        setLoading(true)
-        queryClient.invalidateQueries("next_of_kins")
-        queryClient.invalidateQueries("emergency")
-        queryClient.invalidateQueries("banks")
-        let res = await APIFunction.about_me()  
-        await storeData("about_me",res)
-        setLoading(false)
-        getUserData()
+        queryClient.invalidateQueries(NEXT_OF_KINS)
+        queryClient.invalidateQueries(EMERGENCY)
+        queryClient.invalidateQueries(BANKS)
     } 
 
-    const TopBottomText = ({topText, bottomText, containerStyle}) => {
+    const TopBottomText = ({topText, bottomText, containerStyle}: TopBottomText) => {
       return(
-      <View style={[{justifyContent: 'flex-start'},containerStyle]}>
-        <Text style={styles.insideText1}>{topText}</Text>
-        <Text style={styles.insideText2}>{bottomText}</Text>
-      </View>
+        <View style={[{justifyContent: 'flex-start'},containerStyle]}>
+          <Text style={styles.insideText1}>{topText}</Text>
+          <Text style={styles.insideText2}>{bottomText}</Text>
+        </View>
       )
     }
     const {
       data : kinsData,
       isLoading : loadingKin
-    } = useFetchKin(about?.id)
+    } = useFetchKin(about?.id) as useFetchKinProps
 
     const {
       data : emergData,
       isLoading : loadingEmergency
-    } = useFetchEmergency(about?.id)
+    } = useFetchEmergency(about?.id) as useFetchEmergencyProps
 
-    const {
-      data : bankData,
-      isLoading : loadingBank
-    } = useFetchBanking()
-
-
-    useFocusEffect(useCallback(()=>{
-      getUserData()
-    },[]))
-
-    useEffect(()=>{
-      getProfile("kin")
-    },[loadingKin])
-
-    useEffect(()=>{
-      getProfile("emergency")
-    },[loadingEmergency])
-
-    useEffect(()=>{
-      getProfile("banking")
-    },[loadingBank])
-
-    const getUserData = async () => {
-      let about = await getData("about_me")
-      setAbout(about)
+    const navigationHandler = () => {
+      navigation.navigate("Profile",{screen : "EditProfile"})
     }
 
-    const getProfile = async (type) => {
-      try{
-        if(type === "banking" && bankData) setBanking(bankData);
-      }catch(err){
-       let msg = err.msg && err.msg.detail && typeof(err.msg.detail) == "string" ? err.msg.detail  : "Something went wrong. Please retry"
-       ToastError(msg)
-      }
+    const TextWithButton = ({topText, bottomText} : TextWithButtonProps) => {
+      return (
+        <View style={styles.smallerContainer}>
+          <View>
+            <Text style={styles.insideText4}>{topText}</Text>
+            <Text style={styles.insideText3}>{bottomText}</Text>
+          </View>
+          {/* <TouchableOpacity 
+          style={styles.saveBtnStyle} 
+          onPress={onPressHandle}
+          >
+            <Text style={styles.saveBtnText}>View History</Text>
+          </TouchableOpacity> */}
+        </View>
+      );
     }
 
-    const RenderList = ({item, index}) => {
-        const handleClick = (index) => {
+    const RenderList = ({item, index} : {item : ProfileDataType,index : number}) => {
+        const handleClick = (index : number) => {
           if (selectedIndex == index) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
             setSelectedIndex(-1);
@@ -182,7 +170,9 @@ export default function Profile({navigation}) {
                   <View style={styles.line}/>
                   <Text style={styles.subHeading}>Compensation</Text>
                   <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_1]}>
-                    <TextWithButton topText={data[8]} bottomText={about && about.compensation && about.compensation.amount ? numeral(about.compensation.amount).format("0,0.00") : ""} onPressHandle={() => navigation.navigate('Compensation')}/>
+                    <TextWithButton 
+                      topText={data[8]} bottomText={about && about.compensation && about.compensation.amount ? numeral(about.compensation.amount).format("0,0.00") : ""} onPressHandler={() => navigation.navigate("Profile",{screen : "Compensation"})}
+                    />
                   </View>
                   
                 </View> 
@@ -192,19 +182,19 @@ export default function Profile({navigation}) {
                   <View style={CommonStyles.marginBottom_3}>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
                       <TopBottomText topText={data[0]} 
-                      bottomText={kinsData && kinsData.first_name ? Capitalize(kinsData.first_name) : null} 
+                      bottomText={kinsData?.first_name ? Capitalize(kinsData.first_name) : ""} 
                       containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[2]} bottomText={kinsData && kinsData.last_name ? Capitalize(kinsData.last_name) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[2]} bottomText={kinsData?.last_name ? Capitalize(kinsData.last_name) : ""} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[4]} bottomText={kinsData && kinsData.relationship ? Capitalize(kinsData.relationship) : null} containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[6]} bottomText={kinsData && kinsData.phone_number ? kinsData.phone_number : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[4]} bottomText={kinsData?.relationship ? Capitalize(kinsData.relationship) : ""} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[6]} bottomText={kinsData?.phone_number ? kinsData.phone_number : ""} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[8]} bottomText={kinsData && kinsData.address1 ? kinsData.address1 : null}/>
+                      <TopBottomText topText={data[8]} bottomText={kinsData?.address1 ? kinsData.address1 : ""}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[10]} bottomText={kinsData && kinsData.email ? kinsData.email : null}/>
+                      <TopBottomText topText={data[10]} bottomText={kinsData?.email ? kinsData.email : ""}/>
                     </View>
                   
                   </View> : null
@@ -214,19 +204,19 @@ export default function Profile({navigation}) {
                   <View style={CommonStyles.marginBottom_3}>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_2]}>
                       <TopBottomText topText={data[0]} 
-                      bottomText={emergData && emergData.first_name ? Capitalize(emergData.first_name) : null} 
+                      bottomText={emergData?.first_name ? Capitalize(emergData.first_name) : ""} 
                       containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[2]} bottomText={emergData && emergData.last_name ? Capitalize(emergData.last_name) : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[2]} bottomText={emergData?.last_name ? Capitalize(emergData.last_name) : ""} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[4]} bottomText={emergData && emergData.relationship ? Capitalize(emergData.relationship) : null} containerStyle={styles.halfWidthContainer}/>
-                      <TopBottomText topText={data[6]} bottomText={emergData && emergData.phone_number ? emergData.phone_number : null} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[4]} bottomText={emergData?.relationship ? Capitalize(emergData.relationship) : ""} containerStyle={styles.halfWidthContainer}/>
+                      <TopBottomText topText={data[6]} bottomText={emergData?.phone_number ? emergData.phone_number : ""} containerStyle={styles.halfWidthContainer}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[8]} bottomText={emergData && emergData.address1 ? emergData.address1 : null}/>
+                      <TopBottomText topText={data[8]} bottomText={emergData?.address1 ? emergData.address1 : ""}/>
                     </View>
                     <View style={[CommonStyles.rowJustifySpaceBtw, CommonStyles.marginTop_4]}>
-                      <TopBottomText topText={data[10]} bottomText={emergData && emergData.email ? emergData.email : null}/>
+                      <TopBottomText topText={data[10]} bottomText={emergData?.email ? emergData.email : ""}/>
                     </View>
                   
                   </View> : null
@@ -236,20 +226,20 @@ export default function Profile({navigation}) {
 
                   <View style={[CommonStyles.marginTop_2, CommonStyles.marginBottom_3]}>
                     <TopBottomText topText={data[0]} bottomText={
-                      about && about.bank_account && about.bank_account.bank && about.bank_account.bank.name ? Capitalize(about.bank_account.bank.name) : null
+                      about?.bank_account?.bank?.name ? Capitalize(about.bank_account.bank.name) : ""
                     }/>
                     <TopBottomText topText={data[2]} bottomText={
-                      about && about.bank_account && about.bank_account.account_number ? about.bank_account.account_number : null
+                      about?.bank_account?.account_number ? about.bank_account.account_number : ""
                     } containerStyle={{marginTop: height(2)}}/>
                     <View style={styles.line}/>
                     <Text style={styles.subHeading}>Pension</Text>
                     <TopBottomText topText={data[4]} bottomText={
-                      about && about.pension && about.pension.provider && about.pension.provider.name ? 
-                      Capitalize(about.pension.provider.name) : null
+                      about?.pension?.provider?.name ? 
+                      Capitalize(about.pension.provider.name) : ""
                     } containerStyle={{marginTop: height(2)}}/>
                     <TopBottomText topText={data[6]} bottomText={
                       about && about.pension && about.pension.pension_number ? 
-                      Capitalize(about.pension.pension_number) : null
+                      Capitalize(about.pension.pension_number) : ""
                     } containerStyle={{marginTop: height(2)}}/>
                   </View>
                 }
@@ -259,40 +249,19 @@ export default function Profile({navigation}) {
         );
       };
 
-    const TextWithButton = ({topText, bottomText, onPressHandle}) => {
-      return (
-        <View style={styles.smallerContainer}>
-          <View>
-            <Text style={styles.insideText4}>{topText}</Text>
-            <Text style={styles.insideText3}>{bottomText}</Text>
-          </View>
-          {/* <TouchableOpacity 
-          style={styles.saveBtnStyle} 
-          onPress={onPressHandle}
-          >
-            <Text style={styles.saveBtnText}>View History</Text>
-          </TouchableOpacity> */}
-        </View>
-      );
-    }
-
 
     return (
-        <ScreenWrapper allowScrollToPosition={true}>
-            <View style={styles.header}>
-                <BackHandler />
-                <Text numberOfLines={1} style={styles.screenTitle}>
-                  Profile
-                </Text>
-                <TouchableOpacity
-                  onPress={()=>navigation.navigate("Settings")}
-                >
-                  <Image resizeMode="contain" source={{uri : Images.Settings}} style={styles.leftIcon} />
-                </TouchableOpacity>
-            </View>
+        <ScreenWrapper>
+            <HomePageHeader 
+              header={"Profile"}
+              image={Images.people}
+              rightIcon={{uri : Images.Settings}}
+              onPressHandler={()=>navigation.navigate("Settings")}
+              rightIconColor={AppColors.black3}
+            />
 
             {
-              loadingBank || loadingKin || loadingEmergency || loading ? (
+              loadingKin || loadingEmergency || loading ? (
                 <Container flex={1} horizontalAlignment="center" verticalAlignment="center">
                   <ProfileLoader />
                 </Container>
@@ -302,32 +271,29 @@ export default function Profile({navigation}) {
                   onRefresh={refreshHandler}
                 />}>
                   <React.Fragment>
-                    <View style={styles.line} />
                     <View style={styles.mainViewContainer}>
                         <View style={styles.userInfoContainer}>
                           {
-                            about && about.photo ? (
+                            about?.photo ? (
                               <Image source={{uri : about.photo}} style={styles.avatarStyle} />   
                             ) : (
-                              <Rounded backgroundColor={ColorList[Math.floor(Math.random()*4)]}
-                              size={20}
-                            >
-                              <H1>
-                                {about && about.first_name && about.first_name.length > 0 ? 
-                                  Capitalize([...about.first_name][0]) : ""}
-                                {about && about.last_name && about.last_name.length > 1 ? 
-                                `${Capitalize([...about.last_name][0])}` : ""}
-                              </H1>
-                            </Rounded>
+                              <ImgPlaceholder 
+                                size={28}
+                                text={`${about?.first_name?.[0] ? 
+                                  Capitalize(about?.first_name?.[0]) : ""}${about?.last_name?.[0] ? 
+                                    Capitalize(about?.last_name?.[0]) : ""}`}
+                                radius={50}
+                                fontSize={6}
+                              />
                             )
                           }
                             
-                            <Text numberOfLines={1} style={[styles.nameText, CommonStyles.marginTop_1]}>
+                            <Text numberOfLines={1} style={styles.nameText}>
                               {`${about && about.first_name ? Capitalize(about.first_name):  ""}`} {" "}
                               {`${about && about.last_name ? Capitalize(about.last_name):  ""}`}
                             </Text>
                             <Text numberOfLines={1} style={[styles.designationText, CommonStyles.marginTop_05]}>
-                            {`${about && about.title ? Capitalize(about.title):  ""}`}
+                                {`${about && about.title ? Capitalize(about.title):  ""}`}
                             </Text>
                             {
                               about?.title_display && about?.level ? <View style={[CommonStyles.rowAlignItemCenter, CommonStyles.marginTop_05]}>
@@ -340,26 +306,18 @@ export default function Profile({navigation}) {
                             
                         </View>
                         <View style={[CommonStyles.rowJustifySpaceBtw, {width: width(90)}, CommonStyles.marginBottom_2]}>
-                            <Button 
+                          <Button 
                             title="Edit Profile" 
                             containerStyle={styles.buttonStyle} 
                             textStyle={styles.buttonText}
-                            onPress={async () => {
-                              await storeData("profile",{
-                                banking,
-                                about,
-                                kin : kinsData,
-                                emergency : emergData,
-                              });
-                              navigation.navigate('EditProfile')
-                            }}
-                            />
-                            <Button 
+                            onPress={navigationHandler}
+                          />
+                          <Button 
                             title="Contact" 
                             containerStyle={styles.buttonStyle} 
                             textStyle={styles.buttonText} 
                             onPress={() => setModal(true)}
-                            />
+                          />
                         </View>
                         {
                           <Container>
@@ -368,15 +326,13 @@ export default function Profile({navigation}) {
                             }
                           </Container>
                         }
-                          {/* {profileData.map((item, index) => <RenderList title="Personal Information" item={item} index={index}/>) } */}
-                        
                     </View>
                   </React.Fragment>
                 </ScrollView>
               )
             }
             
-            <ContactModal isVisible={modal} onHide={() => setModal(false)} data={about}/>
+           {modal ?  <ContactModal isVisible={modal} onHide={() => setModal(false)} data={about}/> : null}
         </ScreenWrapper>  
     );
 }

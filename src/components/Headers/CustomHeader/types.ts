@@ -1,10 +1,11 @@
 import { ImageStyle, TextStyle, ViewStyle } from "react-native";
+import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 
 export type HeaderWithBackButtonProps =  {
     headerContainerStyle? : ViewStyle
     headerText? : string
     headerTextStyle? : TextStyle
-    rightIcon? : string
+    rightIcon? : IconSource
     iconStyle? : TextStyle
     onPressHandler? : () => void
     subHeaderText? : string
@@ -13,6 +14,8 @@ export type HeaderWithBackButtonProps =  {
     bottomText? : string
     rightButtonText? : never
     bottomTextStyle? : TextStyle
+    onSubmitHandler? : never
+    isLoading? : never
 } | {
     headerContainerStyle? : ViewStyle
     headerText? : string
@@ -26,6 +29,8 @@ export type HeaderWithBackButtonProps =  {
     subHeaderTextStyle? : TextStyle
     bottomText? : string
     bottomTextStyle? : TextStyle
+    onSubmitHandler? : never
+    isLoading? : never
 } | {
     headerContainerStyle? : ViewStyle
     headerText? : string
@@ -35,7 +40,7 @@ export type HeaderWithBackButtonProps =  {
     onPressHandler? : () => void
     subHeaderText? : string
     rightText? : never
-    rightButtonText? : string
+    rightButtonText : string
     subHeaderTextStyle? : TextStyle
     onSubmitHandler : () => void
     isLoading : boolean
@@ -56,7 +61,7 @@ export type HomePageHeaderProps = {
     imageStyle? : ImageStyle
     header : string
     headerStyle? : TextStyle
-    rightIcon : string
+    rightIcon : IconSource
     rightIconColor? : string
     onPressHandler : () => void
 }

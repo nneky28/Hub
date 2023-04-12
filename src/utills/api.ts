@@ -507,20 +507,14 @@ export const useFetchAnniversary = (status:string, page = 1) => {
   })
 }
 
-
-// export const useFetchNextKIN = (id : number) => {
-//   return useQuery(["employee_kin",id],()=>APIFunction.next_of_kins(id),{
-//     enabled : id !== null && id !== undefined
-//   })
-// }
-export const useFetchKin = (employee_id:number) => {
-  return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id), {
-    enabled: !! employee_id
+export const useFetchKin = (employee_id?:number) => {
+  return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id as number), {
+    enabled: !!employee_id
   })
 }
 
-export const useFetchEmergency = (employee_id:number) => {
-  return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id), {
+export const useFetchEmergency = (employee_id?:number) => {
+  return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id as number), {
     enabled: !!employee_id 
   })
 }

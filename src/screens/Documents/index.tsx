@@ -74,8 +74,8 @@ type Document = {
         React.useCallback(()=>{
             getDocuments()
         }, [doc])
-        
     )
+    
     const ListComponent = ({ item }: { item: Document }) => {
         return(     
             <>

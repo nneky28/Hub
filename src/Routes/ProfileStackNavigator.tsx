@@ -1,7 +1,6 @@
 import React from "react"
 import { createStackNavigator } from "@react-navigation/stack";
 import { ProfileScreenList } from "./types";
-import ScreenTemplate from "../screens/ScreenTemplate";
 import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
 import PersonalInfo from "../screens/PersonalInfo";
@@ -15,10 +14,9 @@ const ProfileStackNavigator = () => {
     const Stack = createStackNavigator<ProfileScreenList>(); 
     return(
         <Stack.Navigator
-            initialRouteName="Profile"
+            initialRouteName="ProfileHome"
             screenOptions={{ headerShown : false }}>
-            <Stack.Screen name="ScreenTemplate" component={ScreenTemplate} />
-            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="ProfileHome" component={Profile} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="PersonalInfo" component={PersonalInfo} />
             <Stack.Screen name="EditPhoto" component={EditPhoto} />

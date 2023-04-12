@@ -1,6 +1,7 @@
+import React from "react";
 
 export type ScreenWrapperProps = {
-  children?:  JSX.Element|JSX.Element[],
+  children?:  React.ReactNode,
   statusBarColor? : string,
   transclucent? : boolean,
   scrollEnabled? : boolean,

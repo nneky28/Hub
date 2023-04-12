@@ -285,7 +285,7 @@ interface Data {
             {
                 visible ? <ItemListModal
                     data={providers as Array<{id: string, name: string}>}
-                    setOpen={setVisible} open={visible}
+                    setOpen={()=>setVisible(false)} open={visible}
                     onPressHandler={(item) => {
                         let load = {
                             ...data, provider: item.id, prov_name: item.name
