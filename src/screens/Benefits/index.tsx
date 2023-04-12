@@ -32,8 +32,7 @@ export default function Benefits() {
   const closeWeb = () => {
     setWeb(false);
   };
-  React.useEffect(() => {}, [profile]);
-
+  
   return (
     <ScreenWrapper>
       <React.Fragment>
