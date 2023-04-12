@@ -45,9 +45,7 @@ export function HomePageHeader(props : HomePageHeaderProps) {
 }
 export function HeaderWithBackButton(props : HeaderWithBackButtonProps) {
   return (
-    <Container 
-        paddingTop={3}
-        paddingBottom={3}
+    <Container
         borderBottomWidth={2}
         borderColor={AppColors.grayBorder}
         verticalAlignment='center'
