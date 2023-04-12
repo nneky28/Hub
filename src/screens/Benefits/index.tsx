@@ -60,7 +60,7 @@ export default function Benefits() {
               </React.Fragment>
             ) : null}
           </View>
-        {web ? 
+        {web && web_url ? 
           <CustomWebView setShow={closeWeb} web_url={web_url} />
         : null}
       </React.Fragment>
