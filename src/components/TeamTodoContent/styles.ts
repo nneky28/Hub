@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native"
 import { height, width } from 'react-native-dimension';
-import { backgroundColor, marginTop } from "styled-system";
 import AppColors from '../../utills/AppColors';
 import { FontFamily } from "../../utills/FontFamily";
 
@@ -41,11 +40,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: width(4.5),
     },
-    date: {
-        marginRight: width(2),
+    // date: {
+    //     marginRight: width(2),
 
-    },
-    dateRow: { marginTop: height(1) },
+    // },
 
     row1: {
         flexDirection: 'row',
@@ -124,11 +122,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: width(20),
     },
-    row1: {
-        flexDirection: 'row',
-        marginTop: height(0.5),
 
-    },
     flag: {
         resizeMode: 'contain',
         width: width(3),
