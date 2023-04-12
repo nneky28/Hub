@@ -10,6 +10,7 @@ import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
+import { RootScreenProps } from '../../Routes/types';
 import { APIFunction, useFetchAboutMe } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
 import { BackHandler, DatePickerModal, KeyboardAwareWrapper } from '../../utills/components';
@@ -17,7 +18,6 @@ import { Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Meth
 import styles from './styles';
 
 interface Data {
-    [key: string]: string;
     first_name: string;
     middle_name: string;
     last_name: string;
@@ -38,7 +38,7 @@ interface IndexProps {
     navigation: any;
   }
 
-const Index : React.FC<IndexProps> = ({ navigation }) => {
+const Index : React.FC<IndexProps> = ({ navigation,route } : RootScreenProps) => {
      const auth = useSelector(state => state.Auth)
 
      const [data, setData] = React.useState<Data>({
@@ -72,7 +72,8 @@ const Index : React.FC<IndexProps> = ({ navigation }) => {
         try {
             Keyboard.dismiss()
             let failed = false;
-            let required = ["first_name", "last_name"]
+            type DataKeys = keyof Data
+            let required : DataKeys[] = ["first_name", "last_name"]
             let msg = "";
             for (let req of required) {
                 if (!data[req] || (data[req] && data[req] === "") || (data[req] && data[req].trim() === "")) {
@@ -108,8 +109,7 @@ const Index : React.FC<IndexProps> = ({ navigation }) => {
              }
           
             if (auth.route !== "main") {
-                let profile = await getData("profile")
-                // return navigation.navigate("NextKin", { kins: profile.kin })
+                return navigation.navigate("Profile",{screen : "NextKin"})
             }
             navigation.goBack();
         } catch (err:any) {
@@ -125,7 +125,7 @@ const Index : React.FC<IndexProps> = ({ navigation }) => {
             if (profile) {
                 setData(
                     {
-                        first_name: profile?.first_name,
+                        first_name: profile?.first_name || "",
                         middle_name: profile?.middle_name,
                         last_name: profile?.last_name,
                         gender: profile.gender,
