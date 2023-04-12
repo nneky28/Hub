@@ -14,6 +14,8 @@ export type HeaderWithBackButtonProps =  {
     bottomText? : string
     rightButtonText? : never
     bottomTextStyle? : TextStyle
+    onSubmitHandler? : never
+    isLoading? : never
 } | {
     headerContainerStyle? : ViewStyle
     headerText? : string
@@ -27,6 +29,8 @@ export type HeaderWithBackButtonProps =  {
     subHeaderTextStyle? : TextStyle
     bottomText? : string
     bottomTextStyle? : TextStyle
+    onSubmitHandler? : never
+    isLoading? : never
 } | {
     headerContainerStyle? : ViewStyle
     headerText? : string
@@ -36,7 +40,7 @@ export type HeaderWithBackButtonProps =  {
     onPressHandler? : () => void
     subHeaderText? : string
     rightText? : never
-    rightButtonText? : string
+    rightButtonText : string
     subHeaderTextStyle? : TextStyle
     onSubmitHandler : () => void
     isLoading : boolean
