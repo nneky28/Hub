@@ -95,13 +95,17 @@ export default function MemberProfile({route} : RootScreenProps) {
         />
       )
     }
+    
+    useEffect(() => {
+      //getProfile();
+    },[])
 
     const keyExtractor = (item : useFetchEmployeesData,index : number) => `${index}${item}`.toString()
-    
+  
     return (
         <ScreenWrapper>
             <HeaderWithBackButton 
-              headerText={`${info?.first_name ? Capitalize(info?.first_name) : ""} ${info?.last_name ? Capitalize(info?.last_name) : ""}`}
+              headerText={`${member?.first_name ? Capitalize(member?.first_name) : ""} ${member?.last_name ? Capitalize(member?.last_name) : ""}`}
             />
             {
               isLoading || fetchingTeams? (

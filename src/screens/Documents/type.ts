@@ -1,4 +1,4 @@
-export type DocumentProps = {
+export type Document = {
     id: number;
     name: string;
     file: string;             

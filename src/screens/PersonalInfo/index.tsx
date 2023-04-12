@@ -3,43 +3,25 @@ import React, { useEffect } from 'react';
 import { Keyboard, Text, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { useMutation } from 'react-query';
-import { useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
-import { RootScreenProps } from '../../Routes/types';
 import { APIFunction, useFetchAboutMe } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
 import { BackHandler, DatePickerModal, KeyboardAwareWrapper } from '../../utills/components';
-import { Capitalize, getData, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, ToastError, ToastSuccess, useAppSelector } from '../../utills/Methods';
 import styles from './styles';
+import { Data, DataKeys } from './types';
+import { RootScreenProps } from '../../Routes/types';
 
-interface Data {
-    first_name: string;
-    middle_name: string;
-    last_name: string;
-    gender: string;
-    birth_date: string;
-    marital_status: string;
-    email: string;
-    address: string;
-    address2: string;
-    phone_number: string;
-    mobileNumber2: string;
-    state: string;
-    city: string;
-    country: string;
-    postal_code: string;
-}
-interface IndexProps {
-    navigation: any;
-  }
 
-const Index : React.FC<IndexProps> = ({ navigation,route } : RootScreenProps) => {
-     const auth = useSelector(state => state.Auth)
+
+
+const PersonalInfo= ({ navigation }: RootScreenProps) => {
+     const auth = useAppSelector(state => state.Auth)
 
      const [data, setData] = React.useState<Data>({
         first_name: "",
@@ -72,7 +54,6 @@ const Index : React.FC<IndexProps> = ({ navigation,route } : RootScreenProps) =>
         try {
             Keyboard.dismiss()
             let failed = false;
-            type DataKeys = keyof Data
             let required : DataKeys[] = ["first_name", "last_name"]
             let msg = "";
             for (let req of required) {
@@ -125,13 +106,13 @@ const Index : React.FC<IndexProps> = ({ navigation,route } : RootScreenProps) =>
             if (profile) {
                 setData(
                     {
-                        first_name: profile?.first_name || "",
-                        middle_name: profile?.middle_name,
-                        last_name: profile?.last_name,
-                        gender: profile.gender,
-                        birth_date: profile.birth_date,
-                        marital_status: profile.marital_status,
-                        email: profile?.email,
+                        first_name: profile?.first_name||"",
+                        middle_name: profile?.middle_name||"",
+                        last_name: profile?.last_name||"",
+                        gender: profile.gender||"",
+                        birth_date: profile.birth_date||"",
+                        marital_status: profile.marital_status||"",
+                        email: profile?.email||"",
                         address: profile?.address?.address1 || "",
                         address2: profile?.address?.address2 || "",
                         phone_number: profile?.phone_number1 || "",
@@ -298,4 +279,4 @@ const Index : React.FC<IndexProps> = ({ navigation,route } : RootScreenProps) =>
         </ScreenWrapper>
     );
 }
-export default Index
+export default PersonalInfo;

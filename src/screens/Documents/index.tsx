@@ -3,28 +3,19 @@ import { FlatList, Image, Platform, Text, TouchableOpacity, View } from 'react-n
 import  { DocumentModal } from '../../components/ContactModal';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox';
-import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { BackHandler, Container, H1, ImageWrap, P, PageLoader, SizedBox } from '../../utills/components';
+import { BackHandler, EmptyStateWrapper, PageLoader } from '../../utills/components';
 import styles from './styles';
 import { Images } from '../../utills/Image';
-import { useFocusEffect } from '@react-navigation/core';
-import { Capitalize, ToastError } from '../../utills/Methods';
+import { Capitalize} from '../../utills/Methods';
 import {useFetchAboutMe, useFetchDoc } from '../../utills/api';
 import moment from 'moment';
 import { width } from 'react-native-dimension';
 import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
+import { Document } from './type';
 
 
-type Document = {
-    id: number;
-    name: string;
-    file: string;             
-    created_at: string;
-    updated_at: string;
-    file_type: string;
-    url: string;
-  };
+
   export default function Documents() {
     const [modal, setModal] = useState<boolean>(false);
     const [documents, setDocuments] = useState<Document[]>([]);
@@ -43,23 +34,23 @@ type Document = {
 
       console.log("doc",doc)
 
-    const getDocuments = async () => {
-        try{
-            const res =  Array.isArray((doc as {results: Array<any>}).results)
-            ? (doc as {results: Array<any>}).results
-            : []
+    // const getDocuments = async () => {
+    //     try{
+    //         const res =  Array.isArray((doc as {results: Array<any>}).results)
+    //         ? (doc as {results: Array<any>}).results
+    //         : []
 
-            if(res){
-                setDocuments(res)
-                setHolders(res)
-            }else{
-                setDocuments([])
-                setHolders([])
-            }
-        } catch (err:any){
-            ToastError(err.msg)
-        }
-    }
+    //         if(res){
+    //             setDocuments(res)
+    //             setHolders(res)
+    //         }else{
+    //             setDocuments([])
+    //             setHolders([])
+    //         }
+    //     } catch (err:any){
+    //         ToastError(err.msg)
+    //     }
+    // }
     const handleSearch = (text:string) => {
         if (text.length > 0){
             let filtered = documents.filter(item => {
@@ -70,11 +61,7 @@ type Document = {
         else
             setDocuments(holders);
     }
-    useFocusEffect(
-        React.useCallback(()=>{
-            getDocuments()
-        }, [doc])
-    )
+    
     
     const ListComponent = ({ item }: { item: Document }) => {
         return(     
@@ -99,6 +86,16 @@ type Document = {
         </>
         );
     }
+    const ListEmptyComponent = () => {
+        return(
+          <EmptyStateWrapper 
+            icon={Images.EmptyBenefits}
+            header_1={"You do not have"} 
+            header_2={"any document yet."}
+            sub_text={"When you do, they will show up here."}
+          />
+        )
+      }
         
     return (
         <ScreenWrapper 
@@ -124,15 +121,16 @@ type Document = {
                             )
                         }
                         {
-                !loading && documents && Array.isArray(documents) && documents.length > 0  ? (
+                !loading && doc && Array.isArray(doc?.results) && doc?.results.length > 0  ? (
                         <FlatList
-                            data={documents}
+                            data={doc.results}
                             keyExtractor={(i) => i.toString()}
                             renderItem={ListComponent}
                             ItemSeparatorComponent={() => <View />}
                             showsVerticalScrollIndicator={false}
                             nestedScrollEnabled={true}
                             contentContainerStyle={CommonStyles.marginTop_2}
+                            ListEmptyComponent={ListEmptyComponent}
                         />
                         ) : null
             }
@@ -144,32 +142,7 @@ type Document = {
             }
             </>
 
-            <>
-            {
-                !loading && documents && Array.isArray(documents) && documents.length === 0  ? <Container
-                marginTop={8}
-                flex={1}
-                style={{
-                    //justifyContent : "center",
-                    alignItems : "center"
-                }}
-            >
-                <ImageWrap 
-                    url={Images.EmptyDoc}
-                    height={30}
-                    fit="contain"
-                />
-                    <H1
-                        color={AppColors.black3}
-                        fontSize={5}
-                    >You do not have</H1>
-                    <H1 color={AppColors.black3}
-                        fontSize={5}>any document yet.</H1>
-                    <SizedBox height={2} />
-                    <P color={AppColors.black2}>When you do, they will show up here.</P>
-                </Container> : null
-            }
-            </>
+        
             <DocumentModal isVisible={modal} onHide={() => setModal(false)} document={document}/>
         </ScreenWrapper>  
     );
