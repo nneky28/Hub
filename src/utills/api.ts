@@ -47,9 +47,9 @@ import {
   GET_TEAM_UPCOMING,
   GET_TEAM_OVERDUE,
   GET_TASK_STATISTICS,
-  GET_SENT_STATISTICS,
-  GET_EMPLOYEE_STATISTICS,
-  GET_TEAM_STATISTICS,
+  // GET_SENT_STATISTICS,
+  // GET_EMPLOYEE_STATISTICS,
+  // GET_TEAM_STATISTICS,
   GET_ACTIVITY,
   GET_COMMENTS,
   EmergencyContactProps,
@@ -62,7 +62,8 @@ import {
   RemoveDeviceTokenLoad,
   NOTIFICATIONS,
   DOCUMENT,
-  BASIC_DETAILS
+  BASIC_DETAILS,
+  TaskStatisticFilter,
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -309,10 +310,10 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=overdue`)
   },
 
-  get_team_statistics: async (id:number) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?department_id=${id}`)
-  },
+  // get_team_statistics: async (id:number) => {
+  //   let biz = await getStoredBusiness()
+  //   return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?department_id=${id}`)
+  // },
   get_team_duetoday: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=duetoday`)
@@ -344,19 +345,23 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=overdue`)
   },
 
-  get_task_statistics: async () => {
+  get_task_statistics: async (
+    filter : TaskStatisticFilter = "",
+    employee_id : number | string = "",
+    department_id : number | string = ""
+  ) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=${filter}&employee_id=${employee_id}&department_id=${department_id}`)
   },
-  get_sent_statistics: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me_and_sent`)
-  },
+  // get_sent_statistics: async () => {
+  //   let biz = await getStoredBusiness()
+  //   return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me_and_sent`)
+  // },
 
-  get_employee_statistics: async (id:number) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
-  },
+  // get_employee_statistics: async (id:number) => {
+  //   let biz = await getStoredBusiness()
+  //   return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
+  // },
 
   get_team_tasks: async (id:number) => {
     let biz = await getStoredBusiness()
@@ -580,18 +585,18 @@ export const useFetchAllTask = (id:number) => {
 
 export const useFetchTodos = (tab:string, index:number) => {
   return useInfiniteQuery([GET_ALL_TODOS, tab], () => APIFunction.get_to_dos(), {
-    enabled: index === 0&& tab === "All" && index !== null && index !== undefined
+    enabled: index === 0 && tab === "All"
   })
 }
 
 export const useFetchDueToday = (tab:string, index:number) => {
   return useInfiniteQuery([GET_DUETODAY, tab], () => APIFunction.get_duetoday(), {
-    enabled: index === 0 && tab === "Due Today" && tab !== null && tab !== undefined
+    enabled: index === 0 && tab === "Due Today"
   })
 }
 export const useFetchUpcoming = (tab:string, index:number) => {
   return useInfiniteQuery([GET_UPCOMING, tab], () => APIFunction.get_upcoming(), {
-    enabled: index === 0 && tab === "Upcoming" && tab !== null && tab !== undefined
+    enabled: index === 0 && tab === "Upcoming"
   })
 }
 export const useFetchOverDue = (tab:string, index:number) => {
@@ -663,25 +668,27 @@ export const useFetchMyTeamOverdue = (tab:string, id:number,index:number) => {
   })
 }
 
-export const useFetchStatistics = () => {
-  return useQuery(GET_TASK_STATISTICS, APIFunction.get_task_statistics)
+export const useFetchStatistics = (filter : TaskStatisticFilter = "",employee_id: number | string = "",department_id : string = "") => {
+  return useQuery([GET_TASK_STATISTICS,employee_id,filter,department_id], () => APIFunction.get_task_statistics(filter,employee_id,department_id),{
+    enabled : !!employee_id || !!filter || !!department_id
+  })
 }
-export const useFetchSentStatistics = () => {
-  return useQuery(GET_SENT_STATISTICS, APIFunction.get_sent_statistics)
-}
+// export const useFetchSentStatistics = () => {
+//   return useQuery(GET_SENT_STATISTICS, APIFunction.get_sent_statistics)
+// }
 
-export const useFetchPeopleStatics = (id:number) => {
-  return useQuery([GET_EMPLOYEE_STATISTICS, id], () => APIFunction.get_employee_statistics(id), {
-    enabled: id !== null && id !== undefined
-  },
+// export const useFetchPeopleStatics = (id:number) => {
+//   return useQuery([GET_EMPLOYEE_STATISTICS, id], () => APIFunction.get_employee_statistics(id), {
+//     enabled: id !== null && id !== undefined
+//   },
 
-  )
-}
-export const useFetchTeamStatistics = (id:number) => {
-  return useQuery([GET_TEAM_STATISTICS, id], () => APIFunction.get_team_statistics(id), {
-    enabled: id !== null && id !== undefined
-  },)
-}
+//   )
+// }
+// export const useFetchTeamStatistics = (id?:number) => {
+//   return useQuery([GET_TEAM_STATISTICS, id], () => APIFunction.get_team_statistics(id as number), {
+//     enabled: !!id
+//   },)
+// }
 
 export const useFetchActivities = (id:number) => {
   return useInfiniteQuery([GET_ACTIVITY, id], () => APIFunction.get_activity(id), {

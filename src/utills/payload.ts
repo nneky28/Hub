@@ -156,3 +156,5 @@ export type LoginLoad = {
 export type RemoveDeviceTokenLoad = {
   registration_id : string
 }
+
+export type TaskStatisticFilter = "created_by_me_and_sent" | "assigned_to_me" | ""
