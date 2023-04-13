@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Keyboard} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {APIFunction, useFetchAboutMe, useFetchKin} from '../../utills/api';
+import {APIFunction} from '../../utills/api';
 import {KeyboardAwareWrapper} from '../../utills/components';
 import {
   ToastError,
@@ -14,21 +14,26 @@ import CustomModalDropdown from '../../components/CustomModalDropdown';
 import {useMutation, useQueryClient} from 'react-query';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
 import {RootScreenProps} from '../../Routes/types';
-import {useFetchKinProps} from '../Profile/types';
+import {useFetchEmergency} from '../../utills/api';
+import {useFetchEmergencyProps} from '../Profile/types';
+import {useFetchAboutMe} from '../../utills/api';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {Data} from './types';
 
-export default function NextKin({navigation}: RootScreenProps) {
+export default function Emergency({navigation}: RootScreenProps) {
+  const auth = useAppSelector((state) => state.Auth);
+
+  const queryClient = useQueryClient();
+
   const {data: about} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
-  const {data: kinsData} = useFetchKin(about?.id) as useFetchKinProps;
-  useMutation(APIFunction.update_next_of_kin);
+  const {data: emergency} = useFetchEmergency(
+    about?.id,
+  ) as useFetchEmergencyProps;
 
   const {mutateAsync, isLoading: loading} = useMutation(
-    APIFunction.update_next_of_kin,
+    APIFunction.update_emergency,
   );
-  const auth = useAppSelector((state) => state.Auth);
-  const queryClient = useQueryClient();
 
   const [data, setData] = useState<Data>({
     first_name: '',
@@ -45,58 +50,43 @@ export default function NextKin({navigation}: RootScreenProps) {
     postal_code: '',
     relationship: '',
   });
+
   const handleSubmit = async () => {
     try {
       Keyboard.dismiss();
-      if (data.email && !validateEmail(data.email)) {
-        return ToastError('Please provide a valid email address');
-      }
+      if (data.email && !validateEmail(data.email.toString().trim()))
+        return ToastError('Please enter a valid email');
+
       if (!about?.id) return;
       let res = await mutateAsync({...data, country: 'NG', id: about.id});
+      console.log('RES', res);
       if (res) {
         ToastSuccess('Record has been updated');
         navigation.goBack();
       }
-
       if (auth.route !== 'main') {
-        return navigation.navigate('Profile', {screen: 'Emergency'});
+        return navigation.navigate('Profile', {screen: 'PensionInfo'});
       }
-      queryClient.invalidateQueries('next_of_kins');
+      queryClient.invalidateQueries('emergency');
     } catch (err: any) {
-      ToastError(err?.msg);
+      ToastError(err.msg);
     }
   };
-
-  const getRecord = async () => {
-    try {
-      if (kinsData) {
-        setData({
-          first_name: kinsData?.first_name || '',
-          last_name: kinsData?.last_name || '',
-          gender: kinsData.gender || '',
-          email: kinsData?.email || '',
-          nationality: kinsData?.nationality || '',
-          address1: kinsData?.address1 || '',
-          phone_number: kinsData?.phone_number || '',
-          address2: kinsData?.address2 || '',
-          city: kinsData?.city || '',
-          state: kinsData?.state || '',
-          country: kinsData?.country_display || '',
-          postal_code: kinsData?.postal_code || '',
-          relationship: kinsData?.relationship || '',
-        });
-      }
-    } catch (err) {}
+  const getRecord = () => {
+    setData({
+      ...data,
+      ...emergency,
+      country: emergency?.country_display || '',
+    });
   };
-
   useEffect(() => {
     getRecord();
-  }, [kinsData]);
+  }, [emergency]);
 
   return (
     <ScreenWrapper scrollEnabled={false}>
       <HeaderWithBackButton
-        headerText="    Update Next of Kin"
+        headerText="Emergency Contact"
         rightButtonText="Save"
         onSubmitHandler={handleSubmit}
         isLoading={loading}
@@ -116,14 +106,13 @@ export default function NextKin({navigation}: RootScreenProps) {
             setData({...data, last_name: value});
           }}
         />
-
         <CustomInput
           placeholder="Phone Number"
           value={data.phone_number}
           onChangeData={(value) => {
             setData({...data, phone_number: value});
           }}
-          keyboardType={'numeric'}
+          keyboardType="numeric"
         />
         <CustomInput
           placeholder="Email Address"
@@ -131,7 +120,6 @@ export default function NextKin({navigation}: RootScreenProps) {
           onChangeData={(value) => {
             setData({...data, email: value});
           }}
-          keyboardType={'email-address'}
         />
         <CustomInput
           placeholder="Relationship"
@@ -148,7 +136,14 @@ export default function NextKin({navigation}: RootScreenProps) {
           }}
         />
         <CustomInput
-          placeholder="Address 2"
+          placeholder="Addrees 2"
+          value={data.address2}
+          onChangeData={(value) => {
+            setData({...data, address2: value});
+          }}
+        />
+        <CustomInput
+          placeholder="Addrees 2"
           value={data.address2}
           onChangeData={(value) => {
             setData({...data, address2: value});
@@ -162,12 +157,13 @@ export default function NextKin({navigation}: RootScreenProps) {
           options={['Nigeria']}
         />
         <CustomInput
-          placeholder="state"
+          placeholder="State"
           value={data.state}
           onChangeData={(value) => {
             setData({...data, state: value});
           }}
         />
+
         <CustomInput
           placeholder="City"
           value={data.city}

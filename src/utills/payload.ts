@@ -124,7 +124,7 @@ export type TaskProps = {
   sub_tasks?: string[];
 };
 export type EmergencyContactProps = {
-  data: {
+  
     first_name: string;
     last_name: string;
     phone_number: string;
@@ -138,7 +138,8 @@ export type EmergencyContactProps = {
     city: string;
     postal_code: string;
     relationship: string;
-  };
+
+  id:number
 };
 
 export type EditProfileProps = {

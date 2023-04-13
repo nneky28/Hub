@@ -105,9 +105,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/emergency-contact/`)
   },
-  update_emergency: async (fd:EmergencyContactProps, id:number) => {
+  update_emergency: async (fd:EmergencyContactProps) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-emergency-contact/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-emergency-contact/`, fd)
   },
   update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
   
@@ -165,9 +165,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/banks/`)
   },
-  update_next_of_kin: async (fd:EmergencyContactProps, id:number) => {
+  update_next_of_kin: async (fd:EmergencyContactProps) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-next-of-kin/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-next-of-kin/`, fd)
   },
   update_pension: async(fd?:any) => {
     let biz = await getStoredBusiness();

@@ -8,36 +8,29 @@ import {profileData} from '../../utills/data/profileData';
 import {Capitalize} from '../../utills/Methods';
 import styles from './styles';
 import {RootScreenProps} from '../../Routes/types';
-import {useFetchAboutMe} from '../../utills/api';
+import {
+  useFetchAboutMe,
+  useFetchBanking,
+  useFetchEmergency,
+  useFetchKin,
+} from '../../utills/api';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {Images} from '../../utills/Image';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
+import {
+  useFetchBankingProps,
+  useFetchEmergencyProps,
+  useFetchKinProps,
+} from '../Profile/types';
 
 export default function EditProfile({navigation}: RootScreenProps) {
-  // const [about, setAbout] = useState(null)
-  //   const [kins, setKins] = useState(null);
-  //   const [emergency, setEmergency] = useState(null);
-
   const {data: about} = useFetchAboutMe('main') as useFetchAboutMeProps;
+  const {data: kinsData} = useFetchKin(about?.id) as useFetchKinProps;
+  const {data: emergency} = useFetchEmergency(
+    about?.id,
+  ) as useFetchEmergencyProps;
+  const {data: banking} = useFetchBanking() as useFetchBankingProps;
 
-  // const getProfile = async () => {
-  //     try {
-  //         // const profile = await getData("about_me") as useFetchNextKin | null;
-  //         if (!profile || !profile) return;
-  //         setAbout(profile.about);
-  //         setKins(profile.kin)
-  //         setEmergency(profile.emergency)
-  //     } catch (err:any) {
-  //         let msg = err.msg && err.msg.detail && typeof (err.msg.detail) == "string" ? err.msg.detail : "Something went wrong. Please retry"
-  //         ToastError(msg)
-  //     }
-  // }
-
-  // useFocusEffect(
-  //     React.useCallback(() => {
-  //         getProfile();
-  //     }, [])
-  // )
   return (
     <ScreenWrapper scrollEnabled={true}>
       <HeaderWithBackButton headerText=" Edit Profile" />
@@ -84,33 +77,41 @@ export default function EditProfile({navigation}: RootScreenProps) {
           iconStyle={styles.rightIcon}
           onPressHandle={() => {
             if (!about) return;
-            navigation.navigate('PersonalInfo', {about});
+            navigation.navigate('Profile', {
+              screen: 'PersonalInfo',
+            });
           }}
+          containerStyle={undefined}
+          textStyle={undefined}
+          url={undefined}
         />
-
         <TextWithIcon item={profileData[1]} iconStyle={styles.rightIcon} />
         <TextWithIcon
           item={profileData[2]}
           iconStyle={styles.rightIcon}
           onPressHandle={() => {
-            //if(!kins) return
-            navigation.navigate('NextKin', {kins});
+            if (!kinsData) return;
+            navigation.navigate('Profile', {
+              screen: 'NextKin',
+            });
           }}
         />
         <TextWithIcon
           item={profileData[3]}
           iconStyle={styles.rightIcon}
           onPressHandle={() => {
-            //if(!emergency) return
-            navigation.navigate('Emergency', {emergency});
+            if (!emergency) return;
+            navigation.navigate('Profile', {
+              screen: 'Emergency',
+            });
           }}
         />
         <TextWithIcon
           item={profileData[4]}
           iconStyle={styles.rightIcon}
           onPressHandle={() => {
-            //if(!banking) return
-            navigation.navigate('PensionInfo', {banking});
+            if (!banking) return;
+            navigation.navigate('Profile', {screen: 'PensionInfo'});
           }}
         />
       </View>

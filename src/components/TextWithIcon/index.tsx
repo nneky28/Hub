@@ -9,7 +9,7 @@ import styles from './styles';
 import {TextWithIconCopyProps, TextWithProps} from './types';
 
 const TextWithIconCopy = ({item, iconStyle, onHide}: TextWithIconCopyProps) => {
-  const [setCopiedText] = useClipboard('');
+  const [copiedText, setCopiedText] = useClipboard();
 
   const handleLongPress = (title: string) => {
     setCopiedText(title);
@@ -56,9 +56,10 @@ const TextWithIconCopy = ({item, iconStyle, onHide}: TextWithIconCopyProps) => {
 const TextWithIcon = ({
   item,
   iconStyle,
-  textStyle,
   onPressHandle,
   containerStyle,
+  url,
+  textStyle,
 }: TextWithProps) => {
   let lock = false;
 
@@ -76,14 +77,13 @@ const TextWithIcon = ({
         disabled={lock}
         onPress={onPressHandle}>
         <View style={CommonStyles.rowAlignItemCenter}>
-          <Text>Hello</Text>
-          {/* {url ? (
+          {url ? (
             <ImageWrap
               url={item.iconLeft}
               width={5}
               height={3}
               fit={'contain'}
-            /> */}
+            />
           ) : (
             <React.Fragment>
               {item && item.iconLeft !== undefined && (
@@ -95,6 +95,13 @@ const TextWithIcon = ({
               )}
             </React.Fragment>
           )}
+          {/* <ImageWrap 
+              url={item.iconLeft}
+              width={5}
+              height={3}
+              fit={'contain'}
+            /> */}
+
           <Text
             style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>
             {item.title}
