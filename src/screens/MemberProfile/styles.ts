@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   headingContainer: {
     marginTop: height(2),
     marginBottom: height(2),
-    width: width(90)
+    width: width(90),
+    alignSelf : "center"
   },
   nameText: {
     fontSize: width(4.5),
@@ -152,6 +153,9 @@ const styles = StyleSheet.create({
     height: height(17), 
     paddingHorizontal: width(2), 
     paddingVertical: height(1)
+  },
+  contentContainerStyle : {
+    paddingHorizontal : width(2)
   }
 });
 

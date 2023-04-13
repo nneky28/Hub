@@ -19,7 +19,7 @@ import { RootScreenProps } from '../../Routes/types'
 import { HomePageHeader } from '../../components/Headers/CustomHeader'
 import { CelebrationItem, Celebrations, TabType, useFetchEmployeesData, useFetchEmployeesProps, useFetchTeamsProps, WhosOutListItem, WhosOutSection } from './types'
 import { useQueryClient } from 'react-query'
-import { GET_EMPLOYEES, GET_TEAMS } from '../../utills/payload'
+import { GET_EMPLOYEES, GET_MY_TEAM_MEMBERS } from '../../utills/payload'
 import { useFetchAnniversaryProps, useFetchBirthdaysProps, useFetchWhosOutProps } from '../Dashboard/types'
 
 export default function People({navigation} : RootScreenProps) {
@@ -324,7 +324,7 @@ export default function People({navigation} : RootScreenProps) {
     const onRefreshHandler = () => {
         setPage(1)
         queryClient.invalidateQueries(GET_EMPLOYEES)
-        queryClient.invalidateQueries(GET_TEAMS)
+        queryClient.invalidateQueries(GET_MY_TEAM_MEMBERS)
     }
 
     const ListFooterComponent = ()=>{

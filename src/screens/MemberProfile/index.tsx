@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import ContactModal from '../../components/ContactModal';
 import PersonCard from '../../components/PersonCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { useFetchEmployeeBasicDetails, useFetchTeams } from '../../utills/api';
+import { useFetchEmployeeBasicDetails, useFetchEmployeeTeamMembers} from '../../utills/api';
 import CommonStyles from '../../utills/CommonStyles';
 import { Container, ImageWrap, ProfileLoader, P, EmptyStateWrapper, ImgPlaceholder} from '../../utills/components';
 import { FontFamily } from '../../utills/FontFamily';
@@ -41,7 +41,7 @@ export default function MemberProfile({route} : RootScreenProps) {
     const {
       data : teamData,
       isLoading : fetchingTeams
-  } = useFetchTeams("My Team",page) as useFetchTeamsProps
+  } = useFetchEmployeeTeamMembers(member_id,page) as useFetchTeamsProps
 
     useEffect(()=>{
       if(teamData?.pages?.[0]?.results && Array.isArray(teamData?.pages?.[0]?.results)) setMembers(teamData?.pages?.[0]?.results)
@@ -86,26 +86,22 @@ export default function MemberProfile({route} : RootScreenProps) {
       )
     }
 
-    const ListItemComponent = () => {
+    const ListEmptyComponent = () => {
       return(
         <EmptyStateWrapper
           marginTop={0.1}
           icon={Images.EmptyTeams}
-          header_1={member && member.first_name ? `${Capitalize(member.first_name)} has no team member` :  "No team member"}
+          header_1={info?.first_name ? `${Capitalize(info?.first_name)} has no team member` :  "No team member"}
         />
       )
     }
-    
-    useEffect(() => {
-      //getProfile();
-    },[])
 
     const keyExtractor = (item : useFetchEmployeesData,index : number) => `${index}${item}`.toString()
   
     return (
         <ScreenWrapper>
             <HeaderWithBackButton 
-              headerText={`${member?.first_name ? Capitalize(member?.first_name) : ""} ${member?.last_name ? Capitalize(member?.last_name) : ""}`}
+              headerText={`${info?.first_name ? Capitalize(info?.first_name) : ""} ${info?.last_name ? Capitalize(info?.last_name) : ""}`}
             />
             {
               isLoading || fetchingTeams? (
@@ -211,13 +207,13 @@ export default function MemberProfile({route} : RootScreenProps) {
                       </View>
                       <FlatList
                           data={members}
-                          horizontal
+                          horizontal={members && Array.isArray(members) && members.length > 0 ? true : false}
                           keyExtractor={keyExtractor}
                           renderItem={RenderItem}
                           ItemSeparatorComponent={() => <View style={[CommonStyles.marginRight_2]}/>}
                           showsHorizontalScrollIndicator={false}
-                          ListEmptyComponent={ListItemComponent}
-                          //contentContainerStyle={[CommonStyles.marginLeft_4]}
+                          ListEmptyComponent={ListEmptyComponent}
+                          contentContainerStyle={styles.contentContainerStyle}
                       />
                   </ScrollView>
                   {

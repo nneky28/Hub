@@ -27,7 +27,7 @@ import {
   PENSION_PROVIDERS,
   GET_ONBOARDING,
   GET_EMPLOYEES,
-  GET_TEAMS,
+  GET_MY_TEAM_MEMBERS,
   GET_DEPARTMENTS,
   GET_ALL_TASK,
   GET_ALL_TODOS,
@@ -72,7 +72,10 @@ export const endPoint = Config.API_URL;
 export const employees_me = (business_id:string) => `/c/${business_id}/employees/me/`;
 export const APIFunction = {
   employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
-  team_members: (business_id:string, id:number, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,  
+  employee_team_members: async (id:number, page = 1) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/team_members/?page=${page}`)
+  },  
   login: async (fd?:LoginLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
@@ -401,7 +404,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },
-  get_teams: async (page = 1) => {
+  get_my_team_members: async (page = 1) => {
     let biz = await getStoredBusiness()
     let user = await getStoreAboutMe()
     return getAPIs(`/c/${biz?.business_id}/employees/${user?.id}/team_members/?page=${page}`)
@@ -550,8 +553,18 @@ export const useFetchEmployees = (tab:string,page: number, search: string) => {
 }
 
 
+export const useFetchEmployeeTeamMembers = (id : number | undefined,page:number) => {
+  return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page,id], () => APIFunction.employee_team_members(id as number,page), {
+    enabled : !!id, 
+    getNextPageParam: (lastPage:any) => {
+      return lastPage?.next
+    }
+  }
+  )
+}
+
 export const useFetchTeams = (tab : string,page:number) => {
-  return useInfiniteQuery([GET_TEAMS, page], () => APIFunction.get_teams(page), {
+  return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page], () => APIFunction.get_my_team_members(page), {
     enabled : !!tab, 
     getNextPageParam: (lastPage:any) => {
       return lastPage?.next
