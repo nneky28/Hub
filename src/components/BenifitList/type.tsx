@@ -1,6 +1,8 @@
+import {useFetchBenefitsData} from '../../screens/Dashboard/types';
+
 export type BenefitListProps = {
-    data: any;
-    horizontal?: boolean;
-    benefits: Array<any>;
-    goToWeb?: (url: string) => void;
-}
+  data: readonly any[];
+  horizontal?: boolean;
+  benefits: readonly useFetchBenefitsData[];
+  goToWeb?: (url: string) => void;
+};

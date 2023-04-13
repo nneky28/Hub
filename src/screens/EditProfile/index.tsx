@@ -1,21 +1,22 @@
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-// import {Images} from '../../component2/image/Image';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TextWithIcon from '../../components/TextWithIcon';
 import CommonStyles from '../../utills/CommonStyles';
-import {BackHandler, ImgPlaceholder} from '../../utills/components';
+import {ImgPlaceholder} from '../../utills/components';
 import {profileData} from '../../utills/data/profileData';
 import {Capitalize} from '../../utills/Methods';
 import styles from './styles';
 import {RootScreenProps} from '../../Routes/types';
 import {useFetchAboutMe} from '../../utills/api';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
+import {Images} from '../../utills/Image';
+import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
 
 export default function EditProfile({navigation}: RootScreenProps) {
   // const [about, setAbout] = useState(null)
-  const [kins, setKins] = useState(null);
-  const [emergency, setEmergency] = useState(null);
+  //   const [kins, setKins] = useState(null);
+  //   const [emergency, setEmergency] = useState(null);
 
   const {data: about} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
@@ -39,13 +40,7 @@ export default function EditProfile({navigation}: RootScreenProps) {
   // )
   return (
     <ScreenWrapper scrollEnabled={true}>
-      <View style={styles.header}>
-        <BackHandler position="center" />
-        <Text numberOfLines={1} style={styles.screenTitle}>
-          Edit Profile
-        </Text>
-      </View>
-      <View style={styles.line} />
+      <HeaderWithBackButton headerText=" Edit Profile" />
       <View style={styles.mainViewContainer}>
         <View style={styles.userInfoContainer}>
           {about && about.photo ? (
@@ -92,6 +87,7 @@ export default function EditProfile({navigation}: RootScreenProps) {
             navigation.navigate('PersonalInfo', {about});
           }}
         />
+
         <TextWithIcon item={profileData[1]} iconStyle={styles.rightIcon} />
         <TextWithIcon
           item={profileData[2]}

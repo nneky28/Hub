@@ -62,7 +62,8 @@ import {
   RemoveDeviceTokenLoad,
   NOTIFICATIONS,
   DOCUMENT,
-  BASIC_DETAILS
+  BASIC_DETAILS,
+  EditProfileProps
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -110,7 +111,7 @@ export const APIFunction = {
   },
   update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
   
-  edit: async (fd:any) => {
+  edit: async (fd:EditProfileProps) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/`, fd);
   },
