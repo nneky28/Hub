@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TextWithIcon from '../../components/TextWithIcon';
 import CommonStyles from '../../utills/CommonStyles';
@@ -32,88 +32,90 @@ export default function EditProfile({navigation}: RootScreenProps) {
   const {data: banking} = useFetchBanking() as useFetchBankingProps;
 
   return (
-    <ScreenWrapper scrollEnabled={true}>
+    <ScreenWrapper>
       <HeaderWithBackButton headerText=" Edit Profile" />
       <View style={styles.mainViewContainer}>
-        <View style={styles.userInfoContainer}>
-          {about && about.photo ? (
-            <Image
-              resizeMode="contain"
-              source={{uri: about.photo}}
-              style={styles.avatarStyle}
-            />
-          ) : (
-            <ImgPlaceholder
-              text={`${
-                about?.first_name?.[0] ? Capitalize(about?.first_name?.[0]) : ''
-              }${
-                about?.last_name?.[0] ? Capitalize(about?.last_name?.[0]) : ''
-              }`}
-              size={20}
-            />
-          )}
+          <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.userInfoContainer}>
+              {about && about.photo ? (
+                <Image
+                  resizeMode="contain"
+                  source={{uri: about.photo}}
+                  style={styles.avatarStyle}
+                />
+              ) : (
+                <ImgPlaceholder
+                  text={`${
+                    about?.first_name?.[0] ? Capitalize(about?.first_name?.[0]) : ''
+                  }${
+                    about?.last_name?.[0] ? Capitalize(about?.last_name?.[0]) : ''
+                  }`}
+                  size={20}
+                />
+              )}
 
-          <View style={[CommonStyles.marginTop_2, CommonStyles.marginBottom_2]}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Profile', {screen: 'EditPhoto'})
-              }
-              activeOpacity={0.8}
-              style={[styles.buttonStyle]}>
-              <Image
-                resizeMode="contain"
-                source={{uri: Images.CameraIcon}}
-                style={styles.cameraIcon}
-              />
-              <Text style={[styles.buttonText]}>Edit Photo</Text>
-            </TouchableOpacity>
-            <Text numberOfLines={1} style={styles.subText}>
-              Click a section below to edit
-            </Text>
-          </View>
-        </View>
-        <TextWithIcon
-          item={profileData[0]}
-          iconStyle={styles.rightIcon}
-          onPressHandle={() => {
-            if (!about) return;
-            navigation.navigate('Profile', {
-              screen: 'PersonalInfo',
-            });
-          }}
-          containerStyle={undefined}
-          textStyle={undefined}
-          url={undefined}
-        />
-        <TextWithIcon item={profileData[1]} iconStyle={styles.rightIcon} />
-        <TextWithIcon
-          item={profileData[2]}
-          iconStyle={styles.rightIcon}
-          onPressHandle={() => {
-            if (!kinsData) return;
-            navigation.navigate('Profile', {
-              screen: 'NextKin',
-            });
-          }}
-        />
-        <TextWithIcon
-          item={profileData[3]}
-          iconStyle={styles.rightIcon}
-          onPressHandle={() => {
-            if (!emergency) return;
-            navigation.navigate('Profile', {
-              screen: 'Emergency',
-            });
-          }}
-        />
-        <TextWithIcon
-          item={profileData[4]}
-          iconStyle={styles.rightIcon}
-          onPressHandle={() => {
-            if (!banking) return;
-            navigation.navigate('Profile', {screen: 'PensionInfo'});
-          }}
-        />
+              <View style={[CommonStyles.marginTop_2, CommonStyles.marginBottom_2]}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Profile', {screen: 'EditPhoto'})
+                  }
+                  activeOpacity={0.8}
+                  style={[styles.buttonStyle]}>
+                  <Image
+                    resizeMode="contain"
+                    source={{uri: Images.CameraIcon}}
+                    style={styles.cameraIcon}
+                  />
+                  <Text style={[styles.buttonText]}>Edit Photo</Text>
+                </TouchableOpacity>
+                <Text numberOfLines={1} style={styles.subText}>
+                  Click a section below to edit
+                </Text>
+              </View>
+            </View>
+            <TextWithIcon
+              item={profileData[0]}
+              iconStyle={styles.rightIcon}
+              onPressHandle={() => {
+                if (!about) return;
+                navigation.navigate('Profile', {
+                  screen: 'PersonalInfo',
+                });
+              }}
+              containerStyle={undefined}
+              textStyle={undefined}
+              url={undefined}
+            />
+            <TextWithIcon item={profileData[1]} iconStyle={styles.rightIcon} />
+            <TextWithIcon
+              item={profileData[2]}
+              iconStyle={styles.rightIcon}
+              onPressHandle={() => {
+                if (!kinsData) return;
+                navigation.navigate('Profile', {
+                  screen: 'NextKin',
+                });
+              }}
+            />
+            <TextWithIcon
+              item={profileData[3]}
+              iconStyle={styles.rightIcon}
+              onPressHandle={() => {
+                if (!emergency) return;
+                navigation.navigate('Profile', {
+                  screen: 'Emergency',
+                });
+              }}
+            />
+            <TextWithIcon
+              item={profileData[4]}
+              iconStyle={styles.rightIcon}
+              onPressHandle={() => {
+                if (!banking) return;
+                navigation.navigate('Profile', {screen: 'PensionInfo'});
+              }}
+            />
+          </ScrollView>
       </View>
     </ScreenWrapper>
   );

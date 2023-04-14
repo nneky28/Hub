@@ -117,10 +117,9 @@ export default function Documents() {
           />
         )}
         <>{loading ? <PageLoader /> : null}</>
-
         <FlatList
-          data={documents}
-          keyExtractor={(i) => i.toString()}
+          data={[...documents,...documents]}
+          keyExtractor={(item,i) => `${item}${i}`.toString()}
           renderItem={ListComponent}
           ItemSeparatorComponent={() => <View />}
           showsVerticalScrollIndicator={false}

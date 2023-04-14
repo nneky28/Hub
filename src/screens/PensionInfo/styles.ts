@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
       color: AppColors.black1
   }, 
   iconAndTextContainer:{
-      justifyContent: 'center',
       alignItems: 'center',
       justifyContent: 'space-evenly',
       height: height(6)

@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
     alignItems: 'center',
+    flex : 1
   },
   header: {
     width: width(100),
