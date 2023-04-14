@@ -294,73 +294,73 @@ const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHa
   );
 };
 
-const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle, loading, title }) => {
-  const [showForm, setShowForm] = useState(false)
-  const [employee, setEmployee] = useState({})
-  const [showDetails, setShowDetails] = useState(false)
-  const navigation = useNavigation();
+// const SentActionModal = ({ isVisible, onHide, item, deleteHandler, onPressHandle, loading, title }) => {
+//   const [showForm, setShowForm] = useState(false)
+//   const [employee, setEmployee] = useState({})
+//   const [showDetails, setShowDetails] = useState(false)
+//   const navigation = useNavigation();
 
-  const getUser = async () => {
-    let user = await getData("about_me")
-    setEmployee(user)
-  }
-  // const disabled = () => {
-  //   if (employee?.id !== item?.created_by?.id) {
-  //     Alert('You can not delete this task')
-  //   }
-  // }
+//   const getUser = async () => {
+//     let user = await getData("about_me")
+//     setEmployee(user)
+//   }
+//   // const disabled = () => {
+//   //   if (employee?.id !== item?.created_by?.id) {
+//   //     Alert('You can not delete this task')
+//   //   }
+//   // }
 
-  const handleView = () => {
-    setShowDetails(true)
-    item
-  }
-  useEffect(() => {
-    getUser()
-  }, [])
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
-      <View style={styles.container1}>
-        <React.Fragment>
-          <TouchableOpacity onPress={() => {
-            onHide()
-            navigation.navigate("TaskView", { item, title })
-          }}
-            style={styles.textCon}>
-            <P>View Task</P>
-          </TouchableOpacity>
-          <View style={styles.line} />
-          <TouchableOpacity onPress={() => {
-            onHide()
-            navigation.navigate("CreateTask", { item, })
-          }}
-            style={styles.textCon}>
-            <P>Edit Task</P>
-          </TouchableOpacity>
-          <View style={styles.line} />
-          <TouchableOpacity style={[styles.textCon]}
-            onPress={() => deleteHandler()}
-            disabled={(employee?.id !== item?.created_by?.id)}>
-            <P color={AppColors.red}>Delete task</P>
-          </TouchableOpacity>
-        </React.Fragment>
-      </View>
-      {/* <TaskViewMore isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} /> */}
-    </Modal>
-  );
-};
+//   const handleView = () => {
+//     setShowDetails(true)
+//     item
+//   }
+//   useEffect(() => {
+//     getUser()
+//   }, [])
+//   return (
+//     <Modal
+//       onBackButtonPress={onHide}
+//       onModalHide={onHide}
+//       animationInTiming={500}
+//       animationOutTiming={10}
+//       backdropOpacity={0.2}
+//       swipeDirection={'down'}
+//       onSwipeComplete={onHide}
+//       onBackdropPress={onHide}
+//       animationIn="fadeInUp"
+//       animationOut="fadeInDown"
+//       swipeThreshold={0.3}
+//       style={{ justifyContent: 'flex-end', margin: 0 }}
+//       isVisible={isVisible}>
+//       <View style={styles.container1}>
+//         <React.Fragment>
+//           <TouchableOpacity onPress={() => {
+//             onHide()
+//             navigation.navigate("TaskView", { item, title })
+//           }}
+//             style={styles.textCon}>
+//             <P>View Task</P>
+//           </TouchableOpacity>
+//           <View style={styles.line} />
+//           <TouchableOpacity onPress={() => {
+//             onHide()
+//             navigation.navigate("CreateTask", { item, })
+//           }}
+//             style={styles.textCon}>
+//             <P>Edit Task</P>
+//           </TouchableOpacity>
+//           <View style={styles.line} />
+//           <TouchableOpacity style={[styles.textCon]}
+//             onPress={() => deleteHandler()}
+//             disabled={(employee?.id !== item?.created_by?.id)}>
+//             <P color={AppColors.red}>Delete task</P>
+//           </TouchableOpacity>
+//         </React.Fragment>
+//       </View>
+//       {/* <TaskViewMore isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} /> */}
+//     </Modal>
+//   );
+// };
 
 
 const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
@@ -393,5 +393,5 @@ const areEqual = (prevProps : prevProps, nextProps : nextProps) => {
   return (prevProps.isVisible === nextProps.isVisible) && (prevProps.loading === nextProps.loading)
 }
 
-export { DocumentModal, FilterModal, ActionModal, UnCompletedModal, SentActionModal };
+export { DocumentModal, FilterModal, ActionModal, UnCompletedModal };
 export default ContactModal;

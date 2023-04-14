@@ -10,10 +10,9 @@ const styles = StyleSheet.create({
     },
     line: {
         width: '100%',
-        height: 1,
-        backgroundColor: AppColors.gray1,
-        marginTop: height(1.5),
-        elevation: 0,
+        borderColor: AppColors.gray1,
+        borderBottomWidth : width(0.3),
+        alignSelf : "center"
     },
     header: {
         width: width(100),
@@ -57,7 +56,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F2F2F2',
         paddingHorizontal: width(1),
         marginLeft: width(4.5),
-        height: height(4.5)
+        height: height(4.5),
+        marginBottom : height(2)
     },
 
     threeButtonCont: {
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: height(2),
         paddingHorizontal: width(5),
-        // paddingVertical: height(1)
+        marginBottom : height(2)
     },
 
     downIcon: {

@@ -265,7 +265,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app_comments/`, fd)
   },
-  update_status: async (fd:TaskStatusProps) => {
+  update_task_status: async (fd:TaskStatusProps) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
@@ -550,7 +550,7 @@ export const useFetchTeamTask = (
   })
 }
 
-export const useFetchStatistics = (filter : TaskStatisticFilter = "",department_id : string = "",employee_id: number | string = "") => {
+export const useFetchStatistics = (filter : TaskStatisticFilter = "",department_id : number | string = "",employee_id: number | string = "") => {
   return useQuery([GET_TASK_STATISTICS,employee_id,filter,department_id], () => APIFunction.get_task_statistics(filter,department_id,employee_id,),{
     enabled : !!employee_id || !!filter || !!department_id
   })
@@ -589,6 +589,7 @@ export const getAPIs = async (path : string) => {
         resolve(result.data);
       })
       .catch(error => {
+        console.log("ERROR",error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"

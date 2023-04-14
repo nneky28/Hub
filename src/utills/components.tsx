@@ -42,6 +42,7 @@ import { useAppSelector } from './Methods';
 import { scrollToPosition } from '../Redux/Actions/Config';
 import { CordType } from './types';
 import { useFetchAboutMeData } from '../components/TimeoffModal/types';
+import { FontWeights } from './FontWeights';
 
 
 const winDimensions = Dimensions.get("window")
@@ -125,15 +126,22 @@ export const P = (props : PTagProps) => (
   <Text
     style={[
       {
-        fontSize: props.fontSize ? width(props.fontSize) : width(3.5),
-        fontFamily: FontFamily.BlackSansRegular,
-        textAlign: props?.textAlign,
-        color: props.color || AppColors.black,
-        marginTop: props?.marginTop ? height(props?.marginTop) : undefined
-        //lineHeight : props.lineHeight ? height(props.lineHeight) : 0,
+        fontSize : props.fontSize ? width(props.fontSize) : width(3.5),
+        fontFamily : FontFamily.BlackSansRegular,
+        textAlign : props.textAlign,
+        lineHeight : props.lineHeight ? height(props.lineHeight) : undefined,
+        color : props.color || AppColors.black,
+        textDecorationLine: props.underline || "none",
+        textDecorationColor : props.lineColor,
+        textDecorationStyle: "solid",
+        marginTop : props.marginTop ? height(props.marginTop) : undefined,
+        marginLeft : props.marginLeft ? width(props.marginLeft) : undefined,
+        marginBottom : props.marginBottom ? height(props.marginBottom) : undefined,
+        marginRight : props.marginRight ? height(props.marginRight) : undefined,
       },
       props.style
     ]}
+    numberOfLines={props?.numberOfLines}
   >
     {props.children}
   </Text>
@@ -144,17 +152,21 @@ export const H1 = (props: HTagProps) => (
     style={[
       {
         fontSize : props?.fontSize ? width(props.fontSize) : width(4),
-        fontFamily: FontFamily.BlackSansBold,
-        color: props.color || 'black',
+        fontFamily : props.bold ? FontWeights[props.bold] : FontFamily.BlackSansBold,
+        color : props.color || AppColors.black,
         textAlign: props.textAlign,
         textDecorationLine: props.underline || "none",
-        textDecorationColor: props.lineColor,
+        textDecorationColor : props.lineColor,
         textDecorationStyle: "solid",
-        marginLeft: props?.marginLeft ? width(props?.marginLeft) : undefined,
-        marginTop: props?.marginTop ? height(props?.marginTop) : undefined
+        lineHeight : props.lineHeight ? height(props.lineHeight) : undefined,
+        marginTop : props.marginTop ? height(props.marginTop) : undefined,
+        marginBottom : props.marginBottom ? height(props.marginBottom) : undefined,
+        marginRight : props.marginRight ? width(props.marginRight) : undefined,
+        marginLeft : props.marginLeft ? width(props.marginLeft) : undefined
       },
       props.style
     ]}
+    numberOfLines={props?.numberOfLines}
   >
     {props.children}
   </Text>

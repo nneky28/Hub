@@ -64,9 +64,9 @@ export type useFetchTodosProps = {
     isFetching : boolean
     hasNextPage : boolean
 }
-
+export type ActionTitleType = 'Completed' | "In Progress" | "To-Do"
 export type ProgressCardType = {
-    selected: 'Completed' | "In Progress" | "To-Do",
+    selected: ActionTitleType,
     image: string,
     selected_image: string,
     count: string,

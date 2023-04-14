@@ -44,7 +44,7 @@ type Props = {
     const {
         mutateAsync,
         isLoading,
-    } = useMutation(APIFunction.update_status)
+    } = useMutation(APIFunction.update_task_status)
       const deleteTask = useMutation(APIFunction.delete_task)
 
       const {

@@ -65,7 +65,7 @@ const CreateTask = ({ route }) => {
     const {
         mutateAsync: editHandler,
         isLoading: isLoadingEdit
-    } = useMutation(APIFunction.update_status)
+    } = useMutation(APIFunction.update_task_status)
 
     const {
         mutateAsync: subTaskEditHandler,

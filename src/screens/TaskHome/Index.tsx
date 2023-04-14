@@ -19,11 +19,11 @@ import {
     EmptyStateWrapper,
     TouchableWrapper,
 } from '../../utills/components';
-import { width, height } from 'react-native-dimension';
+import { width } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index';
-import TeamTodoContent from '../../components/TeamTodoContent/Index';
+//import TeamTodoContent from '../../components/TeamTodoContent/Index';
 import { Images } from '../../utills/Image';
 import numeral from 'numeral';
 import AppColors from '../../utills/AppColors';
@@ -43,12 +43,12 @@ import {
     // useFetchAllSentOverdue,
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { __flatten, useAppSelector, getStoreAboutMe } from '../../utills/Methods';
-import { setCurrentTabIndex } from '../../Redux/Actions/Config';
-import { useDispatch } from 'react-redux';
+import { __flatten, getStoreAboutMe } from '../../utills/Methods';
+//import { setCurrentTabIndex } from '../../Redux/Actions/Config';
+//import { useDispatch } from 'react-redux';
 import { RootScreenProps } from '../../Routes/types';
 import { HomePageHeader } from '../../components/Headers/CustomHeader';
-import { AddButtonProps, ProgressCardType, RenderItemProps, TaskTabType, useFetchStatisticsProps, useFetchTodosData, useFetchTodosProps } from './types';
+import { ActionTitleType, AddButtonProps, ProgressCardType, RenderItemProps, TaskTabType, useFetchStatisticsProps, useFetchTodosData, useFetchTodosProps } from './types';
 import { TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
 import { Coordinates } from '../Profile/types';
 
@@ -58,24 +58,26 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const [department_id, setDepartmentID] = useState<number>();
     const [tab, setTab] = useState<TaskTabType>('All');
     const [count, setCount] = useState("0");
-    const [actionTitle, setActionTitle] = useState('To-Do');
+    const [actionTitle, setActionTitle] = useState<ActionTitleType>('To-Do');
     const [progress,setProgress] = React.useState<TaskProgressStatus>("To-do")
     const [tasks, setTasks] = useState<useFetchTodosData[]>([]);
-    const index = useAppSelector(state => state.Config.currentTaskTabIndex)
-    const dispatch = useDispatch()
+   // const index = useAppSelector(state => state.Config.currentTaskTabIndex)
+    //const dispatch = useDispatch()
     const [characters,setCharacters] = React.useState<string[]>([]) 
     const [filter,setFilter] = React.useState<TaskStatisticFilter>("")
     const [coordinates,setCoordinates] = React.useState<Coordinates>({})
-    const ref = useRef<ScrollView>()
+    const ref = useRef<ScrollView>(null)
     const [overdue_status,setOverDueStatus] = React.useState<TaskDueDateFilter>("")
     const menu = ['My Tasks', 'Sent Tasks', 'My Team']
     const tabs : TaskTabType[] = ['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date']
     const [page,setPage] = React.useState(1)
     const [loading,setLoading] = React.useState(true)
+    const [currentTabIndex,setCurrentTabIndex] = React.useState(0)
 
 
     const setButtons = (i : number) => {
-        dispatch(setCurrentTabIndex(i));
+        //dispatch(setCurrentTabIndex(i));
+        setCurrentTabIndex(i)
         setActionTitle('To-Do');
         setTab('All');
         setLoading(true)
@@ -100,25 +102,26 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const {
         data: statistics,
         isLoading
-    } = useFetchStatistics(filter) as useFetchStatisticsProps
+    } = useFetchStatistics(
+        filter,
+        currentTabIndex === 2 && department_id ? department_id : ""
+    ) as useFetchStatisticsProps
     
     // TODOS
     const {
         data: taskData,
         isFetching,
-        hasNextPage,
+        //hasNextPage,
     } = useFetchTodos(
-        index !== 2 ? filter : "",
-        index !== 2 ? overdue_status : "",
-        index !== 2 ? progress : ""
+        currentTabIndex !== 2 ? filter : "",
+        currentTabIndex !== 2 ? overdue_status : "",
+        currentTabIndex !== 2 ? progress : ""
     ) as useFetchTodosProps
 
-
     const {
-        data: allTeamData,
-    } = useFetchTeamTask(index === 2 ? "My Team" : "", department_id,overdue_status,progress);
-
-    console.log("allTeamData",allTeamData)
+        data: teamTaskData,
+        isFetching : fetching
+    } = useFetchTeamTask(currentTabIndex === 2 ? "My Team" : "", department_id,overdue_status,progress) as useFetchTodosProps
 
     const progressCards : ProgressCardType[] = [
         {
@@ -152,6 +155,9 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     const ListEmptyComponent = () => {
         let  msg = 'todo task.'
+        if(overdue_status === "duetoday") msg = "task due today."
+        if(overdue_status === "upcoming") msg = "upcoming task."
+        if(overdue_status === "overdue") msg = "overdue task."
         return (
             <EmptyStateWrapper 
                 marginTop={1}
@@ -169,7 +175,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         if(item?.is_menu) return (
             <React.Fragment>
                     {
-                        index === 2 ? (
+                        currentTabIndex === 2 ? (
                             <View>
                                 <Text numberOfLines={1} style={styles.headerTitle}>
                                     Find People
@@ -252,7 +258,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                         ))}
                     </View>
                 {
-                    index === 2 && actionTitle === 'To-Do' ? null : (
+                    currentTabIndex === 2 && actionTitle === 'To-Do' ? null : (
                         <View style={styles.container}>
                             <H1 color={AppColors.black1}>
                                 {actionTitle} ({count})
@@ -290,8 +296,8 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                     </View>
                 ) : null
             }
-            {!isFetching && tasks && Array.isArray(tasks) && tasks.length === 0 ? <ListEmptyComponent /> : null}
-            {isFetching && page === 1 ? <Container marginTop={10}>
+            {!(isFetching || fetching) && tasks && Array.isArray(tasks) && tasks.length === 0 ? <ListEmptyComponent /> : null}
+            {(isFetching || fetching) && page === 1 ? <Container marginTop={10}>
                     <ActivityIndicator size={width(8)} color={AppColors.green}/>
                 </Container> : null
             }
@@ -300,20 +306,8 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         return (
             <TodoContent
                 item={item}
-                count={count}
                 title={actionTitle}
-                index={index}
-                id={item.id}
-            />
-        );
-    };
-    const TeamRenderItem = ({ item }) => {
-        return (
-            <TeamTodoContent
-                count={count}
-                item={item}
-                title={actionTitle}
-                index={index}
+                index={currentTabIndex}
                 id={item.id}
             />
         );
@@ -350,15 +344,21 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         setPage(1)
         setCount(item.count);
         setTab("All");
+        setOverDueStatus("")
         setLoading(true)
     }
 
     const KeyExtractor = (item : useFetchTodosData, index : number) => `${item}${index}`.toString()
 
     const mapDataToState = () => {
-        if(taskData?.pages?.[0]?.results && Array.isArray(taskData?.pages?.[0]?.results)){
+        if(currentTabIndex !== 2 && taskData?.pages?.[0]?.results && Array.isArray(taskData?.pages?.[0]?.results)){
             let arr : useFetchTodosData[] = []
             page > 1 ? setTasks([...tasks,...arr]) : setTasks(taskData?.pages?.[0]?.results)
+            setLoading(false)
+        }
+        if(currentTabIndex === 2 && teamTaskData?.pages?.[0]?.results && Array.isArray(teamTaskData?.pages?.[0]?.results)){
+            let arr : useFetchTodosData[] = []
+            page > 1 ? setTasks([...tasks,...arr]) : setTasks(teamTaskData?.pages?.[0]?.results)
             setLoading(false)
         }
     }
@@ -376,14 +376,14 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     useEffect(()=>{
         mapDataToState()
-    },[taskData])
+    },[taskData,teamTaskData])
 
     useEffect(()=> {
         let  type : TaskStatisticFilter = ""
-        if(index === 0) type = "assigned_to_me"
-        if(index === 1) type = "created_by_me_and_sent"
+        if(currentTabIndex === 0) type = "assigned_to_me"
+        if(currentTabIndex === 1) type = "created_by_me_and_sent"
         setFilter(type)
-    },[index])
+    },[currentTabIndex])
 
     useEffect(()=>{
         if(actionTitle === "To-Do") return setProgress("To-do")
@@ -392,11 +392,11 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     },[actionTitle])
 
     useEffect(() => {
-      //  getInfo()
+      getInfo()
     }, [])
 
     useEffect(() => {
-        dispatch(setCurrentTabIndex(0));
+        setCurrentTabIndex(0)
     }, [])
 
     useEffect(()=>{
@@ -425,13 +425,13 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                 onPress={() => {
                                     setButtons(i);
                                 }}
-                                style={index === i ? styles.animatedView : styles.button}
+                                style={currentTabIndex === i ? styles.animatedView : styles.button}
                                 key={i}
                             >
                                 <Text
                                     style={[
                                         styles.buttonText,
-                                        index === i && styles.buttonText1,
+                                        currentTabIndex === i && styles.buttonText1,
                                     ]}>
                                     {item}
                                 </Text>
@@ -442,7 +442,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                         isLoading || loading ? <PageLoader /> : <React.Fragment>
 
                             <FlatList
-                                data={isFetching && page === 1 ? [{is_menu : true}] : [{is_menu : true},...tasks]}
+                                data={(isFetching || fetching) && page === 1 ? [{is_menu : true, id : 1.50}] : [{is_menu : true},...tasks]}
                                 keyExtractor={KeyExtractor}
                                 renderItem={TaskRenderItem}
                                 ItemSeparatorComponent={() => <View style={styles.line} />}
@@ -456,42 +456,6 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                             />
                         </React.Fragment>
                     }
-                   
-                    {/* {
-                        isLoading ? <PageLoader /> : <React.Fragment>
-                               
-                            {
-                                    loadingTasks || loading ? (
-                                    <PageLoader />
-                                ) : null
-                            }
-                            
-                            {
-                                !isLoading && !loading ? <React.Fragment>
-                                   
-                                </React.Fragment> : null
-                            }
-
-                            
-                        </React.Fragment>
-                    } */}
-                    {/* {index === 2 ? (
-                                <FlatList
-                                    data={teamTask}
-                                    keyExtractor={(item, index) => item.id.toString()}
-                                    renderItem={TeamRenderItem}
-                                    ItemSeparatorComponent={() => <View style={styles.line} />}
-                                    showsVerticalScrollIndicator={false}
-                                    nestedScrollEnabled={true}
-                                    contentContainerStyle={[
-                                        CommonStyles.marginTop_3,
-                                        { paddingBottom: height(10) },
-                                    ]}
-                                    onEndReachedThreshold={0.1}
-                                    refreshing={false}
-                                    ListEmptyComponent={ListEmptyComponent}
-                                />
-                            ) : null} */}
                     </React.Fragment>
             </ScreenWrapper>
     );

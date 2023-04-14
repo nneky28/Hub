@@ -156,6 +156,7 @@ export type PTagProps = {
     marginTop? : number,
     marginLeft? : number,
     marginBottom? : number,
+    marginRight? : number,
     style? : TextStyle,
     numberOfLines? : number,
     children : React.ReactNode
@@ -171,6 +172,7 @@ export type HTagProps = {
     marginTop? : number,
     marginLeft? : number,
     marginBottom? : number,
+    marginRight? : number,
     style? : TextStyle,
     numberOfLines? : number,
     children : React.ReactNode,
