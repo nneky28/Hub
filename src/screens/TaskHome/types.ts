@@ -23,3 +23,53 @@ export type useFetchStatisticsData = {
     todo_count?: number
     upcoming_count?: number
 }
+
+export type TaskTabType = 'All' | 'Due Today' | 'Upcoming' | 'Overdue' | 'No Date'
+
+export type useFetchTodosData = {
+    assigned_to? : {
+        email?: string
+        first_name?: string
+        id?: number
+        last_name?: string
+        photo?: string
+    }
+    created_by? : {
+        email?: string
+        first_name?: string
+        id?: number
+        last_name?: string
+        photo? : string
+    }
+    department? : {
+        name? : string
+        id? : number
+    }
+    id? : number
+    status?: string
+    description? : string
+    due_date? : string
+    sub_tasks_tasksapp? : []
+    title? : string
+    is_menu? : boolean
+}
+
+export type useFetchTodosProps = {
+    data? : {
+        pages? : {
+            results? : useFetchTodosData[]
+        }[]
+    }
+    isLoading : boolean
+    isFetching : boolean
+    hasNextPage : boolean
+}
+
+export type ProgressCardType = {
+    selected: 'Completed' | "In Progress" | "To-Do",
+    image: string,
+    selected_image: string,
+    count: string,
+    borderWidth: number,
+    borderColor: string,
+}

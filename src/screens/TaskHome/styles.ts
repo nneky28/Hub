@@ -311,6 +311,10 @@ const styles = StyleSheet.create({
         width: width(29),
         height: height(15),
         marginTop: height(2),
+    },
+    contentContainerStyle : { 
+        paddingBottom: height(10),
+        marginTop : height(1)
     }
 });
 export default styles;
