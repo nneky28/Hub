@@ -145,7 +145,7 @@ export type EmergencyContactProps = {
 };
 
 export type EditProfileProps = {
-  id:number
+  id: number
   title: string;
   first_name: string;
   middle_name: string;
@@ -163,8 +163,14 @@ export type EditProfileProps = {
     city: string
     postal_code: string
   },
+
+}
   
-};
+export type verifyBank = {
+   account_number: string,
+    bank_code: string 
+}
+
 
 export type LoginLoad = {
   email: string;
@@ -174,5 +180,20 @@ export type LoginLoad = {
 export type RemoveDeviceTokenLoad = {
   registration_id : string
 }
+
+export type updatePensionAccountProps = {
+  id:number
+    bank_account?: {
+      bank?: number,
+      account_number?: string,
+      account_name?: string
+    },
+    pension?: {
+      provider?: number,
+      pension_number?: string
+    },
+    is_pension_applicable?: boolean
+  }
+
 
 export type TaskStatisticFilter = "created_by_me_and_sent" | "assigned_to_me" | ""

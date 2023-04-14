@@ -20,17 +20,18 @@ import CustomModalDropdown from '../../components/CustomModalDropdown';
 import {useMutation} from 'react-query';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {RootScreenProps} from '../../Routes/types';
-import {useFetchBankingProps} from '../Profile/types';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
-import {Data} from './types';
+import {Data, DataKeys} from './types';
+import {updatePensionAccountProps} from '../../utills/payload';
 
 const PensionInfo = ({navigation}: RootScreenProps) => {
   const [data, setData] = useState<Data>({
-    account_name: null,
+    account_name: '',
     account_number: '',
     pension_number: '',
-    bank: '',
-    provider: '',
+    bank_code: '',
+    bank_name: '',
+    prov_name: '',
   });
 
   const [disabled, setDisabled] = useState(false);
@@ -43,25 +44,25 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
   const {mutateAsync: updatePension, isLoading: loading} = useMutation(
     APIFunction.update_pension,
   );
+
   const {mutateAsync: bankVerify, isLoading: verifying} = useMutation(
     APIFunction.bank_verification,
   );
 
-  const {data: banks, isFetching: fetchingBanks} =
-    useFetchBanking() as useFetchBankingProps;
+  const {data: banks, isFetching: fetchingBanks} = useFetchBanking();
 
   const {data: providers, isFetching: fetchingProviders} = useFetchProviders();
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
-  console.log('Bank details', banks, providers, profile);
+  console.log('profile', profile);
 
-  const handleSubmit = async (param: any) => {
+  const handleSubmit = async (param: string) => {
     try {
-      let required =
+      let required: DataKeys[] =
         data?.account_number || data?.bank ? ['account_number', 'bank'] : [];
       if (data?.pension_number || data?.provider) {
-        required = [...required, ...['pension_number', 'provider']];
+        required = ['pension_number', 'provider'];
       }
       let failed = false;
       let msg = '';
@@ -100,35 +101,46 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
           bank_code: data.bank_code,
           account_number: data.account_number,
         };
-        let res = await bankVerify(fd);
-        setDisabled(false);
-        return setData({...data, account_name: res.account_name});
+        let res = (await bankVerify(fd)) as Awaited<{account_name: string}>;
+        // console.log('Res', res);
+        return setData({...data, account_name: res.account_name as string});
       }
-      let fd = {is_pension_applicable: false};
+      if (!profile?.id) return;
+
+      let fd: updatePensionAccountProps = {
+        is_pension_applicable: false,
+        id: profile?.id,
+      };
+
       if (data.bank) {
         fd['bank_account'] = {
-          bank: data.bank,
+          bank: data.bank as number,
           account_number: data.account_number,
         };
       }
       if (data.provider) {
         fd['pension'] = {
-          provider: data.provider,
+          provider: data.provider as number,
           pension_number: data.pension_number,
         };
         fd['is_pension_applicable'] = true;
       }
 
-      let res = await updatePension({...fd, id: profile?.id});
+      let res = await updatePension({...fd});
       if (res) {
         ToastSuccess('Record has been saved');
       }
       if (auth.route !== 'main') {
-        return navigation.navigate('EditPhoto');
+        return navigation.navigate('Profile', {screen: 'EditPhoto'});
       }
       return navigation.goBack();
     } catch (err: any) {
-      ToastError(err.msg);
+      let msg =
+        err.msg && err.msg.detail && typeof err.msg.detail == 'string'
+          ? err.msg.detail
+          : 'Something went wrong. Please retry';
+      console.log('ERROR', msg);
+      ToastError(msg);
     }
   };
 
@@ -165,7 +177,9 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
       <HeaderWithBackButton
         headerText="    Update Information"
         rightButtonText="Save"
-        onSubmitHandler={handleSubmit}
+        onSubmitHandler={(param?: string) => {
+          handleSubmit(param!);
+        }}
         isLoading={loading || verifying}
       />
       <Container flex={1}>

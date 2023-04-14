@@ -67,12 +67,15 @@ import {
   TaskStatisticFilter,
   TRAININGHISTORY,
   TRAININGS,
+  verifyBank,
+  updatePensionAccountProps,
 } from "./payload";
 
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
 
-export const employees_me = (business_id:string) => `/c/${business_id}/employees/me/`;
+export const employees_me = (business_id: string) => `/c/${business_id}/employees/me/`;
+
 export const APIFunction = {
   employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
   employee_team_members: async (id:number, page = 1) => {
@@ -129,7 +132,6 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/training/history/?employee_id=${employee_id}`);
   },
-  
 
   // trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
   // training_hist: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/training/history/`,
@@ -186,7 +188,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-next-of-kin/`, fd)
   },
-  update_pension: async(fd?:any) => {
+  update_pension: async(fd:updatePensionAccountProps) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
@@ -199,7 +201,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/notifications/${id}/read/`)
   },
-  bank_verification: async (fd?:any) => {
+  bank_verification: async (fd:verifyBank) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/banks/account_number_validation/`, fd)
   },
@@ -744,6 +746,7 @@ export const useFetchComments = (id:number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+  console.log('token',_token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {

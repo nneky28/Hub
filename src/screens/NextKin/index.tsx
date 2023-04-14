@@ -22,7 +22,6 @@ export default function NextKin({navigation}: RootScreenProps) {
   const {data: about} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
   const {data: kinsData} = useFetchKin(about?.id) as useFetchKinProps;
-  useMutation(APIFunction.update_next_of_kin);
 
   const {mutateAsync, isLoading: loading} = useMutation(
     APIFunction.update_next_of_kin,
