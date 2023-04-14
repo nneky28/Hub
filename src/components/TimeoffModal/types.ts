@@ -101,13 +101,18 @@ export type useFetchAboutMeData = {
     },
     bank_account?: {
         bank? : {
-            name? : string
+            code?: string,
+            id?: number,
+            name?:string
         }
-        account_number? : string
+        account_number?: string,
+        account_name?: string,
+        bank_name?:string
     },
     pension?: {
-        provider? : {
-            name? : string
+        provider?: {
+            name?: string,
+            id?:number
         }
         pension_number? : string
     },

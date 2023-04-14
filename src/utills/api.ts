@@ -46,15 +46,21 @@ import {
   NOTIFICATIONS,
   DOCUMENT,
   BASIC_DETAILS,
+  EditProfileProps,
   TaskStatisticFilter,
   TaskDueDateFilter,
   TaskProgressStatus,
+  TRAININGHISTORY,
+  TRAININGS,
+  verifyBank,
+  updatePensionAccountProps,
 } from "./payload";
 
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
 
-export const employees_me = (business_id:string) => `/c/${business_id}/employees/me/`;
+export const employees_me = (business_id: string) => `/c/${business_id}/employees/me/`;
+
 export const APIFunction = {
   employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
   employee_team_members: async (id:number, page = 1) => {
@@ -93,18 +99,28 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/emergency-contact/`)
   },
-  update_emergency: async (fd:EmergencyContactProps, id:number) => {
+  update_emergency: async (fd:EmergencyContactProps) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-emergency-contact/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-emergency-contact/`, fd)
   },
   update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
   
-  edit: async (fd:any) => {
+  edit: async (fd:EditProfileProps) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/`, fd);
   },
-  trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
-  training_hist: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/history/`,
+  get_trainings: async (employee_id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/trainings/`);
+  },
+  get_training_hist: async ( employee_id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/training/history/?employee_id=${employee_id}`);
+  },
+
+  // trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
+  // training_hist: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/training/history/`,
+  
   timeoff: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
   timeoff_reqs: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id:string, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
@@ -153,11 +169,11 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/banks/`)
   },
-  update_next_of_kin: async (fd:EmergencyContactProps, id:number) => {
+  update_next_of_kin: async (fd:EmergencyContactProps) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-next-of-kin/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-next-of-kin/`, fd)
   },
-  update_pension: async(fd?:any) => {
+  update_pension: async(fd:updatePensionAccountProps) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
@@ -170,7 +186,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/notifications/${id}/read/`)
   },
-  bank_verification: async (fd?:any) => {
+  bank_verification: async (fd:verifyBank) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/banks/account_number_validation/`, fd)
   },
@@ -555,6 +571,32 @@ export const useFetchStatistics = (filter : TaskStatisticFilter = "",department_
     enabled : !!employee_id || !!filter || !!department_id
   })
 }
+export const useFetchTrainings = ( eemployee_id?: number|null) => {
+  return useQuery([TRAININGS, eemployee_id], () => APIFunction.get_trainings(eemployee_id as number),{
+
+  });
+}
+export const useFetchTrainingsHist = ( eemployee_id?: number|null) => {
+  return useQuery([TRAININGHISTORY, eemployee_id], () => APIFunction.get_training_hist(eemployee_id as number),{
+
+  });
+}
+// export const useFetchSentStatistics = () => {
+//   return useQuery(GET_SENT_STATISTICS, APIFunction.get_sent_statistics)
+// }
+
+// export const useFetchPeopleStatics = (id:number) => {
+//   return useQuery([GET_EMPLOYEE_STATISTICS, id], () => APIFunction.get_employee_statistics(id), {
+//     enabled: id !== null && id !== undefined
+//   },
+
+//   )
+// }
+// export const useFetchTeamStatistics = (id?:number) => {
+//   return useQuery([GET_TEAM_STATISTICS, id], () => APIFunction.get_team_statistics(id as number), {
+//     enabled: !!id
+//   },)
+// }
 
 export const useFetchActivities = (id:number) => {
   return useInfiniteQuery([GET_ACTIVITY, id], () => APIFunction.get_activity(id), {

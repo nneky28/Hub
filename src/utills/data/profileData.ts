@@ -5,7 +5,8 @@ export type ProfileDataType = {
     title: string
     iconLeft: {uri : string},
     data: string[],
-    iconRight: {uri : string}, 
+    iconRight: { uri: string }, 
+    url?:string
 }
 
 export const profileData :  ProfileDataType[] = [

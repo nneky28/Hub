@@ -37,7 +37,7 @@ export type HeaderWithBackButtonProps =  {
     headerTextStyle? : TextStyle
     rightIcon? : never
     iconStyle? : TextStyle
-    onPressHandler? : () => void
+    onPressHandler? : (param?:string) => void
     subHeaderText? : string
     rightText? : never
     rightButtonText : string

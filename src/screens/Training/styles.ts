@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   iconAndTextContainer:{
       justifyContent: 'center',
       alignItems: 'center',
-      justifyContent: 'space-evenly',
+      // justifyContent: 'space-evenly',
       height: height(6)
   },
   searchBoxStyle: {

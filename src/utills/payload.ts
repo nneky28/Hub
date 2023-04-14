@@ -2,7 +2,7 @@
 export const ABOUT_ME = 'about_me';
 export const USER = 'user';
 export const EMPLOYEE_TIMEOFF = 'employee_timeoff';
-export const BASIC_DETAILS = "basic_details"
+export const BASIC_DETAILS = 'basic_details';
 export const EMPLOYEE_TIMEOFF_TAKEN = 'employee_timeoff_taken';
 export const EMPLOYEE_TIMEOFF_REQS = 'employee_timeoff_reqs';
 export const PAYROLL_YEARS = 'payroll_years';
@@ -47,21 +47,16 @@ export const GET_EMPLOYEE_STATISTICS = 'get_employee_statistics';
 export const GET_TEAM_STATISTICS = 'get_team_statistics';
 export const GET_ACTIVITY = 'get_activity';
 export const GET_COMMENTS = 'get_comments';
-export const NOTIFICATIONS = "notifications"
-export const DOCUMENT= "document"
-
-
-
+export const NOTIFICATIONS = 'notifications';
+export const DOCUMENT = 'document';
+export const TRAININGS = 'trainings';
+export const TRAININGHISTORY = 'trainings_history';
 
 //ONBOARDING TYPES
 
-export const TASK_ONBOARDING = "Task"
+export const TASK_ONBOARDING = 'Task';
 
-
-
-
-
-//PAYLOAD TYPES 
+//PAYLOAD TYPES
 export type RegisterTokenLoad = {
   user_type: 'business_user' | 'employee';
   registration_id: string;
@@ -115,23 +110,23 @@ export type OnboardingProps = {
   id: number;
 };
 export type TaskStatusProps = {
-    id: number,
-    status: string,
-}
+  id: number;
+  status: string;
+};
 export type TaskProps = {
-    data: {
-        title?: string,
-        description?: string,
-        due_date?:string
-    },
-    created_by?: string,
-    assigned_to?: string,
-    department?: string,
-    status?: "To-do" | "In_progress" | "Completed",
-    sub_tasks?:string[]
-}
-export type EmergencyContactProps = {
   data: {
+    title?: string;
+    description?: string;
+    due_date?: string;
+  };
+  created_by?: string;
+  assigned_to?: string;
+  department?: string;
+  status?: 'To-do' | 'In_progress' | 'Completed';
+  sub_tasks?: string[];
+};
+export type EmergencyContactProps = {
+  
     first_name: string;
     last_name: string;
     phone_number: string;
@@ -145,18 +140,62 @@ export type EmergencyContactProps = {
     city: string;
     postal_code: string;
     relationship: string;
-  };
+
+  id:number
 };
 
-export type LoginLoad = {
-  email : string
-  password : string
+export type EditProfileProps = {
+  id: number
+  title: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  birth_date: string | null;
+  marital_status: string;
+  gender: string
+  phone_number1: string
+  phone_number2: string
+  address: {
+    address1: string
+    address2: string
+    country: string
+    state: string
+    city: string
+    postal_code: string
+  },
+
 }
+  
+export type verifyBank = {
+   account_number: string,
+    bank_code: string 
+}
+
+
+export type LoginLoad = {
+  email: string;
+  password: string;
+};
 
 export type RemoveDeviceTokenLoad = {
   registration_id : string
 }
 
-export type TaskStatisticFilter = "created_by_me_and_sent" | "assigned_to_me" | ""
 export type TaskDueDateFilter = "duetoday" | "upcoming" | "overdue" | "nodate" | "" 
 export type TaskProgressStatus = "To-do" | "In-progress" | "Completed" | ""
+export type updatePensionAccountProps = {
+  id:number
+    bank_account?: {
+      bank?: number,
+      account_number?: string,
+      account_name?: string
+    },
+    pension?: {
+      provider?: number,
+      pension_number?: string
+    },
+    is_pension_applicable?: boolean
+  }
+
+
+export type TaskStatisticFilter = "created_by_me_and_sent" | "assigned_to_me" | ""

@@ -1,0 +1,15 @@
+export type Data ={
+    first_name: string,
+    last_name: string,
+    phone_number: string,
+    email: string,
+    gender: string,
+    nationality:  string,
+    address1:  string,
+    address2:  string,
+    country:  string,
+    state: string,
+    city:  string,
+    postal_code:  string,
+    relationship: string,
+}

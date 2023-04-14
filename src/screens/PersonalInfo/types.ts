@@ -6,10 +6,10 @@ export type Data ={
     birth_date: string;
     marital_status: string;
     email: string;
-    address: string;
-    address2: string;
-    phone_number: string;
     mobileNumber2: string;
+    address2: string;
+    address: string;
+    phone_number: string;
     state: string;
     city: string;
     country: string;
