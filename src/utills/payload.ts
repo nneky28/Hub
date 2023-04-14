@@ -49,6 +49,8 @@ export const GET_ACTIVITY = 'get_activity';
 export const GET_COMMENTS = 'get_comments';
 export const NOTIFICATIONS = 'notifications';
 export const DOCUMENT = 'document';
+export const TRAININGS = 'trainings';
+export const TRAININGHISTORY = 'trainings_history';
 
 //ONBOARDING TYPES
 

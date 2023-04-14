@@ -9,7 +9,7 @@ import styles from './styles';
 import {TextWithIconCopyProps, TextWithProps} from './types';
 
 const TextWithIconCopy = ({item, iconStyle, onHide}: TextWithIconCopyProps) => {
-  const [copiedText, setCopiedText] = useClipboard();
+  const [, setCopiedText] = useClipboard();
 
   const handleLongPress = (title: string) => {
     setCopiedText(title);
@@ -29,20 +29,33 @@ const TextWithIconCopy = ({item, iconStyle, onHide}: TextWithIconCopyProps) => {
           onPress={() => handleLongPress(item && item.title ? item.title : '')}
           style={[styles.row]}>
           <View style={CommonStyles.rowAlignItemCenter}>
-            <Image
-              resizeMode="contain"
-              source={item.iconLeft}
-              style={styles.iconStyle}
-            />
+            {item && item.iconLeft && (
+              <Image
+                resizeMode="contain"
+                source={
+                  typeof item.iconLeft === 'string'
+                    ? {uri: item.iconLeft}
+                    : item.iconLeft
+                }
+                style={styles.iconStyle}
+              />
+            )}
             <Text style={[styles.listCompTitle, CommonStyles.marginLeft_4]}>
               {item && item.title ? item.title : ''}
             </Text>
           </View>
-          <Image
-            resizeMode={'contain'}
-            source={item.iconRight}
-            style={[styles.iconStyle, iconStyle]}
-          />
+
+          {item && item.iconRight && (
+            <Image
+              resizeMode="contain"
+              source={
+                typeof item.iconRight === 'string'
+                  ? {uri: item.iconRight}
+                  : item.iconRight
+              }
+              style={[styles.iconStyle, iconStyle]}
+            />
+          )}
         </TouchableOpacity>
         <View style={styles.line} />
       </View>
@@ -51,14 +64,11 @@ const TextWithIconCopy = ({item, iconStyle, onHide}: TextWithIconCopyProps) => {
   );
 };
 
-// onPressHandle, containerStyle, textStyle, url
-
 const TextWithIcon = ({
   item,
   iconStyle,
   onPressHandle,
   containerStyle,
-  url,
   textStyle,
 }: TextWithProps) => {
   let lock = false;
@@ -77,31 +87,23 @@ const TextWithIcon = ({
         disabled={lock}
         onPress={onPressHandle}>
         <View style={CommonStyles.rowAlignItemCenter}>
-          {url ? (
-            <ImageWrap
-              url={item.iconLeft}
-              width={5}
-              height={3}
-              fit={'contain'}
-            />
+          {item.url ? (
+            <ImageWrap url={item?.url} width={5} height={3} fit={'contain'} />
           ) : (
             <React.Fragment>
-              {item && item.iconLeft !== undefined && (
+              {item && item.iconLeft ? (
                 <Image
                   resizeMode="contain"
-                  source={!url ? item.iconLeft : {uri: item.iconLeft}}
+                  source={
+                    typeof item.iconLeft === 'string'
+                      ? {uri: item.iconLeft}
+                      : item.iconLeft
+                  }
                   style={styles.iconStyle}
                 />
-              )}
+              ) : null}
             </React.Fragment>
           )}
-          {/* <ImageWrap 
-              url={item.iconLeft}
-              width={5}
-              height={3}
-              fit={'contain'}
-            /> */}
-
           <Text
             style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>
             {item.title}
@@ -111,14 +113,21 @@ const TextWithIcon = ({
           <Image
             resizeMode={'contain'}
             source={lockIcon}
-            style={[styles.iconStyle]}
-          />
-        ) : (
-          <Image
-            resizeMode={'contain'}
-            source={item && item.iconRight}
             style={[styles.iconStyle, iconStyle]}
           />
+        ) : (
+          item &&
+          item.iconRight && (
+            <Image
+              resizeMode={'contain'}
+              source={
+                typeof item.iconRight === 'string'
+                  ? {uri: item.iconRight}
+                  : item.iconRight
+              }
+              style={[styles.iconStyle]}
+            />
+          )
         )}
       </TouchableOpacity>
       <View style={styles.line} />

@@ -65,6 +65,8 @@ import {
   BASIC_DETAILS,
   EditProfileProps,
   TaskStatisticFilter,
+  TRAININGHISTORY,
+  TRAININGS,
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -119,8 +121,19 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/`, fd);
   },
-  trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
-  training_hist: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/history/`,
+  get_trainings: async (employee_id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/trainings/`);
+  },
+  get_training_hist: async ( employee_id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/training/history/?employee_id=${employee_id}`);
+  },
+  
+
+  // trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
+  // training_hist: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/training/history/`,
+  
   timeoff: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
   timeoff_reqs: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
   timeoff_taken: (business_id:string, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
@@ -686,6 +699,16 @@ export const useFetchStatistics = (filter : TaskStatisticFilter = "",employee_id
   return useQuery([GET_TASK_STATISTICS,employee_id,filter,department_id], () => APIFunction.get_task_statistics(filter,employee_id,department_id),{
     enabled : !!employee_id || !!filter || !!department_id
   })
+}
+export const useFetchTrainings = ( eemployee_id?: number|null) => {
+  return useQuery([TRAININGS, eemployee_id], () => APIFunction.get_trainings(eemployee_id as number),{
+
+  });
+}
+export const useFetchTrainingsHist = ( eemployee_id?: number|null) => {
+  return useQuery([TRAININGHISTORY, eemployee_id], () => APIFunction.get_training_hist(eemployee_id as number),{
+
+  });
 }
 // export const useFetchSentStatistics = () => {
 //   return useQuery(GET_SENT_STATISTICS, APIFunction.get_sent_statistics)

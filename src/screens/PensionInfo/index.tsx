@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Keyboard, Text, TouchableOpacity, View} from 'react-native';
+import {Keyboard, Text, View} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
   APIFunction,
@@ -7,14 +7,7 @@ import {
   useFetchBanking,
   useFetchProviders,
 } from '../../utills/api';
-import AppColors from '../../utills/AppColors';
-import {
-  BackHandler,
-  Container,
-  H1,
-  ItemListModal,
-  useDebounce,
-} from '../../utills/components';
+import {Container, ItemListModal, useDebounce} from '../../utills/components';
 import {
   Capitalize,
   ToastError,
@@ -24,22 +17,12 @@ import {
 import styles from './styles';
 import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
-import {ActivityIndicator} from 'react-native-paper';
 import {useMutation} from 'react-query';
-import {width} from 'react-native-dimension';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {RootScreenProps} from '../../Routes/types';
 import {useFetchBankingProps} from '../Profile/types';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
-
-interface Data {
-  [key: string]: string | null;
-  account_name: null;
-  account_number: string;
-  pension_number: string;
-  bank: string;
-  provider: string;
-}
+import {Data} from './types';
 
 const PensionInfo = ({navigation}: RootScreenProps) => {
   const [data, setData] = useState<Data>({
@@ -70,6 +53,8 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
   const {data: providers, isFetching: fetchingProviders} = useFetchProviders();
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
+
+  console.log('Bank details', banks, providers, profile);
 
   const handleSubmit = async (param: any) => {
     try {
@@ -181,28 +166,9 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
         headerText="    Update Information"
         rightButtonText="Save"
         onSubmitHandler={handleSubmit}
-        isLoading={loading}
+        isLoading={loading || verifying}
       />
-      {/* <View style={styles.header}>
-        <BackHandler position={'center'} />
-        <View style={styles.titleContainer}>
-          <Text numberOfLines={1} style={styles.screenTitle}>
-            Update Information
-          </Text>
-        </View>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          disabled={verifying || isLoading}>
-          {verifying || isLoading ? (
-            <ActivityIndicator size={width(6)} color={AppColors.green} />
-          ) : (
-            <H1 color={AppColors.green}>Save</H1>
-          )}
-        </TouchableOpacity>
-      </View>
-      <View style={styles.line} /> */}
       <Container flex={1}>
-        {/* <Formik> */}
         <Container>
           <Container paddingHorizontal={5} marginTop={2} marginLeft={5}>
             <Text numberOfLines={1} style={styles.screenTitle}>
