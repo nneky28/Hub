@@ -896,43 +896,48 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
   )
 }
 
-export const EmptyStateWrapper = (props:EmptyStateWrapperProps) => (
-  <Container
-    marginTop={props.marginTop || 8}
-    style={{
-      alignItems: "center",
-      backgroundColor: props.backgroundColor || AppColors.white
-    }}
-  >
-    <Container width={70} alignSelf="center" backgroundColor={props.backgroundColor}>
-      <ImageWrap
-        url={props.icon}
-        height={props.height || 30}
-        fit="contain"
-      />
+export const EmptyStateWrapper = React.memo((props:EmptyStateWrapperProps) => {
+  return(
+      <Container
+      marginTop={props.marginTop || 8}
+      style={{
+        alignItems: "center",
+        backgroundColor: props.backgroundColor || AppColors.white
+      }}
+    >
+      <Container width={70} alignSelf="center" backgroundColor={props.backgroundColor}>
+        <ImageWrap
+          url={props.icon}
+          height={props.height || 30}
+          fit="contain"
+        />
+      </Container>
+      <SizedBox height={props?.spacing || 2} />
+      {
+        props.header_1 ? (
+          <H1
+            color={AppColors.black3}
+            fontSize={5}
+          >{props.header_1}</H1>
+        ) : null
+      }
+      <SizedBox height={props?.spacing || 2} />
+      {
+        props.header_2 ? <React.Fragment>
+          <H1 color={AppColors.black3}
+            fontSize={5}>{props.header_2}</H1>
+          <SizedBox height={props?.spacing || 2} />
+        </React.Fragment> : null
+      }
+      {
+        props.sub_text ? <P color={AppColors.black2}>{props.sub_text}</P> : null
+      }
     </Container>
-    <SizedBox height={props?.spacing || 2} />
-    {
-      props.header_1 ? (
-        <H1
-          color={AppColors.black3}
-          fontSize={5}
-        >{props.header_1}</H1>
-      ) : null
-    }
-    <SizedBox height={props?.spacing || 2} />
-    {
-      props.header_2 ? <React.Fragment>
-        <H1 color={AppColors.black3}
-          fontSize={5}>{props.header_2}</H1>
-        <SizedBox height={props?.spacing || 2} />
-      </React.Fragment> : null
-    }
-    {
-      props.sub_text ? <P color={AppColors.black2}>{props.sub_text}</P> : null
-    }
-  </Container>
-)
+  )
+},(prevProps,nextProps)=>{
+  return (prevProps.header_1 === nextProps.header_1) && (prevProps.header_2 === nextProps.header_2) &&
+  (prevProps.sub_text === nextProps.sub_text)
+})
 
 export const TouchableWrapper = (props:TouchableWrapperProps) => (
   <TouchableRipple onPress={props.onPress}

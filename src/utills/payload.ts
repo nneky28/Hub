@@ -22,7 +22,7 @@ export const BANKS = 'banks';
 export const PENSION_PROVIDERS = 'pension_providers';
 export const GET_ONBOARDING = 'get_onboarding';
 export const GET_EMPLOYEES = 'get_employees';
-export const GET_TEAMS = 'get_teams';
+export const GET_MY_TEAM_MEMBERS = 'get_my_team_members';
 export const GET_DEPARTMENTS = 'get_departments';
 export const GET_ALL_TASK = 'get_all_task';
 export const GET_ALL_TODOS = 'get_to_dos';
@@ -170,5 +170,7 @@ export type LoginLoad = {
 };
 
 export type RemoveDeviceTokenLoad = {
-  registration_id: string;
-};
+  registration_id : string
+}
+
+export type TaskStatisticFilter = "created_by_me_and_sent" | "assigned_to_me" | ""

@@ -43,10 +43,6 @@ const styles = StyleSheet.create({
         paddingVertical: height(2.5)
 
     },
-    team: {
-        paddingHorizontal: width(5),
-        marginTop: height(0.2),
-    },
     scrollRow: {
         alignSelf: 'center',
     },
@@ -67,7 +63,7 @@ const styles = StyleSheet.create({
     threeButtonCont: {
         width: width(90),
         alignSelf: 'center',
-        marginTop: height(4),
+        marginTop: height(2),
         borderWidth: 1,
         // position: 'absolute',
         borderColor: AppColors.grayBorder,
@@ -101,24 +97,31 @@ const styles = StyleSheet.create({
     },
 
     defaultTab: {
-        alignSelf: "center",
-        paddingHorizontal: width(5),
+        // alignSelf: "center",
+        // paddingHorizontal: width(5),
+        borderRadius: width(8),
+        marginRight: width(2),
+        height: height(3.5),
+        alignSelf: 'center',
+        paddingHorizontal: width(3.5),
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    selectedTab: {
+    selected_tab_text : {
         fontFamily: FontFamily.BlackSansBold,
         color: AppColors.green,
+        textAlign : "center"
     },
-    tab: {
+    tab_text : {
         fontFamily: FontFamily.BlackSansSemiBold,
         color: AppColors.black1,
         fontSize: width(3.3),
-        alignSelf: "center",
+        //alignSelf: "center",
     },
     button: {
-        width: '30%',
-        height: height(3),
-        alignItems: "center",
-        justifyContent: "center"
+        width: width(28),
+        borderRadius: width(15),
+        paddingVertical: height(1.5)
     },
 
 
@@ -158,7 +161,11 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: AppColors.purple
     },
-    search: { flexDirection: 'row', paddingHorizontal: width(5) },
+    search: { 
+        flexDirection: 'row',
+        paddingHorizontal: width(5),
+        marginBottom : height(1)
+    },
     searchView: {
         justifyContent: "center",
         borderRadius: 50,
@@ -300,8 +307,10 @@ const styles = StyleSheet.create({
         height: height(5),
 
     },
-    imageStyle: {
-
-    },
+    bg_img : {
+        width: width(29),
+        height: height(15),
+        marginTop: height(2),
+    }
 });
 export default styles;

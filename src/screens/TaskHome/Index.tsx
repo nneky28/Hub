@@ -7,14 +7,17 @@ import {
     ScrollView,
     ActivityIndicator,
     ImageBackground,
+    LayoutChangeEvent,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
     H1,
     Container,
     PageLoader,
     ImgPlaceholder,
+    EmptyStateWrapper,
+    TouchableWrapper,
 } from '../../utills/components';
 import { width, height } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
@@ -26,12 +29,10 @@ import numeral from 'numeral';
 import AppColors from '../../utills/AppColors';
 import {
     useFetchStatistics,
-    useFetchSentStatistics,
     useFetchTodos,
     useFetchDueToday,
     useFetchUpcoming,
     useFetchOverDue,
-    useFetchTeamStatistics,
     useFetchTeamTask,
     useFetchTeamDuetoday,
     useFetchMyTeamUpcoming,
@@ -43,55 +44,59 @@ import {
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { __flatten, getData, useAppSelector } from '../../utills/Methods';
-import { useQueryClient } from 'react-query';
 import { setCurrentTabIndex } from '../../Redux/Actions/Config';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { RootScreenProps } from '../../Routes/types';
 import { HomePageHeader } from '../../components/Headers/CustomHeader';
-import { AddButtonProps } from './types';
-import { RenderItemVerticalParams } from '../../components/Timeoff/types';
+import { AddButtonProps, RenderItemProps, useFetchStatisticsProps } from './types';
+import { TaskStatisticFilter } from '../../utills/payload';
+import { Coordinates } from '../Profile/types';
 
 
 
 const TaskHome = ({ navigation } : RootScreenProps) => {
-    const [employee_pk, setEmployeePK] = useState(null);
+    const [employee_pk, setEmployeePK] = useState();
     const [tab, setTab] = useState('All');
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState("0");
     const [actionTitle, setActionTitle] = useState('To-Do');
-    const [data, setData] = useState([]);
-    const [taskpage, setTaskPage] = useState(1);
-    const [dueTodayPage, setDueTodayPage] = useState(1);
-    const [dueItems, setDueItems] = useState([]);
-    const [upcomingPage, SetupcomingPage] = useState(1);
-    const [upcomingItems, setUpcomingItems] = useState([]);
-    const [overduepage, setOverduePage] = useState(1);
-    const [overdueItems, setOverdueItems] = useState([]);
-    const [sentItems, setSentItems] = useState([]);
-    const [sentPage, setSentPage] = useState(1);
-    const [sentDueItem, setSentDueItems] = useState([]);
-    const [sentUpcomingItem, setSentUpcomingItems] = useState([]);
-    const [sentOverdueItem, setSentOverdueItems] = useState([]);
-    const [margin, setMargin] = useState(0.1);
-    const [visible, setVisible] = useState(false);
-    const [teamData, setTeamData] = useState([]);
-    const [teamPage, setTeamPage] = useState(1);
-    const [teamDueData, setTeamDueData] = useState([]);
-    const [teamDuePage, setTeamDuePage] = useState(1);
-    const [teamUpcomingData, setTeamUpcomingData] = useState([]);
-    const [teamUpcomingPage, setTeamUpcomingPage] = useState(1);
-    const [teamOverdueData, setTeamOverdueData] = useState([]);
-    const [teamOverduePage, setTeamOverduePage] = useState(1);
-    const queryClient = useQueryClient();
+    const [data] = useState([]);
+    const [taskpage] = useState(1);
+    const [dueTodayPage] = useState(1);
+    const [dueItems] = useState([]);
+    const [upcomingPage] = useState(1);
+    const [upcomingItems] = useState([]);
+    const [overduepage] = useState(1);
+    const [overdueItems] = useState([]);
+    const [sentItems] = useState([]);
+    const [sentPage] = useState(1);
+    const [sentDueItem] = useState([]);
+    const [sentUpcomingItem] = useState([]);
+    const [sentOverdueItem] = useState([]);
+    const [teamData] = useState([]);
+    const [teamPage] = useState(1);
+    const [teamDueData] = useState([]);
+    const [teamDuePage] = useState(1);
+    const [teamUpcomingData] = useState([]);
+    const [teamUpcomingPage] = useState(1);
+    const [teamOverdueData] = useState([]);
+    const [teamOverduePage] = useState(1);
     const [tasks, setTasks] = useState([]);
     const [teamTask, setTeamTask] = useState([]);
     const [aboutMe, setAboutMe] = useState(null)
     const index = useAppSelector(state => state.Config.currentTaskTabIndex)
     const dispatch = useDispatch()
+    const [characters,setCharacters] = React.useState<string[]>([]) 
+    const [filter,setFilter] = React.useState<TaskStatisticFilter>("")
+    const [coordinates,setCoordinates] = React.useState<Coordinates>({})
+    const ref = useRef<ScrollView>()
+
 
     const tabs = ['My Tasks', 'Sent Tasks', 'My Team']
 
     const setButtons = (i : number) => {
         dispatch(setCurrentTabIndex(i));
+        setActionTitle('To-Do');
+        setTab('All');
     };
 
     const AddButton = ({ onPress, style } : AddButtonProps) => (
@@ -99,66 +104,28 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
     );
-    const RenderItem = ({ char } : RenderItemVerticalParams) => {
+    const RenderItem = ({ item } : RenderItemProps) => {
         return (
             <TouchableOpacity onPress={() => navigation.navigate("Menu", { screen: "TaskPeopleList" })}>
-                <ImgPlaceholder text={char} size={15} />
+                <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         );
     };
-    const alpha = Array.from(Array(26)).map((e, i) => i + 65);
-    const alphabet = alpha.map((x) => String.fromCharCode(x));
+    
 
-    const {
-        data: statistics
-    } = useFetchStatistics();
-
-    const {
-        data: teamCount
-    } = useFetchTeamStatistics(employee_pk);
-
-    const {
-        data: sentStatistics
-    } = useFetchSentStatistics();
-
-
-
-    const EmptyState = React.memo(() => {
+    const ListEmptyComponent = () => {
+        let  msg = 'todo task.'
         return (
-            <View style={styles.emptyState}>
-                <View>
-                    <Text style={styles.emptyText}>
-                        {index === 2 ? `${aboutMe?.department?.name}`
-                            : index === 0 ? "You" : null}
-                    </Text>
-
-                    <Text style={styles.emptyText}>
-                        {index === 0 && actionTitle === "To-Do" && tab === "All"
-                            ? "have no task in your To-Do."
-                            : index === 0 && actionTitle === "To-Do" && tab === "Upcoming"
-                                ? "have no Upcoming task."
-                                : index === 0 && actionTitle === "To-Do" && tab
-                                    ? `have no task ${tab.toLowerCase()}.`
-                                    : index === 0 ? "have no Completed task." : null}
-
-                        {index === 1 && actionTitle === "To-Do" && tab === "All"
-                            ? "No sent task TO-DO"
-                            : index === 1 && actionTitle === "To-Do" && tab
-                                ? `No sent task is ${tab.toLowerCase()}`
-                                : index === 1 && actionTitle === "Completed"
-                                    ? `No sent task is ${actionTitle.toLowerCase()}`
-                                    : null}
-
-                        {index === 2 && actionTitle === "To-Do" && tab === "All"
-                            ? "no task To-Do"
-                            : index === 2 && actionTitle === "To-Do" && tab
-                                ? `has no task ${tab.toLowerCase()}`
-                                : index === 2 ? `no task ${actionTitle.toLowerCase()}` : null}
-                    </Text>
-                </View>
-            </View>
+            <EmptyStateWrapper 
+                marginTop={1}
+                icon={Images.EmptyTraining}
+                header_1='You have no'
+                header_2={msg}
+                backgroundColor={AppColors.transparent}
+                sub_text='They will show up here when you do.'
+            />
         );
-    });
+    }
 
 
     const RenderItems = ({ item }) => {
@@ -191,8 +158,12 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         );
     };
 
-
-    // my task here
+    const {
+        data: statistics,
+        isLoading
+    } = useFetchStatistics(filter) as useFetchStatisticsProps
+    
+    // ALL MY TASKS
     const {
         data: allTasks,
         isLoading: loadingAllTask,
@@ -214,7 +185,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         data: overdueTasks,
         isLoading: loadingOverdue
     } = useFetchOverDue(tab, index);
-    console.log("OverdueTasks", overdueTasks,)
+
     // all sent here
     const {
         data: allSentTasks,
@@ -525,7 +496,14 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         mapToState(__flattenArr());
     }, [index, actionTitle, tab, allTasks, allSentTasks, allTeamData, data]);
 
+    const pressTabHandler = (selected : string) => {
+        setTab(selected)
+        ref?.current?.scrollTo({x : coordinates?.[tab]?.x,y : coordinates?.[tab]?.y, animated : true})
+    }
 
+    const onLayout = (event : LayoutChangeEvent,tab : string) =>{
+        setCoordinates({...coordinates,[tab] : event.nativeEvent.layout})
+    }
     const getInfo = async () => {
         try {
             let about_me = await getData('about_me');
@@ -534,6 +512,12 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         } catch (err) { }
     };
 
+    useEffect(()=> {
+        let  type : TaskStatisticFilter = ""
+        if(index === 0) type = "assigned_to_me"
+        if(index === 1) type = "created_by_me_and_sent"
+        setFilter(type)
+    },[index])
 
     useEffect(() => {
         getInfo()
@@ -542,6 +526,10 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     useEffect(() => {
         dispatch(setCurrentTabIndex(0));
     }, [])
+
+    useEffect(()=>{
+        setCharacters([...Array(26).keys()].map((i) => i + 65).map((x) => String.fromCharCode(x)))
+    },[])
 
     return (
         <React.Fragment>
@@ -555,25 +543,19 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                         />
                     );
                 }}>
-                <HomePageHeader 
-                    image={Images.TaskLogo}
-                    header="Tasks"
-                />
-                <ScrollView
-                    style={[styles.scroll, CommonStyles.paddingBottom_10]}
-                    showsVerticalScrollIndicator={false}>
-
+                    <HomePageHeader 
+                        image={Images.TaskLogo}
+                        header="Tasks"
+                    />
                     <View style={styles.threeButtonCont}>
                         {tabs.map((item, i) => (
-                            <TouchableOpacity
+                            <TouchableWrapper
                                 onPress={() => {
                                     setButtons(i);
-                                    setActionTitle('To-Do');
-                                    setTab('All');
                                 }}
                                 style={index === i ? styles.animatedView : styles.button}
-                                activeOpacity={0.8}
-                                key={i}>
+                                key={i}
+                            >
                                 <Text
                                     style={[
                                         styles.buttonText,
@@ -581,275 +563,222 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                     ]}>
                                     {item}
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableWrapper>
                         ))}
                     </View>
 
-                    {index === 2 ? (
-                        <View>
-                            <Text numberOfLines={1} style={styles.headerTitle}>
-                                Find People
-                            </Text>
-
-                            <View style={styles.search}>
-                                <TouchableOpacity
-                                    style={styles.searchView}
-                                    onPress={() =>
-                                        // navigation.navigate('search')
-                                        navigation.navigate("Menu", { screen: "TaskPeopleList" })
-                                    }>
-                                    <Image
-                                        source={{ uri: Images.SearchIcon }}
-                                        style={styles.searchBoxStyle}
-                                    />
-                                </TouchableOpacity>
-                                <FlatList
-                                    data={alphabet}
-                                    horizontal
-                                    renderItem={RenderItem}
-                                    ItemSeparatorComponent={() => (
-                                        <View style={[CommonStyles.marginRight_3]} />
-                                    )}
-                                    showsHorizontalScrollIndicator={false}
-                                    nestedScrollEnabled={true}
-                                    style={styles.team}
-                                />
-                            </View>
-                        </View>
-                    ) : null}
-
-                    <View style={styles.boxContainer}>
-                        {[
+                    {
+                        isLoading ? <PageLoader /> : <React.Fragment>
                             {
-                                selected: 'To-Do',
-                                // colorUp: AppColors.blue1,
-                                selected_image: Images.clippedBlue,
-                                image: Images.blueBox,
-                                count:
-                                    index === 0 && statistics
-                                        ? numeral(statistics?.todo_count).format('0,0')
-                                        : index === 1 && sentStatistics
-                                            ? numeral(sentStatistics?.todo_count).format('0,0')
-                                            : index === 2 && teamCount
-                                                ? numeral(
-                                                    teamCount?.todo_count
-                                                ).format('0,0')
-                                                : 0,
-                                borderWidth: 0.5,
-                                borderColor: '#5182F6',
-                            },
-
-                            {
-                                selected: 'In Progress',
-                                image: Images.yellowBox,
-                                // colorUp: AppColors.newYellow,
-                                selected_image: Images.clippedYellow,
-                                count:
-                                    index === 0 && statistics
-                                        ? numeral(statistics?.inprogress_count).format('0,0')
-                                        : index === 1 && sentStatistics
-                                            ? numeral(sentStatistics?.inprogress_count).format('0,0')
-                                            : index === 2 && teamCount
-                                                ? numeral(teamCount?.inprogress_count).format('0,0')
-                                                : 0,
-                                borderWidth: 1,
-                                borderColor: '#FBBC3E',
-                            },
-                            {
-                                selected: 'Completed',
-                                image: Images.greenBox,
-                                // colorUp: AppColors.lightGreen,
-                                selected_image: Images.clippedGreen,
-                                count:
-                                    index === 0 && statistics
-                                        ? numeral(statistics?.completed_count).format('0,0')
-                                        : index === 1 && sentStatistics
-                                            ? numeral(sentStatistics?.completed_count).format('0,0')
-                                            : index === 2 && teamCount
-                                                ? numeral(teamCount?.completed_count).format('0,0')
-                                                : 0,
-                                borderWidth: 0.5,
-                                borderColor: '#2898A4',
-                            },
-                        ].map((item, i) => (
-                            <TouchableOpacity
-                                key={i}
-                                onPress={() => {
-                                    setActionTitle(item.selected);
-                                    setCount(item.count);
-                                    setTab(tab);
-                                }}>
-                                <ImageBackground
-                                    source={{ uri: item.image }}
-                                    resizeMode='cover'
-                                    imageStyle={{
-                                        borderRadius: width(4),
-                                        borderWidth: item.selected === actionTitle ? item.borderWidth : null,
-                                        borderColor: item.selected === actionTitle ? item.borderColor : null,
-                                    }}
-                                    style={{
-                                        width: width(29),
-                                        height: height(15),
-                                        marginTop: height(2),
-                                    }}>
+                                index === 2 ? (
                                     <View>
-                                        <View style={styles.titleCon}>
-                                            <H1 style={styles.title}>{item.selected}</H1>
-                                            {item.selected === actionTitle && (
-                                                <Ionicons
-                                                    name="checkbox"
-                                                    size={14}
-                                                    color={AppColors.black1}
+                                        <Text numberOfLines={1} style={styles.headerTitle}>
+                                            Find People
+                                        </Text>
+
+                                        <View style={styles.search}>
+                                            <TouchableOpacity
+                                                style={styles.searchView}
+                                                onPress={() =>
+                                                    navigation.navigate("Menu", { screen: "TaskPeopleList" })
+                                                }>
+                                                <Image
+                                                    source={{ uri: Images.SearchIcon }}
+                                                    style={styles.searchBoxStyle}
                                                 />
-                                            )}
-                                        </View>
-                                        <View>
-                                            {item.selected === actionTitle && (
-                                                <View style={styles.clippedCon}>
-                                                    <ImageBackground
-                                                        source={{ uri: item.selected_image }}
-                                                        resizeMode='cover'
-                                                        imageStyle={{
-                                                            borderRadius: width(4),
-                                                            // height: height(8)
-                                                        }}
-                                                        style={styles.clipped}
-                                                    />
-                                                </View>
-                                            )}
-                                            <H1
-                                                color={AppColors.black1}
-                                                fontSize={7}
-                                                style={styles.count}>
-                                                {item.count}
-                                            </H1>
+                                            </TouchableOpacity>
+                                            <FlatList
+                                                data={characters}
+                                                horizontal
+                                                renderItem={RenderItem}
+                                                ItemSeparatorComponent={() => (
+                                                    <View style={[CommonStyles.marginRight_3]} />
+                                                )}
+                                                showsHorizontalScrollIndicator={false}
+                                                nestedScrollEnabled={true}
+                                            />
                                         </View>
                                     </View>
-                                </ImageBackground>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-
-                    {index === 2 && actionTitle === 'To-Do' ? null : (
-                        <View style={styles.container}>
-                            {index === 0 ? (
-                                <H1 color={AppColors.black1}>
-                                    {actionTitle} (
-                                    {index === 0 && actionTitle === 'To-Do'
-                                        ? statistics?.todo_count
-                                        : actionTitle === 'In Progress'
-                                            ? statistics?.inprogress_count
-                                            : actionTitle === 'Completed'
-                                                ? statistics?.completed_count
-                                                : 0}
-                                    )
-                                </H1>
-                            ) : index === 1 ? (
-                                <H1 color={AppColors.black1}>
-                                    {actionTitle} (
-                                    {index === 1 && actionTitle === 'To-Do'
-                                        ? sentStatistics?.todo_count
-                                        : actionTitle === 'In Progress'
-                                            ? sentStatistics?.inprogress_count
-                                            : actionTitle === 'Completed'
-                                                ? sentStatistics?.completed_count
-                                                : 0}
-                                    )
-                                </H1>
-                            ) : (
-                                <H1 color={AppColors.black1}>
-                                    {actionTitle} (
-                                    {index === 2 && actionTitle === 'In Progress'
-                                        ? teamCount?.inprogress_count
-                                        : actionTitle === 'Completed'
-                                            ? teamCount?.completed_count
-                                            : 0}
-                                    )
-                                </H1>
-                            )}
-                        </View>
-                    )}
-
-
-                    {(index === 0 && actionTitle === 'To-Do') ||
-                        (index === 1 && actionTitle === 'To-Do') ||
-                        (index === 2 && actionTitle === 'To-Do') ? (
-                        <View style={styles.scrollViewContainer}>
-                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                {['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map(
-                                    (item, i) => (
-                                        <TouchableOpacity
-                                            onPress={() => setTab(item)}
-                                            style={
-                                                tab === item ? styles.currentTab : styles.defaultTab
-                                            }
-                                            key={i}>
-                                            <H1
-                                                fontSize={3.3}
-                                                style={tab === item ? styles.selectedTab : styles.tab}>
-                                                {item}
-                                            </H1>
-                                        </TouchableOpacity>
-                                    ),
-                                )}
-                            </ScrollView>
-                        </View>
-                    ) : null}
-
-                    {loadingAllTask ||
-                        loadingDueTask ||
-                        loadingUpcoming ||
-                        loadingOverdue ||
-                        loadingAllTeamTask ||
-                        loadingAllTeamDue ||
-                        loadingAllTeamUpcoming ||
-                        loadingAllTeamOverdue ||
-                        loadingAllSentDues ||
-                        loadingAllSentOverdue ||
-                        loadingAllSentUpcoming ||
-                        loadingAllSentTask ? (
-                        <PageLoader />
-                    ) : null}
-
-                    {index === 0 || index === 1 ? (
-                        <FlatList
-                            data={tasks}
-                            keyExtractor={(item, index) => item.id.toString()}
-                            renderItem={RenderItems}
-                            ItemSeparatorComponent={() => <View style={styles.line} />}
-                            showsVerticalScrollIndicator={false}
-                            nestedScrollEnabled={true}
-                            contentContainerStyle={[
-                                CommonStyles.marginTop_1,
-                                { paddingBottom: height(10) },
-                            ]}
-                            onEndReachedThreshold={0.1}
-                            refreshing={false}
-                            ListEmptyComponent={EmptyState}
-                            ListFooterComponent={
-                                isFetchingNextPage || hasNextPage ? footerLoader : null
+                                ) : null
                             }
-                        />
-                    ) : null}
+                            <View style={styles.boxContainer}>
+                                    {[
+                                        {
+                                            selected: 'To-Do',
+                                            selected_image: Images.clippedBlue,
+                                            image: Images.blueBox,
+                                            count: statistics?.todo_count ? numeral(statistics?.todo_count).format('0,0') : "0",
+                                            borderWidth: 0.5,
+                                            borderColor: '#5182F6',
+                                        },
 
-                    {index === 2 ? (
-                        <FlatList
-                            data={teamTask}
-                            keyExtractor={(item, index) => item.id.toString()}
-                            renderItem={TeamRenderItem}
-                            ItemSeparatorComponent={() => <View style={styles.line} />}
-                            showsVerticalScrollIndicator={false}
-                            nestedScrollEnabled={true}
-                            contentContainerStyle={[
-                                CommonStyles.marginTop_3,
-                                { paddingBottom: height(10) },
-                            ]}
-                            onEndReachedThreshold={0.1}
-                            refreshing={false}
-                            ListEmptyComponent={EmptyState}
-                        />
-                    ) : null}
-                </ScrollView>
+                                        {
+                                            selected: 'In Progress',
+                                            image: Images.yellowBox,
+                                            // colorUp: AppColors.newYellow,
+                                            selected_image: Images.clippedYellow,
+                                            count: statistics?.inprogress_count ? numeral(statistics?.inprogress_count).format('0,0') : "0",
+                                            borderWidth: 1,
+                                            borderColor: '#FBBC3E',
+                                        },
+                                        {
+                                            selected: 'Completed',
+                                            image: Images.greenBox,
+                                            // colorUp: AppColors.lightGreen,
+                                            selected_image: Images.clippedGreen,
+                                            count: statistics?.completed_count ? numeral(statistics?.completed_count).format('0,0') : "0",
+                                            borderWidth: 0.5,
+                                            borderColor: '#2898A4',
+                                        },
+                                    ].map((item, i) => (
+                                        <TouchableOpacity
+                                            key={i}
+                                            onPress={() => {
+                                                setActionTitle(item.selected);
+                                                setCount(item.count);
+                                                setTab(tab);
+                                            }}>
+                                            <ImageBackground
+                                                source={{ uri: item.image }}
+                                                resizeMode='cover'
+                                                imageStyle={{
+                                                    borderRadius: width(4),
+                                                    borderWidth: item.selected === actionTitle ? item.borderWidth : undefined,
+                                                    borderColor: item.selected === actionTitle ? item.borderColor : undefined,
+                                                }}
+                                                style={styles.bg_img}>
+                                                <View>
+                                                    <View style={styles.titleCon}>
+                                                        <H1 style={styles.title}>{item.selected}</H1>
+                                                        {item.selected === actionTitle && (
+                                                            <Ionicons
+                                                                name="checkbox"
+                                                                size={14}
+                                                                color={AppColors.black1}
+                                                            />
+                                                        )}
+                                                    </View>
+                                                    <View>
+                                                        {item.selected === actionTitle && (
+                                                            <View style={styles.clippedCon}>
+                                                                <ImageBackground
+                                                                    source={{ uri: item.selected_image }}
+                                                                    resizeMode='cover'
+                                                                    imageStyle={{
+                                                                        borderRadius: width(4),
+                                                                        // height: height(8)
+                                                                    }}
+                                                                    style={styles.clipped}
+                                                                />
+                                                            </View>
+                                                        )}
+                                                        <H1
+                                                            color={AppColors.black1}
+                                                            fontSize={7}
+                                                            style={styles.count}>
+                                                            {item.count}
+                                                        </H1>
+                                                    </View>
+                                                </View>
+                                            </ImageBackground>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                                {
+                                    index === 2 && actionTitle === 'To-Do' ? null : (
+                                        <View style={styles.container}>
+                                            <H1 color={AppColors.black1}>
+                                                {actionTitle} ({count})
+                                            </H1>
+                                        </View>
+                                    )
+                                }
+                                {
+                                    actionTitle === "To-Do" ? (
+                                    <View style={styles.scrollViewContainer}>
+                                        <ScrollView 
+                                            horizontal 
+                                            showsHorizontalScrollIndicator={false}
+                                            ref={ref}
+                                        >
+                                            {['All', 'Due Today', 'Upcoming', 'Overdue', 'No Date'].map(
+                                                (item, i) => (
+                                                    <TouchableWrapper
+                                                        onPress={()=>pressTabHandler(item)}
+                                                        style={
+                                                            tab === item ? styles.currentTab : styles.defaultTab
+                                                        }
+                                                        onLayout={(event)=>onLayout(event,item)}
+                                                        key={i}
+                                                    >
+                                                        <H1
+                                                            fontSize={3.3}
+                                                            style={tab === item ? styles.selected_tab_text : styles.tab_text}>
+                                                            {item}
+                                                        </H1>
+                                                    </TouchableWrapper>
+                                                ),
+                                            )}
+                                        </ScrollView>
+                                    </View>
+                                ) : null
+                            }
+                            {
+                                    loadingAllTask ||
+                                    loadingDueTask ||
+                                    loadingUpcoming ||
+                                    loadingOverdue ||
+                                    loadingAllTeamTask ||
+                                    loadingAllTeamDue ||
+                                    loadingAllTeamUpcoming ||
+                                    loadingAllTeamOverdue ||
+                                    loadingAllSentDues ||
+                                    loadingAllSentOverdue ||
+                                    loadingAllSentUpcoming ||
+                                    loadingAllSentTask ? (
+                                    <PageLoader />
+                                ) : null
+                            }
+                            {index === 0 || index === 1 ? (
+                                <FlatList
+                                    data={tasks}
+                                    keyExtractor={(item, index) => item.id.toString()}
+                                    renderItem={RenderItems}
+                                    ItemSeparatorComponent={() => <View style={styles.line} />}
+                                    showsVerticalScrollIndicator={false}
+                                    nestedScrollEnabled={true}
+                                    contentContainerStyle={[
+                                        CommonStyles.marginTop_1,
+                                        { paddingBottom: height(10) },
+                                    ]}
+                                    onEndReachedThreshold={0.1}
+                                    refreshing={false}
+                                    ListEmptyComponent={ListEmptyComponent}
+                                    ListFooterComponent={
+                                        isFetchingNextPage || hasNextPage ? footerLoader : null
+                                    }
+                                />
+                            ) : null}
+
+                            {index === 2 ? (
+                                <FlatList
+                                    data={teamTask}
+                                    keyExtractor={(item, index) => item.id.toString()}
+                                    renderItem={TeamRenderItem}
+                                    ItemSeparatorComponent={() => <View style={styles.line} />}
+                                    showsVerticalScrollIndicator={false}
+                                    nestedScrollEnabled={true}
+                                    contentContainerStyle={[
+                                        CommonStyles.marginTop_3,
+                                        { paddingBottom: height(10) },
+                                    ]}
+                                    onEndReachedThreshold={0.1}
+                                    refreshing={false}
+                                    ListEmptyComponent={ListEmptyComponent}
+                                />
+                            ) : null}
+                        </React.Fragment>
+                    }
             </ScreenWrapper>
         </React.Fragment>
     );
