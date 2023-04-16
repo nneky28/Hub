@@ -1,12 +1,15 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
+import { width } from 'react-native-dimension';
 import { showMessage } from 'react-native-flash-message';
 
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { useFetchAboutMeData } from '../components/TimeoffModal/types';
 import type { RootState,AppDispatch } from '../Redux';
 import { StoredUserProps } from '../Routes/types';
+import AppColors from './AppColors';
+import { FontFamily } from './FontFamily';
 
 
 export const useAppDispatch: () => AppDispatch = useDispatch
@@ -32,6 +35,14 @@ export const ToastError = (msg:string) => {
     message: 'Error',
     description: msg,
     type: 'danger',
+    titleStyle : {
+      fontFamily : FontFamily.BlackSansBold,
+      fontSize : width(4)
+    },
+    textStyle : {
+      fontFamily : FontFamily.BlackSansRegular,
+      fontSize : width(3.3)
+    }
   })
 };
 
@@ -45,6 +56,15 @@ export const ToastSuccess = (msg : string) => (
     message: 'Success',
     description: msg,
     type: 'success',
+    backgroundColor : AppColors.green,
+    titleStyle : {
+      fontFamily : FontFamily.BlackSansBold,
+      fontSize : width(4)
+    },
+    textStyle : {
+      fontFamily : FontFamily.BlackSansRegular,
+      fontSize : width(3.3)
+    }
   })
 );
 export type getStoredBusinessProps = {

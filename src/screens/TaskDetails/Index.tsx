@@ -13,10 +13,9 @@ import moment from 'moment';
 import { useFetchActivities, useFetchComments, useFetchTaskByPK } from '../../utills/api';
 import ActivityCard from '../../components/ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
-import { __flatten, Capitalize, getStoreAboutMe } from '../../utills/Methods';
+import { __flatten, Capitalize, getStoreAboutMe, ToastError, ToastSuccess } from '../../utills/Methods';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction } from '../../utills/api';
-import { showFlashMessage } from '../../components/SuccessFlash/index';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper/index';
@@ -104,10 +103,7 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
             Keyboard.dismiss()
             let about = await getStoreAboutMe()
             if(!comment || comment.toString().trim() === ""){
-                return showFlashMessage({
-                    title : "Please provide a comment",
-                    type : "error"
-                })
+                return ToastError("Please provide a comment")
             }
             if(!about?.id || !task?.id) return
             let fd = {
@@ -119,12 +115,9 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
             await mutateAsync(fd)
             queryClient.invalidateQueries(GET_COMMENTS)
             setComment("")
-            showFlashMessage({ title: "comment sent" })
-        } catch (err) {
-            showFlashMessage({
-                title: "Something went wrong. Please retry",
-                type: 'error'
-            })
+            ToastSuccess("Comment sent")
+        } catch (err : any) {
+            ToastSuccess(err?.msg)
         }
     }
 
@@ -391,6 +384,7 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                         }
                             renderItem={RenderItem}
                             keyExtractor={(item,i) => `${item}${i}`.toString()}
+                            keyboardShouldPersistTaps="handled"
                             renderSectionHeader={({ section: { title,is_accordion,type } } : {section : TaskListSection}) => {
                                 if(is_accordion && type){
                                     return <TouchableOpacity onPress={()=>onHide(type)} style={styles.sections}>

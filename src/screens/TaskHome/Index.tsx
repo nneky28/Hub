@@ -393,7 +393,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             setShow(false)
             queryClient.invalidateQueries(GET_TASKS)
             queryClient.invalidateQueries(GET_TASK_STATISTICS)
-            ToastSuccess("Changes have been saved.")
+            ToastSuccess("Your changes have been saved.")
         }catch(err : any){
             setShow(false)
             ToastError(err?.msg)
@@ -442,6 +442,9 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     useEffect(()=>{
         setCharacters([...Array(26).keys()].map((i) => i + 65).map((x) => String.fromCharCode(x)))
+        return () => {
+            dispatch(setCurrentTaskItem({}))
+        }
     },[])
 
     useEffect(()=>{
