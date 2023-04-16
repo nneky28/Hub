@@ -1,5 +1,5 @@
 import {
-    Platform,
+    ActivityIndicator,
 } from 'react-native'
 import React from 'react'
 import { Container, H1, P, TouchableWrapper} from '../../utills/components'
@@ -8,103 +8,89 @@ import AppColors from '../../utills/AppColors';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { Capitalize, storeData } from '../../utills/Methods';
-import { showFlashMessage } from '../SuccessFlash/index';
+import { Capitalize, ToastError } from '../../utills/Methods';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { TodoContentProps } from './types';
-import { RootNavigationProps } from '../../Routes/types';
+import { DUE_STATUS, MenuListItem, TodoContentProps } from './types';
+//import { RootNavigationProps } from '../../Routes/types';
 import { width } from 'react-native-dimension';
 import CustomMenu from '../CustomMenu';
 import CustomIconButton from '../CustomIconButton';
-import { MenuBodyListItem } from '../MenuItemModal/types';
+import { useDispatch } from 'react-redux';
+import { setCurrentTaskItem } from '../../Redux/Actions/Config';
+import { GET_TASKS, GET_TASK_STATISTICS } from '../../utills/payload';
+import { RootNavigationProps } from '../../Routes/types';
 
 
 
-const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
+const TodoContent = ({ item, index, title } : TodoContentProps) => {
     const queryClient = useQueryClient()
     const navigation = useNavigation<RootNavigationProps>();
     // const [watch, setWatch] = useState<boolean>(false)
     // const [sentModal, setSent] = useState<boolean>(false)
     // const [loading, setLoading] = useState<boolean>(false);
     const [visible,setVisible] = React.useState(false)
-    const [list,setList] = React.useState<string[]>([])
+    const [list,setList] = React.useState<MenuListItem[]>([])
+    const dispatch = useDispatch()
+    
 
     const {
         mutateAsync,
+        isLoading
     } = useMutation(APIFunction.update_task_status)
 
-    const deleteTask = useMutation(APIFunction.delete_task)
+   // const deleteTask = useMutation(APIFunction.delete_task)
 
-    const unDo = async (action: string) => {
-        try {
-            let fd = {
-                status: action,
-                id: item.id
-            };
-            let res = await mutateAsync(fd);
-
-            if (res) {
-                await storeData('task updated', res);
-                queryClient.invalidateQueries();
-                }
-        } catch (err) {
-            
-        }
-}
-
-
-    const onPressHandler = async (action:string) => {
-        // try {
-        //   let fd = {
-        //     status: action,
-        //       id: item.id
-        //   };
-        //   setLoading(true)
-        //   let res = await mutateAsync(fd);
-        //   if (res) {
-        //     await storeData('task updated', res);
-        //       queryClient.invalidateQueries();
-        //       setLoading(false)
-        //     setModal(false);
-        //     setCompleted(false);
-        //     setSent(false);
-        //     showFlashMessage({
-        //       title: `${' '} Task moved to ${action.toUpperCase()} ${' '} `,
-        //       duration: 5000,
-        //       type: 'task',
-        //       statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
-        //       backgroundColor: AppColors.newYellow,
-        //       actionType:"task",
-        //       action:()=>unDo(action==="Completed"?"In-progress":action==="In-progress"?"To-do":'To-do')
-        //     });
-        //     setWatch(!watch);
-        //   }
-        // } catch (error) {
+    // const onPressHandler = async (action:string) => {
+    //     // try {
+    //     //   let fd = {
+    //     //     status: action,
+    //     //       id: item.id
+    //     //   };
+    //     //   setLoading(true)
+    //     //   let res = await mutateAsync(fd);
+    //     //   if (res) {
+    //     //     await storeData('task updated', res);
+    //     //       queryClient.invalidateQueries();
+    //     //       setLoading(false)
+    //     //     setModal(false);
+    //     //     setCompleted(false);
+    //     //     setSent(false);
+    //     //     showFlashMessage({
+    //     //       title: `${' '} Task moved to ${action.toUpperCase()} ${' '} `,
+    //     //       duration: 5000,
+    //     //       type: 'task',
+    //     //       statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
+    //     //       backgroundColor: AppColors.newYellow,
+    //     //       actionType:"task",
+    //     //       action:()=>unDo(action==="Completed"?"In-progress":action==="In-progress"?"To-do":'To-do')
+    //     //     });
+    //     //     setWatch(!watch);
+    //     //   }
+    //     // } catch (error) {
        
-        // }
-      }
-      
+    //     // }
+    // }
 
-    const handleDelete = async (id:number) => {
-        try {
-             await deleteTask.mutateAsync(id)
-            queryClient.invalidateQueries()
-            showFlashMessage({
-                title: `${' '} Task Deleted`,
-                duration: 8000,
-                type: 'task',
-                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null,
-                backgroundColor: AppColors.newYellow
-            })
-            ///setModal(false)
-            //setSent(false)
-        } catch (error) {
-        }
+    // const handleDelete = async (id:number) => {
+    //     try {
+    //          await deleteTask.mutateAsync(id)
+    //         queryClient.invalidateQueries()
+    //         showFlashMessage({
+    //             title: `${' '} Task Deleted`,
+    //             duration: 8000,
+    //             type: 'task',
+    //             statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null,
+    //             backgroundColor: AppColors.newYellow
+    //         })
+    //         ///setModal(false)
+    //         //setSent(false)
+    //     } catch (error) {
+    //     }
 
-    }
+    // }
 
-    let due_status : "OVER_DUE" | "DUE_TODAY" | "UPCOMING" | "NO_DATE" | "" = ""
+    let due_status : DUE_STATUS = ""
     if(moment(item?.due_date).isBefore(new Date())) due_status = "OVER_DUE"
     if(moment(item?.due_date).isSame(new Date(), 'day')) due_status = "DUE_TODAY"
     if(moment(item?.due_date).isAfter(new Date())) due_status = "UPCOMING"
@@ -112,10 +98,7 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
   
 
     const navigationHandler = () => {
-        navigation.navigate("Menu",{screen : "CreateTask"})
-
-        //() => navigation.navigate("TaskView" as never, {id,title, }as never)
-       // console.log("navigationHandler")
+        navigation.navigate("Menu",{screen : "TaskDetails",params : {id : item?.id}})
     }
 
     const openMenuHandler = () => {
@@ -129,8 +112,32 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
         setVisible(false)
     }
 
-    const menuItemPressHandler = (param : MenuBodyListItem | string) => {
-
+    const menuItemPressHandler = async (param : MenuListItem) => {
+        try{
+            setVisible(false)
+            if(param === "Edit task"){
+                return  navigation.navigate("Menu",{screen : "CreateTask", params : { item }})
+            }
+            if(param === "View task"){
+                return navigation.navigate("Menu",{screen : "TaskDetails",params : {id : item?.id}})
+            }
+            let status = "To-do"
+            if(param === "Undo completed" || param === "Mark task as started") status = "In-progress"
+            if(param === "Mark task as not started") status = "To-do"
+            if(param === "Mark task as completed") status = "Completed"
+            if(!item?.id) return
+            let fd = {
+                status : status,
+                id : item?.id
+            }
+            
+            await mutateAsync(fd)
+            queryClient.invalidateQueries(GET_TASKS)
+            queryClient.invalidateQueries(GET_TASK_STATISTICS)
+            dispatch(setCurrentTaskItem({...item,status : status}))
+        }catch(err : any){
+            ToastError(err?.msg)
+        }
     }
     
     return (
@@ -152,7 +159,7 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
                         {`${index === 0 ? "By" : "To"}: ${item?.created_by?.first_name ? Capitalize(item?.created_by?.first_name) : ""} ${item?.created_by?.last_name ? Capitalize(item?.created_by?.last_name) : ""}`.trim()}
                     </P>
                     {
-                        due_status === "DUE_TODAY" ? <Container backgroundColor={AppColors.transparent} direction="row"
+                        due_status === "DUE_TODAY" && title !== "Completed" ? <Container backgroundColor={AppColors.transparent} direction="row"
                             verticalAlignment='center'
                         >
                             <Ionicons name={"flag"} 
@@ -162,7 +169,7 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
                         </Container> : null
                     }
                    {
-                        due_status === "UPCOMING" ?  <Container backgroundColor={AppColors.transparent} 
+                        due_status === "UPCOMING" && title !== "Completed"  ?  <Container backgroundColor={AppColors.transparent} 
                         direction="row"
                         verticalAlignment='center'
                     >
@@ -183,7 +190,7 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
                     </Container> : null
                    }
                    {
-                        due_status === "OVER_DUE" ?  <Container backgroundColor={AppColors.transparent} 
+                        due_status === "OVER_DUE" && title !== "Completed" ?  <Container backgroundColor={AppColors.transparent} 
                         direction="row"
                         verticalAlignment='center'
                     >
@@ -222,18 +229,22 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
                    </Container> */}
                 </Container>
                 {
-                     title !== "Completed" ?  <Container backgroundColor={AppColors.transparent} width={30} direction="row" horizontalAlignment='space-between'>
+                     title === "To-Do" ?  <Container backgroundColor={AppColors.transparent} width={30} direction="row" horizontalAlignment='space-between'>
                      <Container width={23} backgroundColor={AppColors.transparent}>
-                         <TouchableWrapper onPress={onPressHandler} style={styles.start_task_btn}>
-                             <H1 color={AppColors.black3} fontSize={3} textAlign='center'>Start task</H1>
+                         <TouchableWrapper onPress={()=>menuItemPressHandler("Mark task as started")} style={styles.start_task_btn}
+                            disabled={isLoading}
+                         >
+                             {
+                                 isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <H1 color={AppColors.black3} fontSize={3} textAlign='center'>Start task</H1>
+                             }
                          </TouchableWrapper>
                      </Container>
                      <CustomMenu 
                          visible={visible}
                          onDismiss={onDismiss}
                          anchor={<Container backgroundColor={AppColors.transparent} width={6}>
-                                 <TouchableWrapper onPress={openMenuHandler} style={styles.menu_button}>
-                                     <Ionicons name={"chevron-down-outline"} color={AppColors.black3}/>
+                                 <TouchableWrapper onPress={openMenuHandler} style={styles.menu_button} disabled={isLoading}>
+                                 <Ionicons name={"chevron-down-outline"} color={AppColors.black3}/>
                                  </TouchableWrapper>
                              </Container>}
                          listItem={list}
@@ -242,11 +253,11 @@ const TodoContent = ({ item, index, title,id } : TodoContentProps) => {
                  </Container> : <CustomMenu 
                          visible={visible}
                          onDismiss={onDismiss}
-                         anchor={<CustomIconButton 
+                         anchor={isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <CustomIconButton 
                                  icon={"dots-vertical"}
                                  onPress={openMenuHandler}
                                  color={AppColors.black3}
-                                 size={6}
+                                 size={5}
                              />}
                          listItem={list}
                          onPressHandler={menuItemPressHandler}

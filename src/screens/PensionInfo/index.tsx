@@ -173,7 +173,7 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
   }, [reloadTerm]);
 
   return (
-    <ScreenWrapper scrollEnabled={true}>
+    <ScreenWrapper>
       <HeaderWithBackButton
         headerText="    Update Information"
         rightButtonText="Save"

@@ -1,4 +1,4 @@
-import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE } from '../Types';
+import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE, SETCURRENTTASKITEM } from '../Types';
 
 export const setLoaderVisible = (payload) => {
   return {
@@ -37,6 +37,13 @@ export const setCurrentTabIndex = (payload) => {
 export const setModalVisible = (payload) => {
   return {
     type: SETMODALVISIBLE,
+    payload: payload,
+  };
+};
+
+export const setCurrentTaskItem = (payload) => {
+  return {
+    type: SETCURRENTTASKITEM,
     payload: payload,
   };
 };

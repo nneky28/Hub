@@ -125,7 +125,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: width(3),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignSelf : "center"
   },
   avatarSmall: {
     height: height(5),

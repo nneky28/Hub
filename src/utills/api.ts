@@ -29,7 +29,7 @@ import {
   GET_EMPLOYEES,
   GET_MY_TEAM_MEMBERS,
   GET_DEPARTMENTS,
-  GET_ALL_TASK,
+  GET_TASK_BY_PK,
   GET_TASKS,
   GET_TEAM_TASKS,
   GET_TASK_STATISTICS,
@@ -307,7 +307,7 @@ export const APIFunction = {
   },
 
 
-  get_all_task: async (id:number) => {
+  get_task_by_pk: async (id:number) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
@@ -332,13 +332,13 @@ export const APIFunction = {
     return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${dept_id}&due_date_status=${due_date_status}&status=${status}&page=${page}&page_size=${limit}`)
   },
   
-  get_activity: async (id:number) => {
+  get_activity: async (id:number,page = 1,limit = 20) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}&page=${page}&page_size=${limit}`)
   },
-  get_comments: async (id:number) => {
+  get_comments: async (id:number,page: number,limit = 20) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}&page=${page}&page_size=${limit}`)
   },
 
   departments: async (page:number, search:string) => {
@@ -536,9 +536,9 @@ export const useFetchDepartments = (page:number, search:string) => {
     }
   })
 }
-export const useFetchAllTask = (id:number) => {
-  return useInfiniteQuery([GET_ALL_TASK, id], () => APIFunction.get_all_task(id), {
-    enabled: id !== null && id !== undefined
+export const useFetchTaskByPK = (id?:number) => {
+  return useQuery([GET_TASK_BY_PK, id], () => APIFunction.get_task_by_pk(id as number), {
+    enabled: !!id
   })
 }
 
@@ -598,17 +598,19 @@ export const useFetchTrainingsHist = ( eemployee_id?: number|null) => {
 //   },)
 // }
 
-export const useFetchActivities = (id:number) => {
-  return useInfiniteQuery([GET_ACTIVITY, id], () => APIFunction.get_activity(id), {
-    getNextPageParam: () => {
-      // return lastPage.next
+export const useFetchActivities = (id:number | "",page:number) => {
+  return useInfiniteQuery([GET_ACTIVITY, id], () => APIFunction.get_activity(id as number,page), {
+    enabled : !!id,
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
     }
   })
 }
-export const useFetchComments = (id:number) => {
-  return useInfiniteQuery([GET_COMMENTS, id], () => APIFunction.get_comments(id), {
-    getNextPageParam: () => {
-      // return lastPage.next
+export const useFetchComments = (id:number | "",page : number) => {
+  return useInfiniteQuery([GET_COMMENTS, id], () => APIFunction.get_comments(id as number,page), {
+    enabled : !!id,
+    getNextPageParam: (lastPage : any) => {
+      return lastPage.next
     }
   })
 }

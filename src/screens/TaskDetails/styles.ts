@@ -15,16 +15,17 @@ const styles = StyleSheet.create({
 
     },
     container: {
-        paddingHorizontal: width(5),
-        marginTop: height(10)
+        marginTop: height(2),
+        width : width(90),
+        alignSelf : "center"
     },
 
     flagText: {
-        fontSize: width(3),
+        fontSize: width(3.1),
         color: AppColors.black1,
     },
     date: {
-        fontSize: width(3),
+        fontSize: width(3.1),
         color: AppColors.black1,
     },
     row: {
@@ -60,8 +61,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: height(2),
     },
-    subTitle: { fontSize: width(3.1), color: AppColors.black1, marginLeft: width(4), alignSelf: 'center', width: width(80) },
-    descriptionCon: { marginTop: height(1), },
+    subTitle: { 
+        fontSize: width(3.1), 
+        color: AppColors.black1, 
+        marginLeft: width(2)
+    },
+    description_container : { 
+        marginTop: height(2)
+    },
     con: {
 
         paddingHorizontal: width(1),
@@ -123,10 +130,6 @@ const styles = StyleSheet.create({
         height: height(6),
         justifyContent: 'center'
     },
-    addBtn: {
-        bottom: height(1)
-
-    },
     description: {
         fontSize: width(3),
         fontFamily: FontFamily.BlackSansRegular,
@@ -169,6 +172,8 @@ const styles = StyleSheet.create({
         borderRadius: width(5),
         width: width(30),
         alignSelf: 'flex-start',
+        margin : 0,
+        marginBottom : height(1.5)
     },
     buttonText: {
         color: AppColors.black1,
@@ -225,6 +230,13 @@ const styles = StyleSheet.create({
         width: height(5),
         borderRadius: height(4.75),
     },
-
+    sub_task_button : {
+        flexDirection : "row",
+        alignItems : "center",
+        width : width(80),
+        alignSelf : "center",
+        borderBottomWidth : width(0.3),
+        borderColor : AppColors.grayBorder
+    }
 });
 export default styles;

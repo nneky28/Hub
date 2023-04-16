@@ -26,6 +26,24 @@ export type useFetchStatisticsData = {
 
 export type TaskTabType = 'All' | 'Due Today' | 'Upcoming' | 'Overdue' | 'No Date'
 
+export type TaskProgressStatus = "To-do" | "In-progress" | "Completed"
+
+export type SubTaskData = {
+    assigned_by? : {
+        email?: string
+        first_name?: string
+        id?: number
+        last_name?: string
+        photo? : string
+    }
+    description?: string
+    due_date?: string
+    id?: number
+    status?: TaskProgressStatus
+    sub_assigned_to?: string
+    title?: string
+}
+
 export type useFetchTodosData = {
     assigned_to? : {
         email?: string
@@ -46,10 +64,10 @@ export type useFetchTodosData = {
         id? : number
     }
     id? : number
-    status?: string
+    status?: TaskProgressStatus
     description? : string
     due_date? : string
-    sub_tasks_tasksapp? : []
+    sub_tasks_tasksapp? : SubTaskData[]
     title? : string
     is_menu? : boolean
 }

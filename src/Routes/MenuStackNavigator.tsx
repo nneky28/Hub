@@ -13,6 +13,7 @@ import TeamTaskHome from "../screens/TeamTaskHome/Index"
 import Training from "../screens/Training"
 import { MenuScreenList } from "./types"
 import TimeOff from "../screens/TimeOff"
+import TaskDetails from "../screens/TaskDetails/Index"
 
 const MenuStackNavigator = () =>{
     const Stack = createStackNavigator<MenuScreenList>()
@@ -34,6 +35,7 @@ const MenuStackNavigator = () =>{
             <Stack.Screen name="CreateTask" component={CreateTask} />
             <Stack.Screen name="TaskPeopleList" component={TaskPeopleList} />
             <Stack.Screen name="TeamTaskHome" component={TeamTaskHome} />
+            <Stack.Screen name="TaskDetails" component={TaskDetails} />
         </Stack.Navigator>
     )
 }

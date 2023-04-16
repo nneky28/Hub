@@ -34,6 +34,7 @@ import {
     // useFetchUpcoming,
     // useFetchOverDue,
     useFetchTeamTask,
+    APIFunction,
     // useFetchTeamDuetoday,
     // useFetchMyTeamUpcoming,
     // useFetchMyTeamOverdue,
@@ -43,26 +44,29 @@ import {
     // useFetchAllSentOverdue,
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { __flatten, getStoreAboutMe } from '../../utills/Methods';
+import { __flatten, getStoreAboutMe, useAppSelector, ToastError, ToastSuccess } from '../../utills/Methods';
 //import { setCurrentTabIndex } from '../../Redux/Actions/Config';
 //import { useDispatch } from 'react-redux';
 import { RootScreenProps } from '../../Routes/types';
 import { HomePageHeader } from '../../components/Headers/CustomHeader';
 import { ActionTitleType, AddButtonProps, ProgressCardType, RenderItemProps, TaskTabType, useFetchStatisticsProps, useFetchTodosData, useFetchTodosProps } from './types';
-import { TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
+import { GET_TASKS, GET_TASK_STATISTICS, TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
 import { Coordinates } from '../Profile/types';
+import CustomSnackBar from '../../components/CustomSnackBar';
+import { setCurrentTaskItem } from '../../Redux/Actions/Config';
+import { useDispatch } from 'react-redux';
+import { useMutation, useQueryClient } from 'react-query';
 
 
 
 const TaskHome = ({ navigation } : RootScreenProps) => {
     const [department_id, setDepartmentID] = useState<number>();
     const [tab, setTab] = useState<TaskTabType>('All');
-    const [count, setCount] = useState("0");
     const [actionTitle, setActionTitle] = useState<ActionTitleType>('To-Do');
     const [progress,setProgress] = React.useState<TaskProgressStatus>("To-do")
     const [tasks, setTasks] = useState<useFetchTodosData[]>([]);
    // const index = useAppSelector(state => state.Config.currentTaskTabIndex)
-    //const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const [characters,setCharacters] = React.useState<string[]>([]) 
     const [filter,setFilter] = React.useState<TaskStatisticFilter>("")
     const [coordinates,setCoordinates] = React.useState<Coordinates>({})
@@ -73,10 +77,16 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const [page,setPage] = React.useState(1)
     const [loading,setLoading] = React.useState(true)
     const [currentTabIndex,setCurrentTabIndex] = React.useState(0)
-
-
+    const [show,setShow] = React.useState(false)
+    const [timeoutID,setTimeoutID] = React.useState<NodeJS.Timeout>()
+    const currentTask : useFetchTodosData = useAppSelector(state=>state?.Config?.task)
+    const queryClient = useQueryClient()
+    const {
+        mutateAsync,
+        isLoading : updating
+    } = useMutation(APIFunction.update_task_status)
+    
     const setButtons = (i : number) => {
-        //dispatch(setCurrentTabIndex(i));
         setCurrentTabIndex(i)
         setActionTitle('To-Do');
         setTab('All');
@@ -158,6 +168,8 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         if(overdue_status === "duetoday") msg = "task due today."
         if(overdue_status === "upcoming") msg = "upcoming task."
         if(overdue_status === "overdue") msg = "overdue task."
+        if(actionTitle === "In Progress") msg = "task in progress."
+        if(actionTitle === "Completed") msg = "completed task."
         return (
             <EmptyStateWrapper 
                 marginTop={1}
@@ -261,7 +273,11 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                     currentTabIndex === 2 && actionTitle === 'To-Do' ? null : (
                         <View style={styles.container}>
                             <H1 color={AppColors.black1}>
-                                {actionTitle} ({count})
+                                {actionTitle} ({
+                                    actionTitle === "Completed" ? numeral(statistics?.completed_count).format("0,0") : 
+                                    actionTitle === "In Progress" ? numeral(statistics?.inprogress_count).format("0,0") : 
+                                    actionTitle === "To-Do" ? numeral(statistics?.todo_count).format("0,0") : 0
+                                })
                             </H1>
                         </View>
                     )
@@ -342,7 +358,6 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const cardPressHandler = (item : ProgressCardType) => {
         setActionTitle(item.selected);
         setPage(1)
-        setCount(item.count);
         setTab("All");
         setOverDueStatus("")
         setLoading(true)
@@ -361,6 +376,32 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             page > 1 ? setTasks([...tasks,...arr]) : setTasks(teamTaskData?.pages?.[0]?.results)
             setLoading(false)
         }
+    }
+    
+    const undoChangesHandler = async () => {
+        try{    
+            clearTimeout(Number(timeoutID))
+            if(!currentTask?.id) return
+            let status = "To-do"
+            if(currentTask?.status === "Completed") status = "In-progress"
+            if(currentTask?.status === "In-progress") status = "To-do"
+            let fd = {
+                id : currentTask?.id,
+                status
+            }
+            await mutateAsync(fd)
+            setShow(false)
+            queryClient.invalidateQueries(GET_TASKS)
+            queryClient.invalidateQueries(GET_TASK_STATISTICS)
+            ToastSuccess("Changes have been saved.")
+        }catch(err : any){
+            setShow(false)
+            ToastError(err?.msg)
+        }
+    }
+
+    const onDismiss = () => {
+        
     }
 
     const ListFooterComponent = () => {
@@ -403,17 +444,32 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         setCharacters([...Array(26).keys()].map((i) => i + 65).map((x) => String.fromCharCode(x)))
     },[])
 
+    useEffect(()=>{
+        if(Object.values(currentTask).length === 0) return
+        setPage(1)
+        setShow(true)
+    },[currentTask])
+
+    useEffect(()=> {
+        if(Object.values(currentTask).length === 0) return 
+        let timeout = setTimeout(()=>{
+            setShow(false)
+            dispatch(setCurrentTaskItem({}))
+        },7000)
+        setTimeoutID(timeout)
+    },[currentTask])
+
+
     return (
         <ScreenWrapper
-                scrollEnabled={false}
-                footerUnScrollable={() => {
-                    return (
+                footerUnScrollable={() => !show ? 
+                    (
                         <AddButton
                             style={styles.addButton}
                             onPress={() => navigation.navigate("Menu", { screen: "CreateTask" })}
                         />
-                    );
-                }}>
+                    ) : ()=><React.Fragment />}
+            >
                 <React.Fragment>
                     <HomePageHeader 
                         image={Images.TaskLogo}
@@ -455,6 +511,19 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                 ListFooterComponent={ListFooterComponent}
                             />
                         </React.Fragment>
+                    }
+                    {
+                        show ? <CustomSnackBar 
+                            visible={show}
+                            onDismiss={onDismiss}
+                            label="Undo"
+                            text={"Your changes have been saved"}
+                            onPressHandler={undoChangesHandler}
+                            loading={updating}
+                            containerStyle={styles.snackbar}
+                            labelStyle={styles.snackbar_label}
+                            textColor={AppColors.black}
+                        /> : null
                     }
                     </React.Fragment>
             </ScreenWrapper>

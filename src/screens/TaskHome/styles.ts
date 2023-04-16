@@ -315,6 +315,13 @@ const styles = StyleSheet.create({
     contentContainerStyle : { 
         paddingBottom: height(10),
         marginTop : height(1)
+    },
+    snackbar : {
+        backgroundColor : AppColors.newYellow
+    },
+    snackbar_label : {
+        fontFamily : FontFamily.BlackSansBold,
+        color : AppColors.red3
     }
 });
 export default styles;

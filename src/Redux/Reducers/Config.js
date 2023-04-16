@@ -1,11 +1,12 @@
-import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE } from '../Types';
+import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE, SETCURRENTTASKITEM } from '../Types';
 const intialState = {
   isLoaderVisible: false,
   isSecurityVisible: false,
   isBottomTabBarVisible: true,
   currentTaskTabIndex: 0,
   scrollPosition: { x: 0, y: 0 },
-  isModalVisible: false
+  isModalVisible: false,
+  task : {}
 };
 const reducer = (state = intialState, action) => {
   switch (action.type) {
@@ -43,6 +44,12 @@ const reducer = (state = intialState, action) => {
       return {
         ...state,
         isModalVisible: action.payload,
+      };
+    }
+    case SETCURRENTTASKITEM: {
+      return {
+        ...state,
+        task : action.payload,
       };
     }
     default:

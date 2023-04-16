@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
-import { Input } from 'native-base';
 
 const styles = StyleSheet.create({
     listItemContainer: {
@@ -36,17 +35,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: width(3.3),
         color: AppColors.black1,
-        marginRight: width(2),
-        fontFamily: FontFamily.BlackSansBold,
-        width: width(70)
-    },
-
-    textContainer1: {
-        justifyContent: 'space-between',
-        height: height(4.5),
-        marginLeft: width(2),
-        marginTop: height(1.5),
-        // width: width(90)
+        fontFamily: FontFamily.BlackSansRegular
     },
     listContainer1: {
         width: width(90),

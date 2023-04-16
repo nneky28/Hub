@@ -45,12 +45,13 @@ export type MenuScreenList = {
     Documents : undefined
     Trainings : undefined
     TaskOnboarding : undefined
-    CreateTask : undefined
+    CreateTask : ParamsType | undefined
     TeamTaskHome : ParamsType | undefined
     TaskPeopleList : undefined
     TaskLandingPage : undefined
     TaskHome : undefined
     PayslipHistory : undefined
+    TaskDetails : ParamsType
 }
 
 export type OnboardScreenList = {

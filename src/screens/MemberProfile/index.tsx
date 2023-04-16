@@ -143,6 +143,7 @@ export default function MemberProfile({route} : RootScreenProps) {
                       <Container 
                         marginTop={5}
                         width={90}
+                        alignSelf="center"
                       >
                         {
                           [
