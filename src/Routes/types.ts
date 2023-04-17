@@ -4,6 +4,7 @@ import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } 
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
 import { useFetchAboutMeData } from "../components/TimeoffModal/types"
 
+
 type ParamsType = {
     [key : string] : unknown
 }
@@ -59,7 +60,8 @@ export type OnboardScreenList = {
     PersonalInfo : undefined
     Emergency : undefined
     NextKin : undefined
-    PensionInfo : undefined
+    PensionInfo: undefined
+    EditPhoto:undefined
 }
 
 export type TabScreenList = {
