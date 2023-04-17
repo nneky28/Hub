@@ -23,34 +23,21 @@ import { width } from 'react-native-dimension';
 import CommonStyles from '../../utills/CommonStyles';
 import styles from './styles';
 import TodoContent from '../../components/TodoContent/Index';
-//import TeamTodoContent from '../../components/TeamTodoContent/Index';
 import { Images } from '../../utills/Image';
 import numeral from 'numeral';
 import AppColors from '../../utills/AppColors';
 import {
     useFetchStatistics,
     useFetchTodos,
-    // useFetchDueToday,
-    // useFetchUpcoming,
-    // useFetchOverDue,
     useFetchTeamTask,
     APIFunction,
-    // useFetchTeamDuetoday,
-    // useFetchMyTeamUpcoming,
-    // useFetchMyTeamOverdue,
-    // useFetchAllSent,
-    // useFetchAllSentDue,
-    // useFetchAllSentUpcoming,
-    // useFetchAllSentOverdue,
 } from '../../utills/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { __flatten, getStoreAboutMe, useAppSelector, ToastError, ToastSuccess } from '../../utills/Methods';
-//import { setCurrentTabIndex } from '../../Redux/Actions/Config';
-//import { useDispatch } from 'react-redux';
 import { RootScreenProps } from '../../Routes/types';
 import { HomePageHeader } from '../../components/Headers/CustomHeader';
 import { ActionTitleType, AddButtonProps, ProgressCardType, RenderItemProps, TaskTabType, useFetchStatisticsProps, useFetchTodosData, useFetchTodosProps } from './types';
-import { GET_TASKS, GET_TASK_STATISTICS, TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
+import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
 import { Coordinates } from '../Profile/types';
 import CustomSnackBar from '../../components/CustomSnackBar';
 import { setCurrentTaskItem } from '../../Redux/Actions/Config';
@@ -65,7 +52,6 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const [actionTitle, setActionTitle] = useState<ActionTitleType>('To-Do');
     const [progress,setProgress] = React.useState<TaskProgressStatus>("To-do")
     const [tasks, setTasks] = useState<useFetchTodosData[]>([]);
-   // const index = useAppSelector(state => state.Config.currentTaskTabIndex)
     const dispatch = useDispatch()
     const [characters,setCharacters] = React.useState<string[]>([]) 
     const [filter,setFilter] = React.useState<TaskStatisticFilter>("")
@@ -87,6 +73,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     } = useMutation(APIFunction.update_task_status)
     
     const setButtons = (i : number) => {
+        if(currentTabIndex === i) return
         setCurrentTabIndex(i)
         setActionTitle('To-Do');
         setTab('All');
@@ -244,11 +231,10 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                             )}
                                         </View>
                                         <View>
-                                            {item.selected === actionTitle && (
+                                            {/* {item.selected === actionTitle && (
                                                 <View style={styles.clippedCon}>
                                                     <ImageBackground
                                                         source={{ uri: item.selected_image }}
-                                                        resizeMode='cover'
                                                         imageStyle={{
                                                             borderRadius: width(4),
                                                             // height: height(8)
@@ -256,7 +242,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                                         style={styles.clipped}
                                                     />
                                                 </View>
-                                            )}
+                                            )} */}
                                             <H1
                                                 color={AppColors.black1}
                                                 fontSize={7}
@@ -356,6 +342,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     }
 
     const cardPressHandler = (item : ProgressCardType) => {
+        if(actionTitle === item?.selected) return
         setActionTitle(item.selected);
         setPage(1)
         setTab("All");
@@ -393,6 +380,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             setShow(false)
             queryClient.invalidateQueries(GET_TASKS)
             queryClient.invalidateQueries(GET_TASK_STATISTICS)
+            queryClient.invalidateQueries(GET_TEAM_TASKS)
             ToastSuccess("Your changes have been saved.")
         }catch(err : any){
             setShow(false)

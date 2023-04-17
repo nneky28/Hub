@@ -102,7 +102,13 @@ export type CommentProps = {
   task: number;
   due_date: string;
 };
-export type OnboardingProps = {
+export type OnboardingLoad = {
+  type: string;
+  employee: number;
+  has_completed_mobile_navigation: boolean;
+  has_completed_mobile_onboarding: boolean;
+};
+export type UpdateOnboardingLoad = {
   type: string;
   employee: number;
   has_completed_mobile_navigation: boolean;

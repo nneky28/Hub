@@ -585,65 +585,25 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
       style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={props?.show}
     >
-      <Container
-        //flex={1}
-        style={{
-          justifyContent: "center",
-          alignItems: 'center',
-          borderTopLeftRadius: width(5),
-          borderTopRightRadius: width(5)
-        }}
-        backgroundColor={AppColors.white}
-        paddingHorizontal={5}
-      >
-        {
-          props?.header ? <Container marginBottom={5}
-            width={90}
-          >
-            <H1 fontSize={4}>{props.header}</H1>
-          </Container> : null
-        }
-        <Container
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: height(3)
-          }}
-        >
-            {
-              props?.header ? <Container 
-                width={90}
-                marginTop={4}
-
-              >
-                <H1 fontSize={4} color={AppColors.black2}>{props.header}</H1>
-              </Container> : null
-            }
-            <Container
-              style={{
-                justifyContent : "center",
-                alignItems : "center",
-                marginTop : height(3)
-              }}
-            >
+      <Container borderTopRightRadius={20} borderTopLeftRadius={20} paddingTop={3}>
+          <Container width={90} alignSelf="center">
               <DatePicker
-                date={new Date(selected)} 
-                onDateChange={(newDate) => {
-                  if(props.mode) return setSelected(newDate)
-                  setSelected(moment(newDate).format("YYYY-MM-DD"))
-                }} 
-                mode={props.mode || "date"} 
-                maximumDate={undefined}
-                timeZoneOffsetInMinutes={0}
-              /> 
-              <Container 
-                marginTop={5}
+                  date={new Date(selected)} 
+                  onDateChange={(newDate) => {
+                    if(props.mode) return setSelected(newDate)
+                    setSelected(moment(newDate).format("YYYY-MM-DD"))
+                  }} 
+                  mode={props.mode || "date"} 
+                  maximumDate={undefined}
+                  timeZoneOffsetInMinutes={0}
+                  textColor={AppColors.black}
+            /> 
+            <Container 
+                marginTop={2}
                 marginBottom={3}
                 width={90}
                 direction="row"
-                style={{
-                  justifyContent : 'space-between'
-                }}
+                horizontalAlignment='space-between'
               >
                   <TouchableWrapper
                     onPress={()=>props.setShow(false)}
@@ -662,8 +622,7 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
                     <H1 color={AppColors.green}>Select</H1>
                   </TouchableWrapper>
               </Container>
-            </Container>
-        </Container>
+          </Container>
       </Container>
     </ReactNativeModal>
   )

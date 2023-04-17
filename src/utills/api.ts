@@ -37,7 +37,7 @@ import {
   GET_COMMENTS,
   EmergencyContactProps,
   EditPassword,
-  OnboardingProps,
+  OnboardingLoad,
   CommentProps,
   TaskStatusProps,
   TaskProps,
@@ -54,6 +54,7 @@ import {
   TRAININGS,
   verifyBank,
   updatePensionAccountProps,
+  UpdateOnboardingLoad,
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -256,11 +257,11 @@ export const APIFunction = {
   error_report: async (fd:any) => {
     return postNoToken('/mobile_error_report', fd)
   },
-  post_onboarding: async (fd:OnboardingProps) => {
+  post_onboarding: async (fd:OnboardingLoad) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/app_onboarding/`, fd)
   },
-  update_onboarding: async (fd:OnboardingProps) => {
+  update_onboarding: async (fd:UpdateOnboardingLoad) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/app_onboarding/${fd.id}/`, fd)
   },

@@ -128,4 +128,5 @@ export type useFetchAboutMeProps = {
     data? : useFetchAboutMeData
     isLoading : boolean
     isFetching : boolean
+    error : unknown
 }

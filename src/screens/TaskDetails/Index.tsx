@@ -2,13 +2,12 @@ import {
     View, Text, Keyboard,
     Animated,
     Easing,
-    TouchableOpacity,
-    SectionList,
+    TouchableOpacity
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './styles';
 import Button from '../../components/Button'
-import { P, H1, PageLoader, TouchableWrapper, Container, KeyboardAwareWrapper } from '../../utills/components';
+import { P, H1, PageLoader, TouchableWrapper, Container } from '../../utills/components';
 import moment from 'moment';
 import { useFetchActivities, useFetchComments, useFetchTaskByPK } from '../../utills/api';
 import ActivityCard from '../../components/ActivityCard/Index'
@@ -31,6 +30,7 @@ import { GET_COMMENTS, GET_TASK_BY_PK } from '../../utills/payload';
 import { TextInput } from 'react-native-paper';
 import CustomInput from '../../components/CustomInput';
 import TaskCommentCard from '../../components/TaskCommentCard/Index';
+import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view';
 
 
 
@@ -282,7 +282,8 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                     headerText={task?.title ? Capitalize(task?.title) : ""}
                 />
                 {
-                    loadingTask ? <PageLoader /> : <SectionList 
+                    loadingTask ? <PageLoader /> : <KeyboardAwareSectionList 
+                        showsVerticalScrollIndicator={false}
                         ListHeaderComponent={<React.Fragment>
                             <View style={styles.container}>
                                 <View style={styles.row1}>
@@ -401,24 +402,22 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                 )
                                 
                             }}
-                            ListFooterComponent={showComment ? <KeyboardAwareWrapper>
-                                <CustomInput 
-                                    placeholder="Add a comment"
-                                    value={comment}
-                                    onChangeData={(value : string)=>setComment(value)}
-                                    multiline={true}
-                                    minHeight={4}
-                                    right={<TextInput.Icon 
-                                        name={isLoading ? "loading" : "send-circle"}
-                                        color={AppColors.green}
-                                        onPress={handleSubmit}
-                                        tvParallaxProperties={undefined}
-                                        hasTVPreferredFocus={undefined}
-                                        size={width(8)}
-                                        forceTextInputFocus={false}
-                                      />}
-                                />
-                            </KeyboardAwareWrapper> : <React.Fragment />} 
+                            ListFooterComponent={showComment ? <CustomInput 
+                                placeholder="Add a comment"
+                                value={comment}
+                                onChangeData={(value : string)=>setComment(value)}
+                                multiline={true}
+                                minHeight={4}
+                                right={<TextInput.Icon 
+                                    name={isLoading ? "loading" : "send-circle"}
+                                    color={AppColors.green}
+                                    onPress={handleSubmit}
+                                    tvParallaxProperties={undefined}
+                                    hasTVPreferredFocus={undefined}
+                                    size={width(8)}
+                                    forceTextInputFocus={false}
+                                  />}
+                            /> : <React.Fragment />} 
                         
                     />
                 }
