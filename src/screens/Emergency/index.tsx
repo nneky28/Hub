@@ -13,14 +13,15 @@ import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
 import {useMutation, useQueryClient} from 'react-query';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
-import {RootScreenProps} from '../../Routes/types';
 import {useFetchEmergency} from '../../utills/api';
 import {useFetchEmergencyProps} from '../Profile/types';
 import {useFetchAboutMe} from '../../utills/api';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {Data} from './types';
+import {EMERGENCY} from '../../utills/payload';
+import {RootOnboardScreenProps} from '../../Routes/types';
 
-export default function Emergency({navigation}: RootScreenProps) {
+export default function Emergency({navigation}: RootOnboardScreenProps) {
   const auth = useAppSelector((state) => state.Auth);
 
   const queryClient = useQueryClient();
@@ -58,16 +59,14 @@ export default function Emergency({navigation}: RootScreenProps) {
         return ToastError('Please enter a valid email');
 
       if (!about?.id) return;
-      let res = await mutateAsync({...data, country: 'NG', id: about.id});
-      console.log('RES', res);
-      if (res) {
-        ToastSuccess('Record has been updated');
-        navigation.goBack();
-      }
+      await mutateAsync({...data, country: 'NG', id: about.id});
+      ToastSuccess('Record has been updated');
+      navigation.goBack();
+
       if (auth.route !== 'main') {
-        return navigation.navigate('Profile', {screen: 'PensionInfo'});
+        return navigation.navigate('PensionInfo');
       }
-      queryClient.invalidateQueries('emergency');
+      queryClient.invalidateQueries(EMERGENCY);
     } catch (err: any) {
       ToastError(err.msg);
     }

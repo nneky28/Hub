@@ -50,7 +50,7 @@ export type useFetchBankingData = {
 export type useFetchBankingProps = {
     data? : useFetchBankingData
     isLoading : boolean
-    isFetching? : boolean
+    isFetching?: boolean
 }
 
 export type TextWithButtonProps = {

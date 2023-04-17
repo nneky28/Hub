@@ -17,15 +17,15 @@ import {
 import styles from './styles';
 import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
-import {useMutation} from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
-import {RootScreenProps} from '../../Routes/types';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
 import {Data, DataKeys} from './types';
-import {updatePensionAccountProps} from '../../utills/payload';
-import {useFetchBankingProps} from '../Profile/types';
+import {ABOUT_ME, updatePensionAccountProps} from '../../utills/payload';
+import {useFetchBankingData, useFetchBankingProps} from '../Profile/types';
+import {RootOnboardScreenProps} from '../../Routes/types';
 
-const PensionInfo = ({navigation}: RootScreenProps) => {
+const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
   const [data, setData] = useState<Data>({
     account_name: '',
     account_number: '',
@@ -41,6 +41,9 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
   const [open, setOpen] = React.useState(false);
   const [reload, setReload] = React.useState('');
   const reloadTerm = useDebounce(reload, 200);
+  const queryClient = useQueryClient();
+  const [banks, setBanks] = useState<useFetchBankingData[]>([]);
+  const [providers, setProviders] = useState<useFetchBankingData[]>([]);
 
   const {mutateAsync: updatePension, isLoading: loading} = useMutation(
     APIFunction.update_pension,
@@ -50,14 +53,13 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
     APIFunction.bank_verification,
   );
 
-  const {data: banks, isFetching: fetchingBanks} =
+  const {data: bank, isFetching: fetchingBanks} =
     useFetchBanking() as useFetchBankingProps;
 
-  const {data: providers, isFetching: fetchingProviders} = useFetchProviders();
+  const {data: provider, isFetching: fetchingProviders} =
+    useFetchProviders() as useFetchBankingProps;
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
-
-  console.log('profile', profile);
 
   const handleSubmit = async (param: string) => {
     try {
@@ -127,13 +129,11 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
         };
         fd['is_pension_applicable'] = true;
       }
-
-      let res = await updatePension({...fd});
-      if (res) {
-        ToastSuccess('Record has been saved');
-      }
+      await updatePension({...fd});
+      ToastSuccess('Record has been saved');
+      queryClient.invalidateQueries(ABOUT_ME);
       if (auth.route !== 'main') {
-        return navigation.navigate('Profile', {screen: 'EditPhoto'});
+        return navigation.navigate('EditPhoto');
       }
       return navigation.goBack();
     } catch (err: any) {
@@ -141,7 +141,7 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
         err.msg && err.msg.detail && typeof err.msg.detail == 'string'
           ? err.msg.detail
           : 'Something went wrong. Please retry';
-      console.log('ERROR', msg);
+      // console.log('ERROR', msg);
       ToastError(msg);
     }
   };
@@ -165,6 +165,24 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
       ToastError(err.msg);
     }
   };
+
+  const getData = () => {
+    try {
+      if (bank && Array.isArray(bank)) {
+        setBanks(bank);
+      }
+
+      if (provider && Array.isArray(provider)) {
+        setProviders(provider);
+      }
+    } catch (error) {
+      // console.log('ERR', error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [bank, provider]);
 
   useEffect(() => {
     fetchRecord();
@@ -242,7 +260,7 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
       <>
         {visible ? (
           <ItemListModal
-            data={providers as Array<{id: string; name: string}>}
+            data={providers}
             setOpen={() => setVisible(false)}
             open={visible}
             onPressHandler={(item) => {
