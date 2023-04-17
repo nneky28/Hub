@@ -91,7 +91,9 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                             color={item?.id && selectedIDs.includes(item?.id) ? AppColors.green : AppColors.black1}
                         />
                         }
-                        <P style={styles.subTitle} underline={item?.status === "Completed" ? "line-through" : "none"}>{item.title}</P>
+                        <Container width={60} marginLeft={2} backgroundColor={AppColors.transparent}>
+                            <P style={styles.subTitle} underline={item?.status === "Completed" ? "line-through" : "none"} lineHeight={2}>{item.title}</P>
+                        </Container>
                     </React.Fragment>
                 </TouchableWrapper>
             </>
@@ -407,6 +409,8 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                 value={comment}
                                 onChangeData={(value : string)=>setComment(value)}
                                 multiline={true}
+                                editable={task?.status === "Completed" ? false : true}
+                                backgroundColor={AppColors.gray1}
                                 minHeight={4}
                                 right={<TextInput.Icon 
                                     name={isLoading ? "loading" : "send-circle"}

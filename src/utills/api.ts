@@ -289,9 +289,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
-  delete_task: async (fd:any) => {
+  delete_task: async (id : number) => {
     let biz = await getStoredBusiness()
-    return deleteAPIs(`/c/${biz?.business_id}/tasks_app/${fd}/`)
+    return deleteAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
   update_sub_task: async (fd:any) => {
     let biz = await getStoredBusiness()

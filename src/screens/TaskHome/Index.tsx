@@ -65,7 +65,9 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const [currentTabIndex,setCurrentTabIndex] = React.useState(0)
     const [show,setShow] = React.useState(false)
     const [timeoutID,setTimeoutID] = React.useState<NodeJS.Timeout>()
-    const currentTask : useFetchTodosData = useAppSelector(state=>state?.Config?.task)
+    const currentTask : useFetchTodosData & {
+        old_status : TaskProgressStatus
+    } = useAppSelector(state=>state?.Config?.task)
     const queryClient = useQueryClient()
     const {
         mutateAsync,
@@ -123,7 +125,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const progressCards : ProgressCardType[] = [
         {
             selected: 'To-Do',
-            selected_image: Images.clippedBlue,
+            selected_image: Images.SelectedPurpleBg,
             image: Images.blueBox,
             count: statistics?.todo_count ? numeral(statistics?.todo_count).format('0,0') : "0",
             borderWidth: 0.5,
@@ -134,7 +136,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             selected: 'In Progress',
             image: Images.yellowBox,
             // colorUp: AppColors.newYellow,
-            selected_image: Images.clippedYellow,
+            selected_image: Images.SelectedYellowBg,
             count: statistics?.inprogress_count ? numeral(statistics?.inprogress_count).format('0,0') : "0",
             borderWidth: 1,
             borderColor: '#FBBC3E',
@@ -143,7 +145,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             selected: 'Completed',
             image: Images.greenBox,
             // colorUp: AppColors.lightGreen,
-            selected_image: Images.clippedGreen,
+            selected_image: Images.SelectedGreenBg,
             count: statistics?.completed_count ? numeral(statistics?.completed_count).format('0,0') : "0",
             borderWidth: 0.5,
             borderColor: '#2898A4',
@@ -211,7 +213,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                 key={i}
                                 onPress={() => cardPressHandler(item)}>
                                 <ImageBackground
-                                    source={{ uri: item.image }}
+                                    source={{ uri: item.selected === actionTitle ? item.selected_image : item.image }}
                                     resizeMode='cover'
                                     imageStyle={{
                                         borderRadius: width(4),
@@ -231,18 +233,6 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                             )}
                                         </View>
                                         <View>
-                                            {/* {item.selected === actionTitle && (
-                                                <View style={styles.clippedCon}>
-                                                    <ImageBackground
-                                                        source={{ uri: item.selected_image }}
-                                                        imageStyle={{
-                                                            borderRadius: width(4),
-                                                            // height: height(8)
-                                                        }}
-                                                        style={styles.clipped}
-                                                    />
-                                                </View>
-                                            )} */}
                                             <H1
                                                 color={AppColors.black1}
                                                 fontSize={7}
@@ -369,12 +359,9 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         try{    
             clearTimeout(Number(timeoutID))
             if(!currentTask?.id) return
-            let status = "To-do"
-            if(currentTask?.status === "Completed") status = "In-progress"
-            if(currentTask?.status === "In-progress") status = "To-do"
             let fd = {
                 id : currentTask?.id,
-                status
+                status : currentTask?.old_status
             }
             await mutateAsync(fd)
             setShow(false)
