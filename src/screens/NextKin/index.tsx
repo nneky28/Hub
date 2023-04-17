@@ -13,12 +13,13 @@ import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
 import {useMutation, useQueryClient} from 'react-query';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
-import {RootScreenProps} from '../../Routes/types';
+import {RootOnboardScreenProps} from '../../Routes/types';
 import {useFetchKinProps} from '../Profile/types';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {Data} from './types';
+import { NEXT_OF_KINS } from '../../utills/payload';
 
-export default function NextKin({navigation}: RootScreenProps) {
+export default function NextKin({navigation}: RootOnboardScreenProps) {
   const {data: about} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
   const {data: kinsData} = useFetchKin(about?.id) as useFetchKinProps;
@@ -51,16 +52,13 @@ export default function NextKin({navigation}: RootScreenProps) {
         return ToastError('Please provide a valid email address');
       }
       if (!about?.id) return;
-      let res = await mutateAsync({...data, country: 'NG', id: about.id});
-      if (res) {
-        ToastSuccess('Record has been updated');
-        navigation.goBack();
-      }
-
+      await mutateAsync({...data, country: 'NG', id: about.id});
+      queryClient.invalidateQueries(NEXT_OF_KINS);
       if (auth.route !== 'main') {
-        return navigation.navigate('Profile', {screen: 'Emergency'});
+        return navigation.navigate("Emergency");
       }
-      queryClient.invalidateQueries('next_of_kins');
+      ToastSuccess('Record has been updated');
+      navigation.goBack();
     } catch (err: any) {
       ToastError(err?.msg);
     }

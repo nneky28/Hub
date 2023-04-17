@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button : {
-    width : width(90)
+    width : width(90),
+    marginTop : height(15)
   },
   main_container : {
     flex : 1,

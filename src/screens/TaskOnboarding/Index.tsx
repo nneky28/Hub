@@ -1,144 +1,66 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef } from 'react'
 import { View, Image } from 'react-native'
 import Swiper from 'react-native-swiper'
 import { Images } from '../../utills/Image';
-import { height, width } from 'react-native-dimension';
+import { height } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import AppColors from '../../utills/AppColors';
-import { FontFamily } from '../../utills/FontFamily';
 import { H1, P } from '../../utills/components';
 import Button from '../../components/Button'
 import { useMutation, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { APIFunction, useFetchOnboarding } from '../../utills/api';
-import { getData, storeData } from '../../utills/Methods';
-import { showFlashMessage } from '../../components/SuccessFlash/index';
+import { getStoreAboutMe, ToastError } from '../../utills/Methods';
+import { RootScreenProps } from '../../Routes/types';
+import { useFetchAppOnboardingProps } from '../../components/SelectionModal/types';
+import styles from "./styles"
+import { GET_ONBOARDING, OnboardingLoad, UpdateOnboardingLoad } from '../../utills/payload';
 
 
-
-const styles = {
-    wrapper: {
-        backgroundColor: AppColors.white,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
-    slide: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1
-
-    },
-    container: {
-        flex: 1,
-    },
-
-    image: {
-        width: width(15),
-        height: height(15),
-    },
-    title: {
-        color: '#171717',
-        fontSize: width(5.5),
-        textAlign: 'center',
-        width: width(55)
-    },
-    subTitle: {
-        color: '#545454',
-        fontSize: width(3.3),
-        lineHeight: width(5),
-        paddingVertical: height(2),
-        textAlign: 'center',
-        paddingHorizontal: width(15),
-
-    },
-    dot: {
-        backgroundColor: "#5BCBD7",
-        width: height(1.5),
-        height: height(1.5),
-        marginLeft: width(2),
-        marginRight: width(2),
-        borderRadius: width(15)
-    },
-
-    active: {
-        backgroundColor: '#2898A4',
-        width: height(1.5),
-        height: height(1.5),
-        marginLeft: width(2),
-        marginRight: width(2),
-        borderRadius: width(15)
-    },
-    button: {
-        width: width(90),
-        borderRadius: width(3),
-        bottom: height(5),
-        height: height(5)
-    },
-    btn: {
-        backgroundColor: '#EAF8FA',
-        width: width(90),
-        borderRadius: width(3),
-        bottom: height(5),
-        height: height(5)
-    },
-    btnText: {
-        color: AppColors.green,
-        fontSize: width(3.5),
-        fontFamily: FontFamily.BlackSansBold
-    },
-    buttonText: {
-        fontSize: width(3.5),
-        fontFamily: FontFamily.BlackSansBold
-    }
-}
-
-
-
-const TaskOnboarding = ({ navigation }) => {
+const TaskOnboarding = ({ navigation } : RootScreenProps) => {
 
     const swiperRef = useRef(null);
     const dispatch = useDispatch();
     const Task_Name = "Task"
     const queryClient = useQueryClient()
-    const { mutateAsync, isLoading } = useMutation(APIFunction.post_onboarding)
-    const { mutateAsync: editHandler } = useMutation(APIFunction.update_onboarding)
-    const [toCheck, setToCheck] = useState(true)
+    const { 
+        mutateAsync,
+        isLoading
+    } = useMutation(APIFunction.post_onboarding)
+    const { 
+        mutateAsync: editHandler,
+        isLoading : isUpdating
+     } = useMutation(APIFunction.update_onboarding)
     const {
         data: onboarding,
-    } = useFetchOnboarding(Task_Name)
+    } = useFetchOnboarding(Task_Name) as useFetchAppOnboardingProps
 
     const handleCompletion = async () => {
         try {
-            dispatch(setLoaderVisible(true));
-            let employee_id = await getData("about_me")
-
-            let fd = {
+            let about = await getStoreAboutMe()
+            if(!about?.id) return
+            let fd : UpdateOnboardingLoad | OnboardingLoad = {
                 type: 'Task',
-                employee: employee_id.id,
+                employee: about.id,
                 has_completed_mobile_navigation: true,
                 has_completed_mobile_onboarding: true
             }
-
-            if (onboarding && onboarding?.length) {
-                fd["id"] = onboarding[0]?.id;
-                let res = await editHandler(fd)
-
-                queryClient.invalidateQueries("get_onboarding")
+            if (onboarding[0]?.id) {
+                fd = {
+                    ...fd,
+                    id : onboarding?.[0]?.id
+                };
+                await editHandler(fd)
+                queryClient.invalidateQueries(GET_ONBOARDING)
                 dispatch(setLoaderVisible(false));
-                navigation.navigate("Task")
-            } else {
-                let res = await mutateAsync(fd)
-                queryClient.invalidateQueries()
-                dispatch(setLoaderVisible(false));
-                navigation.navigate("Task")
+                return navigation.navigate("Menu",{screen : "TaskHome"})
             }
-        } catch (error) {
-            showFlashMessage({
-                title: "Something went wrong. Please retry",
-                type: 'error'
-            })
+            await mutateAsync(fd)
+            queryClient.invalidateQueries(GET_ONBOARDING)
+            dispatch(setLoaderVisible(false));
+            navigation.navigate("Menu",{screen : "TaskHome"})
+        } catch (err : any) {
+           ToastError(err?.msg)
         }
 
     }
@@ -203,14 +125,9 @@ const TaskOnboarding = ({ navigation }) => {
                     textStyle={styles.buttonText}
                     containerStyle={styles.button}
                     onPress={handleCompletion}
-
+                    isLoading={isUpdating || isLoading}
+                    disabled={isUpdating || isLoading}
                 />
-                {/* <Button
-                    title="Skip"
-                    textStyle={styles.btnText}
-                    containerStyle={styles.btn}
-                    onPress={handleCompletion}
-                /> */}
             </View>
         </ScreenWrapper>
     )

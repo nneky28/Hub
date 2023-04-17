@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, {useEffect} from 'react';
 import {Keyboard} from 'react-native';
-import {useMutation} from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
 import CustomDatePicker from '../../components/CustomDatePicker';
 import CustomInput from '../../components/CustomInput';
 import CustomModalDropdown from '../../components/CustomModalDropdown';
@@ -16,10 +16,11 @@ import {
   useAppSelector,
 } from '../../utills/Methods';
 import {Data, DataKeys} from './types';
-import {RootScreenProps} from '../../Routes/types';
+import {RootOnboardScreenProps} from '../../Routes/types';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
+import { ABOUT_ME } from '../../utills/payload';
 
-const PersonalInfo = ({navigation}: RootScreenProps) => {
+const PersonalInfo = ({navigation}: RootOnboardScreenProps) => {
   const auth = useAppSelector((state) => state.Auth);
 
   const [data, setData] = React.useState<Data>({
@@ -41,6 +42,8 @@ const PersonalInfo = ({navigation}: RootScreenProps) => {
   });
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
+
+  const queryClient = useQueryClient()
 
   const {mutateAsync, isLoading: loading} = useMutation(APIFunction.edit);
 
@@ -87,13 +90,11 @@ const PersonalInfo = ({navigation}: RootScreenProps) => {
         },
       };
 
-      let res = await mutateAsync({...fd, id: profile?.id});
-      if (res) {
-        ToastSuccess('Profile Updated');
-      }
-
+      await mutateAsync({...fd, id: profile?.id});
+      ToastSuccess('Profile Updated');
+      queryClient.invalidateQueries(ABOUT_ME);
       if (auth.route !== 'main') {
-        return navigation.navigate('Profile', {screen: 'NextKin'});
+        return navigation.navigate("NextKin");
       }
       navigation.goBack();
     } catch (err: any) {
@@ -263,6 +264,7 @@ const PersonalInfo = ({navigation}: RootScreenProps) => {
             current={data.birth_date}
             setShow={setShow}
             show={show}
+            type="dob"
           />
         ) : null}
       </>

@@ -21,7 +21,8 @@ export default function LandingPage(props : RootOnboardScreenProps) {
 
     const {
       data : about,
-      isLoading
+      isLoading,
+      error
     } = useFetchAboutMe("main") as useFetchAboutMeProps
 
     const logoutMethod = async () => {
@@ -35,18 +36,19 @@ export default function LandingPage(props : RootOnboardScreenProps) {
     };
 
     const getRecord = async () => {
-        try{
-          let biz = await getStoredBusiness()
-          if(!biz) return
-          setBiz(biz)
-        }catch(err){
-          logoutMethod()
-        }
+      let biz = await getStoredBusiness()
+      if(!biz) return
+      setBiz(biz)
     }
 
   const onPressHandler  = async ()=>{
     props.navigation.navigate("PersonalInfo")
   }
+
+  useEffect(()=>{
+    if(!error) return
+    logoutMethod()
+  },[error])
 
   useEffect(() => {
       getRecord()
@@ -56,7 +58,7 @@ export default function LandingPage(props : RootOnboardScreenProps) {
 
 
   return (
-      <ScreenWrapper>
+      <ScreenWrapper backgroundColor={AppColors.lightGreen}>
           {
             isLoading ? <PageLoader /> : (
                 <View
@@ -92,13 +94,11 @@ export default function LandingPage(props : RootOnboardScreenProps) {
                           color={AppColors.black1}
                       >fingertip.</P>
                  </Container>
-                  <Container marginTop={15} width={90}>
                     <Button
                       title={'Next'}
                       onPress={onPressHandler}
                       containerStyle={styles.button}
                     />
-                  </Container> 
               </View>
             )
         }

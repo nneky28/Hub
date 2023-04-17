@@ -196,7 +196,7 @@ export type HTagProps = {
 export type DatePickerModalProps = {
     show? : boolean
     setShow : (param : boolean) => void
-    type? : string
+    type? : "dob"
     current? : string
     header? : string
     mode? : "time" | "date" | "datetime"

@@ -78,5 +78,5 @@ export type TaskListSection =  {
     title?: string,
     is_accordion? : boolean
     type? : TaskAccordionType
-    data: TaskActivityData[] | TaskCommentData[],
+    data: readonly TaskActivityData[] | readonly TaskCommentData[],
 }
