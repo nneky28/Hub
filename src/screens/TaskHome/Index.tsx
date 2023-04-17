@@ -221,26 +221,27 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                         borderColor: item.selected === actionTitle ? item.borderColor : undefined,
                                     }}
                                     style={styles.bg_img}>
-                                    <View>
-                                        <View style={styles.titleCon}>
-                                            <H1 style={styles.title}>{item.selected}</H1>
-                                            {item.selected === actionTitle && (
-                                                <Ionicons
-                                                    name="checkbox"
-                                                    size={14}
-                                                    color={AppColors.black1}
-                                                />
-                                            )}
-                                        </View>
-                                        <View>
-                                            <H1
+                                    <View style={styles.titleCon}>
+                                        <H1 style={styles.title}>{item.selected}</H1>
+                                        {item.selected === actionTitle && (
+                                            <Ionicons
+                                                name="checkbox"
+                                                size={14}
                                                 color={AppColors.black1}
-                                                fontSize={7}
-                                                style={styles.count}>
-                                                {item.count}
-                                            </H1>
-                                        </View>
+                                            />
+                                        )}
                                     </View>
+                                    <Container backgroundColor={AppColors.transparent}
+                                        horizontalAlignment="flex-end"
+                                        paddingRight={4}
+                                        paddingBottom={1}
+                                    >
+                                        <H1
+                                            color={AppColors.black1}
+                                            fontSize={7} numberOfLines={1}>
+                                            {item.count}
+                                        </H1>
+                                    </Container>
                                 </ImageBackground>
                             </TouchableOpacity>
                         ))}

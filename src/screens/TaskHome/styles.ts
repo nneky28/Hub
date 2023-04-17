@@ -279,11 +279,6 @@ const styles = StyleSheet.create({
     clipped: { resizeMode: 'cover', height: height(7.5), },
 
     clippedCon: { top: height(1.2) },
-    count: {
-        position: 'absolute',
-        left: width(19),
-        top: height(4)
-    },
     emptyState: {
         flex: 1,
         marginTop: height(12),
@@ -311,6 +306,7 @@ const styles = StyleSheet.create({
         width: width(29),
         height: height(15),
         marginTop: height(2),
+        justifyContent : "space-between"
     },
     contentContainerStyle : { 
         paddingBottom: height(10),
