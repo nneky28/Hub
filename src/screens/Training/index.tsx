@@ -34,13 +34,17 @@ export default function Training() {
   ) as useFetchTrainingsProps;
 
   const getData = () => {
-    let allTrainings = training?.results;
-    if (allTrainings && Array.isArray(allTrainings)) {
-      setTrainings(allTrainings);
-    }
-    let allHistories = history?.results;
-    if (allHistories && Array.isArray(allHistories)) {
-      setHistories(allHistories);
+    try {
+      let allTrainings = training?.results;
+      if (allTrainings && Array.isArray(allTrainings)) {
+        setTrainings(allTrainings);
+      }
+      let allHistories = history?.results;
+      if (allHistories && Array.isArray(allHistories)) {
+        setHistories(allHistories);
+      }
+    } catch (error) {
+      // console.log('ERR', error);
     }
   };
 
