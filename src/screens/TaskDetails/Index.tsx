@@ -410,7 +410,7 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                 onChangeData={(value : string)=>setComment(value)}
                                 multiline={true}
                                 editable={task?.status === "Completed" ? false : true}
-                                backgroundColor={AppColors.gray1}
+                                backgroundColor={task?.status === "Completed" ? AppColors.gray1 : undefined}
                                 minHeight={4}
                                 right={<TextInput.Icon 
                                     name={isLoading ? "loading" : "send-circle"}
