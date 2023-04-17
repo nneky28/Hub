@@ -23,6 +23,7 @@ import {RootScreenProps} from '../../Routes/types';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
 import {Data, DataKeys} from './types';
 import {updatePensionAccountProps} from '../../utills/payload';
+import {useFetchBankingProps} from '../Profile/types';
 
 const PensionInfo = ({navigation}: RootScreenProps) => {
   const [data, setData] = useState<Data>({
@@ -49,7 +50,8 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
     APIFunction.bank_verification,
   );
 
-  const {data: banks, isFetching: fetchingBanks} = useFetchBanking();
+  const {data: banks, isFetching: fetchingBanks} =
+    useFetchBanking() as useFetchBankingProps;
 
   const {data: providers, isFetching: fetchingProviders} = useFetchProviders();
 
@@ -262,7 +264,7 @@ const PensionInfo = ({navigation}: RootScreenProps) => {
       <>
         {open ? (
           <ItemListModal
-            data={banks as Array<{id: string; name: string}>}
+            data={banks}
             setOpen={() => setOpen(false)}
             open={open}
             onPressHandler={(item) => {
