@@ -110,13 +110,16 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/`, fd);
   },
+
+// ​/employees​/{employee_pk}​/training​/
   get_trainings: async (employee_id: number) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/trainings/`);
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/training/`);
   },
+  // /employees/{employee_pk}/training/history/
   get_training_hist: async ( employee_id: number) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz?.business_id}/training/history/?employee_id=${employee_id}`);
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/training/history/`);
   },
 
   // trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
@@ -572,14 +575,14 @@ export const useFetchStatistics = (filter : TaskStatisticFilter = "",department_
     enabled : !!employee_id || !!filter || !!department_id
   })
 }
-export const useFetchTrainings = ( eemployee_id?: number|null) => {
-  return useQuery([TRAININGS, eemployee_id], () => APIFunction.get_trainings(eemployee_id as number),{
-
+export const useFetchTrainings = ( employee_id?: number) => {
+  return useQuery([TRAININGS, employee_id], () => APIFunction.get_trainings(employee_id as number),{
+    enabled: !!employee_id
   });
 }
-export const useFetchTrainingsHist = ( eemployee_id?: number|null) => {
-  return useQuery([TRAININGHISTORY, eemployee_id], () => APIFunction.get_training_hist(eemployee_id as number),{
-
+export const useFetchTrainingsHist = ( employee_id?: number) => {
+  return useQuery([TRAININGHISTORY, employee_id], () => APIFunction.get_training_hist(employee_id as number),{
+    enabled: !!employee_id
   });
 }
 // export const useFetchSentStatistics = () => {
