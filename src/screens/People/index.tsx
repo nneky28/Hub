@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Image, Platform, ScrollView, SectionList, Text,View } from 'react-native'
 import { width } from 'react-native-dimension'
-import { FilterModal } from '../../components/ContactModal'
 import PersonCard from '../../components/PersonCard'
 import PersonListComp from '../../components/PersonListComp'
 import ScreenWrapper from '../../components/ScreenWrapper'
@@ -27,7 +26,6 @@ export default function People({navigation} : RootScreenProps) {
     
     var [selected, setSelected] = useState<TabType>('All');
     const [isListView, setIsListView] = useState(false);
-    const [modal, setModal] = useState(false);
     const [personsList, setPersonsList] = useState<useFetchEmployeesData[]>([]);
     const [celebrations,setCelebrations] = useState<Celebrations[]>();
     const [whosOut,setWhosOut] = useState<WhosOutSection[]>()
@@ -519,10 +517,6 @@ export default function People({navigation} : RootScreenProps) {
                             }
                         </React.Fragment>
                     )
-                }
-                
-                {
-                    modal ? <FilterModal onPressHandle={handleSearch} isVisible={modal} onHide={() => setModal(false)}/> : null
                 }
             </View>
             </React.Fragment>

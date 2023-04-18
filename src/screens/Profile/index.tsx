@@ -120,7 +120,7 @@ export default function Profile({navigation} : RootScreenProps) {
           isExpanded = true;
 
         
-        const {data} = item;
+        const data = item?.data || [];
         return (
           <View style={styles.profileListContainer} 
             onLayout={(event)=>{

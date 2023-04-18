@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Text, View, Share, Linking, TouchableOpacity
-} from 'react-native';
+  View, Share, Linking} from 'react-native';
 import Modal from 'react-native-modal';
-import { unCheckRectIcon } from '../../assets/images';
 import TextWithIcon, { TextWithIconCopy } from '../TextWithIcon';
 import styles from './styles';
-import { Container, EmptyStateWrapper, P, TouchableWrapper } from '../../utills/components';
-import AppColors from '../../utills/AppColors';
 import { Images } from '../../utills/Image';
-import { height, width } from 'react-native-dimension';
-import { useNavigation } from '@react-navigation/native';
-import Button from '../Button';
+import { ContactModalProps, DocumentModalProps } from './types';
 
 
 
-const ContactModal = ({ isVisible, onHide, data }) => {
+const ContactModal = ({ isVisible, onHide, data } : ContactModalProps) => {
 
 
   let address = ""
-  if (data?.address) {
+  if ( data && "address" in data) {
     address = data?.address?.address1 || ""
     address = address && data?.address?.address2 ? `${address}, ${data?.address?.address2}` : data?.address?.address2 ? data?.address?.address2 : address
     address = address && data?.address?.city ? `${address}, ${data?.address?.city}` : data?.address?.city ? data?.address?.city : address
@@ -41,7 +35,7 @@ const ContactModal = ({ isVisible, onHide, data }) => {
     },
     {
       key: '3',
-      title: data && data.phone_number1 ? data.phone_number1 : "",
+      title: data && "phone_number1" in data && data?.phone_number1 ? data.phone_number1 : "",
       iconLeft: { uri: Images.PhoneIcon },
       iconRight: { uri: Images.CopyIcon },
     },
@@ -68,17 +62,16 @@ const ContactModal = ({ isVisible, onHide, data }) => {
       style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <TextWithIconCopy item={contactData[0]} onHide={onHide} />
-        <TextWithIconCopy item={contactData[1]} onHide={onHide} />
-        <TextWithIconCopy item={contactData[2]} onHide={onHide} />
-        {/* <TextWithIcon item={contactData[3]} textStyle={styles.text2}/> */}
+        {
+          contactData.map((item,i)=><TextWithIconCopy item={item} onHide={onHide} key={i}/>)
+        }
       </View>
     </Modal>
   );
 };
 
-const DocumentModal = ({ isVisible, onHide, document }) => {
-  const onPressHandle = (action) => {
+const DocumentModal = ({ isVisible, onHide, document } : DocumentModalProps) => {
+  const onPressHandle = (action : "view" | "share" | "download") => {
     try {
       if (!document || !document.file) return
       if (action === "view") {
@@ -110,214 +103,16 @@ const DocumentModal = ({ isVisible, onHide, document }) => {
       style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={isVisible}>
       <View style={styles.container}>
-        <TextWithIcon item={{ title: 'Share', iconLeft: Images.ShareIcon }} textStyle={styles.text2}
+        <TextWithIcon item={{ title: 'Share', iconLeft: {uri : Images.ShareIcon} }} textStyle={styles.text2}
           onPressHandle={() => onPressHandle("share")}
-          url={true}
         />
-        <TextWithIcon item={{ title: 'Download', iconLeft: Images.DownloadIcon }} textStyle={styles.text2}
+        <TextWithIcon item={{ title: 'Download', iconLeft: {uri : Images.DownloadIcon} }} textStyle={styles.text2}
           onPressHandle={() => onPressHandle("download")}
-          url={true}
         />
-        {/* <TextWithIcon item={{title: 'View', iconLeft: Images.EyeIcon}} textStyle={styles.text2}
-          onPressHandle={()=>onPressHandle("view")}
-          url={true}
-        /> */}
       </View>
     </Modal>
   );
 };
 
-export const RestrictionModal = ({ isVisible, onHide, onPressHandler }) => {
-  return (
-    <Modal
-      //onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      // onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}
-    >
-      <View style={styles.container}>
-        <EmptyStateWrapper
-          marginTop={height(0.3)}
-          height={height(1.8)}
-          icon={Images.PINLocation}
-          header_1={"Where are you?"}
-          sub_text={"Please turn on your location so you can clock in."}
-        />
-        <Container width={80} marginTop={2}
-          // direction="row"
-          style={{
-            justifyContent: "space-between",
-            alignSelf: "center",
-            alignItems: "center"
-          }}
-        >
-          {/* <TouchableOpacity onPress={onHide}>
-              <H1>Cancel</H1>
-            </TouchableOpacity> */}
-          <Button
-            onPress={onPressHandler}
-            containerStyle={{
-              width: width(70),
-            }}
-            title={"Turn on"}
-          />
-          <Button
-            onPress={onHide}
-            containerStyle={{
-              width: width(70),
-              marginTop: height(2),
-              backgroundColor: AppColors.white
-            }}
-            title={"Cancel"}
-            textStyle={{
-              color: AppColors.black
-            }}
-          />
-        </Container>
-      </View>
-    </Modal>
-  );
-};
-
-
-
-
-
-const FilterModal = ({ isVisible, onHide, onPressHandle }) => {
-
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
-      <View style={styles.container}>
-        <View style={styles.line1} />
-        <View style={styles.textContainer}>
-          <Text style={styles.text1}>Filter</Text>
-        </View>
-        <TextWithIcon item={{ title: 'Department', iconRight: unCheckRectIcon }} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2} />
-        <TextWithIcon item={{ title: 'Job Role', iconRight: unCheckRectIcon }} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2} />
-        <TextWithIcon item={{ title: 'Line Manager', iconRight: unCheckRectIcon }} containerStyle={styles.filterContainer} iconStyle={styles.uncheckIcon} textStyle={styles.text2} />
-      </View>
-    </Modal>
-  );
-};
-const ActionModal = ({ isVisible, onHide, onPressHandle, loading, item, deleteHandler, title }) => {
-
-  const [showDetails, setShowDetails] = useState(false)
-  const [showForm, setShowForm] = useState(false)
-  const navigation = useNavigation();
-
-
-  const handleOpen = () => {
-    setShowDetails(true)
-    item
-  }
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      isVisible={isVisible}>
-
-      <View style={styles.container1}>
-        <TouchableOpacity style={styles.textCon} onPress={() => {
-          onHide()
-          navigation.navigate("TaskView", { item, title })
-        }}>
-          <P>View Task</P>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity
-          style={styles.textCon} onPress={() => onPressHandle("Completed")}>
-          <P>Mark task as complete</P>
-        </TouchableOpacity>
-        {
-          title === "To-Do" ? null :
-            <>
-              <View style={styles.line} />
-              <TouchableOpacity style={styles.textCon} onPress={() => {
-                onHide()
-                onPressHandle("To-do")
-              }
-              } >
-                <P>Mark task as not started</P>
-              </TouchableOpacity>
-            </>
-        }
-        <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => {
-          onHide()
-          navigation.navigate("CreateTask", { item })
-        }}>
-          <P>Edit Task</P>
-        </TouchableOpacity>
-        <View style={styles.line} />
-        <TouchableOpacity style={styles.textCon} onPress={() => deleteHandler()}>
-          <P color={AppColors.red}>Delete Task</P>
-        </TouchableOpacity>
-        <View style={styles.line} />
-      </View>
-
-      {/* <TaskViewMore isVisible={showDetails} onHide={() => setShowDetails(false)} item={item} /> */}
-    </Modal>
-  );
-};
-
-
-const UnCompletedModal = ({ isVisible, onHide, onPressHandle }) => {
-
-  return (
-    <Modal
-      onBackButtonPress={onHide}
-      onModalHide={onHide}
-      animationInTiming={500}
-      animationOutTiming={10}
-      backdropOpacity={0.2}
-      swipeDirection={'down'}
-      onSwipeComplete={onHide}
-      onBackdropPress={onHide}
-      animationIn="fadeInUp"
-      animationOut="fadeInDown"
-      swipeThreshold={0.3}
-      style={{ margin: 0 }}
-      isVisible={isVisible}>
-      <View style={styles.conBox}>
-        <TouchableWrapper style={styles.textCon} onPress={() => onPressHandle('In-progress')}>
-          <Text style={styles.progress}>Undo completed</Text>
-        </TouchableWrapper>
-      </View>
-    </Modal>
-  );
-};
-
-export { DocumentModal, FilterModal, ActionModal, UnCompletedModal };
+export { DocumentModal };
 export default ContactModal;

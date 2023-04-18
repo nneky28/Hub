@@ -1,4 +1,4 @@
-import { ViewStyle,TextStyle } from "react-native";
+import { ViewStyle,TextStyle, ImageStyle } from "react-native";
 import { ProfileDataType } from '../../utills/data/profileData';
 
 
@@ -6,7 +6,7 @@ import { ProfileDataType } from '../../utills/data/profileData';
 
 export type TextWithIconCopyProps = {
     item:  ProfileDataType;
-    iconStyle:{}
+    iconStyle?: ImageStyle
     onHide: () => void,
     url?:string
 }
@@ -14,7 +14,7 @@ export type TextWithIconCopyProps = {
 export type TextWithProps = {
     containerStyle? : ViewStyle,
     textStyle?: TextStyle,
-    iconStyle:{}
+    iconStyle?: ImageStyle
     item: ProfileDataType,
     onPressHandle?: () => void,
     url?:string

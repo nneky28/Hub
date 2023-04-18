@@ -4,7 +4,6 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {lockIcon} from '../../assets/images';
 import CommonStyles from '../../utills/CommonStyles';
-import {ImageWrap} from '../../utills/components';
 import styles from './styles';
 import {TextWithIconCopyProps, TextWithProps} from './types';
 
@@ -87,23 +86,19 @@ const TextWithIcon = ({
         disabled={lock}
         onPress={onPressHandle}>
         <View style={CommonStyles.rowAlignItemCenter}>
-          {item.url ? (
-            <ImageWrap url={item?.url} width={5} height={3} fit={'contain'} />
-          ) : (
-            <React.Fragment>
-              {item && item.iconLeft ? (
-                <Image
-                  resizeMode="contain"
-                  source={
-                    typeof item.iconLeft === 'string'
-                      ? {uri: item.iconLeft}
-                      : item.iconLeft
-                  }
-                  style={styles.iconStyle}
-                />
-              ) : null}
-            </React.Fragment>
-          )}
+          <React.Fragment>
+            {item && item.iconLeft ? (
+              <Image
+                resizeMode="contain"
+                source={
+                  typeof item.iconLeft === 'string'
+                    ? {uri: item.iconLeft}
+                    : item.iconLeft
+                }
+                style={styles.iconStyle}
+              />
+            ) : null}
+          </React.Fragment>
           <Text
             style={[styles.TitleText, CommonStyles.marginLeft_4, textStyle]}>
             {item.title}
