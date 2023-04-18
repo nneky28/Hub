@@ -350,7 +350,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_employees: async (page = 1, search = "",limit = 20) => {
+  get_employees: async (page = 1, search = "",limit = 8) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },

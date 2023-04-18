@@ -3,6 +3,8 @@ import { DrawerNavigationProp, DrawerScreenProps } from "@react-navigation/drawe
 import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
 import { useFetchAboutMeData } from "../components/TimeoffModal/types"
+import { TaskPeopleListParams } from "../screens/TaskPeopleList/types"
+import { TeamTaskHomeParam } from "../screens/TeamTaskHome/types"
 
 
 type ParamsType = {
@@ -47,8 +49,8 @@ export type MenuScreenList = {
     Trainings : undefined
     TaskOnboarding : undefined
     CreateTask : ParamsType | undefined
-    TeamTaskHome : ParamsType | undefined
-    TaskPeopleList : ParamsType  | undefined
+    TeamTaskHome : TeamTaskHomeParam | undefined
+    TaskPeopleList : TaskPeopleListParams | undefined
     TaskLandingPage : undefined
     TaskHome : undefined
     PayslipHistory : undefined
@@ -93,6 +95,8 @@ export type RootAuthScreenProps = StackScreenProps<AuthScreenList>
 export type RootOnboardScreenProps = StackScreenProps<OnboardScreenList>
 
 export type RootHomeScreenProps = StackScreenProps<HomeScreenList>
+
+export type RootMenuScreenProps = StackScreenProps<MenuScreenList>
 
 
 

@@ -5,97 +5,43 @@ import { FontFamily } from '../../utills/FontFamily';
 
 
 const styles = StyleSheet.create({
-    wrapper: {
-        backgroundColor: '#F5F5F5',
-        flex: 1,
-        alignItems: 'center',
-    },
-
     twoButtonCont: {
         width: width(90),
         alignSelf: 'center',
         borderWidth: 1,
         borderColor: AppColors.grayBorder,
-        borderRadius: 20,
+        borderRadius: width(10),
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        height: height(4.5),
+        justifyContent: 'space-between',
+        marginTop : height(2),
         alignItems: 'center',
 
     },
-    button3: {
-        width: '64%',
-        height: height(3),
+    selected_tab : {
+        width: width(43),
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        paddingVertical : height(1),
+        backgroundColor : AppColors.lightGreen,
+        borderRadius: width(10),
+    },
+    deselected_tab : {
+        width: width(43),
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical : height(1),
+        backgroundColor : AppColors.white,
+        borderRadius: width(10),
     },
     buttonText1: {
         fontSize: width(3.3),
         fontFamily: FontFamily.BlackSansRegular,
         color: AppColors.green,
     },
-    animatedView3: {
-        position: 'absolute',
-        width: width(40),
-        backgroundColor: AppColors.lightGreen,
-        height: height(4),
-        borderRadius: 20,
-        zIndex: -1,
-    },
-    containerView: {
-        width: width(100),
-        paddingVertical: height(2),
-        flex: 1
-    },
-    mainViewContainer: {
-        backgroundColor: AppColors.white,
-        alignItems: 'center',
-    },
-
-    header: {
-        width: width(100),
-        // marginBottom: height(0.5),
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: width(1),
-        justifyContent: 'space-between',
-        paddingVertical: height(2)
-    },
-    leftIcon: {
-        width: width(5),
-        height: width(5),
-    },
-    screenTitle: {
-        fontSize: width(5),
-        color: AppColors.black1,
-        fontFamily: FontFamily.BlackSansBold,
-    },
-
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: width(100),
-        // paddingVertical: height(2),
-        paddingHorizontal: width(1.5),
-        marginTop: height(2)
-    },
-    btnText: {
-        textDecorationLine: 'underline',
-        color: AppColors.green
-    },
     line: {
         width: width(90),
-        height: 1,
-        backgroundColor: AppColors.gray1,
-        elevation: 0,
-        marginLeft: width(5)
-    },
-
-    team: {
-        height: height(40),
-        width: width(90),
-        minHeight: height(20)
-
+        borderWidth : width(0.2),
+        borderColor: AppColors.gray1,
     },
     searchBoxContainer: {
         width: width(100),
@@ -110,59 +56,16 @@ const styles = StyleSheet.create({
         backgroundColor: AppColors.transparent,
         marginTop: height(3),
     },
-
-    searchBox: {
-        width: width(80),
-        alignSelf: 'flex-start',
-        flexDirection: 'row',
-        paddingHorizontal: width(3),
-    },
-    searchBoxA: {
-        width: width(60),
-        alignSelf: 'flex-start',
-        flexDirection: 'row',
-        paddingHorizontal: width(3),
-    },
-    titleText: {
-        fontSize: width(3.5),
-        color: AppColors.black1,
-        marginRight: width(5),
-        fontFamily: FontFamily.BlackSansBold,
-
-    },
-    textContainer: {
-        justifyContent: 'space-between',
-        height: height(4.5),
-        marginLeft: width(2),
-        marginTop: height(2)
-    },
-    subText: {
-        fontSize: width(2.5),
-        color: AppColors.black1,
-        fontFamily: FontFamily.BlackSansRegular,
-    },
-
-    button: {
-        backgroundColor: '#E1E1E1',
-        width: width(25),
-        borderRadius: width(6),
-        margin: 0,
-
-    },
+   
     buttonText: {
         fontSize: width(3.1),
         fontFamily: FontFamily.BlackSansBold,
         color: AppColors.black1,
     },
-    listContainer: {
-        width: width(90),
-        justifyContent: 'space-between',
-        paddingVertical: height(0.8),
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: height(2)
-    },
-
+    contentContainerStyle : {
+        justifyContent : "center",
+        alignItems : "center"
+    }
 
 });
 export default styles;

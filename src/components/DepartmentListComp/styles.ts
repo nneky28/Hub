@@ -36,16 +36,15 @@ const styles = StyleSheet.create({
 
   },
   textContainer1: {
-    justifyContent: 'space-between',
-    height: height(4.5),
-    marginLeft: width(2),
-    marginTop: height(2)
+      width : width(75)
   },
   listContainer1: {
     width: width(90),
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf : "center",
+    paddingVertical : height(1)
   },
 });
 

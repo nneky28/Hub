@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, Platform, RefreshControl, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
+import { ImageBackground, Text, Platform, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "./Image"
 import {
@@ -705,17 +705,6 @@ export const OnboardModal = (props:OnboardModalProps) => {
   )
 }
 
-export const CustomRefreshControl = (props : {loading : boolean, onRefresh : () => void}) =>{
-  return(
-    <RefreshControl
-        colors={[AppColors.white]}
-        progressBackgroundColor={AppColors.green}
-        refreshing={props.loading}
-      // onRefresh={props.onRefresh}
-      {...props}
-  />)
-}
-
 export const CustomWebView = (props:CustomWebViewProps) => (
   <Modal visible={props.show}>
     <Container
@@ -843,10 +832,11 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
     reportMainError()
   }, [])
   return (
-    <Container flex={1} style={{
-      alignItems: "center",
-      justifyContent: "center"
-    }}
+    <Container 
+      flex={1} 
+      horizontalAlignment="center"
+      verticalAlignment="center"
+      backgroundColor={AppColors.white}
     >
       <Container width={90}>
         <EmptyStateWrapper
@@ -869,12 +859,13 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
 export const EmptyStateWrapper = React.memo((props:EmptyStateWrapperProps) => {
   return(
       <Container
-      marginTop={props.marginTop || 8}
-      style={{
-        alignItems: "center",
-        backgroundColor: props.backgroundColor || AppColors.white
-      }}
-    >
+        marginTop={props.marginTop || 8}
+        verticalAlignment="center"
+        horizontalAlignment="center"
+        alignSelf="center"
+        backgroundColor={props.backgroundColor || AppColors.white}
+        width={90}
+      >
       <Container width={70} alignSelf="center" backgroundColor={props.backgroundColor}>
         <ImageWrap
           url={props.icon}
@@ -883,25 +874,26 @@ export const EmptyStateWrapper = React.memo((props:EmptyStateWrapperProps) => {
         />
       </Container>
       <SizedBox height={props?.spacing || 2} />
-      {
-        props.header_1 ? (
-          <H1
-            color={AppColors.black3}
-            fontSize={5}
-          >{props.header_1}</H1>
-        ) : null
-      }
-      <SizedBox height={props?.spacing || 2} />
-      {
-        props.header_2 ? <React.Fragment>
-          <H1 color={AppColors.black3}
-            fontSize={5}>{props.header_2}</H1>
-          <SizedBox height={props?.spacing || 2} />
-        </React.Fragment> : null
-      }
-      {
-        props.sub_text ? <P color={AppColors.black2}>{props.sub_text}</P> : null
-      }
+        {
+          props.header_1 ? (
+            <H1
+              color={AppColors.black3}
+              fontSize={5}
+              textAlign='center'
+            >{props.header_1}</H1>
+          ) : null
+        }
+        <SizedBox height={props?.spacing || 2} />
+        {
+          props.header_2 ? <React.Fragment>
+            <H1 color={AppColors.black3} textAlign='center'
+              fontSize={5}>{props.header_2}</H1>
+            <SizedBox height={props?.spacing || 2} />
+          </React.Fragment> : null
+        }
+        {
+          props.sub_text ? <P color={AppColors.black2}>{props.sub_text}</P> : null
+        }
     </Container>
   )
 },(prevProps,nextProps)=>{

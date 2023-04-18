@@ -17,7 +17,7 @@ const PersonListComp: React.FC<PersonListCompProps> = ({
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.listItemContainer]}
+      style={styles.listItemContainer}
       onPress={onPressHandler}
     >
       <View style={CommonStyles.rowJustifySpaceBtw}>

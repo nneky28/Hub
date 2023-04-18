@@ -207,7 +207,8 @@ const styles = StyleSheet.create({
   },
   contentContainerStyle : {
     marginTop : height(1),
-    paddingBottom : height(40)
+    paddingBottom : height(40),
+    backgroundColor : AppColors.transparent
   }
 });
 export default styles;
