@@ -6,19 +6,10 @@ import {
   View,
 } from 'react-native';
 import CommonStyles from '../../utills/CommonStyles';
-import { H1, ImgPlaceholder} from '../../utills/components';
+import { ImgPlaceholder} from '../../utills/components';
 import { Capitalize } from '../../utills/Methods';
 import styles from './styles';
 import { PersonListCompProps } from './types';
-
-
-
-type DeptListCompProps = {
-  item: {
-    name?: string| null
-  };
-  onPressHandle: () => void;
-};
 
 const PersonListComp: React.FC<PersonListCompProps> = ({
   item,
@@ -48,30 +39,6 @@ const PersonListComp: React.FC<PersonListCompProps> = ({
           <Text style={styles.subText}>
             {item?.job?.title ? Capitalize(item?.job?.title) : ''}
           </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export const DeptListComp: React.FC<DeptListCompProps> = ({
-  item,
-  onPressHandle,
-}) => {
-  return (
-    <TouchableOpacity
-      style={[styles.listContainer1]}
-      onPress={onPressHandle}>
-      <View style={CommonStyles.rowJustifySpaceBtw}>
-        <ImgPlaceholder
-          text={item?.name && item?.name.length > 0 ? Capitalize([...item?.name][0]) : ''}
-          size={12}
-        />
-
-        <View style={styles.textContainer1}>
-          <H1 style={styles.titleText}>
-            {item?.name ? Capitalize(item?.name) : ''}{' '}
-          </H1>
         </View>
       </View>
     </TouchableOpacity>

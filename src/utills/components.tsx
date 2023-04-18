@@ -383,12 +383,11 @@ export const Container = (props : ContainerProps) => (
       {
         position: props.position,
         borderColor: props.borderColor?props.borderColor:AppColors.grayBorder,
-        flex: props.flex || 0,
+        flex: props.flex,
         flexDirection: props.direction,
         width: props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
         padding: props.padding ? width(props.padding) : undefined,
         height: props?.height,
-        //? height(props.height) : null,
         justifyContent:
           props.direction === "row"
             ? props.horizontalAlignment
@@ -406,7 +405,7 @@ export const Container = (props : ContainerProps) => (
         paddingRight: props.paddingRight ? width(props.paddingRight) : 0,
         paddingLeft: props.paddingLeft ? width(props.paddingLeft) : 0,
         marginRight: props.marginRight ? width(props.marginRight) : 0,
-        backgroundColor: props.backgroundColor || AppColors.white,
+        backgroundColor: props.backgroundColor || AppColors.transparent,
         borderWidth: props.borderWidth,
         borderTopWidth: props.borderTopWidth,
         borderBottomWidth: props.borderBottomWidth,

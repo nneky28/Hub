@@ -1,39 +1,38 @@
 import { View, Text, FlatList, Platform, ActivityIndicator, TouchableOpacity, SectionList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import styles from './styles'
-import { CloseHandler, Container, P,  H1 } from '../../utills/components';
+import { CloseHandler, Container, P,  H1, useDebounce } from '../../utills/components';
 import SearchBox,{SearchBoxIOS} from '../../components/SearchBox/index';
 import CommonStyles from '../../utills/CommonStyles';
 import AppColors from '../../utills/AppColors';
-import PersonListComp, { DeptListComp } from '../../components/PersonListComp/index';
+import PersonListComp from '../../components/PersonListComp/index';
 import { useFetchEmployees, useFetchTeams, useFetchDepartments } from '../../utills/api';
 import {  getData } from '../../utills/Methods';
 import { height, width } from 'react-native-dimension';
 import { useFetchAboutMeData } from '../../components/TimeoffModal/types';
+import { RootScreenProps } from '../../Routes/types';
+import { Tab, TaskPeopleListParams } from './types';
+import { useFetchEmployeesProps, useFetchTeamsProps } from '../People/types';
+import DeptListComp from '../../components/DepartmentListComp';
 
-
-
-
-interface Props {
-    navigation: any;
-    onPressHandler: () => void;
-    item:any
-  }
   
 
 
-const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
-  const [myTeam, setMyTeam] = useState({name : ""})
-  const [item, setItem] = useState<Array<any>>([]);
-  const [teamItem, setTeamItem] = useState<Array<any>>([]);
-  const [page, setPage] = useState<number>(1);
-  const [teamPage] = useState<number>(1);
-  const [search, setSearch] = useState<string>("");
-  const [tab, setTab] = useState<string>("Employees");
-  const [deptPage] = useState<number>(1);
-  const [departments, setDepartments] = useState<Array<any>>([]);
-  const [searchDeptTerm] = useState<string>("");
-  const combinedState = [...teamItem, ...item];
+const TaskPeopleList = ({ route,navigation } : RootScreenProps) => {
+
+    const {
+        char
+    } : TaskPeopleListParams = route?.params || {}
+
+    const [myTeam, setMyTeam] = useState({name : ""})
+    const [item, setItem] = useState<Array<any>>([]);
+    const [teamItem, setTeamItem] = useState<Array<any>>([]);
+    const [page, setPage] = useState<number>(1);
+    const [search, setSearch] = useState<string>("");
+    const searchTerm = useDebounce(search,200)
+    const [tab, setTab] = useState<Tab>("Employees");
+    const [departments, setDepartments] = useState<Array<any>>([]);
+    const combinedState = [...teamItem, ...item];
 
 
     const {
@@ -41,26 +40,37 @@ const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
         hasNextPage: hasNextPage,
         isLoading: loading,
         isFetchingNextPage: isFetchingNextPage
-    } = useFetchEmployees(page, search)
+    } = useFetchEmployees(
+        tab !== "Employees" ? "Employees" : "",
+        page, 
+        searchTerm
+    ) as useFetchEmployeesProps
 
     const {
         data: teamData,
-    } = useFetchTeams(teamPage)
+    } = useFetchTeams(
+        tab === "Employees" ? "Employees" : ""
+    ) as useFetchTeamsProps
 
     const {
         data: departmentData,
         isFetching: fetchingDepartments,
         isFetchingNextPage: fetchingNextDepartments,
-    } = useFetchDepartments(deptPage, searchDeptTerm)
+    } = useFetchDepartments(
+        tab === "Departments" ? "Departments" : "",
+        page,
+        searchTerm
+    )
+
+    console.log("departmentData",departmentData)
 
    
     const RenderItem = ({ item }:{item:any}) => {
         return (
           <PersonListComp
             item={item}
-            onPressHandle={() =>
+            onPressHandler={() =>
                 navigation.navigate("Menu", { screen: "TeamTaskHome", params: { item: item } })
-
             }
           />
         );
@@ -70,7 +80,7 @@ const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
         return (
           <DeptListComp
             item={item}
-                onPressHandle={() =>
+                onPressHandler={() =>
                     navigation.navigate("Menu", { screen: "TeamTaskHome", params: {item, departments} })
             }
           />
@@ -101,7 +111,7 @@ const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
         })
         let arr = flattenArr.flat()
         if (param === "departments")
-            return deptPage > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
+            return page > 1 ? setDepartments([...departments, ...arr]) : setDepartments(arr)
     }
 
     const flattenAndMapData = (data:any, type:string) => {
@@ -160,7 +170,11 @@ const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
           setMyTeam(about.department);
         }
       };
-      
+    
+    useEffect(()=>{
+        setSearch("")
+    },[char])
+
     useEffect(() => {
         __flattenArr('departments')
     }, [fetchingDepartments, fetchingNextDepartments])
@@ -260,7 +274,7 @@ const TaskPeopleList: React.FC<Props> = ({ navigation }) => {
                             <View style={[CommonStyles.marginTop_3, CommonStyles.marginLeft_5,]}>
                                 <H1 style={CommonStyles.marginBottom_2} fontSize={3.3}>Your Team</H1>
                             <DeptListComp item={myTeam}
-                                      onPressHandle={() => null}
+                                      onPressHandler={() => null}
                                 />
                             </View>
                             {

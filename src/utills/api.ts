@@ -513,7 +513,7 @@ export const useFetchEmployeeTeamMembers = (id : number | undefined,page:number)
   )
 }
 
-export const useFetchTeams = (tab : string,page:number) => {
+export const useFetchTeams = (tab : string,page = 1) => {
   return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page], () => APIFunction.get_my_team_members(page), {
     enabled : !!tab, 
     getNextPageParam: (lastPage:any) => {
@@ -533,10 +533,11 @@ export const useFetchNotifications = (page:number) => {
 }
 
 
-export const useFetchDepartments = (page:number, search:string) => {
+export const useFetchDepartments = (tab : string,page:number, search:string) => {
   return useInfiniteQuery([GET_DEPARTMENTS, page, search], () => APIFunction.departments(page, search), {
-    getNextPageParam: () => {
-      // return lastPage.next
+    enabled : !!tab,
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
     }
   })
 }

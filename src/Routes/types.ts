@@ -48,7 +48,7 @@ export type MenuScreenList = {
     TaskOnboarding : undefined
     CreateTask : ParamsType | undefined
     TeamTaskHome : ParamsType | undefined
-    TaskPeopleList : undefined
+    TaskPeopleList : ParamsType  | undefined
     TaskLandingPage : undefined
     TaskHome : undefined
     PayslipHistory : undefined

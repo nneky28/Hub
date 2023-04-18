@@ -287,7 +287,8 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                     loadingTask ? <PageLoader /> : <KeyboardAwareSectionList 
                         showsVerticalScrollIndicator={false}
                         ListHeaderComponent={<React.Fragment>
-                            <View style={styles.container}>
+                            {
+                                task?.status !== "Completed" ? <View style={styles.container}>
                                 <View style={styles.row1}>
                                     <P style={styles.flagText}>Due: </P>
                                     {due_status === "DUE_TODAY" ? <React.Fragment>
@@ -304,19 +305,17 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                         <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
                                     </React.Fragment> : null}
                                 </View>
-                                {
-                                        task?.status === 'Completed' ? null :
-                                            <Button
-                                                title="Edit Task"
-                                                containerStyle={styles.buttonStyle}
-                                                textStyle={styles.buttonText}
-                                                onPress={() => {
-                                                    navigation.navigate("Menu",{screen : "CreateTask", params : { item : task }})
-                                                }}
-                                            />
-                                    }
+                                <Button
+                                    title="Edit Task"
+                                    containerStyle={styles.buttonStyle}
+                                    textStyle={styles.buttonText}
+                                    onPress={() => {
+                                        navigation.navigate("Menu",{screen : "CreateTask", params : { item : task }})
+                                    }}
+                                />
                                 <View style={styles.line} />
-                            </View>
+                            </View> : null
+                            }
                             <View style={styles.genContainer}>
                                 <View>
             

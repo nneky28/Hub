@@ -3,7 +3,7 @@ import { Menu } from "react-native-paper"
 import styles from "./styles"
 import { CustomMenuProps } from "./types"
 
-const CustomMenu = <T,>(props : CustomMenuProps<T>) => {
+const CustomMenu = <T extends string>(props : CustomMenuProps<T>) => {
     return(
         <Menu
             visible={props.visible}

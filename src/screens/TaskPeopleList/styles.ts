@@ -29,11 +29,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
-    buttonText: {
-        fontSize: width(3.3),
-        fontFamily: FontFamily.BlackSansRegular,
-        color: AppColors.black1,
-    },
     buttonText1: {
         fontSize: width(3.3),
         fontFamily: FontFamily.BlackSansRegular,

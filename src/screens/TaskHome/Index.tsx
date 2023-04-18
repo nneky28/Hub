@@ -92,7 +92,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     const RenderItem = ({ item } : RenderItemProps) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate("Menu", { screen: "TaskPeopleList" })}>
+            <TouchableOpacity onPress={() => navigation.navigate("Menu", { screen: "TaskPeopleList", params : {char : item}})}>
                 <ImgPlaceholder text={item} size={15} />
             </TouchableOpacity>
         );
