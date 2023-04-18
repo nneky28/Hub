@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
     alignItems: 'center',
-    // flex: 1,
+    flex: 1,
+    justifyContent : "center"
   },
   header: {
     width: width(100),
@@ -91,25 +92,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansSemiBold,
     color:AppColors.red
   },
-  imageContainer: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 1,
-    marginTop: height(4),   
-    },
   imageStyle: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: height(4.75),
- 
+    borderRadius: width(50)
   },
-  avatarStyle: {
-    height: height(20),
-    width: height(20),
-    borderRadius: height(4.75),
-
-  },
- 
   mask: {
     justifyContent: 'center',
     alignItems: 'center',

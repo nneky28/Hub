@@ -106,9 +106,10 @@ export const APIFunction = {
   },
   // update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
   
-  update_photo: async ( id: number) => {
+  update_photo: async (fd : FormData) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz?.business_id}/employees/${id}/update-photo/`);
+    const user = await getStoreAboutMe()
+    return storeFilePut(`/c/${biz?.business_id}/employees/${user?.id}/update-photo/`,fd);
   },
 
   edit: async (fd:EditProfileProps) => {
@@ -226,9 +227,10 @@ export const APIFunction = {
   user_info: async () => {
     return getAPIs(`/accounts/auth/user/`)
   },
-  onboarded: async (employee_id:number) => {
+  complete_user_onboarding : async () => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz?.business_id}/employees/${employee_id}/complete_user_onboarding/`)
+    let about = await getStoreAboutMe()
+    return postAPIs(`/c/${biz?.business_id}/employees/${about?.id}/complete_user_onboarding/`)
   },
   attendance_config: async (limit = 1) => {
     let biz = await getStoredBusiness()
