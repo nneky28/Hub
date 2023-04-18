@@ -104,8 +104,13 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-emergency-contact/`, fd)
   },
-  update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
+  // update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
   
+  update_photo: async ( id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/update-photo/`);
+  },
+
   edit: async (fd:EditProfileProps) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/`, fd);
@@ -198,7 +203,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/notifications/seen_all/`)
   },
-  remove_photo: async (employee_id:number) => {
+  remove_photo: async (employee_id?:number) => {
     let biz = await getStoredBusiness();
     return putAPIs(`/c/${biz?.business_id}/employees/${employee_id}/delete-photo/`)
   },

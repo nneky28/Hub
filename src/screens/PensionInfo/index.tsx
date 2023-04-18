@@ -106,9 +106,8 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
           account_number: data.account_number,
         };
         let res = (await bankVerify(fd)) as Awaited<{account_name?: string}>;
-        console.log('Res', res);
+        // console.log('Res', res);
         return setData({...data, account_name: res?.account_name || ''});
-        navigation.goBack();
       }
       if (!profile?.id) return;
 

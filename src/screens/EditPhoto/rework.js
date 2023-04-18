@@ -1,26 +1,21 @@
-import { useFocusEffect } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Platform, Text, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 //import ImagePicker from 'react-native-image-crop-picker';
 import { Circle, Defs, Mask, Rect, Svg } from 'react-native-svg';
-import { leftIcon, placeholder5 } from '../../assets/images';
 import Button from '../../components/Button';
-import ScreenWrapper from '../../components/ScreenWrapper';
 import { showFlashMessage } from '../../components/SuccessFlash';
 import AppColors, { ColorList } from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
 import { Capitalize, getData, storeData, ToastError, ToastSuccess } from '../../utills/Methods';
 import styles from './styles';
-import { setLoaderVisible } from '../../Redux/Actions/Config';
 import { useDispatch, useSelector } from 'react-redux';
-import { APIFunction, putAPIs, storeFile, storeFilePut } from '../../utills/api';
-import { ActivityIndicator } from 'react-native-paper';
+import { APIFunction, storeFilePut } from '../../utills/api';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { BackHandler, H1, Rounded } from '../../utills/components';
 import { PermissionsAndroid } from 'react-native';
-import { WarningModal } from '../../components/ContactModal';
 import { login } from '../../Redux/Actions/Auth';
+import WarningModal from '../../components/WarningModal/index';
+import ScreenWrapper from '../../components/ScreenWrapper/index';
 
 
 
@@ -33,10 +28,10 @@ export default function EditPhoto({ navigation }) {
   const [file, setFile] = useState(null)
   const [fileMeta, setFileMeta] = useState(null)
   const [show, setShow] = React.useState(false)
-
   const dispatch = useDispatch();
   var cropValues;
-  const SvgCircle = (props) => {
+
+  const SvgCircle = () => {
     return (
       <Svg width={width(100)} height={height(40)}>
         <Defs>
@@ -57,6 +52,9 @@ export default function EditPhoto({ navigation }) {
       </Svg>
     );
   }
+
+
+
 
   const imageFromGallery = async () => {
     try {
@@ -208,26 +206,26 @@ export default function EditPhoto({ navigation }) {
   }
 
   return (
-    <ScreenWrapper scrollEnabled={true}>
-      <View style={styles.header}>
-        <BackHandler />
-        <Text numberOfLines={1} style={styles.screenTitle}>
-          Edit Photo
-        </Text>
-        {
-          loading ? (
-            <ActivityIndicator size={15} color={AppColors.green} />
-          ) : (
-            <Button
-              title="save"
-              onPress={updateImage}
-              containerStyle={styles.saveBtnStyle}
-              textStyle={styles.saveBtnText}
-            />
-          )
-        }
-      </View>
-      <View style={styles.line} />
+    <ScreenWrapper>
+      {/* // <View style={styles.header}>
+      //   <BackHandler />
+      //   <Text numberOfLines={1} style={styles.screenTitle}>
+      //     Edit Photo
+      //   </Text> */}
+      {/* //   {
+      //     loading ? (
+      //       <ActivityIndicator size={15} color={AppColors.green} />
+      //     ) : (
+      //       <Button
+      //         title="save"
+      //         onPress={updateImage}
+      //         containerStyle={styles.saveBtnStyle}
+      //         textStyle={styles.saveBtnText}
+      //       />
+      //     )
+      //   }
+      // </View>
+      // <View style={styles.line} /> */}
 
       <View style={styles.mainViewContainer}>
         <View style={styles.imageContainer}>
@@ -238,7 +236,7 @@ export default function EditPhoto({ navigation }) {
                 resizeMode='contain'
                 style={styles.imageStyle}
               >
-                <SvgCircle />
+                // <SvgCircle />
               </ImageBackground>
             ) : profilePicture && profilePicture.assets && profilePicture.assets[0] ? (
               <ImageBackground
@@ -246,7 +244,7 @@ export default function EditPhoto({ navigation }) {
                 resizeMode='contain'
                 style={styles.imageStyle}
               >
-                <SvgCircle />
+                // <SvgCircle />
               </ImageBackground>
             ) : null
           }
