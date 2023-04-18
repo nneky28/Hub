@@ -584,7 +584,7 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
       style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={props?.show}
     >
-      <Container borderTopRightRadius={20} borderTopLeftRadius={20} paddingTop={3}>
+      <Container borderTopRightRadius={20} borderTopLeftRadius={20} paddingTop={3} backgroundColor={AppColors.white}>
           <Container width={90} alignSelf="center">
               <DatePicker
                   date={new Date(selected)} 
