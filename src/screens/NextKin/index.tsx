@@ -93,7 +93,7 @@ export default function NextKin({navigation}: RootOnboardScreenProps) {
   return (
     <ScreenWrapper scrollEnabled={false}>
       <HeaderWithBackButton
-        headerText="    Update Next of Kin"
+        headerText="Next of Kin"
         rightButtonText="Save"
         onSubmitHandler={handleSubmit}
         isLoading={loading}

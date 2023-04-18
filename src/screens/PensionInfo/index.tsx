@@ -33,6 +33,8 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
     bank_code: '',
     bank_name: '',
     prov_name: '',
+    bank: "",
+    provider: ""
   });
 
   const [disabled, setDisabled] = useState(false);
@@ -66,7 +68,7 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
       let required: DataKeys[] =
         data?.account_number || data?.bank ? ['account_number', 'bank'] : [];
       if (data?.pension_number || data?.provider) {
-        required = ['pension_number', 'provider'];
+        required = [...required,'pension_number', 'provider'];
       }
       let failed = false;
       let msg = '';
@@ -106,7 +108,7 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
           account_number: data.account_number,
         };
         let res = (await bankVerify(fd)) as Awaited<{account_name?: string}>;
-        // console.log('Res', res);
+        setDisabled(false)
         return setData({...data, account_name: res?.account_name || ''});
       }
       if (!profile?.id) return;
@@ -116,15 +118,15 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
         id: profile?.id,
       };
 
-      if (data.bank) {
+      if (data.bank && typeof data.bank === "number") {
         fd['bank_account'] = {
-          bank: data.bank as number,
+          bank: data.bank,
           account_number: data.account_number,
         };
       }
-      if (data.provider) {
+      if (data.provider && data.provider && typeof data.provider === "number") {
         fd['pension'] = {
-          provider: data.provider as number,
+          provider: data.provider,
           pension_number: data.pension_number,
         };
         fd['is_pension_applicable'] = true;
@@ -137,12 +139,7 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
       }
       return navigation.goBack();
     } catch (err: any) {
-      let msg =
-        err.msg && err.msg.detail && typeof err.msg.detail == 'string'
-          ? err.msg.detail
-          : 'Something went wrong. Please retry';
-      console.log('ERROR', msg);
-      ToastError(msg);
+      ToastError(err?.msg);
     }
   };
 

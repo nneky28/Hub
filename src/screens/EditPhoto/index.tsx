@@ -143,14 +143,14 @@ export default function EditPhoto() {
         }
         fd.append("photo",file)
         await update(fd)
-        setProfilePicture(undefined)
-        ToastSuccess("Photo has been saved")
-        queryClient.invalidateQueries(ABOUT_ME)
         if(auth.route !== "main"){
           await completeOnboarding()
           await storeData("about_me",{...about,completed_user_onboarding : true});
           return dispatch(login({...auth,onboard : false, route : "main"}))
         }
+        setProfilePicture(undefined)
+        ToastSuccess("Photo has been saved")
+        queryClient.invalidateQueries(ABOUT_ME)
       }catch(err : any){
         ToastError(err?.msg)
       }
