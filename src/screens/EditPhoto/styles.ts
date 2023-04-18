@@ -3,6 +3,8 @@ import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
 
+
+
 const styles = StyleSheet.create({
   mainViewContainer: {
     backgroundColor: AppColors.white,
@@ -79,25 +81,45 @@ const styles = StyleSheet.create({
     fontSize: width(3.5),
     fontFamily: FontFamily.BlackSansSemiBold
   },
+  btnTextBlack: {
+    fontSize: width(3.5),
+    fontFamily: FontFamily.BlackSansSemiBold,
+    color:AppColors.black3
+  },
+  btnTextRed: {
+    fontSize: width(3.5),
+    fontFamily: FontFamily.BlackSansSemiBold,
+    color:AppColors.red
+  },
   imageContainer: {
-      // backgroundColor: AppColors.darkGray, 
-      // width: width(100), 
-      alignItems: 'center', 
+      alignItems: 'center',
       justifyContent: 'center',
       opacity: 1,
-      marginTop: height(4)
+    marginTop: height(4),   
     },
   imageStyle: {
-    // width: width(60),
-    // height: height(40),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: height(4.75),
+ 
   },
   avatarStyle: {
     height: height(20),
     width: height(20),
     borderRadius: height(4.75),
+
   },
+ 
+  mask: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: height(4.75),
+  },
+  container: {
+    height: height(20),
+    width: height(20),
+    borderRadius: height(4.75),
+  }
 
 });
 
