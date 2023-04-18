@@ -8,7 +8,7 @@ import ScreenWrapper from '../../components/ScreenWrapper'
 import SearchBox, { SearchBoxIOS } from '../../components/SearchBox'
 import AppColors from '../../utills/AppColors'
 import CommonStyles from '../../utills/CommonStyles'
-import { Container, EmptyStateWrapper,PageLoader,useDebounce, TouchableWrapper, CustomRefreshControl, ImgPlaceholder } from '../../utills/components'
+import { Container, EmptyStateWrapper,PageLoader,useDebounce, TouchableWrapper, ImgPlaceholder } from '../../utills/components'
 import styles from './styles'
 import { Capitalize} from '../../utills/Methods'
 import { useFetchAnniversary, useFetchBirthdays, useFetchEmployees, useFetchTeams, useFetchWhosOut } from '../../utills/api'
@@ -21,6 +21,7 @@ import { CelebrationItem, Celebrations, TabType, useFetchEmployeesData, useFetch
 import { useQueryClient } from 'react-query'
 import { GET_EMPLOYEES, GET_MY_TEAM_MEMBERS } from '../../utills/payload'
 import { useFetchAnniversaryProps, useFetchBirthdaysProps, useFetchWhosOutProps } from '../Dashboard/types'
+import { CustomRefreshControl } from '../../components/CustomRefreshControl'
 
 export default function People({navigation} : RootScreenProps) {
     

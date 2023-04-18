@@ -294,9 +294,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
-  delete_task: async (fd:any) => {
+  delete_task: async (id : number) => {
     let biz = await getStoredBusiness()
-    return deleteAPIs(`/c/${biz?.business_id}/tasks_app/${fd}/`)
+    return deleteAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
   update_sub_task: async (fd:any) => {
     let biz = await getStoredBusiness()
@@ -355,7 +355,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_employees: async (page = 1, search = "",limit = 20) => {
+  get_employees: async (page = 1, search = "",limit = 8) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },
@@ -518,7 +518,7 @@ export const useFetchEmployeeTeamMembers = (id : number | undefined,page:number)
   )
 }
 
-export const useFetchTeams = (tab : string,page:number) => {
+export const useFetchTeams = (tab : string,page = 1) => {
   return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page], () => APIFunction.get_my_team_members(page), {
     enabled : !!tab, 
     getNextPageParam: (lastPage:any) => {
@@ -538,10 +538,11 @@ export const useFetchNotifications = (page:number) => {
 }
 
 
-export const useFetchDepartments = (page:number, search:string) => {
+export const useFetchDepartments = (tab : string,page:number, search:string) => {
   return useInfiniteQuery([GET_DEPARTMENTS, page, search], () => APIFunction.departments(page, search), {
-    getNextPageParam: () => {
-      // return lastPage.next
+    enabled : !!tab,
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
     }
   })
 }

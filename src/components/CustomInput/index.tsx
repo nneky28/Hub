@@ -25,7 +25,8 @@ interface Props{
   editable? : boolean,
   style? : ViewStyle,
   autoFocus? : boolean,
-  multiline? :boolean
+  multiline? :boolean,
+  backgroundColor? : string
 }
 
 const CustomInput: React.FC<Props> = (props) => {
@@ -42,7 +43,7 @@ const CustomInput: React.FC<Props> = (props) => {
   multiline={props.multiline}
       style={[
         {
-          backgroundColor: AppColors.gray,
+          backgroundColor: props?.backgroundColor || AppColors.gray,
           width: props?.inputWidth ? width(props.inputWidth) : width(90),
           justifyContent: 'center',
           alignSelf: 'center',
@@ -59,7 +60,7 @@ const CustomInput: React.FC<Props> = (props) => {
         colors: {
         primary: '#2898A4',
         placeholder: props?.placeholderColor || AppColors.black3,
-        text: props?.textColor || AppColors.black
+        text: props?.textColor || AppColors.black,
         },
         fonts: {
         regular: {

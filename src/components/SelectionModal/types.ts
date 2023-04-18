@@ -1,8 +1,10 @@
 import { MenuScreenList } from "../../Routes/types"
 
+export type ScreenList = Omit<MenuScreenList,"TaskDetails">
+
 export type TextWithIconProps = { 
     text : string
-    screen : keyof MenuScreenList,
+    screen : keyof ScreenList,
     icon : string, fill : string
 }
 

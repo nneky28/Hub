@@ -37,10 +37,9 @@ function TabBar({ state, descriptors,navigation} : BottomTabBarProps) {
     return (
       <>
         <Container
-          style={{
-            flexDirection: "row",
-            paddingBottom: height(3)
-          }}
+          backgroundColor={AppColors.white}
+          direction="row"
+          paddingBottom={3}
         >
           {/* tabBarHideOnKeyboard: true, */}
           {state.routes.map((route, index) => {

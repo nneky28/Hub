@@ -186,22 +186,22 @@ const ClockINContainer = () => {
                 style={styles.yellow_box}
                 position="absolute"
                 borderColor={AppColors.yellow}
+                backgroundColor={AppColors.white}
               >
                 <Container
                   style={{
                     alignItems: "center",
                   }}
                   marginBottom={2}
+                  backgroundColor={AppColors.white}
                 >
                   <P fontSize={3.3} color={AppColors.darkGray}>{getGreetingTime()}</P>
                   <Container
                     marginTop={2}
                     direction="row"
                     width={63}
-                    style={{
-                      alignSelf: "center",
-                      justifyContent: "space-around"
-                    }}
+                    horizontalAlignment="space-evenly"
+                    alignSelf="center"
                   >
                     {
                       current ? [...current.toString()].filter(num => num.trim() !== "").map((num, i) => (

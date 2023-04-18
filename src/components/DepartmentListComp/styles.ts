@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     paddingVertical: height(1),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
 
   },
   avatarStyle: {
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: height(4.5),
     marginLeft: width(2),
-    marginTop: height(0.5),
+    marginTop: height(0.5)
   },
   subText: {
     fontSize: width(2.5),
@@ -36,16 +36,15 @@ const styles = StyleSheet.create({
 
   },
   textContainer1: {
-    justifyContent: 'space-between',
-    height: height(4.5),
-    marginLeft: width(2),
-    marginTop: height(2)
+      width : width(75)
   },
   listContainer1: {
     width: width(90),
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf : "center",
+    paddingVertical : height(1)
   },
 });
 

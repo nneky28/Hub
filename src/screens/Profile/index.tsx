@@ -14,7 +14,7 @@ import { scrollToPosition } from '../../Redux/Actions/Config';
 import { useFetchAboutMe,useFetchEmergency, useFetchKin } from '../../utills/api';
 import AppColors from '../../utills/AppColors';
 import CommonStyles from '../../utills/CommonStyles';
-import { Container, CustomRefreshControl,ImgPlaceholder, ProfileLoader } from '../../utills/components';
+import { Container,ImgPlaceholder, ProfileLoader } from '../../utills/components';
 import { profileData, ProfileDataType } from '../../utills/data/profileData';
 import { Capitalize, useAppSelector } from '../../utills/Methods';
 import styles from './styles';
@@ -23,6 +23,7 @@ import { HomePageHeader } from '../../components/Headers/CustomHeader';
 import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
 import { Coordinates, TextWithButtonProps, TopBottomText, useFetchEmergencyProps, useFetchKinProps } from './types';
 import { BANKS, EMERGENCY, NEXT_OF_KINS } from '../../utills/payload';
+import { CustomRefreshControl } from '../../components/CustomRefreshControl';
 
 
 if (Platform.OS === 'android') {

@@ -63,8 +63,9 @@ const styles = StyleSheet.create({
     },
     subTitle: { 
         fontSize: width(3.1), 
-        color: AppColors.black1, 
-        marginLeft: width(2)
+        color: AppColors.black1,
+        marginBottom : height(1),
+        marginTop : height(1)
     },
     description_container : { 
         marginTop: height(2)

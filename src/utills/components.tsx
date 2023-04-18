@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentLoader from 'react-content-loader/native'
 import LottieView from 'lottie-react-native';
-import { ImageBackground, Text, Platform, RefreshControl, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
+import { ImageBackground, Text, Platform, TextInput, SafeAreaView, FlatList, KeyboardAvoidingView,ViewStyle } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather'
 import { Images } from "./Image"
 import {
@@ -383,12 +383,11 @@ export const Container = (props : ContainerProps) => (
       {
         position: props.position,
         borderColor: props.borderColor?props.borderColor:AppColors.grayBorder,
-        flex: props.flex || 0,
+        flex: props.flex,
         flexDirection: props.direction,
         width: props.width ? width(props.width) : props.widthPercent ? props.widthPercent : '100%',
         padding: props.padding ? width(props.padding) : undefined,
         height: props?.height,
-        //? height(props.height) : null,
         justifyContent:
           props.direction === "row"
             ? props.horizontalAlignment
@@ -406,7 +405,7 @@ export const Container = (props : ContainerProps) => (
         paddingRight: props.paddingRight ? width(props.paddingRight) : 0,
         paddingLeft: props.paddingLeft ? width(props.paddingLeft) : 0,
         marginRight: props.marginRight ? width(props.marginRight) : 0,
-        backgroundColor: props.backgroundColor || AppColors.white,
+        backgroundColor: props.backgroundColor || AppColors.transparent,
         borderWidth: props.borderWidth,
         borderTopWidth: props.borderTopWidth,
         borderBottomWidth: props.borderBottomWidth,
@@ -585,7 +584,7 @@ export const DatePickerModal = (props : DatePickerModalProps) => {
       style={{ justifyContent: 'flex-end', margin: 0 }}
       isVisible={props?.show}
     >
-      <Container borderTopRightRadius={20} borderTopLeftRadius={20} paddingTop={3}>
+      <Container borderTopRightRadius={20} borderTopLeftRadius={20} paddingTop={3} backgroundColor={AppColors.white}>
           <Container width={90} alignSelf="center">
               <DatePicker
                   date={new Date(selected)} 
@@ -704,17 +703,6 @@ export const OnboardModal = (props:OnboardModalProps) => {
       </Container>
     </Modal>
   )
-}
-
-export const CustomRefreshControl = (props : {loading : boolean, onRefresh : () => void}) =>{
-  return(
-    <RefreshControl
-        colors={[AppColors.white]}
-        progressBackgroundColor={AppColors.green}
-        refreshing={props.loading}
-      // onRefresh={props.onRefresh}
-      {...props}
-  />)
 }
 
 export const CustomWebView = (props:CustomWebViewProps) => (
@@ -844,10 +832,11 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
     reportMainError()
   }, [])
   return (
-    <Container flex={1} style={{
-      alignItems: "center",
-      justifyContent: "center"
-    }}
+    <Container 
+      flex={1} 
+      horizontalAlignment="center"
+      verticalAlignment="center"
+      backgroundColor={AppColors.white}
     >
       <Container width={90}>
         <EmptyStateWrapper
@@ -870,12 +859,13 @@ export const CustomFallBackScreen = (props:CustomFallBackScreenProps) => {
 export const EmptyStateWrapper = React.memo((props:EmptyStateWrapperProps) => {
   return(
       <Container
-      marginTop={props.marginTop || 8}
-      style={{
-        alignItems: "center",
-        backgroundColor: props.backgroundColor || AppColors.white
-      }}
-    >
+        marginTop={props.marginTop || 8}
+        verticalAlignment="center"
+        horizontalAlignment="center"
+        alignSelf="center"
+        backgroundColor={props.backgroundColor || AppColors.white}
+        width={90}
+      >
       <Container width={70} alignSelf="center" backgroundColor={props.backgroundColor}>
         <ImageWrap
           url={props.icon}
@@ -884,25 +874,26 @@ export const EmptyStateWrapper = React.memo((props:EmptyStateWrapperProps) => {
         />
       </Container>
       <SizedBox height={props?.spacing || 2} />
-      {
-        props.header_1 ? (
-          <H1
-            color={AppColors.black3}
-            fontSize={5}
-          >{props.header_1}</H1>
-        ) : null
-      }
-      <SizedBox height={props?.spacing || 2} />
-      {
-        props.header_2 ? <React.Fragment>
-          <H1 color={AppColors.black3}
-            fontSize={5}>{props.header_2}</H1>
-          <SizedBox height={props?.spacing || 2} />
-        </React.Fragment> : null
-      }
-      {
-        props.sub_text ? <P color={AppColors.black2}>{props.sub_text}</P> : null
-      }
+        {
+          props.header_1 ? (
+            <H1
+              color={AppColors.black3}
+              fontSize={5}
+              textAlign='center'
+            >{props.header_1}</H1>
+          ) : null
+        }
+        <SizedBox height={props?.spacing || 2} />
+        {
+          props.header_2 ? <React.Fragment>
+            <H1 color={AppColors.black3} textAlign='center'
+              fontSize={5}>{props.header_2}</H1>
+            <SizedBox height={props?.spacing || 2} />
+          </React.Fragment> : null
+        }
+        {
+          props.sub_text ? <P color={AppColors.black2}>{props.sub_text}</P> : null
+        }
     </Container>
   )
 },(prevProps,nextProps)=>{

@@ -91,7 +91,9 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                             color={item?.id && selectedIDs.includes(item?.id) ? AppColors.green : AppColors.black1}
                         />
                         }
-                        <P style={styles.subTitle} underline={item?.status === "Completed" ? "line-through" : "none"}>{item.title}</P>
+                        <Container width={60} marginLeft={2} backgroundColor={AppColors.transparent}>
+                            <P style={styles.subTitle} underline={item?.status === "Completed" ? "line-through" : "none"} lineHeight={2}>{item.title}</P>
+                        </Container>
                     </React.Fragment>
                 </TouchableWrapper>
             </>
@@ -285,7 +287,8 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                     loadingTask ? <PageLoader /> : <KeyboardAwareSectionList 
                         showsVerticalScrollIndicator={false}
                         ListHeaderComponent={<React.Fragment>
-                            <View style={styles.container}>
+                            {
+                                task?.status !== "Completed" ? <View style={styles.container}>
                                 <View style={styles.row1}>
                                     <P style={styles.flagText}>Due: </P>
                                     {due_status === "DUE_TODAY" ? <React.Fragment>
@@ -302,19 +305,17 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                         <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
                                     </React.Fragment> : null}
                                 </View>
-                                {
-                                        task?.status === 'Completed' ? null :
-                                            <Button
-                                                title="Edit Task"
-                                                containerStyle={styles.buttonStyle}
-                                                textStyle={styles.buttonText}
-                                                onPress={() => {
-                                                    navigation.navigate("Menu",{screen : "CreateTask", params : { item : task }})
-                                                }}
-                                            />
-                                    }
+                                <Button
+                                    title="Edit Task"
+                                    containerStyle={styles.buttonStyle}
+                                    textStyle={styles.buttonText}
+                                    onPress={() => {
+                                        navigation.navigate("Menu",{screen : "CreateTask", params : { item : task }})
+                                    }}
+                                />
                                 <View style={styles.line} />
-                            </View>
+                            </View> : null
+                            }
                             <View style={styles.genContainer}>
                                 <View>
             
@@ -407,6 +408,8 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                 value={comment}
                                 onChangeData={(value : string)=>setComment(value)}
                                 multiline={true}
+                                editable={task?.status === "Completed" ? false : true}
+                                backgroundColor={task?.status === "Completed" ? AppColors.gray1 : undefined}
                                 minHeight={4}
                                 right={<TextInput.Icon 
                                     name={isLoading ? "loading" : "send-circle"}

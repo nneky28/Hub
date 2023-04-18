@@ -75,7 +75,7 @@ export type ContainerProps = {
   width?: number;
   height?: number;
   borderColor?: string;
-  widthPercent?: any;
+  widthPercent?: string;
   padding?: number;
   paddingHorizontal?: number;
   marginTop?: number;

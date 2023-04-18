@@ -128,9 +128,7 @@ export const getGreetingTime = () => {
 }
 
 type __flattenProps = {
-  res? : {
-    results? : any
-  }
+  results? : any
 }
 
 export const __flatten = (data:__flattenProps[]) => {

@@ -387,18 +387,6 @@ const CreateTask = ({ route }) => {
 }
 
 
-
-{/* {item?.due_date ? moment(item?.due_date).format("dddd D, MMM YYYY") :
-  data?.due_date === 'No Date' ? 'No Date' : data?.due_date === 'Today' ? `Today, ${moment().format("ddd D, MMM YYYY")}` : 
-  moment(data?.due_date).format("dddd D, MMM YYYY")  } */}
-{/* {!item?.assigned_to && !assignTo?.name ? "You" : 
-     item?.assigned_to ? item?.assigned_to?.first_name :
-      assignTo?.name && !item?.assigned_to ? assignTo?.name : "Me"} */}
-
-
-
-
-
 export default CreateTask
 
 
