@@ -83,8 +83,6 @@ export default function Dashboard({
   const {data: upcomingANN, isFetching: upcomingANNFetching} =
     useFetchAnniversary('upcoming') as useFetchAnniversaryProps;
 
-  console.log('ANNIversary', upcomingANN);
-
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const [margin, setMargin] = useState(0.1);
