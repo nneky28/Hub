@@ -39,8 +39,7 @@ import {
   EditPassword,
   OnboardingLoad,
   CommentProps,
-  TaskStatusProps,
-  TaskProps,
+  TaskLoad,
   LoginLoad,
   RemoveDeviceTokenLoad,
   NOTIFICATIONS,
@@ -55,6 +54,7 @@ import {
   verifyBank,
   updatePensionAccountProps,
   UpdateOnboardingLoad,
+  TaskUpdateLoad,
 } from "./payload";
 
 export const endPoint = Config.API_URL;
@@ -280,19 +280,15 @@ export const APIFunction = {
     let user = await getStoreAboutMe()
     return getAPIs(`/c/${biz?.business_id}/app_onboarding/?${type}&employee_id=${user?.id}`)
   },
-  post_task: async (fd:TaskProps) => {
+  post_task: async (fd:TaskLoad) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app/`, fd)
-  },
-  post_sub_Task: async (fd:any) => {
-    let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz?.business_id}/sub_tasks_app/`, fd)
   },
   post_comment: async (fd:CommentProps) => {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/tasks_app_comments/`, fd)
   },
-  update_task_status: async (fd:TaskStatusProps) => {
+  update_task_status: async (fd:TaskUpdateLoad) => {
     let biz = await getStoredBusiness()
     return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
@@ -357,7 +353,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_employees: async (page = 1, search = "",limit = 8) => {
+  get_employees: async (page = 1, search = "",limit = 20) => {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },
@@ -629,7 +625,7 @@ export const useFetchComments = (id:number | "",page : number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
-  console.log("getAPIs",path,_token)
+  //console.log("getAPIs",path,_token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -645,7 +641,7 @@ export const getAPIs = async (path : string) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log("ERROR",error)
+        //console.log("ERROR",error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -661,6 +657,7 @@ export const getAPIs = async (path : string) => {
 
 export const postAPIs = async (path : string, fd? : any) => {
   let _token = await getData("token");
+  //console.log("postAPIs",path,fd)
   return new Promise((resolve, reject) => {
     axios({
       url: `${endPoint}${path}`,
@@ -675,6 +672,7 @@ export const postAPIs = async (path : string, fd? : any) => {
         resolve(result.data);
       })
       .catch(error => {
+        //console.log("postAPIs ERROR",error?.response)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -724,8 +722,9 @@ export const deleteAPIs = async (path : string,fd? : any) => {
   });
 };
 
-export const putAPIs = async (path:string, fd?:{[index:string]:any}) => {
+export const putAPIs = async (path:string, fd?:any) => {
   let _token = await getData("token");
+  //console.log("putAPIs",path,fd)
   return new Promise((resolve, reject) => {
     axios({
       url: `${endPoint}${path}`,
@@ -740,6 +739,7 @@ export const putAPIs = async (path:string, fd?:{[index:string]:any}) => {
         resolve(result.data);
       })
       .catch(error => {
+        //console.log("putAPIs ERROR",error?.response)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"

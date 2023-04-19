@@ -200,9 +200,9 @@ export type DatePickerModalProps = {
     current? : string
     header? : string
     mode? : "time" | "date" | "datetime"
-   
     onChangeData? : (param : string | Date) => void
 }
+
 export type CustomCalenderProps = {
     setShow : (param : false | DateData) => void
     date : string

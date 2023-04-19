@@ -3,6 +3,8 @@ import { DrawerNavigationProp, DrawerScreenProps } from "@react-navigation/drawe
 import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
 import { useFetchAboutMeData } from "../components/TimeoffModal/types"
+import { CreateTaskParams } from "../screens/CreateTask/types"
+import { TaskDetailsParams } from "../screens/TaskDetails/types"
 import { TaskPeopleListParams } from "../screens/TaskPeopleList/types"
 import { TeamTaskHomeParam } from "../screens/TeamTaskHome/types"
 
@@ -48,13 +50,13 @@ export type MenuScreenList = {
     Documents : undefined
     Trainings : undefined
     TaskOnboarding : undefined
-    CreateTask : ParamsType | undefined
+    CreateTask : CreateTaskParams | undefined
     TeamTaskHome : TeamTaskHomeParam | undefined
     TaskPeopleList : TaskPeopleListParams | undefined
     TaskLandingPage : undefined
     TaskHome : undefined
     PayslipHistory : undefined
-    TaskDetails : ParamsType
+    TaskDetails : TaskDetailsParams
 }
 
 export type OnboardScreenList = {
@@ -105,6 +107,7 @@ export type RootMenuScreenProps = StackScreenProps<MenuScreenList>
 
 export const CLOCK_IN_ALERT = "clock_in_alert"
 export const TIME_OFF_REQUEST = "time_off_request"
+export const ASSIGNED_TASK = "assigned_task"
 
 
 export type PushNotificationData = {
@@ -120,6 +123,12 @@ export type PushNotificationData = {
     sentTime? : number
     ttl? : number
 }
+
+// export type ScreenDeterminateReturn = {
+//     screen : "TaskDetails",
+//     stack : "Menu",
+//     params : ParamsType | TaskDetailsParams
+// }
 
 
 export type UserMembershipProps = {

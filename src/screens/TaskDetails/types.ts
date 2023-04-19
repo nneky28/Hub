@@ -1,8 +1,7 @@
 import { useFetchTodosData } from "../TaskHome/types"
 
 export type TaskDetailsParams = {
-    id? : number
-    title? : string
+    id : number
 }
 
 export type useFetchTaskByPKData = useFetchTodosData

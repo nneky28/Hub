@@ -9,8 +9,7 @@ const styles = StyleSheet.create({
     paddingVertical: height(1),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
-
+    justifyContent: 'space-between',
   },
   avatarStyle: {
     height: height(6),

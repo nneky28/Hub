@@ -17,7 +17,7 @@ import CustomMenu from '../CustomMenu';
 import CustomIconButton from '../CustomIconButton';
 import { useDispatch } from 'react-redux';
 import { setCurrentTaskItem } from '../../Redux/Actions/Config';
-import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS } from '../../utills/payload';
+import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskProgressLoad } from '../../utills/payload';
 import { RootNavigationProps } from '../../Routes/types';
 import WarningModal from '../WarningModal';
 
@@ -65,6 +65,7 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
   
 
     const navigationHandler = () => {
+        if(!item?.id && typeof item?.id !== "number") return
         navigation.navigate("Menu",{screen : "TaskDetails",params : {id : item?.id}})
     }
 
@@ -84,18 +85,20 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
         try{
             setVisible(false)
             if(param === "Delete task") return setShow(true)
-            if(param === "Edit task"){
-                return  navigation.navigate("Menu",{screen : "CreateTask", params : { item }})
+            if(param === "Edit task" && typeof item?.id === "number"){
+                return  navigation.navigate("Menu",{screen : "CreateTask", params : { task_id : item?.id }})
             }
-            if(param === "View task"){
+            if(param === "View task" && typeof item?.id === "number"){
                 return navigation.navigate("Menu",{screen : "TaskDetails",params : {id : item?.id}})
             }
-            let status = "To-do"
+            let status : TaskProgressLoad = "To-do"
             if(param === "Undo completed" || param === "Mark task as started") status = "In-progress"
             if(param === "Mark task as not started") status = "To-do"
             if(param === "Mark task as completed") status = "Completed"
-            if(!item?.id) return
+            if(!item?.id || !item?.created_by?.id) return
             let fd = {
+                title : item?.title || "",
+                created_by : item?.created_by?.id,
                 status : status,
                 id : item?.id
             }
@@ -208,7 +211,7 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
                                     size={width(1.5)}
                                 />
                                 <Container width={48} marginLeft={1} backgroundColor={AppColors.transparent}>
-                                    <P numberOfLines={1} color={AppColors.black3} fontSize={3}>{sub_task?.title}</P>
+                                    <P numberOfLines={1} color={AppColors.black3} fontSize={3}>{sub_task?.title || sub_task?.description}</P>
                                 </Container>
                             </Container>)
                         }

@@ -109,7 +109,8 @@ const Routes = () => {
         if(!resp?.stack || !resp?.screen) return
         await storeData("backgroundEventDetails",{})
         setBackgroundEventDetails(detail)
-        navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
+        if(resp.screen === "TaskDetails") return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
+        return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
       }
     })
   }
@@ -156,24 +157,33 @@ const Routes = () => {
   }
   useEffect(()=>{
     if(route !== "main") return
-    pushNotificationInit()
+    pushNotificationInit() // SCHEDULES CLOCK IN REMINDER
   },[route,about,config,status])
 
   useEffect(()=>{
     const unsubscribe = notifee.onForegroundEvent(async ({type,detail})=>{
       if(route !== "main") return
       if(type === EventType.PRESS){
+        //NOTIFEE FOREGROUND PRESS EVENT LISTENER TAKES USER TO 
+        // SCREEN RETURNED BY SCREEN DETERMINANT 
+        console.log("onForegroundEvent",type,detail)
         let resp = screenDeterminant(detail)
+        console.log("screenDeterminant",resp)
         if(!resp?.stack || !resp?.screen) return
+        if(resp.screen === "TaskDetails") return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
         return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
       }
       await notifeeEventHandler(type)
     })
     return unsubscribe
-  },[route])
+  },[
+    route
+    // WE NEED NOTIFEE CALL BACK FUNCTION TO ONLY BE TRIGGERED WHEN USER IS LOGGED IN
+  ])
   
   useEffect(()=>{
     const unsubscribe = messaging().onMessage(async (message : PushNotificationData)=>{
+      //FIREBASE FOREGROUND LISTENER INVOKES NOTIFEE DISPLAY NOTIFICATION FUNCTION
       onDisplayNotification(message)
     })
     return unsubscribe
@@ -182,7 +192,10 @@ const Routes = () => {
   useEffect(() => {
     AppStateListener()
     notifeeBackgroundEventHandler()
-  }, [route,backgroundEventDetails])
+  }, [
+    route,backgroundEventDetails
+    //REFRESHES THE LISTERNERS
+  ])
 
   useEffect(() => {
     getDeepLinkInfo()

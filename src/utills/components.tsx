@@ -998,6 +998,7 @@ export const KeyboardAwareWrapper = ({children,scrollable,style} : KeyboardAware
   const dispatch = useDispatch()
   useEffect(()=>{
       if(scrollable && ref?.current?.scrollToPosition){
+        console.log("KeyboardAwareWrapper",position)
         ref?.current?.scrollToPosition(0,position?.[0]?.y || 0,true)
       }
   },[position])

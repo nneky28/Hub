@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
-import { borderWidth, justifyContent, marginLeft } from 'styled-system';
 
 const styles = StyleSheet.create({
     mainViewContainer: {
@@ -32,7 +31,7 @@ const styles = StyleSheet.create({
 
     button: {
         width: width(50),
-        height: height(4),
+        paddingVertical : height(0.5),
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: AppColors.gray1,
@@ -41,24 +40,18 @@ const styles = StyleSheet.create({
     },
     button1: {
         width: width(42),
-        height: height(4),
+        paddingVertical : height(1.2),
+        paddingHorizontal : width(2),
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: AppColors.gray1,
-        flexDirection: 'row',
         borderRadius: width(2),
     },
-    buttonText1: {
-        color: AppColors.black1,
-        fontFamily: FontFamily.BlackSansBold
-    },
-
     container: {
         marginTop: height(1.5),
         borderWidth: width(0.3),
         borderColor: AppColors.grayBorder,
         borderRadius: width(5),
-        height: height(14),
         justifyContent: 'center',
         alignSelf: 'center',
         width: width(90)
@@ -67,16 +60,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomWidth: width(0.5),
         borderBottomColor: AppColors.gray1,
-        minHeight: height(7.5),
         alignItems: 'center',
+        marginTop : height(1),
+        paddingBottom : height(1),
         justifyContent: 'space-around',
     },
     dueDate: {
         flexDirection: 'row',
-        height: height(7),
         alignItems: 'center',
         justifyContent: 'space-around',
-
+        marginTop : height(0.5),
+        marginBottom : height(0.5)
     },
 
     btn: {
@@ -138,6 +132,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: AppColors.white,
         marginTop: height(2),
+        marginBottom : height(3)
 
     },
     buttonStyle: {
@@ -167,8 +162,6 @@ const styles = StyleSheet.create({
         marginTop: height(1),
         marginLeft: width(3)
     }
-
-
 });
 
 export default styles;

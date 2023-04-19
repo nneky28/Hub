@@ -18,8 +18,8 @@ import { APIFunction } from '../../utills/api';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { height, width } from 'react-native-dimension';
 import ScreenWrapper from '../../components/ScreenWrapper/index';
-import { RootScreenProps } from '../../Routes/types';
-import { TaskAccordionType, TaskActivityData, TaskCommentData, TaskDetailsParams, TaskListSection, useFetchActivitiesData, useFetchActivitiesProps, useFetchCommentsProps, useFetchTaskByPKProps } from './types';
+import { RootMenuScreenProps} from '../../Routes/types';
+import { TaskAccordionType, TaskActivityData, TaskCommentData,TaskListSection, useFetchActivitiesData, useFetchActivitiesProps, useFetchCommentsProps, useFetchTaskByPKProps } from './types';
 import { HeaderWithBackButton } from '../../components/Headers/CustomHeader';
 import { DUE_STATUS } from '../../components/TodoContent/types';
 import { Images } from '../../utills/Image';
@@ -34,8 +34,8 @@ import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-vie
 
 
 
-const TaskDetails = ({ navigation,route } : RootScreenProps) => {
-    const { id } = route?.params as TaskDetailsParams || {}
+const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
+    const { id } = route?.params || {}
     const spinValue = new Animated.Value(0);
     const [selectedIDs, setSelectedIDs] = useState<number[]>([])
     const [logs, setLogs] = useState<TaskListSection[]>([])
@@ -50,11 +50,11 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
 
     const {
         data: logData
-    } = useFetchActivities(showLog && id? id : "",page) as useFetchActivitiesProps
+    } = useFetchActivities(showLog && id && typeof id === "number" ? id : "",page) as useFetchActivitiesProps
 
     const {
         data: commentData,
-    } = useFetchComments(showComment && id ? id : "",page) as useFetchCommentsProps
+    } = useFetchComments(showComment && id && typeof id === "number" ? id : "",page) as useFetchCommentsProps
 
     const {
         mutateAsync: subTaskEditHandler
@@ -64,7 +64,7 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
     const {
         data: task,
         isLoading : loadingTask
-    } = useFetchTaskByPK(id) as useFetchTaskByPKProps
+    } = useFetchTaskByPK(id && typeof id === "number" ? id : undefined) as useFetchTaskByPKProps
 
     const flattenAndMapData = (data : useFetchActivitiesData) : TaskListSection[] => {
         if(!Object.keys(data)?.[0] || !Object.values(data)?.[0]) return []
@@ -92,7 +92,7 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                         />
                         }
                         <Container width={60} marginLeft={2} backgroundColor={AppColors.transparent}>
-                            <P style={styles.subTitle} underline={item?.status === "Completed" ? "line-through" : "none"} lineHeight={2}>{item.title}</P>
+                            <P style={styles.subTitle} underline={item?.status === "Completed" ? "line-through" : "none"} lineHeight={2}>{item.title || item.description}</P>
                         </Container>
                     </React.Fragment>
                 </TouchableWrapper>
@@ -310,7 +310,8 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                     containerStyle={styles.buttonStyle}
                                     textStyle={styles.buttonText}
                                     onPress={() => {
-                                        navigation.navigate("Menu",{screen : "CreateTask", params : { item : task }})
+                                        if(!task?.id) return
+                                        navigation.navigate("CreateTask",{task_id : task?.id})
                                     }}
                                 />
                                 <View style={styles.line} />
@@ -419,6 +420,7 @@ const TaskDetails = ({ navigation,route } : RootScreenProps) => {
                                     hasTVPreferredFocus={undefined}
                                     size={width(8)}
                                     forceTextInputFocus={false}
+                                    disabled={task?.status === "Completed" ? true : false}
                                   />}
                             /> : <React.Fragment />} 
                         
