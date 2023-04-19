@@ -159,7 +159,6 @@ export const APIFunction = {
   },
   job_anniversary: async (status:string, page = 1) => {
     let biz = await getStoredBusiness();
-    console.log("Biz",biz?.business_id)
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
   },
   notifications: async (page = 1) => {

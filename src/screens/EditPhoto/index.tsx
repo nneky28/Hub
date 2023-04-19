@@ -82,7 +82,6 @@ export default function EditPhoto() {
       if (response.errorMessage) {
         return ToastError(response.errorMessage);
       }
-      console.log('setProfilePicture', response);
       setProfilePicture(response);
     });
   };

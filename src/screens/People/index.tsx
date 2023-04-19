@@ -91,11 +91,10 @@ export default function People({navigation}: RootScreenProps) {
     selected === 'Celebrations' ? 'active' : '',
   ) as useFetchAnniversaryProps;
 
-  const {data: upcomingANN, isFetching: upcomingANNFetching} =
-    useFetchAnniversary(
+  const {data: upcomingANN, isFetching: upcomingANNFetching} = useFetchAnniversary(
       selected === 'Celebrations' ? 'upcoming' : '',
-    ) as useFetchAnniversaryProps;
-  console.log('PeopleAnn', upcomingANN);
+   ) as useFetchAnniversaryProps;
+
   const {data: outData, isFetching: whosoutLoading} = useFetchWhosOut(
     selected === "Who's Out" ? 'timeoff' : '',
   ) as useFetchWhosOutProps;
