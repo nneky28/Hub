@@ -79,11 +79,11 @@ export default function Dashboard({
   const {data: activeANN, isFetching: activeANNFetching} = useFetchAnniversary(
     'active',
   ) as useFetchAnniversaryProps;
-  // const {data: activeANN, isFetching: activeANNFetching} = useFetchAnniversary(
-  //   'upcoming' || '',
-  // ) as useFetchAnniversaryProps;
 
-  console.log('ANNIversary', activeANN);
+  const {data: upcomingANN, isFetching: upcomingANNFetching} =
+    useFetchAnniversary('upcoming') as useFetchAnniversaryProps;
+
+  console.log('ANNIversary', upcomingANN);
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -184,6 +184,7 @@ export default function Dashboard({
       benefitFetching ||
       activeBDFetching ||
       upcomingBDFetching ||
+      upcomingANNFetching ||
       activeANNFetching ||
       fetchingTimeoff ||
       fetchingActive ||
@@ -201,6 +202,7 @@ export default function Dashboard({
     benefitFetching,
     activeBDFetching,
     upcomingBDFetching,
+    upcomingANNFetching,
     activeANNFetching,
     fetchingTimeoff,
     fetchingActive,
@@ -504,6 +506,11 @@ export default function Dashboard({
                 upcoming_birthdays={
                   upcomingBD?.results && Array.isArray(upcomingBD?.results)
                     ? upcomingBD?.results
+                    : []
+                }
+                upcoming_anniversary={
+                  upcomingANN?.results && Array.isArray(upcomingANN?.results)
+                    ? upcomingANN?.results
                     : []
                 }
                 anniversary={
