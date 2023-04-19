@@ -19,14 +19,14 @@ import {useFetchAboutMe, useFetchDoc} from '../../utills/api';
 import moment from 'moment';
 import {width} from 'react-native-dimension';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
-import {Document, useFetchDocumentsProps} from './type';
+import {useFetchDocumentsData, useFetchDocumentsProps} from './type';
 import {HomePageHeader} from '../../components/Headers/CustomHeader';
 
 export default function Documents() {
   const [modal, setModal] = useState<boolean>(false);
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [document, setDocument] = useState<Document | null>(null);
-  const [holders, setHolders] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<useFetchDocumentsData[]>([]);
+  const [document, setDocument] = useState<useFetchDocumentsData>();
+  const [holders, setHolders] = useState<useFetchDocumentsData[]>([]);
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
@@ -59,7 +59,7 @@ export default function Documents() {
     } else setDocuments(holders);
   };
 
-  const ListComponent = ({item}: {item: Document}) => {
+  const ListComponent = ({item}: {item: useFetchDocumentsData}) => {
     return (
       <>
         <TouchableOpacity
@@ -116,8 +116,7 @@ export default function Documents() {
             onSubmitEditing={handleSearch}
           />
         )}
-        <>{loading ? <PageLoader /> : null}</>
-        <FlatList
+        <>{loading ? <PageLoader /> : <FlatList
           data={[...documents,...documents]}
           keyExtractor={(item,i) => `${item}${i}`.toString()}
           renderItem={ListComponent}
@@ -126,7 +125,7 @@ export default function Documents() {
           nestedScrollEnabled={true}
           contentContainerStyle={CommonStyles.marginTop_2}
           ListEmptyComponent={ListEmptyComponent}
-        />
+        />}</>
       </View>
 
       <DocumentModal

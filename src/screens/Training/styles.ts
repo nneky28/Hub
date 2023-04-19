@@ -27,18 +27,31 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansBold,
     marginLeft : width(24)
   },
+
   selectedHeading: {
-    fontSize: width(3.4),
-    paddingRight: width(5),
     color: AppColors.green, 
     fontFamily: FontFamily.BlackSansBold,
+    paddingRight: width(5),
   },
   heading: {
     fontSize: width(3.4),
     color: AppColors.black1,
-    width: width(30),
-    fontFamily: FontFamily.BlackSansRegular,
+    fontFamily: FontFamily.BlackSansRegular
   },
+  selected_tab : {
+    borderBottomWidth  : width(0.4),
+    borderColor: AppColors.green,
+    width: '40%',
+  },
+  deselected_tab : {
+    borderBottomWidth  : width(0.4),
+    borderColor: AppColors.grayBorder,
+    width: '40%',
+  },
+ animated : {
+   height: height(0.8),
+  },
+
   scrollViewContainer: {
     paddingTop: height(2), 
     width: width(90), 
@@ -52,17 +65,10 @@ const styles = StyleSheet.create({
   },
   line2: {
     width: '100%',
-    height: 1,
     backgroundColor: AppColors.gray1,
+    height: height(0.3),
+    marginBottom: height(7),
     elevation: 0,
-  },
-  animated: {
-    width: '50%',
-    backgroundColor: AppColors.green,
-    height: height(0.8),
-    marginTop: height(0.5),
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
   },
   headingContainer: {
     marginTop: height(2),

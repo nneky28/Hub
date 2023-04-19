@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import TrainingList from '../../components/TrainingList';
 import {
@@ -11,6 +11,7 @@ import {
   Container,
   EmptyStateWrapper,
   PageLoader,
+  TouchableWrapper,
 } from '../../utills/components';
 import {Images} from '../../utills/Image';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
@@ -73,7 +74,13 @@ export default function Training() {
           paddingHorizontal={5}
           width={90}>
           {['Upcoming', 'History'].map((item, index) => (
-            <TouchableOpacity onPress={() => setSelected(item)} key={index}>
+            <TouchableWrapper
+              isText
+              onPress={() => setSelected(item)}
+              style={
+                selected === item ? styles.selected_tab : styles.deselected_tab
+              }
+              key={index}>
               <Text
                 style={[
                   styles.heading,
@@ -81,11 +88,10 @@ export default function Training() {
                 ]}>
                 {item}
               </Text>
-              {selected == item && <View style={styles.animated} />}
-            </TouchableOpacity>
+            </TouchableWrapper>
           ))}
         </Container>
-        <View style={styles.line2} />
+        {/* <View style={styles.line2} /> */}
 
         {loading || loadingHistory ? (
           <PageLoader />

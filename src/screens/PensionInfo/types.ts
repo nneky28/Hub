@@ -1,11 +1,10 @@
 
 export type  Data ={
-  bank?: number | string;
-  
-  provider?: number | string;
-    account_name: string|null;
-    account_number: string;
-    pension_number: string;
+  bank: number | string;
+  provider: number | string;
+  account_name : string;
+  account_number: string;
+  pension_number: string;
   bank_code: string;
   bank_name: string
   prov_name: string

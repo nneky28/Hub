@@ -61,12 +61,11 @@ export default function Emergency({navigation}: RootOnboardScreenProps) {
       if (!about?.id) return;
       await mutateAsync({...data, country: 'NG', id: about.id});
       ToastSuccess('Record has been updated');
-      navigation.goBack();
-
+      queryClient.invalidateQueries(EMERGENCY);
       if (auth.route !== 'main') {
         return navigation.navigate('PensionInfo');
       }
-      queryClient.invalidateQueries(EMERGENCY);
+      navigation.goBack();
     } catch (err: any) {
       ToastError(err.msg);
     }

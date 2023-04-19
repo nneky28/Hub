@@ -1,11 +1,11 @@
 import { Images } from '../Image';
 
 export type ProfileDataType = {
-    key: string
+    key?: string
     title: string
     iconLeft: {uri : string},
-    data: string[],
-    iconRight: { uri: string }, 
+    data?: string[],
+    iconRight?: { uri: string }, 
     url?:string
 }
 
