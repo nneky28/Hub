@@ -80,7 +80,7 @@ export default function EditPhoto() {
             blurRadius={20}
           />
         ) : (
-          <View />
+          <ImgPlaceholder />
         )}
         <Image
           style={[styles.mask, cropValues]}
