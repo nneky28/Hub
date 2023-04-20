@@ -5,17 +5,22 @@ export type TrainingType = {
     venue: string;
     start_datetime: string;
     end_datetime: string;
-    cost: string;
+  cost: string;
+  opacity?: number;
 };
   
 export type useFetchTrainingsData = {
-  id: number;
+  data: {
+    id: number;
     title: string;
-    description: string;             
+    description: string;
     venue: string;
     start_datetime: string;
     end_datetime: string;
     cost: string;
+  }[];
+
+  opacity?: number;
 }   
 export type useFetchTrainingsProps = {
   data? : {

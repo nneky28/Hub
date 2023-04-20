@@ -18,7 +18,7 @@ import {
 import {Data, DataKeys} from './types';
 import {RootOnboardScreenProps} from '../../Routes/types';
 import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
-import { ABOUT_ME } from '../../utills/payload';
+import {ABOUT_ME} from '../../utills/payload';
 
 const PersonalInfo = ({navigation}: RootOnboardScreenProps) => {
   const auth = useAppSelector((state) => state.Auth);
@@ -43,7 +43,7 @@ const PersonalInfo = ({navigation}: RootOnboardScreenProps) => {
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const {mutateAsync, isLoading: loading} = useMutation(APIFunction.edit);
 
@@ -94,7 +94,7 @@ const PersonalInfo = ({navigation}: RootOnboardScreenProps) => {
       ToastSuccess('Profile Updated');
       queryClient.invalidateQueries(ABOUT_ME);
       if (auth.route !== 'main') {
-        return navigation.navigate("NextKin");
+        return navigation.navigate('NextKin');
       }
       navigation.goBack();
     } catch (err: any) {

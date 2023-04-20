@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   selectedHeading: {
     color: AppColors.green, 
     fontFamily: FontFamily.BlackSansBold,
-    paddingRight: width(5),
   },
   heading: {
     fontSize: width(3.4),
@@ -41,12 +40,10 @@ const styles = StyleSheet.create({
   selected_tab : {
     borderBottomWidth  : width(0.4),
     borderColor: AppColors.green,
-    // width: '40%',
+    // width: '50%',
   },
   deselected_tab : {
-    borderBottomWidth  : width(0.4),
     borderColor: AppColors.grayBorder,
-    // width: '40%',
   },
  animated : {
    height: height(0.8),
@@ -65,9 +62,9 @@ const styles = StyleSheet.create({
   },
   line2: {
     width: '100%',
-    backgroundColor: AppColors.gray1,
-    height: height(0.3),
-    marginBottom: height(7),
+    backgroundColor: AppColors.grayBorder,
+    height: height(0.2),
+    // marginBottom: height(7),
     elevation: 0,
   },
   headingContainer: {

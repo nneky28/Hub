@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
 import { FontFamily } from '../../utills/FontFamily';
@@ -7,11 +7,8 @@ const styles = StyleSheet.create({
 
     container: {
         width: width(100),
-        paddingVertical: height(2),
         backgroundColor: AppColors.white,
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-        marginTop: height(8),
+        flex : 1
     },
     options: {
         paddingVertical: height(3)
@@ -56,7 +53,8 @@ const styles = StyleSheet.create({
     flatlist: {
         paddingHorizontal: width(1),
         paddingVertical: height(1),
-
+        justifyContent : "center",
+        alignItems : "center"
     },
     item: {
         fontSize: width(3.5),
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     twoButtonCont: {
         width: width(90),
         alignSelf: 'center',
-        marginTop: height(3),
+        marginTop: height(2),
         borderWidth: 1,
         borderColor: AppColors.grayBorder,
         borderRadius: 20,
@@ -89,10 +87,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         zIndex: -1,
     },
-
-    team: {
-        paddingHorizontal: width(5),
-    },
     selected: {
         borderWidth: 3,
         borderColor: AppColors.purple
@@ -103,7 +97,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width(6),
         marginTop: height(3.5),
         width: width(100),
-        marginBottom: height(1.5)
+        marginBottom: height(0.4)
     },
     btnText: {
         textDecorationLine: 'underline',
@@ -113,27 +107,15 @@ const styles = StyleSheet.create({
         fontSize: width(3.5),
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
-
     },
     line: {
         width: width(90),
-        height: 1,
-        backgroundColor: AppColors.gray1,
-        elevation: 0,
-        marginLeft: width(5),
-
-    },
-    line1: {
-        width: width(85),
-        height: 1,
-        backgroundColor: AppColors.gray1,
-        elevation: 0,
-        marginLeft: width(5),
-
+        borderBottomWidth : width(0.3),
+        borderBottomColor : AppColors.gray1
     },
     people: {
         paddingHorizontal: width(7),
-        marginTop: height(4),
+        marginTop: height(2),
         color: '#A8A8A8'
     },
     buttonText: {
@@ -154,18 +136,11 @@ const styles = StyleSheet.create({
         marginTop: height(15),
 
     },
-    // search: { flexDirection: 'row', paddingHorizontal: width(5) },
-    // searchView: {
-    //     justifyContent: "center",
-    //     borderRadius: 50,
-    //     alignItems: 'center',
-    //     width: width(15),
-    //     height: height(7),
-    //     borderWidth: 1,
-    //     borderColor: AppColors.grayBorder
-
-    // },
-    searchBoxStyle: { width: width(4), height: height(2), borderRadius: 50, alignSelf: 'center' },
+    searchBoxStyle: {
+        width: width(90),
+        alignSelf: 'flex-start',
+        backgroundColor: AppColors.transparent
+    },
     close: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -176,7 +151,18 @@ const styles = StyleSheet.create({
         color: AppColors.black1,
         fontFamily: FontFamily.BlackSansBold,
         width: width(13)
-    }
+    },
+    alphabetscontentContainerStyle : {
+        paddingHorizontal : width(5)
+    },
+    searchBoxContainer: {
+        width: width(100),
+        justifyContent: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: width(4.5),
+        marginBottom : height(2)
+    },
 }
 );
 

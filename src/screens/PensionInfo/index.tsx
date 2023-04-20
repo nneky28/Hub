@@ -33,8 +33,8 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
     bank_code: '',
     bank_name: '',
     prov_name: '',
-    bank: "",
-    provider: ""
+    bank: '',
+    provider: '',
   });
 
   const [disabled, setDisabled] = useState(false);
@@ -68,7 +68,7 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
       let required: DataKeys[] =
         data?.account_number || data?.bank ? ['account_number', 'bank'] : [];
       if (data?.pension_number || data?.provider) {
-        required = [...required,'pension_number', 'provider'];
+        required = [...required, 'pension_number', 'provider'];
       }
       let failed = false;
       let msg = '';
@@ -108,7 +108,7 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
           account_number: data.account_number,
         };
         let res = (await bankVerify(fd)) as Awaited<{account_name?: string}>;
-        setDisabled(false)
+        setDisabled(false);
         return setData({...data, account_name: res?.account_name || ''});
       }
       if (!profile?.id) return;
@@ -118,13 +118,13 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
         id: profile?.id,
       };
 
-      if (data.bank && typeof data.bank === "number") {
+      if (data.bank && typeof data.bank === 'number') {
         fd['bank_account'] = {
           bank: data.bank,
           account_number: data.account_number,
         };
       }
-      if (data.provider && data.provider && typeof data.provider === "number") {
+      if (data.provider && data.provider && typeof data.provider === 'number') {
         fd['pension'] = {
           provider: data.provider,
           pension_number: data.pension_number,
@@ -192,7 +192,7 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
   return (
     <ScreenWrapper>
       <HeaderWithBackButton
-        headerText="    Update Information"
+        headerText="Update Information"
         rightButtonText="Save"
         onSubmitHandler={(param?: string) => {
           handleSubmit(param!);

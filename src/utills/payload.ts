@@ -112,22 +112,7 @@ export type UpdateOnboardingLoad = {
   has_completed_mobile_onboarding: boolean;
   id: number;
 };
-export type TaskStatusProps = {
-  id: number;
-  status: string;
-};
-export type TaskProps = {
-  data: {
-    title?: string;
-    description?: string;
-    due_date?: string;
-  };
-  created_by?: string;
-  assigned_to?: string;
-  department?: string;
-  status?: 'To-do' | 'In_progress' | 'Completed';
-  sub_tasks?: string[];
-};
+
 export type EmergencyContactProps = {
   
     first_name: string;
@@ -199,6 +184,31 @@ export type updatePensionAccountProps = {
     },
     is_pension_applicable?: boolean
   }
+  export type TaskProgressLoad = "To-do" | "In-progress" | "Completed"
 
+  export type SubTaskLoad = {
+    id? : number | null
+    title? : string | null
+    description : string
+    assigned_by? : number
+    sub_assigned_to? : number | null
+    task? : number
+    status : TaskProgressLoad
+    due_date? : string | null
+}
 
+export type TaskLoad = {
+  title: string;
+  description?: string | null;
+  due_date?: string | null;
+  created_by : number;
+  assigned_to? : number | null;
+  department?: number | null;
+  status?: TaskProgressLoad;
+  sub_tasks?: SubTaskLoad[];
+};
+
+export type TaskUpdateLoad = TaskLoad & {
+  id: number;
+};
 export type TaskStatisticFilter = "created_by_me_and_sent" | "assigned_to_me" | ""

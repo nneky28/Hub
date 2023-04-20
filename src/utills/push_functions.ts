@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import { APIFunction } from './api';
 import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType, TimestampTrigger, TriggerType, RepeatFrequency, NotificationAndroid, NotificationIOS} from '@notifee/react-native';
-import { PushNotificationData, TIME_OFF_REQUEST } from '../Routes/types';
+import { ASSIGNED_TASK, PushNotificationData, TIME_OFF_REQUEST } from '../Routes/types';
 
 export const requestUserPermission = async () => {
     try{
@@ -101,6 +101,15 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
             stack : "Menu",
             params : undefined
         } as const
+    }
+    if(data?.type === ASSIGNED_TASK && data?.type_id){
+      return {
+          screen : "TaskDetails",
+          stack : "Menu",
+          params : {
+            id : Number(data?.type_id) 
+          }
+      } as const
     }
   }
 

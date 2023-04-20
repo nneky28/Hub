@@ -35,8 +35,9 @@ import {HeaderWithBackButton} from '../../components/Headers/CustomHeader';
 import {height} from 'react-native-dimension';
 import {useDispatch} from 'react-redux';
 import {login} from '../../Redux/Actions/Auth';
+import {RootScreenProps} from '../../Routes/types';
 
-export default function EditPhoto() {
+export default function EditPhoto({navigation}: RootScreenProps) {
   const [profilePicture, setProfilePicture] = useState<ImagePickerResponse>();
   const [show, setShow] = React.useState(false);
   const queryClient = useQueryClient();
@@ -82,7 +83,6 @@ export default function EditPhoto() {
       if (response.errorMessage) {
         return ToastError(response.errorMessage);
       }
-      console.log('setProfilePicture', response);
       setProfilePicture(response);
     });
   };
@@ -170,6 +170,7 @@ export default function EditPhoto() {
       setProfilePicture(undefined);
       ToastSuccess('Photo has been saved');
       queryClient.invalidateQueries(ABOUT_ME);
+      navigation.goBack();
     } catch (err: any) {
       ToastError(err?.msg);
     }

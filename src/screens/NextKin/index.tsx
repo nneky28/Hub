@@ -17,7 +17,7 @@ import {RootOnboardScreenProps} from '../../Routes/types';
 import {useFetchKinProps} from '../Profile/types';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {Data} from './types';
-import { NEXT_OF_KINS } from '../../utills/payload';
+import {NEXT_OF_KINS} from '../../utills/payload';
 
 export default function NextKin({navigation}: RootOnboardScreenProps) {
   const {data: about} = useFetchAboutMe('main') as useFetchAboutMeProps;
@@ -55,7 +55,7 @@ export default function NextKin({navigation}: RootOnboardScreenProps) {
       await mutateAsync({...data, country: 'NG', id: about.id});
       queryClient.invalidateQueries(NEXT_OF_KINS);
       if (auth.route !== 'main') {
-        return navigation.navigate("Emergency");
+        return navigation.navigate('Emergency');
       }
       ToastSuccess('Record has been updated');
       navigation.goBack();
