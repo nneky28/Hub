@@ -18,6 +18,7 @@ import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
 import {TrainingType, useFetchTrainingsProps} from './types';
 import {HomePageHeader} from '../../components/Headers/CustomHeader';
 import styles from './styles';
+// import {TrainingListProps} from '../../components/TrainingList/types';
 
 export default function Training() {
   var [selected, setSelected] = useState('Upcoming');
@@ -53,15 +54,7 @@ export default function Training() {
   }, [training, history]);
 
   return (
-    <ScreenWrapper
-      scrollEnabled={
-        selected === 'Available' &&
-        trainings &&
-        Array.isArray(trainings) &&
-        trainings?.length === 0
-          ? false
-          : true
-      }>
+    <ScreenWrapper>
       <HomePageHeader header="Training" image={Images.people} />
 
       <View style={styles.mainViewContainer}>
@@ -69,8 +62,6 @@ export default function Training() {
           style={{
             flexDirection: 'row',
           }}
-          paddingTop={2}
-          paddingHorizontal={5}
           width={90}>
           {['Upcoming', 'History'].map((item, index) => (
             <TouchableWrapper
@@ -90,7 +81,7 @@ export default function Training() {
             </TouchableWrapper>
           ))}
         </Container>
-        {/* <View style={styles.line2} /> */}
+        <View style={styles.line2} />
 
         {loading || loadingHistory ? (
           <PageLoader />

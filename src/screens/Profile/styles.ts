@@ -8,15 +8,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.white,
     alignItems: 'center',
   },
-  header: {
-    width: width(100),
-    paddingHorizontal: width(5),
-    marginTop: height(2),
-    marginBottom: height(1.5),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   leftIcon: {
     width: width(5),
     height: width(5),

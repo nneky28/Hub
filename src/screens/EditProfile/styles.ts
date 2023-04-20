@@ -9,37 +9,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex : 1
   },
-  header: {
-    width: width(100),
-    paddingHorizontal: width(5),
-    marginTop: height(2),
-    marginBottom: height(1.5),
-    flexDirection: 'row',
-    // justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
-  leftIcon: {
-    width: width(5),
-    height: width(5),
-  },
   cameraIcon: {
     width: width(4),
     height: width(4),
-  },
-  screenTitle: {
-    fontSize: width(4),
-    color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold,
-    alignSelf: 'center',
-    marginLeft: width(24),
-    // width: width(60),
-  },
-  line: {
-    width: '100%',
-    height: 1,
-    backgroundColor: AppColors.gray1,
-    marginTop: height(1),
-    elevation: 0,
   },
   userInfoContainer: {
     marginTop: height(3),

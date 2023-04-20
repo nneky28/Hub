@@ -4,13 +4,14 @@ import CommonStyles from '../../utills/CommonStyles';
 import styles from './styles';
 import {Capitalize} from '../../utills/Methods';
 import moment from 'moment';
-import {TrainingListProps} from './types';
+// import {TrainingListProps} from './types';
+import {useFetchTrainingsData} from '../../screens/Training/types';
 
-const TrainingList: React.FC<TrainingListProps> = ({data, opacity = 1}) => {
+const TrainingList: React.FC<useFetchTrainingsData> = ({data, opacity = 1}) => {
   return (
     <FlatList
       data={data}
-      ItemSeparatorComponent={() => <View style={CommonStyles.marginTop_2} />}
+      ItemSeparatorComponent={() => <View style={CommonStyles.marginTop_1} />}
       keyExtractor={() => String(Math.random())}
       contentContainerStyle={styles.flatList}
       showsHorizontalScrollIndicator={false}
@@ -21,7 +22,7 @@ const TrainingList: React.FC<TrainingListProps> = ({data, opacity = 1}) => {
             <View style={[styles.row, styles.between]}>
               <View>
                 <Text style={[styles.text, {opacity: opacity}]}>
-                  {item.title ? Capitalize(item.title) : ''}
+                  {item?.title ? Capitalize(item?.title) : ''}
                 </Text>
               </View>
             </View>
@@ -33,13 +34,13 @@ const TrainingList: React.FC<TrainingListProps> = ({data, opacity = 1}) => {
                 <Text
                   style={[styles.ttext, {opacity: opacity}]}
                   numberOfLines={1}>
-                  {item.description ? item.description : ''}
+                  {item?.description ? item?.description : ''}
                 </Text>
               </View>
               <View style={styles.halfWidth}>
                 <Text style={[styles.ttext1, {opacity: opacity}]}>Venue</Text>
                 <Text style={[styles.ttext, {opacity: opacity}]}>
-                  {item.venue ? Capitalize(item.venue) : ''}
+                  {item?.venue ? Capitalize(item?.venue) : ''}
                 </Text>
               </View>
             </View>
@@ -49,8 +50,8 @@ const TrainingList: React.FC<TrainingListProps> = ({data, opacity = 1}) => {
                   Start date:
                 </Text>
                 <Text style={[styles.ttext, {opacity: opacity}]}>
-                  {item.start_datetime
-                    ? moment(item.start_datetime).format('DD/MM/YYYY')
+                  {item?.start_datetime
+                    ? moment(item?.start_datetime).format('DD/MM/YYYY')
                     : ''}
                 </Text>
               </View>
@@ -59,8 +60,8 @@ const TrainingList: React.FC<TrainingListProps> = ({data, opacity = 1}) => {
                   End date:
                 </Text>
                 <Text style={[styles.ttext, {opacity: opacity}]}>
-                  {item.end_datetime
-                    ? moment(item.end_datetime).format('DD/MM/YYYY')
+                  {item?.end_datetime
+                    ? moment(item?.end_datetime).format('DD/MM/YYYY')
                     : ''}
                 </Text>
               </View>
