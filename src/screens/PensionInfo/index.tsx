@@ -173,7 +173,6 @@ const PensionInfo = ({navigation}: RootOnboardScreenProps) => {
         setProviders(provider);
       }
     } catch (error) {
-      // console.log('ERR', error);
     }
   };
 

@@ -37,7 +37,7 @@ import { __flatten, getStoreAboutMe, useAppSelector, ToastError, ToastSuccess } 
 import { RootScreenProps } from '../../Routes/types';
 import { HomePageHeader } from '../../components/Headers/CustomHeader';
 import { ActionTitleType, AddButtonProps, ProgressCardType, RenderItemProps, TaskTabType, useFetchStatisticsProps, useFetchTodosData, useFetchTodosProps } from './types';
-import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
+import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskDueDateFilter, TaskProgressLoad, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
 import { Coordinates } from '../Profile/types';
 import CustomSnackBar from '../../components/CustomSnackBar';
 import { setCurrentTaskItem } from '../../Redux/Actions/Config';
@@ -66,7 +66,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const [show,setShow] = React.useState(false)
     const [timeoutID,setTimeoutID] = React.useState<NodeJS.Timeout>()
     const currentTask : useFetchTodosData & {
-        old_status : TaskProgressStatus
+        old_status : TaskProgressLoad
     } = useAppSelector(state=>state?.Config?.task)
     const queryClient = useQueryClient()
     const {
@@ -359,10 +359,12 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const undoChangesHandler = async () => {
         try{    
             clearTimeout(Number(timeoutID))
-            if(!currentTask?.id) return
+            if(!currentTask?.id || !currentTask?.created_by?.id || !currentTask?.title) return
             let fd = {
                 id : currentTask?.id,
-                status : currentTask?.old_status
+                status : currentTask?.old_status,
+                created_by : currentTask?.created_by?.id,
+                title : currentTask?.title
             }
             await mutateAsync(fd)
             setShow(false)

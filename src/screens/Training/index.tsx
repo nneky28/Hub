@@ -45,7 +45,6 @@ export default function Training() {
         setHistories(allHistories);
       }
     } catch (error) {
-      // console.log('ERR', error);
     }
   };
 

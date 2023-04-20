@@ -625,7 +625,6 @@ export const useFetchComments = (id:number | "",page : number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
-  //console.log("getAPIs",path,_token)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -641,7 +640,6 @@ export const getAPIs = async (path : string) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("ERROR",error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -657,7 +655,6 @@ export const getAPIs = async (path : string) => {
 
 export const postAPIs = async (path : string, fd? : any) => {
   let _token = await getData("token");
-  //console.log("postAPIs",path,fd)
   return new Promise((resolve, reject) => {
     axios({
       url: `${endPoint}${path}`,
@@ -672,7 +669,6 @@ export const postAPIs = async (path : string, fd? : any) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("postAPIs ERROR",error?.response)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -724,7 +720,6 @@ export const deleteAPIs = async (path : string,fd? : any) => {
 
 export const putAPIs = async (path:string, fd?:any) => {
   let _token = await getData("token");
-  //console.log("putAPIs",path,fd)
   return new Promise((resolve, reject) => {
     axios({
       url: `${endPoint}${path}`,
@@ -739,7 +734,6 @@ export const putAPIs = async (path:string, fd?:any) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("putAPIs ERROR",error?.response)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"

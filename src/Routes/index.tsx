@@ -147,7 +147,7 @@ const Routes = () => {
       }
       if(!status?.is_clocked_in && !moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))){
         //IF USER IS NOT CLOCKED IN AND IT IS NOT YET TIME
-        //NOTIFEE ON IOS IGNORES THE START DATE OF TRIGGERED NOTIFICATION
+        //NOTIFEE ON IOS IGNORES THE START DATE OF TRIGGERED NOTIFICATION HENCE, IT IS IMPORTANT TO CHECK IF IT PAST TIME
         let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes").valueOf()
         onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
       }
@@ -165,10 +165,8 @@ const Routes = () => {
       if(route !== "main") return
       if(type === EventType.PRESS){
         //NOTIFEE FOREGROUND PRESS EVENT LISTENER TAKES USER TO 
-        // SCREEN RETURNED BY SCREEN DETERMINANT 
-        console.log("onForegroundEvent",type,detail)
+        // SCREEN RETURNED BY SCREEN DETERMINANT
         let resp = screenDeterminant(detail)
-        console.log("screenDeterminant",resp)
         if(!resp?.stack || !resp?.screen) return
         if(resp.screen === "TaskDetails") return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
         return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
