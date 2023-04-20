@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
   selected_tab : {
     borderBottomWidth  : width(0.4),
     borderColor: AppColors.green,
-    width: '40%',
+    // width: '40%',
   },
   deselected_tab : {
     borderBottomWidth  : width(0.4),
     borderColor: AppColors.grayBorder,
-    width: '40%',
+    // width: '40%',
   },
  animated : {
    height: height(0.8),

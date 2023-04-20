@@ -54,15 +54,7 @@ export default function Training() {
   }, [training, history]);
 
   return (
-    <ScreenWrapper
-      scrollEnabled={
-        selected === 'Available' &&
-        trainings &&
-        Array.isArray(trainings) &&
-        trainings?.length === 0
-          ? false
-          : true
-      }>
+    <ScreenWrapper scrollEnabled={true}>
       <HomePageHeader header="Training" image={Images.people} />
 
       <View style={styles.mainViewContainer}>
