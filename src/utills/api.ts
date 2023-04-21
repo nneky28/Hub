@@ -669,7 +669,7 @@ export const postAPIs = async (path : string, fd? : any) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log("postAPIs ERROR",error)
+        //console.log("postAPIs ERROR",error)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -735,7 +735,7 @@ export const putAPIs = async (path:string, fd?:any) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log("putAPIs ERROR",error)
+        //console.log("putAPIs ERROR",error)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
