@@ -163,10 +163,10 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             <EmptyStateWrapper 
                 marginTop={1}
                 icon={Images.EmptyTraining}
-                header_1='You have no'
+                header_1={currentTabIndex < 2 ? 'You have no' : "Your team has no"}
                 header_2={msg}
                 backgroundColor={AppColors.transparent}
-                sub_text='They will show up here when you do.'
+                sub_text={'They will show up here when you do.'}
             />
         );
     }

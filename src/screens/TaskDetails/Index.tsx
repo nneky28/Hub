@@ -53,7 +53,7 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
     } = useFetchActivities(showLog && id && typeof id === "number" ? id : "",page) as useFetchActivitiesProps
 
     const {
-        data: commentData,
+        data: commentData
     } = useFetchComments(showComment && id && typeof id === "number" ? id : "",page) as useFetchCommentsProps
 
     const {
@@ -68,13 +68,20 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
 
     const flattenAndMapData = (data : useFetchActivitiesData) : TaskListSection[] => {
         if(!Object.keys(data)?.[0] || !Object.values(data)?.[0]) return []
-        return [
-            {
-                key: Object.keys(data)?.[0],
-                title: Object.keys(data)?.[0] ?? "",
-                data: Object.values(data)?.[0] ?? [],
+        return Object.keys(data).map((item)=>{
+            return {
+                key: item,
+                title: item ?? "",
+                data: data[item] ?? [],
             }
-        ]
+        })
+        // return [
+        //     {
+        //         key: Object.keys(data)?.[0],
+        //         title: Object.keys(data)?.[0] ?? "",
+        //         data: Object.values(data)?.[0] ?? [],
+        //     }
+        // ]
     };
 
     const SubTaskRenderItem = ({item,index} : {item : SubTaskData,index : number}) => {
@@ -151,7 +158,6 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
             inputRange: [0, 1],
             outputRange: deg,
         }));
-        //LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     };
 
     const onHide = (type : "COMMENT_ACCORDION" | "LOG_ACCORDION") => {
@@ -254,7 +260,7 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
 
     useEffect(() => {
         mapDataToState()
-    }, [logData,commentData]);
+    }, [logData,commentData,showLog,showComment]);
 
     useEffect(()=>{
         setSelectedSubTaskID(undefined)

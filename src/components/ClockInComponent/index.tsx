@@ -16,6 +16,7 @@ import {useFetchAttendanceConfigProps, useFetchAttendanceStatusProps,useFetchLoc
 import { CLOCK_IN_ALERT, StoredAboutMeProps } from "../../Routes/types"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import notifee from '@notifee/react-native';
+import { ATTENDANCE_STATUS } from "../../utills/payload"
 
 const ClockINContainer = () => {
     const [current, setCurrent] = React.useState("")
@@ -89,7 +90,7 @@ const ClockINContainer = () => {
               }
               await clockEmployeeIn(fd)
               await notifee.cancelTriggerNotification(CLOCK_IN_ALERT)
-              queryClient.invalidateQueries("attendance_status")
+              queryClient.invalidateQueries(ATTENDANCE_STATUS)
               dispatch(setLoaderVisible(false))
               showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
             }catch(error : any){

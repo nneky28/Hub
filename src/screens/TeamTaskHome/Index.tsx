@@ -139,7 +139,7 @@ const TeamTaskHome = ({route} : RootMenuScreenProps) => {
                 header_1={`${name} has no`}
                 header_2={msg}
                 backgroundColor={AppColors.transparent}
-                sub_text='They will show up here when you do.'
+                sub_text='The tasks will show up here when they do.'
             />
         );
     }
@@ -195,10 +195,12 @@ const TeamTaskHome = ({route} : RootMenuScreenProps) => {
     const undoChangesHandler = async () => {
         try{    
             clearTimeout(Number(timeoutID))
-            if(!currentTask?.id) return
+            if(!currentTask?.id || !currentTask?.created_by?.id || !currentTask?.title) return
             let fd = {
                 id : currentTask?.id,
-                status : currentTask?.old_status
+                status : currentTask?.old_status,
+                created_by : currentTask?.created_by?.id,
+                title : currentTask?.title
             }
             await mutateAsync(fd)
             setShow(false)

@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import { APIFunction } from './api';
-import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType, TimestampTrigger, TriggerType, NotificationAndroid, NotificationIOS} from '@notifee/react-native';
+import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType, TimestampTrigger, TriggerType, NotificationAndroid, NotificationIOS, AndroidNotificationSetting} from '@notifee/react-native';
 import { ASSIGNED_TASK, COMMENT_ON_TASK, PushNotificationData, TASK_UPDATE, TIME_OFF_REQUEST } from '../Routes/types';
 
 export const requestUserPermission = async () => {
@@ -118,6 +118,10 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
 
   export const onCreateScheduledNotification = async (time : number,title : string,body : string,type : string,icon : string)=> {
     try{
+      const settings = await notifee.getNotificationSettings();
+      if (settings.android.alarm !== AndroidNotificationSetting.ENABLED){
+        await notifee.openAlarmPermissionSettings();
+      }
       // Create a time-based trigger
       const trigger: TimestampTrigger = {
         type: TriggerType.TIMESTAMP,

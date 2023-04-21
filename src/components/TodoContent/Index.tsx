@@ -1,14 +1,14 @@
 import {
     ActivityIndicator,
 } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Container, H1, P, TouchableWrapper} from '../../utills/components'
 import styles from './styles'
 import AppColors from '../../utills/AppColors';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { Capitalize, ToastError, ToastSuccess } from '../../utills/Methods';
+import { Capitalize, getStoreAboutMe, ToastError, ToastSuccess } from '../../utills/Methods';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { DUE_STATUS, MenuListItem, TodoContentProps } from './types';
@@ -20,6 +20,7 @@ import { setCurrentTaskItem } from '../../Redux/Actions/Config';
 import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskProgressLoad } from '../../utills/payload';
 import { RootNavigationProps } from '../../Routes/types';
 import WarningModal from '../WarningModal';
+import { useFetchAboutMeData } from '../TimeoffModal/types';
 
 
 
@@ -30,6 +31,7 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
     const [list,setList] = React.useState<MenuListItem[]>([])
     const dispatch = useDispatch()
     const [show,setShow] = React.useState(false)
+    const [about,setAbout] = React.useState<useFetchAboutMeData>()
     
 
     const {
@@ -81,6 +83,12 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
         setShow(false)
     }
 
+    const getAboutUser = async () => {
+        let user = await getStoreAboutMe()
+        if(!user) return
+        setAbout(user)
+    }
+
     const menuItemPressHandler = async (param : MenuListItem) => {
         try{
             setVisible(false)
@@ -106,6 +114,7 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
             await mutateAsync(fd)
             queryClient.invalidateQueries(GET_TASKS)
             queryClient.invalidateQueries(GET_TASK_STATISTICS)
+            queryClient.invalidateQueries(GET_TEAM_TASKS)
             dispatch(setCurrentTaskItem({...item,
                 status : status,
                 old_status : item?.status
@@ -114,7 +123,11 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
             ToastError(err?.msg)
         }
     }
-    
+
+    useEffect(()=>{
+        getAboutUser()
+    },[])
+
     return (
 
         <TouchableWrapper onPress={navigationHandler}
@@ -219,39 +232,43 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
                    }
                 </Container>
                 {
-                     title === "To-Do" ?  <Container backgroundColor={AppColors.transparent} width={30} direction="row" horizontalAlignment='space-between'>
-                     <Container width={23} backgroundColor={AppColors.transparent}>
-                         <TouchableWrapper onPress={()=>menuItemPressHandler("Mark task as started")} style={styles.start_task_btn}
-                            disabled={isLoading}
-                         >
-                             {
-                                 isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <H1 color={AppColors.black3} fontSize={3} textAlign='center'>Start task</H1>
-                             }
-                         </TouchableWrapper>
-                     </Container>
-                     <CustomMenu 
-                         visible={visible}
-                         onDismiss={onDismiss}
-                         anchor={<Container backgroundColor={AppColors.transparent} width={6}>
-                                 <TouchableWrapper onPress={openMenuHandler} style={styles.menu_button} disabled={isLoading}>
-                                 <Ionicons name={"chevron-down-outline"} color={AppColors.black3}/>
-                                 </TouchableWrapper>
-                             </Container>}
-                         listItem={list}
-                         onPressHandler={menuItemPressHandler}
-                     />
-                 </Container> : <CustomMenu 
-                         visible={visible}
-                         onDismiss={onDismiss}
-                         anchor={isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <CustomIconButton 
-                                 icon={"dots-vertical"}
-                                 onPress={openMenuHandler}
-                                 color={AppColors.black3}
-                                 size={5}
-                             />}
-                         listItem={list}
-                         onPressHandler={menuItemPressHandler}
-                     />
+                    (item?.department?.id === about?.department?.id) || about?.id === item?.assigned_to?.id ? <React.Fragment>
+                        {
+                            title === "To-Do" ?  <Container backgroundColor={AppColors.transparent} width={30} direction="row" horizontalAlignment='space-between'>
+                            <Container width={23} backgroundColor={AppColors.transparent}>
+                                <TouchableWrapper onPress={()=>menuItemPressHandler("Mark task as started")} style={styles.start_task_btn}
+                                    disabled={isLoading}
+                                >
+                                    {
+                                        isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <H1 color={AppColors.black3} fontSize={3} textAlign='center'>Start task</H1>
+                                    }
+                                </TouchableWrapper>
+                            </Container>
+                            <CustomMenu 
+                                visible={visible}
+                                onDismiss={onDismiss}
+                                anchor={<Container backgroundColor={AppColors.transparent} width={6}>
+                                        <TouchableWrapper onPress={openMenuHandler} style={styles.menu_button} disabled={isLoading}>
+                                        <Ionicons name={"chevron-down-outline"} color={AppColors.black3}/>
+                                        </TouchableWrapper>
+                                    </Container>}
+                                listItem={list}
+                                onPressHandler={menuItemPressHandler}
+                            />
+                            </Container> : <CustomMenu 
+                                visible={visible}
+                                onDismiss={onDismiss}
+                                anchor={isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <CustomIconButton 
+                                        icon={"dots-vertical"}
+                                        onPress={openMenuHandler}
+                                        color={AppColors.black3}
+                                        size={5}
+                                    />}
+                                listItem={list}
+                                onPressHandler={menuItemPressHandler}
+                            />
+                        }
+                    </React.Fragment>    : null   
                 }
                 {
                 show ?  <WarningModal

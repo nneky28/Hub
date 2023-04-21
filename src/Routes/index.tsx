@@ -30,7 +30,7 @@ import { CLOCK_IN_ALERT, PushNotificationData, RootNavigationProps } from './typ
 import messaging from '@react-native-firebase/messaging';
 import notifee, { EventDetail, EventType } from '@notifee/react-native';
 import { useFetchAttendanceConfigProps, useFetchAttendanceStatusProps } from '../components/ClockInComponent/types';
-import { useFetchAboutMeProps } from '../components/TimeoffModal/types';
+import { useFetchAboutMeProps, WorkDays } from '../components/TimeoffModal/types';
 import { Images } from '../utills/Image';
 import HomeStackNavigator from './HomeStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
@@ -56,6 +56,7 @@ const Routes = () => {
   const [backgroundEventDetails,setBackgroundEventDetails] = React.useState<EventDetail>()
   const {
     data : config,
+    isFetching : fetchingConfig
   } = useFetchAttendanceConfig(route) as useFetchAttendanceConfigProps
   const {
     data : about
@@ -63,6 +64,7 @@ const Routes = () => {
 
   const {
     data : status,
+    isFetching
   } = useFetchAttendanceStatus(route) as useFetchAttendanceStatusProps
 
   const logoutMethod = async () => {
@@ -134,22 +136,37 @@ const Routes = () => {
       if(
         !config?.data?.start_date || 
         !moment(config?.data?.start_date).isBefore(moment()) || 
-        !about?.employee_job?.arrival_time 
+        !about?.employee_job?.arrival_time ||
+        !about?.employee_job?.work_days || 
+        !Array.isArray(about?.employee_job?.work_days)
       ){
         return
       }
+      let work_day = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").format("dddd") as WorkDays
+      let today = moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("dddd") as WorkDays
       if(
-        moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))
+        status?.is_clocked_in &&
+        about?.employee_job?.work_days?.includes(work_day)
       ){
-        //IF IT IS PAST THE CLOCK IN TIME, SET A REMINDER FOR TOMORROW
+        //IF USER IS CLOCKED IN AND THERE IS WORK TOMORROW, SET A REMINDER FOR TOMORROW
         let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").subtract(5,"minutes").valueOf()
         return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
       }
-      if(!status?.is_clocked_in && !moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes"))){
-        //IF USER IS NOT CLOCKED IN AND IT IS NOT YET TIME
-        //NOTIFEE ON IOS IGNORES THE START DATE OF TRIGGERED NOTIFICATION HENCE, IT IS IMPORTANT TO CHECK IF IT PAST TIME
+      if(!status?.is_clocked_in && 
+        !moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes")) &&
+        about?.employee_job?.work_days?.includes(today)
+      ){
+        //IF USER IS NOT CLOCKED IN AND IT IS NOT YET TIME, AND THERE IS WORK TODAY
         let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes").valueOf()
-        onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
+       return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
+      }
+      if(
+        !status?.is_clocked_in &&
+        about?.employee_job?.work_days?.includes(work_day)
+      ){
+        //IF USER IS NOT CLOCKED IN AND THERE IS WORK TOMORROW, SET A REMINDER FOR TOMORROW
+        let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").subtract(5,"minutes").valueOf()
+        return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
       }
     }catch(err){
 
@@ -158,7 +175,8 @@ const Routes = () => {
   useEffect(()=>{
     if(route !== "main") return
     pushNotificationInit() // SCHEDULES CLOCK IN REMINDER
-  },[route,about,config,status])
+    storeData("about_me",about)
+  },[route,about,fetchingConfig,isFetching])
 
   useEffect(()=>{
     const unsubscribe = notifee.onForegroundEvent(async ({type,detail})=>{

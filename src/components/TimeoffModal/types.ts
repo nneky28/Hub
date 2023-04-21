@@ -11,7 +11,7 @@ export type TimeoffModalProps = {
     datePickerHandler : (action : string) => void
     onChangeText : (value : string) => void
 }
-type WorkDays = "Monday"| "Tuesday"| "Wednesday"| "Thursday"| "Friday"| "Saturday"| "Sunday"
+export type WorkDays = "Monday"| "Tuesday"| "Wednesday"| "Thursday"| "Friday"| "Saturday"| "Sunday"
 export type useFetchAboutMeData = {
     id?: number
     employee_id? : number

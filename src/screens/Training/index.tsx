@@ -15,15 +15,15 @@ import {
 } from '../../utills/components';
 import {Images} from '../../utills/Image';
 import {useFetchAboutMeProps} from '../../components/TimeoffModal/types';
-import {TrainingType, useFetchTrainingsProps} from './types';
+import {useFetchTrainingsData, useFetchTrainingsProps} from './types';
 import {HomePageHeader} from '../../components/Headers/CustomHeader';
 import styles from './styles';
 // import {TrainingListProps} from '../../components/TrainingList/types';
 
 export default function Training() {
   var [selected, setSelected] = useState('Upcoming');
-  const [histories, setHistories] = useState<TrainingType[]>([]);
-  const [trainings, setTrainings] = useState<TrainingType[]>([]);
+  const [histories, setHistories] = useState<useFetchTrainingsData[]>([]);
+  const [trainings, setTrainings] = useState<useFetchTrainingsData[]>([]);
 
   const {data: profile} = useFetchAboutMe('main') as useFetchAboutMeProps;
 
