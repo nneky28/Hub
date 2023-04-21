@@ -625,6 +625,7 @@ export const useFetchComments = (id:number | "",page : number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+  console.log("getAPIs",path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -735,7 +736,7 @@ export const putAPIs = async (path:string, fd?:any) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("putAPIs ERROR",error)
+        console.log("putAPIs ERROR",error,path,fd)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"

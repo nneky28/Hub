@@ -9,10 +9,10 @@ import styles from './styles';
 import Button from '../../components/Button'
 import { P, H1, PageLoader, TouchableWrapper, Container } from '../../utills/components';
 import moment from 'moment';
-import { useFetchActivities, useFetchComments, useFetchTaskByPK } from '../../utills/api';
+import { useFetchAboutMe, useFetchActivities, useFetchComments, useFetchTaskByPK } from '../../utills/api';
 import ActivityCard from '../../components/ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
-import { __flatten, Capitalize, getStoreAboutMe, ToastError, ToastSuccess } from '../../utills/Methods';
+import { __flatten, Capitalize, ToastError, ToastSuccess } from '../../utills/Methods';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction } from '../../utills/api';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -31,6 +31,7 @@ import { TextInput } from 'react-native-paper';
 import CustomInput from '../../components/CustomInput';
 import TaskCommentCard from '../../components/TaskCommentCard/Index';
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view';
+import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
 
 
 
@@ -51,6 +52,10 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
     const {
         data: logData
     } = useFetchActivities(showLog && id && typeof id === "number" ? id : "",page) as useFetchActivitiesProps
+
+    const {
+        data : about
+    } = useFetchAboutMe("main") as useFetchAboutMeProps
 
     const {
         data: commentData
@@ -89,6 +94,8 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
             <>
                 <TouchableWrapper onPress={() => handleComplete(item)}
                     style={[styles.sub_task_button,task?.sub_tasks_tasksapp && (index === (task?.sub_tasks_tasksapp?.length - 1)) ? {borderBottomWidth : undefined} : {}]}
+                    disabled={(task?.department?.id === about?.department?.id) || 
+                        (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? false : true}
                 >
                     <React.Fragment>
                         {
@@ -96,6 +103,8 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                             icon={item?.id && selectedIDs.includes(item?.id) ?  "loading" : item?.status === "Completed" ? "checkbox-marked-outline" : "checkbox-blank-outline"}
                             onPress={() => handleComplete(item)}
                             color={item?.id && selectedIDs.includes(item?.id) ? AppColors.green : AppColors.black1}
+                            disabled={(task?.department?.id === about?.department?.id) || 
+                                (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? false : true}
                         />
                         }
                         <Container width={60} marginLeft={2} backgroundColor={AppColors.transparent}>
@@ -110,7 +119,6 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
     const handleSubmit = async () => {
         try {
             Keyboard.dismiss()
-            let about = await getStoreAboutMe()
             if(!comment || comment.toString().trim() === ""){
                 return ToastError("Please provide a comment")
             }
@@ -311,15 +319,18 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                                         <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
                                     </React.Fragment> : null}
                                 </View>
-                                <Button
-                                    title="Edit Task"
-                                    containerStyle={styles.buttonStyle}
-                                    textStyle={styles.buttonText}
-                                    onPress={() => {
-                                        if(!task?.id) return
-                                        navigation.navigate("CreateTask",{task_id : task?.id})
-                                    }}
-                                />
+                                {
+                                    (task?.department?.id === about?.department?.id) || 
+                                    (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? <Button
+                                        title="Edit Task"
+                                        containerStyle={styles.buttonStyle}
+                                        textStyle={styles.buttonText}
+                                        onPress={() => {
+                                            if(!task?.id) return
+                                            navigation.navigate("CreateTask",{task_id : task?.id})
+                                        }}
+                                    /> : null
+                                }
                                 <View style={styles.line} />
                             </View> : null
                             }
@@ -410,7 +421,11 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                                 )
                                 
                             }}
-                            ListFooterComponent={showComment ? <CustomInput 
+                            ListFooterComponent={showComment && (
+                                (task?.department?.id === about?.id) ||
+                                (task?.assigned_to?.id === about?.id) ||
+                                (task?.created_by?.id === about?.id)
+                            ) ? <CustomInput 
                                 placeholder="Add a comment"
                                 value={comment}
                                 onChangeData={(value : string)=>setComment(value)}

@@ -110,17 +110,20 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const {
         data: taskData,
         isFetching,
-        //hasNextPage,
+        hasNextPage,
     } = useFetchTodos(
         currentTabIndex !== 2 ? filter : "",
         currentTabIndex !== 2 ? overdue_status : "",
-        currentTabIndex !== 2 ? progress : ""
+        currentTabIndex !== 2 ? progress : "",
+        "",
+        page
     ) as useFetchTodosProps
 
     const {
         data: teamTaskData,
-        isFetching : fetching
-    } = useFetchTeamTask(currentTabIndex === 2 ? "My Team" : "", department_id,overdue_status,progress) as useFetchTodosProps
+        isFetching : fetching,
+        hasNextPage : hasNextTeamPage
+    } = useFetchTeamTask(currentTabIndex === 2 ? "My Team" : "", department_id,overdue_status,progress,page) as useFetchTodosProps
 
     const progressCards : ProgressCardType[] = [
         {
@@ -201,7 +204,6 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                             <View style={[CommonStyles.marginRight_3]} />
                                         )}
                                         showsHorizontalScrollIndicator={false}
-                                        nestedScrollEnabled={true}
                                     />
                                 </View>
                             </View>
@@ -329,7 +331,11 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
 
     const onEndReached = () => {
-
+        if(
+            (currentTabIndex !== 2 && (!hasNextPage || isFetching)) ||
+            (currentTabIndex === 2 && (!hasNextTeamPage || fetching))
+        ) return
+        setPage(page + 1)
     }
 
     const cardPressHandler = (item : ProgressCardType) => {
@@ -345,13 +351,11 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     const mapDataToState = () => {
         if(currentTabIndex !== 2 && taskData?.pages?.[0]?.results && Array.isArray(taskData?.pages?.[0]?.results)){
-            let arr : useFetchTodosData[] = []
-            page > 1 ? setTasks([...tasks,...arr]) : setTasks(taskData?.pages?.[0]?.results)
-            setLoading(false)
+            page > 1 ? setTasks([...tasks,...taskData?.pages?.[0]?.results]) : setTasks(taskData?.pages?.[0]?.results)
+            return setLoading(false)
         }
         if(currentTabIndex === 2 && teamTaskData?.pages?.[0]?.results && Array.isArray(teamTaskData?.pages?.[0]?.results)){
-            let arr : useFetchTodosData[] = []
-            page > 1 ? setTasks([...tasks,...arr]) : setTasks(teamTaskData?.pages?.[0]?.results)
+            page > 1 ? setTasks([...tasks,...teamTaskData?.pages?.[0]?.results]) : setTasks(teamTaskData?.pages?.[0]?.results)
             setLoading(false)
         }
     }
@@ -383,7 +387,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     }
 
     const ListFooterComponent = () => {
-        if(isFetching && page > 1){
+        if((isFetching || fetching) && page > 1){
             return(
                 <Container alignSelf={'center'} width={30} marginTop={3}>
                     <ActivityIndicator size={width(10)} color={AppColors.green} />
@@ -395,7 +399,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     useEffect(()=>{
         mapDataToState()
-    },[taskData,teamTaskData])
+    },[taskData,teamTaskData,currentTabIndex])
 
     useEffect(()=> {
         let  type : TaskStatisticFilter = ""

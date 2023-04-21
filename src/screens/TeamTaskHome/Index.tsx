@@ -38,7 +38,7 @@ const TeamTaskHome = ({route} : RootMenuScreenProps) => {
     const [progress,setProgress] = React.useState<TaskProgressStatus>("To-do")
     const [tasks, setTasks] = useState<useFetchTodosData[]>([]);
     const dispatch = useDispatch()
-    const [filter] = React.useState<TaskStatisticFilter>("assigned_to_me")
+    const [filter] = React.useState<TaskStatisticFilter>("")
     const [coordinates,setCoordinates] = React.useState<Coordinates>({})
     const ref = useRef<ScrollView>(null)
     const [overdue_status,setOverDueStatus] = React.useState<TaskDueDateFilter>("")
