@@ -144,14 +144,8 @@ const Routes = () => {
       }
       let work_day = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").format("dddd") as WorkDays
       let today = moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("dddd") as WorkDays
-      if(
-        status?.is_clocked_in &&
-        about?.employee_job?.work_days?.includes(work_day)
-      ){
-        //IF USER IS CLOCKED IN AND THERE IS WORK TOMORROW, SET A REMINDER FOR TOMORROW
-        let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").subtract(5,"minutes").valueOf()
-        return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
-      }
+      // let time = moment().add(2,"minutes").valueOf()
+      // return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
       if(!status?.is_clocked_in && 
         !moment().isAfter(moment(about?.employee_job?.arrival_time,"HH:mm:ss").subtract(5,"minutes")) &&
         about?.employee_job?.work_days?.includes(today)
@@ -161,10 +155,9 @@ const Routes = () => {
        return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
       }
       if(
-        !status?.is_clocked_in &&
         about?.employee_job?.work_days?.includes(work_day)
       ){
-        //IF USER IS NOT CLOCKED IN AND THERE IS WORK TOMORROW, SET A REMINDER FOR TOMORROW
+        //IF USER HAS WORK TOMORROW, SET A REMINDER FOR TOMORROW
         let time = moment(about?.employee_job?.arrival_time,"HH:mm:ss").add(24,"hours").subtract(5,"minutes").valueOf()
         return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn) 
       }
@@ -214,6 +207,7 @@ const Routes = () => {
   ])
 
   useEffect(() => {
+    notifee.setBadgeCount(0)
     getDeepLinkInfo()
     deepLinkListener()
   }, [])
