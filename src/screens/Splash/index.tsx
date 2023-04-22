@@ -34,9 +34,8 @@ const Splash = () => {
         if(Number(build_number) < Number(stable_build_number)){
           setForce(true)
         }else if (about && about.completed_user_onboarding) {
-          dispatch(login({ ...auth, user: about, isLogin: true, route: "main" }));
           dispatch(setSecurityVisible(true))
-          //dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
+          dispatch(login({ ...auth, user: about, isLogin: true, route: "main" }));
         } else if (about && !about.completed_user_onboarding) {
           dispatch(login({ ...auth, user: about, isLogin: true, route: "onboard" }));
         } else {

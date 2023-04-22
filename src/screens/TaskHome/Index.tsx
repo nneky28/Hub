@@ -79,6 +79,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         setCurrentTabIndex(i)
         setActionTitle('To-Do');
         setTab('All');
+        setOverDueStatus("")
         setLoading(true)
         setPage(1)
     };

@@ -72,16 +72,6 @@ import {RenderItemVerticalParams} from '../../components/Timeoff/types';
 export default function Dashboard({
   navigation: {navigate, toggleDrawer},
 }: RootScreenProps) {
-  const {data: activeBD, isFetching: activeBDFetching} = useFetchBirthdays(
-    'active',
-  ) as useFetchBirthdaysProps;
-
-  const {data: activeANN, isFetching: activeANNFetching} = useFetchAnniversary(
-    'active',
-  ) as useFetchAnniversaryProps;
-
-  const {data: upcomingANN, isFetching: upcomingANNFetching} =
-    useFetchAnniversary('upcoming') as useFetchAnniversaryProps;
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -124,48 +114,70 @@ export default function Dashboard({
     reason: '',
   });
 
-  const {data: outData, isLoading: whosoutLoading} = useFetchWhosOut(
-    category,
-  ) as useFetchWhosOutProps;
-
-  const {data: about_me} = useFetchAboutMe('main') as useFetchAboutMeProps;
-
-  const {data: upcomingBD, isFetching: upcomingBDFetching} = useFetchBirthdays(
-    'upcoming',
-  ) as useFetchBirthdaysProps;
-
-  const {data: assets, isFetching: assetFetching} = useFetchAssets(
-    employee_pk,
-  ) as useFetchAssetsProps;
-
-  const {data: benefits, isFetching: benefitFetching} = useFetchBenefits(
-    employee_pk,
-  ) as useFetchBenefitsProps;
-
-  const {data: timeoffData, isFetching: fetchingTimeoff} =
-    useFetchEmployeeTimeOff(employee_pk || '') as useFetchEmployeeTimeOffProps;
-
   const {data: activeData, isFetching: fetchingActive} =
-    useFetchEmployeeTimeOffTaken(
-      employee_pk || '',
-      'active',
-    ) as useFetchEmployeeTimeOffTakenProps;
+  useFetchEmployeeTimeOffTaken(
+    isSecurityVisible || !employee_pk ? "" :employee_pk,
+    'active',
+  ) as useFetchEmployeeTimeOffTakenProps;
 
   const {data: upcomingData, isFetching: fetchingUpcoming} =
     useFetchEmployeeTimeOffTaken(
-      employee_pk || '',
+      isSecurityVisible || !employee_pk ? "" : employee_pk,
       'upcoming',
     ) as useFetchEmployeeTimeOffTakenProps;
 
   const {data: historyData, isFetching: fetchingHistory} =
     useFetchEmployeeTimeOffTaken(
-      employee_pk || '',
+      isSecurityVisible || !employee_pk ? "" : employee_pk,
       'history',
     ) as useFetchEmployeeTimeOffTakenProps;
 
   const {data: reqData, isFetching: fetchingReq} = useFetchEmployeeTimeOffReqs(
-    employee_pk || '',
+    isSecurityVisible || !employee_pk ? "" : employee_pk,
   ) as useFetchEmployeeTimeOffReqsProps;
+
+  const {data: timeoffData, isFetching: fetchingTimeoff} =
+    useFetchEmployeeTimeOff(
+      isSecurityVisible || !employee_pk ? "" : employee_pk,
+    ) as useFetchEmployeeTimeOffProps;
+
+  (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming)
+  
+  //LAZY LOADING BEGINS
+  const {data: activeBD, isFetching: activeBDFetching} = useFetchBirthdays(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible)  ?  "" : 'active',
+  ) as useFetchBirthdaysProps;
+
+  const {data: activeANN, isFetching: activeANNFetching} = useFetchAnniversary(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) ? "" : 'active',
+  ) as useFetchAnniversaryProps;
+
+  const {data: upcomingANN, isFetching: upcomingANNFetching} =
+    useFetchAnniversary(
+      (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) ? "" : 'upcoming'
+    ) as useFetchAnniversaryProps;
+
+  const {data: outData, isLoading: whosoutLoading} = useFetchWhosOut(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) ? "" : category,
+  ) as useFetchWhosOutProps;
+
+  const {data: about_me} = useFetchAboutMe(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) ? "" : 'main'
+  ) as useFetchAboutMeProps;
+
+  const {data: upcomingBD, isFetching: upcomingBDFetching} = useFetchBirthdays(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) ? "" : 'upcoming'
+  ) as useFetchBirthdaysProps;
+
+  const {data: assets, isFetching: assetFetching} = useFetchAssets(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) || !employee_pk ? undefined : employee_pk,
+  ) as useFetchAssetsProps;
+
+  const {data: benefits, isFetching: benefitFetching} = useFetchBenefits(
+    (fetchingActive || fetchingTimeoff || fetchingReq || fetchingHistory || fetchingUpcoming || isSecurityVisible) || !employee_pk ? undefined : employee_pk,
+  ) as useFetchBenefitsProps;
+
+ 
 
   const getInfo = async () => {
     if (!about_me?.id) return;
@@ -190,7 +202,6 @@ export default function Dashboard({
       fetchingReq ||
       fetchingUpcoming
     ) {
-      //dispatch(setLoaderVisible(true))
       return setLoading(true);
     }
     dispatch(setLoaderVisible(false));
@@ -400,7 +411,7 @@ export default function Dashboard({
           </View>
           <View style={styles.line} />
         </Container>
-        {loading && !isSecurityVisible ? (
+        {loading ? (
           <PageLoader />
         ) : (
           <ScrollView
