@@ -53,7 +53,7 @@ const Routes = () => {
   const navigation = useNavigation<RootNavigationProps>()
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient()
-  const [backgroundEventDetails,setBackgroundEventDetails] = React.useState<EventDetail>()
+
   const {
     data : config,
     isFetching : fetchingConfig
@@ -102,19 +102,18 @@ const Routes = () => {
     })
   }
 
-  const notifeeBackgroundEventHandler = () => {
-    return AppState.addEventListener("change",async nextAppState =>{
-      if (nextAppState === "active" && auth?.route === "main") {
-        let detail : EventDetail | null | false | string = await getData("backgroundEventDetails")
-        if(typeof detail === "string" || !detail || !detail?.notification) return
-        let resp = screenDeterminant(detail)
-        if(!resp?.stack || !resp?.screen) return
-        await storeData("backgroundEventDetails",{})
-        setBackgroundEventDetails(detail)
-        if(resp.screen === "TaskDetails") return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
-        return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
-      }
-    })
+  const notifeeBackgroundEventHandler = async () => {
+    try{
+      let detail : EventDetail | null | false | string = await getData("backgroundEventDetails")
+      if(typeof detail === "string" || !detail || !detail?.notification) return
+      let resp = screenDeterminant(detail)
+      if(!resp?.stack || !resp?.screen) return
+      await storeData("backgroundEventDetails",{})
+      if(resp.screen === "TaskDetails") return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
+      return navigation.navigate(resp?.stack,{screen : resp?.screen,params : resp?.params})
+    }catch(err){
+
+    }
   }
 
   const AppStateListener = () => {
@@ -200,9 +199,9 @@ const Routes = () => {
 
   useEffect(() => {
     AppStateListener()
-    notifeeBackgroundEventHandler()
+    if(route === "main") notifeeBackgroundEventHandler()
   }, [
-    route,backgroundEventDetails
+    route
     //REFRESHES THE LISTERNERS
   ])
 

@@ -126,12 +126,13 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
 
       let fd: TaskLoad = {
         title: data?.title,
+        description : data?.description,
         due_date:
           data?.due_date === 'Today'
             ? moment().toISOString(true)
-            : data?.due_date
+            : data?.due_date !== "No Date"
             ? moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS')
-            : undefined,
+            : null,
         created_by: task?.created_by?.id || about?.id,
         assigned_to:
           data?.type === 'Employee' &&
@@ -301,7 +302,7 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
                     onPress={showCalendar}
                     style={styles.button1}>
                     <Text numberOfLines={1} style={styles.date}>
-                      {data?.due_date === 'No Date'
+                      {!data?.due_date || data?.due_date === 'No Date'
                         ? 'No Date'
                         : data?.due_date === 'Today'
                         ? `Today, ${moment().format('ddd D, MMM YYYY')}`

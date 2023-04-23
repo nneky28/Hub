@@ -80,13 +80,6 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                 data: data[item] ?? [],
             }
         })
-        // return [
-        //     {
-        //         key: Object.keys(data)?.[0],
-        //         title: Object.keys(data)?.[0] ?? "",
-        //         data: Object.values(data)?.[0] ?? [],
-        //     }
-        // ]
     };
 
     const SubTaskRenderItem = ({item,index} : {item : SubTaskData,index : number}) => {
@@ -303,22 +296,24 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                         ListHeaderComponent={<React.Fragment>
                             {
                                 task?.status !== "Completed" ? <View style={styles.container}>
-                                <View style={styles.row1}>
-                                    <P style={styles.flagText}>Due: </P>
-                                    {due_status === "DUE_TODAY" ? <React.Fragment>
-                                        <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
-                                        <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                        <P style={styles.flagText}>Due Today</P>
-                                    </React.Fragment> : due_status === "OVER_DUE" ? <React.Fragment>
-                                        <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
-                                        <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                        <P color={AppColors.red} fontSize={3.1}>Overdue</P>
-                                    </React.Fragment> : due_status === "UPCOMING" ? <React.Fragment>
-                                        <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
-                                        <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                        <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
-                                    </React.Fragment> : null}
-                                </View>
+                                {
+                                    due_status !== "NO_DATE" ? <View style={styles.row1}>
+                                        <P style={styles.flagText}>Due: </P>
+                                        {due_status === "DUE_TODAY" ? <React.Fragment>
+                                            <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
+                                            <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                            <P style={styles.flagText}>Due Today</P>
+                                        </React.Fragment> : due_status === "OVER_DUE" ? <React.Fragment>
+                                            <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
+                                            <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                            <P color={AppColors.red} fontSize={3.1}>Overdue</P>
+                                        </React.Fragment> : due_status === "UPCOMING" ? <React.Fragment>
+                                            <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
+                                            <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                            <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
+                                        </React.Fragment> : null}
+                                    </View> : null
+                                }
                                 {
                                     (task?.department?.id === about?.department?.id) || 
                                     (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? <Button
@@ -355,14 +350,14 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                                         <View style={styles.assign}>
                                             <P color={AppColors.black3} fontSize={3.1}>Assigned To</P>
                                             <View style={styles.button}>
-                                                <Text style={styles.name}>{task?.department?.name ? Capitalize(task?.department?.name) : `${task?.assigned_to?.first_name ? Capitalize(task?.assigned_to?.first_name) : ""} ${task?.assigned_to?.last_name ? Capitalize(task?.assigned_to?.last_name) : ''}`.trim()}</Text>
+                                                <Text style={styles.name}>{task?.department?.name && !task?.assigned_to ? Capitalize(task?.department?.name) : `${task?.assigned_to?.first_name ? Capitalize(task?.assigned_to?.first_name) : ""} ${task?.assigned_to?.last_name ? Capitalize(task?.assigned_to?.last_name) : ''}`.trim()}</Text>
                                             </View>
                                         </View>
                                         <View style={styles.dueDate}>
                                             <P color={AppColors.black3} fontSize={3.1}>Due Date</P>
                                             <View style={styles.button}>
                                                 <Text style={styles.name} numberOfLines={1}>
-                                                    {task?.due_date && moment(task?.due_date).format("dddd D, MMM YYYY")}</Text>
+                                                    {task?.due_date ? moment(task?.due_date).format("dddd D, MMM YYYY") : "No Date"}</Text>
                                             </View>
                                         </View>
                                     </View>
