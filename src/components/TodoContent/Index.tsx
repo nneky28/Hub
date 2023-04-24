@@ -121,10 +121,12 @@ const TodoContent = ({ item, index, title } : TodoContentProps) => {
             queryClient.invalidateQueries(GET_TASKS)
             queryClient.invalidateQueries(GET_TASK_STATISTICS)
             queryClient.invalidateQueries(GET_TEAM_TASKS)
-            dispatch(setCurrentTaskItem({...item,
-                status : status,
-                old_status : item?.status
-            }))
+            if(param !== "Claim task"){
+                dispatch(setCurrentTaskItem({...item,
+                    status : status,
+                    old_status : item?.status
+                }))
+            }
         }catch(err : any){
             ToastError(err?.msg)
         }
