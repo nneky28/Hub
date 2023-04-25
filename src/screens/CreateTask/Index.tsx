@@ -30,7 +30,7 @@ import {useMutation, useQueryClient} from 'react-query';
 import CommonStyles from '../../utills/CommonStyles';
 import {ActivityIndicator, TextInput} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {scrollToPosition} from '../../Redux/Actions/Config';
+import {scrollToPosition, setCurrentTabIndex} from '../../Redux/Actions/Config';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import CustomCalendarModal from '../../components/CustomCalendarModal';
 import {DateData} from 'react-native-calendars/src/types';
@@ -50,7 +50,7 @@ import {
 } from '../../utills/payload';
 import {width} from 'react-native-dimension';
 
-const CreateTask = ({route}: RootMenuScreenProps) => {
+const CreateTask = ({route, navigation}: RootMenuScreenProps) => {
   const {task_id} = route?.params || {};
   const queryClient = useQueryClient();
   const [show, setShow] = useState(false);
@@ -127,11 +127,11 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
 
       let fd: TaskLoad = {
         title: data?.title,
-        description : data?.description,
+        description: data?.description,
         due_date:
           data?.due_date === 'Today'
             ? moment().toISOString(true)
-            : data?.due_date !== "No Date"
+            : data?.due_date !== 'No Date'
             ? moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS')
             : null,
         created_by: task?.created_by?.id || about?.id,
@@ -172,6 +172,10 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
           assigned_to_id: '',
         });
         setSubTask([]);
+        if (data?.assigned_to_id || data?.type === 'Departments') {
+          dispatch(setCurrentTabIndex(1));
+        }
+        navigation.navigate('TaskHome');
         return ToastSuccess('Task has been created');
       }
       await editHandler({...fd, id: task?.id});
@@ -179,6 +183,7 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
       queryClient.invalidateQueries(GET_TASKS);
       queryClient.invalidateQueries(GET_TASK_BY_PK);
       queryClient.invalidateQueries(GET_TEAM_TASKS);
+      navigation.goBack();
       ToastSuccess('Your changes have been saved.');
     } catch (err: any) {
       ToastError(err?.msg);

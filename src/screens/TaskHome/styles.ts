@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
         width: width(15),
         height: height(7),
         borderWidth: 1,
+        marginRight: width(2),
         borderColor: AppColors.grayBorder
 
     },
