@@ -37,7 +37,7 @@ import { __flatten, getStoreAboutMe, useAppSelector, ToastError, ToastSuccess } 
 import { RootScreenProps } from '../../Routes/types';
 import { HomePageHeader } from '../../components/Headers/CustomHeader';
 import { ActionTitleType, AddButtonProps, ProgressCardType, RenderItemProps, TaskTabType, useFetchStatisticsProps, useFetchTodosData, useFetchTodosProps } from './types';
-import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskDueDateFilter, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
+import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskDueDateFilter, TaskProgressLoad, TaskProgressStatus, TaskStatisticFilter } from '../../utills/payload';
 import { Coordinates } from '../Profile/types';
 import CustomSnackBar from '../../components/CustomSnackBar';
 import { setCurrentTaskItem } from '../../Redux/Actions/Config';
@@ -66,7 +66,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const [show,setShow] = React.useState(false)
     const [timeoutID,setTimeoutID] = React.useState<NodeJS.Timeout>()
     const currentTask : useFetchTodosData & {
-        old_status : TaskProgressStatus
+        old_status : TaskProgressLoad
     } = useAppSelector(state=>state?.Config?.task)
     const queryClient = useQueryClient()
     const {
@@ -79,6 +79,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
         setCurrentTabIndex(i)
         setActionTitle('To-Do');
         setTab('All');
+        setOverDueStatus("")
         setLoading(true)
         setPage(1)
     };
@@ -110,17 +111,20 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const {
         data: taskData,
         isFetching,
-        //hasNextPage,
+        hasNextPage,
     } = useFetchTodos(
         currentTabIndex !== 2 ? filter : "",
         currentTabIndex !== 2 ? overdue_status : "",
-        currentTabIndex !== 2 ? progress : ""
+        currentTabIndex !== 2 ? progress : "",
+        "",
+        page
     ) as useFetchTodosProps
 
     const {
         data: teamTaskData,
-        isFetching : fetching
-    } = useFetchTeamTask(currentTabIndex === 2 ? "My Team" : "", department_id,overdue_status,progress) as useFetchTodosProps
+        isFetching : fetching,
+        hasNextPage : hasNextTeamPage
+    } = useFetchTeamTask(currentTabIndex === 2 ? "My Team" : "", department_id,overdue_status,progress,page) as useFetchTodosProps
 
     const progressCards : ProgressCardType[] = [
         {
@@ -163,10 +167,10 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
             <EmptyStateWrapper 
                 marginTop={1}
                 icon={Images.EmptyTraining}
-                header_1='You have no'
+                header_1={currentTabIndex < 2 ? 'You have no' : "Your team has no"}
                 header_2={msg}
                 backgroundColor={AppColors.transparent}
-                sub_text='They will show up here when you do.'
+                sub_text={'They will show up here when you do.'}
             />
         );
     }
@@ -201,7 +205,6 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
                                             <View style={[CommonStyles.marginRight_3]} />
                                         )}
                                         showsHorizontalScrollIndicator={false}
-                                        nestedScrollEnabled={true}
                                     />
                                 </View>
                             </View>
@@ -329,7 +332,11 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
 
     const onEndReached = () => {
-
+        if(
+            (currentTabIndex !== 2 && (!hasNextPage || isFetching)) ||
+            (currentTabIndex === 2 && (!hasNextTeamPage || fetching))
+        ) return
+        setPage(page + 1)
     }
 
     const cardPressHandler = (item : ProgressCardType) => {
@@ -345,13 +352,11 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     const mapDataToState = () => {
         if(currentTabIndex !== 2 && taskData?.pages?.[0]?.results && Array.isArray(taskData?.pages?.[0]?.results)){
-            let arr : useFetchTodosData[] = []
-            page > 1 ? setTasks([...tasks,...arr]) : setTasks(taskData?.pages?.[0]?.results)
-            setLoading(false)
+            page > 1 ? setTasks([...tasks,...taskData?.pages?.[0]?.results]) : setTasks(taskData?.pages?.[0]?.results)
+            return setLoading(false)
         }
         if(currentTabIndex === 2 && teamTaskData?.pages?.[0]?.results && Array.isArray(teamTaskData?.pages?.[0]?.results)){
-            let arr : useFetchTodosData[] = []
-            page > 1 ? setTasks([...tasks,...arr]) : setTasks(teamTaskData?.pages?.[0]?.results)
+            page > 1 ? setTasks([...tasks,...teamTaskData?.pages?.[0]?.results]) : setTasks(teamTaskData?.pages?.[0]?.results)
             setLoading(false)
         }
     }
@@ -359,10 +364,12 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     const undoChangesHandler = async () => {
         try{    
             clearTimeout(Number(timeoutID))
-            if(!currentTask?.id) return
+            if(!currentTask?.id || !currentTask?.created_by?.id || !currentTask?.title) return
             let fd = {
                 id : currentTask?.id,
-                status : currentTask?.old_status
+                status : currentTask?.old_status,
+                created_by : currentTask?.created_by?.id,
+                title : currentTask?.title
             }
             await mutateAsync(fd)
             setShow(false)
@@ -381,7 +388,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
     }
 
     const ListFooterComponent = () => {
-        if(isFetching && page > 1){
+        if((isFetching || fetching) && page > 1){
             return(
                 <Container alignSelf={'center'} width={30} marginTop={3}>
                     <ActivityIndicator size={width(10)} color={AppColors.green} />
@@ -393,7 +400,7 @@ const TaskHome = ({ navigation } : RootScreenProps) => {
 
     useEffect(()=>{
         mapDataToState()
-    },[taskData,teamTaskData])
+    },[taskData,teamTaskData,currentTabIndex])
 
     useEffect(()=> {
         let  type : TaskStatisticFilter = ""

@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import { APIFunction } from './api';
-import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType, TimestampTrigger, TriggerType, RepeatFrequency, NotificationAndroid, NotificationIOS} from '@notifee/react-native';
-import { ASSIGNED_TASK, PushNotificationData, TIME_OFF_REQUEST } from '../Routes/types';
+import notifee,{AuthorizationStatus, AndroidImportance, AndroidStyle, EventDetail, EventType, TimestampTrigger, TriggerType, NotificationAndroid, NotificationIOS, AndroidNotificationSetting} from '@notifee/react-native';
+import { ASSIGNED_TASK, COMMENT_ON_TASK, PushNotificationData, TASK_UPDATE, TIME_OFF_REQUEST } from '../Routes/types';
 
 export const requestUserPermission = async () => {
     try{
@@ -102,7 +102,10 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
             params : undefined
         } as const
     }
-    if(data?.type === ASSIGNED_TASK && data?.type_id){
+    if((
+      data?.type === ASSIGNED_TASK || data?.type === COMMENT_ON_TASK ||
+      data?.type === TASK_UPDATE
+    ) && data?.type_id){
       return {
           screen : "TaskDetails",
           stack : "Menu",
@@ -115,11 +118,14 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
 
   export const onCreateScheduledNotification = async (time : number,title : string,body : string,type : string,icon : string)=> {
     try{
+      const settings = await notifee.getNotificationSettings();
+      if (settings.android.alarm !== AndroidNotificationSetting.ENABLED){
+        await notifee.openAlarmPermissionSettings();
+      }
       // Create a time-based trigger
       const trigger: TimestampTrigger = {
         type: TriggerType.TIMESTAMP,
         timestamp: time, // fire at 11:10am (10 minutes before meeting)
-        repeatFrequency : RepeatFrequency.DAILY
       };
       // Create a trigger notification
       const msg = {
@@ -129,7 +135,7 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
           message_title : title,
           type, 
           type_id : type
-      }
+        }
       }
       const {ios,android} = await generateNotifeeProperties(msg)
       await notifee.createTriggerNotification(
@@ -143,6 +149,5 @@ export const  onDisplayNotification = async (message : PushNotificationData) => 
         trigger,
       );
     }catch(err){
-      //console.log("onCreateScheduledNotification Error",err)
     }
   }

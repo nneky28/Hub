@@ -12,6 +12,7 @@ const CustomIconButton = (props : CustomIconButtonProps) => {
             rippleColor={props?.rippleColor || AppColors.whiteBase}
             hasTVPreferredFocus={undefined} 
             color={props.color || AppColors.green}
+            disabled={props?.disabled}
             size={props.size ? width(props.size) : undefined}
             tvParallaxProperties={undefined}       
         />

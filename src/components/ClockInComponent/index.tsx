@@ -13,8 +13,10 @@ import AppColors from "../../utills/AppColors"
 import styles from "./styles"
 import { height, width } from "react-native-dimension"
 import {useFetchAttendanceConfigProps, useFetchAttendanceStatusProps,useFetchLocationTypeProps} from "./types"
-import { StoredAboutMeProps } from "../../Routes/types"
+import { CLOCK_IN_ALERT, StoredAboutMeProps } from "../../Routes/types"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import notifee from '@notifee/react-native';
+import { ATTENDANCE_STATUS } from "../../utills/payload"
 
 const ClockINContainer = () => {
     const [current, setCurrent] = React.useState("")
@@ -87,7 +89,8 @@ const ClockINContainer = () => {
                 location_type: tab === "Remote" ? "remote" : "on_site"
               }
               await clockEmployeeIn(fd)
-              queryClient.invalidateQueries("attendance_status")
+              await notifee.cancelTriggerNotification(CLOCK_IN_ALERT)
+              queryClient.invalidateQueries(ATTENDANCE_STATUS)
               dispatch(setLoaderVisible(false))
               showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
             }catch(error : any){

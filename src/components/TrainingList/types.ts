@@ -1,11 +1,6 @@
+import { useFetchTrainingsData } from "../../screens/Training/types";
 
 export type TrainingListProps= {
-    data: {
-      title: string;
-      description: string;
-      venue: string;
-      start_datetime: string;
-      end_datetime: string;
-    }[];
+    data: useFetchTrainingsData[];
     opacity?: number;
   }

@@ -55,7 +55,7 @@ import {
   useFetchAttendanceConfigProps,
   useFetchAttendanceStatusProps,
 } from '../components/ClockInComponent/types';
-import {useFetchAboutMeProps} from '../components/TimeoffModal/types';
+import {useFetchAboutMeProps, WorkDays} from '../components/TimeoffModal/types';
 import {Images} from '../utills/Image';
 import HomeStackNavigator from './HomeStackNavigator';
 import MenuStackNavigator from './MenuStackNavigator';
@@ -77,14 +77,13 @@ const Routes = () => {
   const navigation = useNavigation<RootNavigationProps>();
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const [backgroundEventDetails, setBackgroundEventDetails] =
-    React.useState<EventDetail>();
-  const {data: config} = useFetchAttendanceConfig(
+
+  const {data: config, isFetching: fetchingConfig} = useFetchAttendanceConfig(
     route,
   ) as useFetchAttendanceConfigProps;
   const {data: about} = useFetchAboutMe(route) as useFetchAboutMeProps;
 
-  const {data: status} = useFetchAttendanceStatus(
+  const {data: status, isFetching} = useFetchAttendanceStatus(
     route,
   ) as useFetchAttendanceStatusProps;
 
@@ -146,29 +145,26 @@ const Routes = () => {
     });
   };
 
-  const notifeeBackgroundEventHandler = () => {
-    return AppState.addEventListener('change', async (nextAppState) => {
-      if (nextAppState === 'active' && auth?.route === 'main') {
-        let detail: EventDetail | null | false | string = await getData(
-          'backgroundEventDetails',
-        );
-        if (typeof detail === 'string' || !detail || !detail?.notification)
-          return;
-        let resp = screenDeterminant(detail);
-        if (!resp?.stack || !resp?.screen) return;
-        await storeData('backgroundEventDetails', {});
-        setBackgroundEventDetails(detail);
-        if (resp.screen === 'TaskDetails')
-          return navigation.navigate(resp?.stack, {
-            screen: resp?.screen,
-            params: resp?.params,
-          });
+  const notifeeBackgroundEventHandler = async () => {
+    try {
+      let detail: EventDetail | null | false | string = await getData(
+        'backgroundEventDetails',
+      );
+      if (typeof detail === 'string' || !detail || !detail?.notification)
+        return;
+      let resp = screenDeterminant(detail);
+      if (!resp?.stack || !resp?.screen) return;
+      await storeData('backgroundEventDetails', {});
+      if (resp.screen === 'TaskDetails')
         return navigation.navigate(resp?.stack, {
           screen: resp?.screen,
           params: resp?.params,
         });
-      }
-    });
+      return navigation.navigate(resp?.stack, {
+        screen: resp?.screen,
+        params: resp?.params,
+      });
+    } catch (err) {}
   };
 
   const AppStateListener = () => {
@@ -190,19 +186,47 @@ const Routes = () => {
       if (
         !config?.data?.start_date ||
         !moment(config?.data?.start_date).isBefore(moment()) ||
-        !about?.employee_job?.arrival_time
+        !about?.employee_job?.arrival_time ||
+        !about?.employee_job?.work_days ||
+        !Array.isArray(about?.employee_job?.work_days)
       ) {
         return;
       }
+      let work_day = moment(about?.employee_job?.arrival_time, 'HH:mm:ss')
+        .add(24, 'hours')
+        .format('dddd') as WorkDays;
+      let today = moment(about?.employee_job?.arrival_time, 'HH:mm:ss').format(
+        'dddd',
+      ) as WorkDays;
+      // let time = moment().add(2,"minutes").valueOf()
+      // return onCreateScheduledNotification(time,"Now is a good time to Clock In",`It’s almost ${moment(about?.employee_job?.arrival_time,"HH:mm:ss").format("hh:mm a")}, don’t forget to clock in.`,CLOCK_IN_ALERT,Images.ClockIn)
       if (
-        moment().isAfter(
+        !status?.is_clocked_in &&
+        !moment().isAfter(
           moment(about?.employee_job?.arrival_time, 'HH:mm:ss').subtract(
             5,
             'minutes',
           ),
-        )
+        ) &&
+        about?.employee_job?.work_days?.includes(today)
       ) {
-        //IF IT IS PAST THE CLOCK IN TIME, SET A REMINDER FOR TOMORROW
+        //IF USER IS NOT CLOCKED IN AND IT IS NOT YET TIME, AND THERE IS WORK TODAY
+        let time = moment(about?.employee_job?.arrival_time, 'HH:mm:ss')
+          .subtract(5, 'minutes')
+          .valueOf();
+        return onCreateScheduledNotification(
+          time,
+          'Now is a good time to Clock In',
+          `It’s almost ${moment(
+            about?.employee_job?.arrival_time,
+            'HH:mm:ss',
+          ).format('hh:mm a')}, don’t forget to clock in.`,
+          CLOCK_IN_ALERT,
+          Images.ClockIn,
+        );
+      }
+      if (about?.employee_job?.work_days?.includes(work_day)) {
+        //IF USER HAS WORK TOMORROW, SET A REMINDER FOR TOMORROW
         let time = moment(about?.employee_job?.arrival_time, 'HH:mm:ss')
           .add(24, 'hours')
           .subtract(5, 'minutes')
@@ -218,37 +242,13 @@ const Routes = () => {
           Images.ClockIn,
         );
       }
-      if (
-        !status?.is_clocked_in &&
-        !moment().isAfter(
-          moment(about?.employee_job?.arrival_time, 'HH:mm:ss').subtract(
-            5,
-            'minutes',
-          ),
-        )
-      ) {
-        //IF USER IS NOT CLOCKED IN AND IT IS NOT YET TIME
-        //NOTIFEE ON IOS IGNORES THE START DATE OF TRIGGERED NOTIFICATION
-        let time = moment(about?.employee_job?.arrival_time, 'HH:mm:ss')
-          .subtract(5, 'minutes')
-          .valueOf();
-        onCreateScheduledNotification(
-          time,
-          'Now is a good time to Clock In',
-          `It’s almost ${moment(
-            about?.employee_job?.arrival_time,
-            'HH:mm:ss',
-          ).format('hh:mm a')}, don’t forget to clock in.`,
-          CLOCK_IN_ALERT,
-          Images.ClockIn,
-        );
-      }
     } catch (err) {}
   };
   useEffect(() => {
     if (route !== 'main') return;
     pushNotificationInit(); // SCHEDULES CLOCK IN REMINDER
-  }, [route, about, config, status]);
+    storeData('about_me', about);
+  }, [route, about, fetchingConfig, isFetching]);
 
   useEffect(() => {
     const unsubscribe = notifee.onForegroundEvent(async ({type, detail}) => {
@@ -256,9 +256,7 @@ const Routes = () => {
       if (type === EventType.PRESS) {
         //NOTIFEE FOREGROUND PRESS EVENT LISTENER TAKES USER TO
         // SCREEN RETURNED BY SCREEN DETERMINANT
-        console.log('onForegroundEvent', type, detail);
         let resp = screenDeterminant(detail);
-        console.log('screenDeterminant', resp);
         if (!resp?.stack || !resp?.screen) return;
         if (resp.screen === 'TaskDetails')
           return navigation.navigate(resp?.stack, {
@@ -290,14 +288,14 @@ const Routes = () => {
 
   useEffect(() => {
     AppStateListener();
-    notifeeBackgroundEventHandler();
+    if (route === 'main') notifeeBackgroundEventHandler();
   }, [
     route,
-    backgroundEventDetails,
     //REFRESHES THE LISTERNERS
   ]);
 
   useEffect(() => {
+    notifee.setBadgeCount(0);
     getDeepLinkInfo();
     deepLinkListener();
   }, []);

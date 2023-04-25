@@ -108,6 +108,8 @@ export type RootMenuScreenProps = StackScreenProps<MenuScreenList>
 export const CLOCK_IN_ALERT = "clock_in_alert"
 export const TIME_OFF_REQUEST = "time_off_request"
 export const ASSIGNED_TASK = "assigned_task"
+export const COMMENT_ON_TASK = "comment_on_task"
+export const TASK_UPDATE = "task_update"
 
 
 export type PushNotificationData = {

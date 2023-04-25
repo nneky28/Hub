@@ -45,6 +45,7 @@ import {
   GET_TASKS,
   GET_TASK_BY_PK,
   GET_TASK_STATISTICS,
+  GET_TEAM_TASKS,
   TaskLoad,
 } from '../../utills/payload';
 import {width} from 'react-native-dimension';
@@ -126,12 +127,13 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
 
       let fd: TaskLoad = {
         title: data?.title,
+        description : data?.description,
         due_date:
           data?.due_date === 'Today'
             ? moment().toISOString(true)
-            : data?.due_date
+            : data?.due_date !== "No Date"
             ? moment(data?.due_date).format('YYYY-MM-DD[T]HH:mm:ss.SSS')
-            : undefined,
+            : null,
         created_by: task?.created_by?.id || about?.id,
         assigned_to:
           data?.type === 'Employee' &&
@@ -159,6 +161,7 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
         await mutateAsync(fd);
         queryClient.invalidateQueries(GET_TASK_STATISTICS);
         queryClient.invalidateQueries(GET_TASKS);
+        queryClient.invalidateQueries(GET_TEAM_TASKS);
         setData({
           title: '',
           description: '',
@@ -175,6 +178,7 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
       queryClient.invalidateQueries(GET_TASK_STATISTICS);
       queryClient.invalidateQueries(GET_TASKS);
       queryClient.invalidateQueries(GET_TASK_BY_PK);
+      queryClient.invalidateQueries(GET_TEAM_TASKS);
       ToastSuccess('Your changes have been saved.');
     } catch (err: any) {
       ToastError(err?.msg);
@@ -301,7 +305,7 @@ const CreateTask = ({route}: RootMenuScreenProps) => {
                     onPress={showCalendar}
                     style={styles.button1}>
                     <Text numberOfLines={1} style={styles.date}>
-                      {data?.due_date === 'No Date'
+                      {!data?.due_date || data?.due_date === 'No Date'
                         ? 'No Date'
                         : data?.due_date === 'Today'
                         ? `Today, ${moment().format('ddd D, MMM YYYY')}`

@@ -4,10 +4,9 @@ import CommonStyles from '../../utills/CommonStyles';
 import styles from './styles';
 import {Capitalize} from '../../utills/Methods';
 import moment from 'moment';
-// import {TrainingListProps} from './types';
-import {useFetchTrainingsData} from '../../screens/Training/types';
+import { TrainingListProps } from './types';
 
-const TrainingList: React.FC<useFetchTrainingsData> = ({data, opacity = 1}) => {
+const TrainingList: React.FC<TrainingListProps> = ({data, opacity = 1}) => {
   return (
     <FlatList
       data={data}

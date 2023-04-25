@@ -16,6 +16,14 @@ const styles = StyleSheet.create({
         justifyContent : "center",
         alignItems : "center"
     },
+    claim_task_btn : {
+        width : width(23),
+        paddingVertical : height(1.2),
+        borderRadius : width(50),
+        backgroundColor : AppColors.grayBorder,
+        justifyContent : "center",
+        alignItems : "center"
+    },
     menu_button : {
         width : width(6),
         paddingVertical : height(1.2),

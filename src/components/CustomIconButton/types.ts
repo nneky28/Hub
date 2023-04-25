@@ -6,4 +6,5 @@ export type CustomIconButtonProps = {
     color? : string
     rippleColor? : string
     size? : number
+    disabled? : boolean
 }

@@ -1137,7 +1137,6 @@ export const KeyboardAwareWrapper = ({
   const dispatch = useDispatch();
   useEffect(() => {
     if (scrollable && ref?.current?.scrollToPosition) {
-      console.log('KeyboardAwareWrapper', position);
       ref?.current?.scrollToPosition(0, position?.[0]?.y || 0, true);
     }
   }, [position]);
@@ -1166,3 +1165,45 @@ export const KeyboardAwareWrapper = ({
     </KeyboardAwareScrollView>
   );
 };
+
+// export const KeyboardAwareWrapper = ({
+//   children,
+//   scrollable,
+//   style,
+// }: KeyboardAwareWrapperProps) => {
+//   const ref = useRef<KeyboardAwareScrollView>(null);
+//   const position: CordType = useAppSelector(
+//     (state) => state.Config.scrollPosition,
+//   );
+//   const dispatch = useDispatch();
+//   useEffect(() => {
+//     if (scrollable && ref?.current?.scrollToPosition) {
+//       console.log('KeyboardAwareWrapper', position);
+//       ref?.current?.scrollToPosition(0, position?.[0]?.y || 0, true);
+//     }
+//   }, [position]);
+
+//   useEffect(() => {
+//     return () => {
+//       dispatch(
+//         scrollToPosition({
+//           [0]: {
+//             y: 0,
+//             x: 0,
+//           },
+//         }),
+//       );
+//     };
+//   }, []);
+//   return (
+//     <KeyboardAwareScrollView
+//       enableResetScrollToCoords={false}
+//       keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
+//       showsVerticalScrollIndicator={false}
+//       keyboardShouldPersistTaps="handled"
+//       ref={ref}
+//       style={style}>
+//       {children}
+//     </KeyboardAwareScrollView>
+//   );
+// };

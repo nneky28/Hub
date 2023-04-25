@@ -9,10 +9,10 @@ import styles from './styles';
 import Button from '../../components/Button'
 import { P, H1, PageLoader, TouchableWrapper, Container } from '../../utills/components';
 import moment from 'moment';
-import { useFetchActivities, useFetchComments, useFetchTaskByPK } from '../../utills/api';
+import { useFetchAboutMe, useFetchActivities, useFetchComments, useFetchTaskByPK } from '../../utills/api';
 import ActivityCard from '../../components/ActivityCard/Index'
 import AppColors from '../../utills/AppColors';
-import { __flatten, Capitalize, getStoreAboutMe, ToastError, ToastSuccess } from '../../utills/Methods';
+import { __flatten, Capitalize, ToastError, ToastSuccess } from '../../utills/Methods';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction } from '../../utills/api';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -31,6 +31,7 @@ import { TextInput } from 'react-native-paper';
 import CustomInput from '../../components/CustomInput';
 import TaskCommentCard from '../../components/TaskCommentCard/Index';
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view';
+import { useFetchAboutMeProps } from '../../components/TimeoffModal/types';
 
 
 
@@ -53,7 +54,11 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
     } = useFetchActivities(showLog && id && typeof id === "number" ? id : "",page) as useFetchActivitiesProps
 
     const {
-        data: commentData,
+        data : about
+    } = useFetchAboutMe("main") as useFetchAboutMeProps
+
+    const {
+        data: commentData
     } = useFetchComments(showComment && id && typeof id === "number" ? id : "",page) as useFetchCommentsProps
 
     const {
@@ -68,13 +73,13 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
 
     const flattenAndMapData = (data : useFetchActivitiesData) : TaskListSection[] => {
         if(!Object.keys(data)?.[0] || !Object.values(data)?.[0]) return []
-        return [
-            {
-                key: Object.keys(data)?.[0],
-                title: Object.keys(data)?.[0] ?? "",
-                data: Object.values(data)?.[0] ?? [],
+        return Object.keys(data).map((item)=>{
+            return {
+                key: item,
+                title: item ?? "",
+                data: data[item] ?? [],
             }
-        ]
+        })
     };
 
     const SubTaskRenderItem = ({item,index} : {item : SubTaskData,index : number}) => {
@@ -82,6 +87,8 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
             <>
                 <TouchableWrapper onPress={() => handleComplete(item)}
                     style={[styles.sub_task_button,task?.sub_tasks_tasksapp && (index === (task?.sub_tasks_tasksapp?.length - 1)) ? {borderBottomWidth : undefined} : {}]}
+                    disabled={(task?.department?.id === about?.department?.id) || 
+                        (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? false : true}
                 >
                     <React.Fragment>
                         {
@@ -89,6 +96,8 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                             icon={item?.id && selectedIDs.includes(item?.id) ?  "loading" : item?.status === "Completed" ? "checkbox-marked-outline" : "checkbox-blank-outline"}
                             onPress={() => handleComplete(item)}
                             color={item?.id && selectedIDs.includes(item?.id) ? AppColors.green : AppColors.black1}
+                            disabled={(task?.department?.id === about?.department?.id) || 
+                                (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? false : true}
                         />
                         }
                         <Container width={60} marginLeft={2} backgroundColor={AppColors.transparent}>
@@ -103,7 +112,6 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
     const handleSubmit = async () => {
         try {
             Keyboard.dismiss()
-            let about = await getStoreAboutMe()
             if(!comment || comment.toString().trim() === ""){
                 return ToastError("Please provide a comment")
             }
@@ -151,7 +159,6 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
             inputRange: [0, 1],
             outputRange: deg,
         }));
-        //LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     };
 
     const onHide = (type : "COMMENT_ACCORDION" | "LOG_ACCORDION") => {
@@ -254,7 +261,7 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
 
     useEffect(() => {
         mapDataToState()
-    }, [logData,commentData]);
+    }, [logData,commentData,showLog,showComment]);
 
     useEffect(()=>{
         setSelectedSubTaskID(undefined)
@@ -289,31 +296,36 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                         ListHeaderComponent={<React.Fragment>
                             {
                                 task?.status !== "Completed" ? <View style={styles.container}>
-                                <View style={styles.row1}>
-                                    <P style={styles.flagText}>Due: </P>
-                                    {due_status === "DUE_TODAY" ? <React.Fragment>
-                                        <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
-                                        <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                        <P style={styles.flagText}>Due Today</P>
-                                    </React.Fragment> : due_status === "OVER_DUE" ? <React.Fragment>
-                                        <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
-                                        <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                        <P color={AppColors.red} fontSize={3.1}>Overdue</P>
-                                    </React.Fragment> : due_status === "UPCOMING" ? <React.Fragment>
-                                        <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
-                                        <Entypo name="dot-single" size={18} color={AppColors.black} />
-                                        <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
-                                    </React.Fragment> : null}
-                                </View>
-                                <Button
-                                    title="Edit Task"
-                                    containerStyle={styles.buttonStyle}
-                                    textStyle={styles.buttonText}
-                                    onPress={() => {
-                                        if(!task?.id) return
-                                        navigation.navigate("CreateTask",{task_id : task?.id})
-                                    }}
-                                />
+                                {
+                                    due_status !== "NO_DATE" ? <View style={styles.row1}>
+                                        <P style={styles.flagText}>Due: </P>
+                                        {due_status === "DUE_TODAY" ? <React.Fragment>
+                                            <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
+                                            <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                            <P style={styles.flagText}>Due Today</P>
+                                        </React.Fragment> : due_status === "OVER_DUE" ? <React.Fragment>
+                                            <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
+                                            <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                            <P color={AppColors.red} fontSize={3.1}>Overdue</P>
+                                        </React.Fragment> : due_status === "UPCOMING" ? <React.Fragment>
+                                            <P style={styles.date}>{moment(task?.due_date).format("MMMM D, YYYY")}</P>
+                                            <Entypo name="dot-single" size={18} color={AppColors.black} />
+                                            <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
+                                        </React.Fragment> : null}
+                                    </View> : null
+                                }
+                                {
+                                    (task?.department?.id === about?.department?.id) || 
+                                    (task?.assigned_to?.id === about?.id) || (task?.created_by?.id === about?.id) ? <Button
+                                        title="Edit Task"
+                                        containerStyle={styles.buttonStyle}
+                                        textStyle={styles.buttonText}
+                                        onPress={() => {
+                                            if(!task?.id) return
+                                            navigation.navigate("CreateTask",{task_id : task?.id})
+                                        }}
+                                    /> : null
+                                }
                                 <View style={styles.line} />
                             </View> : null
                             }
@@ -338,14 +350,14 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                                         <View style={styles.assign}>
                                             <P color={AppColors.black3} fontSize={3.1}>Assigned To</P>
                                             <View style={styles.button}>
-                                                <Text style={styles.name}>{task?.department?.name ? Capitalize(task?.department?.name) : `${task?.assigned_to?.first_name ? Capitalize(task?.assigned_to?.first_name) : ""} ${task?.assigned_to?.last_name ? Capitalize(task?.assigned_to?.last_name) : ''}`.trim()}</Text>
+                                                <Text style={styles.name}>{task?.department?.name && !task?.assigned_to ? Capitalize(task?.department?.name) : `${task?.assigned_to?.first_name ? Capitalize(task?.assigned_to?.first_name) : ""} ${task?.assigned_to?.last_name ? Capitalize(task?.assigned_to?.last_name) : ''}`.trim()}</Text>
                                             </View>
                                         </View>
                                         <View style={styles.dueDate}>
                                             <P color={AppColors.black3} fontSize={3.1}>Due Date</P>
                                             <View style={styles.button}>
                                                 <Text style={styles.name} numberOfLines={1}>
-                                                    {task?.due_date && moment(task?.due_date).format("dddd D, MMM YYYY")}</Text>
+                                                    {task?.due_date ? moment(task?.due_date).format("dddd D, MMM YYYY") : "No Date"}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -404,7 +416,11 @@ const TaskDetails = ({ navigation,route } : RootMenuScreenProps) => {
                                 )
                                 
                             }}
-                            ListFooterComponent={showComment ? <CustomInput 
+                            ListFooterComponent={showComment && (
+                                (task?.department?.id === about?.id) ||
+                                (task?.assigned_to?.id === about?.id) ||
+                                (task?.created_by?.id === about?.id)
+                            ) ? <CustomInput 
                                 placeholder="Add a comment"
                                 value={comment}
                                 onChangeData={(value : string)=>setComment(value)}
