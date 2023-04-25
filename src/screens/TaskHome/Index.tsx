@@ -95,7 +95,7 @@ const TaskHome = ({navigation}: RootScreenProps) => {
   const currentTabIndex = useAppSelector(
     (state) => state.Config.currentTaskTabIndex,
   );
-  // const [currentTabIndex,setCurrentTabIndex] = React.useState(0)
+  
   const [show, setShow] = React.useState(false);
   const [timeoutID, setTimeoutID] = React.useState<NodeJS.Timeout>();
   const currentTask: useFetchTodosData & {
@@ -108,7 +108,7 @@ const TaskHome = ({navigation}: RootScreenProps) => {
   );
 
   const setButtons = (i: number) => {
-    // if(currentTabIndex === i) return
+    if(currentTabIndex === i) return
     dispatch(setCurrentTabIndex(i));
     setCurrentTabIndex(i);
     setActionTitle('To-Do');
@@ -497,7 +497,7 @@ const TaskHome = ({navigation}: RootScreenProps) => {
   }, []);
 
   useEffect(() => {
-    setCurrentTabIndex(0);
+    dispatch(setCurrentTabIndex(0));
   }, []);
 
   useEffect(() => {

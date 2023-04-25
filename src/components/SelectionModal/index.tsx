@@ -24,6 +24,8 @@ const SelectionModal = ({ isVisible, onHide} : SelectionModalProps) => {
     data: onboarding,
   } = useFetchOnboarding(TASK_ONBOARDING) as useFetchAppOnboardingProps
 
+  console.log("useFetchOnboarding",onboarding)
+
   const screenList : TextWithIconProps[]  = [
     {
       screen : "TaskHome",
