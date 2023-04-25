@@ -13,8 +13,10 @@ import AppColors from "../../utills/AppColors"
 import styles from "./styles"
 import { height, width } from "react-native-dimension"
 import {useFetchAttendanceConfigProps, useFetchAttendanceStatusProps,useFetchLocationTypeProps} from "./types"
-import { StoredAboutMeProps } from "../../Routes/types"
+import { CLOCK_IN_ALERT, StoredAboutMeProps } from "../../Routes/types"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import notifee from '@notifee/react-native';
+import { ATTENDANCE_STATUS } from "../../utills/payload"
 
 const ClockINContainer = () => {
     const [current, setCurrent] = React.useState("")
@@ -30,11 +32,11 @@ const ClockINContainer = () => {
   
     const {
       data: config,
-    } = useFetchAttendanceConfig() as useFetchAttendanceConfigProps
+    } = useFetchAttendanceConfig("main") as useFetchAttendanceConfigProps
     const {
       data: status,
       isFetching: fetchingStatus
-    } = useFetchAttendanceStatus() as useFetchAttendanceStatusProps
+    } = useFetchAttendanceStatus("main") as useFetchAttendanceStatusProps
   
     const {
       data: type
@@ -53,16 +55,17 @@ const ClockINContainer = () => {
     }, [type, status])
   
     useEffect(() => {
-      setInterval(() => {
+      let interval = setInterval(() => {
         setCurrent(moment().format("HH : mm"))
       }, 1000);
+      return ()=> clearInterval(interval)
     }, [])
   
     const submitHandler = async () => {
       try {
         if (status?.is_clocked_in) {
-          let user : StoredAboutMeProps | null | false = await getData("about_me")
-          if(!user || !user?.id) return
+          let user : StoredAboutMeProps | null | false | string = await getData("about_me")
+          if(typeof user === "string" || !user || !user?.id) return
           dispatch(setLoaderVisible(true))
           let fd = {
             employee: user.id,
@@ -86,7 +89,8 @@ const ClockINContainer = () => {
                 location_type: tab === "Remote" ? "remote" : "on_site"
               }
               await clockEmployeeIn(fd)
-              queryClient.invalidateQueries("attendance_status")
+              await notifee.cancelTriggerNotification(CLOCK_IN_ALERT)
+              queryClient.invalidateQueries(ATTENDANCE_STATUS)
               dispatch(setLoaderVisible(false))
               showFlashMessage({ title: `You resumed for work at ${moment().format("hh:mm a")}`, type: "success" })
             }catch(error : any){
@@ -185,22 +189,22 @@ const ClockINContainer = () => {
                 style={styles.yellow_box}
                 position="absolute"
                 borderColor={AppColors.yellow}
+                backgroundColor={AppColors.white}
               >
                 <Container
                   style={{
                     alignItems: "center",
                   }}
                   marginBottom={2}
+                  backgroundColor={AppColors.white}
                 >
                   <P fontSize={3.3} color={AppColors.darkGray}>{getGreetingTime()}</P>
                   <Container
                     marginTop={2}
                     direction="row"
                     width={63}
-                    style={{
-                      alignSelf: "center",
-                      justifyContent: "space-around"
-                    }}
+                    horizontalAlignment="space-evenly"
+                    alignSelf="center"
                   >
                     {
                       current ? [...current.toString()].filter(num => num.trim() !== "").map((num, i) => (

@@ -7,7 +7,7 @@ import Button from '../../../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import AppColors from '../../../utills/AppColors';
 import { TouchableWrapper, UserPINComponent } from '../../../utills/components';
-import { Images } from '../../../component2/image/Image';
+import { Images } from '../../../utills/Image';
 import { ICON_BUTTON_SIZE } from '../../../utills/Constants';
 import CommonStyles from '../../../utills/CommonStyles';
 import { Field, Formik } from 'formik';

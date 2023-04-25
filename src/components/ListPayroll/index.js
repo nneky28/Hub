@@ -1,32 +1,29 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import styles from './styles';
 import moment from "moment"
 
-export default function ListPayroll({item,screen}) {
+export default function ListPayroll({item}) {
   const [isvisible, setIsVisible] = useState(false);
   const navigation = useNavigation();
   return (  
     <TouchableOpacity
       style={styles.flatlistContainer}
       onPress={() => {
-        load = {...item,title : `Payslips for ${moment(item.pay_date).format("MMM")}`}
-        return navigation.navigate("PayslipBreakDown",{payroll : load})
+        return navigation.navigate("PayslipBreakDown",{payroll : item})
       }}>
       <Image
-        source={{uri : screen === "history" ? Images.FileIcon : Images.PayslipIcon2}}
+        source={{uri : Images.PayslipIcon2}}
         resizeMode="contain"
         style={styles.fileIcon}
       />
       <View style={styles.titleWrapper}>
         <View style={styles.titleandperiod}>
           {
-            screen === "history" && item?.pay_date ? <Text style={styles.Titletext}>
-            Payroll for {moment(item.pay_date).format("MMM")}
-          </Text> : item?.pay_date ? <Text style={styles.Titletext}>
-              Payslips for {moment(item.pay_date).format("MMM")}
+            item?.pay_date ? <Text style={styles.Titletext}>
+              Payslip for {moment(item.pay_date).format("MMM")}
             </Text> : null
           }
           {

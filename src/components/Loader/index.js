@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, View,Image} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
-import { Images } from '../../component2/image/Image';
+import { Images } from '../../utills/Image';
 import AppColors from '../../utills/AppColors';
 import styles from './styles'
 export default function Loader() {

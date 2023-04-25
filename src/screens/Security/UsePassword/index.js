@@ -5,7 +5,7 @@ import styles from './styles';
 import { H1, P,Container,TouchableWrapper} from '../../../utills/components';
 import Button from '../../../components/Button';
 import AppColors from '../../../utills/AppColors';
-import { Images } from '../../../component2/image/Image';
+import { Images } from '../../../utills/Image';
 import { ICON_BUTTON_SIZE } from '../../../utills/Constants';
 import CommonStyles from '../../../utills/CommonStyles';
 import { Field, Formik } from 'formik';

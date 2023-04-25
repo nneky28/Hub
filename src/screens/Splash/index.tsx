@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../Redux/Actions/Auth';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
-import { getData, storeData } from '../../utills/Methods';
-import { Images } from '../../component2/image/Image';
+import { getStoreAboutMe, storeData } from '../../utills/Methods';
+import { Images } from '../../utills/Image';
 import styles from "./styles"
 import { setSecurityVisible } from '../../Redux/Actions/Config';
 import { getBuildNumber } from 'react-native-device-info';
@@ -25,8 +25,7 @@ const Splash = () => {
   }
 
   const loginMethod = async () => {
-    let user = await getData("user")
-    let about = await getData("about_me")
+    let about = await getStoreAboutMe()
     await storeData("page", 1)
     setTimeout(async () => {
       try {
@@ -34,11 +33,10 @@ const Splash = () => {
         const stable_build_number = Platform.OS === "android" ? ANDROID_STABLE_BUILD_NUMBER : IOS_STABLE_BUILD_NUMBER
         if(Number(build_number) < Number(stable_build_number)){
           setForce(true)
-        }else if (user && about && about.completed_user_onboarding) {
-          dispatch(login({ ...auth, user: about, isLogin: true, route: "main" }));
+        }else if (about && about.completed_user_onboarding) {
           dispatch(setSecurityVisible(true))
-          //dispatch(login({...auth,user : about,isLogin : true,route : "security"}));
-        } else if (user && about && !about.completed_user_onboarding) {
+          dispatch(login({ ...auth, user: about, isLogin: true, route: "main" }));
+        } else if (about && !about.completed_user_onboarding) {
           dispatch(login({ ...auth, user: about, isLogin: true, route: "onboard" }));
         } else {
           //I have a feeling there is another case that needs to be captured here.

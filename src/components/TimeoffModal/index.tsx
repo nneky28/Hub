@@ -2,15 +2,16 @@ import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { APIFunction } from "../../utills/api";
 import AppColors from "../../utills/AppColors";
-import { getData, ToastSuccess } from "../../utills/Methods";
-import { TimeOffModalData, TimeoffModalProps, useFetchAboutMeData } from "./types";
+import { getStoreAboutMe, ToastSuccess } from "../../utills/Methods";
+import { TimeOffModalData, TimeoffModalProps} from "./types";
 import Modal from "react-native-modal"
-import { Keyboard, KeyboardAvoidingView, Platform,View} from "react-native";
+import { Keyboard,View} from "react-native";
 import styles from "./styles"
 import { Container, H1, P } from "../../utills/components";
 import Button from "../Button";
 import CustomDatePicker from "../CustomDatePicker";
 import CustomInput from "../CustomInput";
+import { EMPLOYEE_TIMEOFF, EMPLOYEE_TIMEOFF_REQS, EMPLOYEE_TIMEOFF_TAKEN } from "../../utills/payload";
 
 const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,onChangeText } : TimeoffModalProps ) => {
     const [error,setError] = React.useState("")
@@ -39,7 +40,7 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         if (failed) {
           return setError("All fields are required")
         };
-        let about : useFetchAboutMeData | null | false = await getData("about_me")
+        let about = await getStoreAboutMe()
         if(!about || !about?.id || !timeoff_id) return
         let fd = {
             id : about?.id,
@@ -48,9 +49,9 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         setError("")
         await mutateAsync(fd)
         ToastSuccess("Request has been submitted for processing")
-        queryClient.invalidateQueries("employee_timeoff")
-        queryClient.invalidateQueries("employee_timeoff_taken")
-        queryClient.invalidateQueries("employee_timeoff_reqs")
+        queryClient.invalidateQueries(EMPLOYEE_TIMEOFF)
+        queryClient.invalidateQueries(EMPLOYEE_TIMEOFF_TAKEN)
+        queryClient.invalidateQueries(EMPLOYEE_TIMEOFF_REQS)
         onHide()
       } catch (err : any) {
         return setError(err?.msg)
@@ -69,15 +70,12 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
         animationIn="fadeInUp"
         animationOut="fadeInDown"
         swipeThreshold={0.3}
-        style={{justifyContent: 'flex-end', margin: 0}}
+        style={{justifyContent: 'flex-end', margin: 0,flex : 1}}
         isVisible={isVisible}
+        avoidKeyboard={true}
     >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{justifyContent: "flex-end" }} 
-        >
-            <View style={styles.container}
-                onStartShouldSetResponder={handleUnhandledTouches}
+        <View style={styles.container}
+               onStartShouldSetResponder={handleUnhandledTouches}
             >
                 
                 <Container width={90} alignSelf="center">
@@ -119,7 +117,6 @@ const  TimeoffModal  = ({ data,isVisible, onHide, timeoff_id,datePickerHandler,o
                     />
                 </Container>
             </View>
-        </KeyboardAvoidingView>
       </Modal>
     );
   }

@@ -1,60 +1,48 @@
-import {View, Image} from 'react-native';
-import React, {FC} from 'react';
-import CommonStyles from '../../utills/CommonStyles';
-import {P, ImgPlaceholder} from '../../utills/components';
+import {Image} from 'react-native';
+import React from 'react';
+import {P, ImgPlaceholder, Container} from '../../utills/components';
 import styles from './styles';
-import { height } from 'react-native-dimension';
+import { ActivityCardProps } from './types';
+import { Capitalize } from '../../utills/Methods';
+import AppColors from '../../utills/AppColors';
 
 
-
-type Props = {
-  item: {
-    logged_by: {
-      photo?: string;
-      first_name: string;
-      last_name: string;
-    };
-    description?: string;
-  };
-};
-
-const Index: FC<Props> = ({ item }) => {
-
- 
-  
+const ActivityCard = ({ item } : ActivityCardProps) => { 
   return (
-    <View>
-      <View style={styles.rowSection}>
-        <View style={[CommonStyles.rowJustifySpaceBtw]}>
-          {item.logged_by?.photo ? (
-            <Image
-              source={{uri: item.logged_by.photo}}
-              style={styles.avatarStyle}
-            />
-          ) : (
-              <View style={{ marginTop: height(1) }}>
-                <ImgPlaceholder
-              text={`${item.logged_by ? item.logged_by?.first_name[0] : ''} ${
-                item.logged_by ? item.logged_by?.last_name[0] : ''
-              }`}
-              size={10}
-            />
-              </View>
-         
-          )}
-
-          <View style={styles.textContainer1}>
-            <P numberOfLines={1} style={styles.titleText}>
+    <Container 
+      verticalAlignment="center" 
+      direction="row"
+      width={90} 
+      alignSelf='center'
+      paddingTop={1.5}
+      paddingBottom={1.5}
+      borderBottomWidth={1}
+      borderColor={AppColors.grayBorder}
+      backgroundColor={AppColors.transparent}
+    >
+        {item?.logged_by?.photo ? (
+          <Image
+            source={{uri: item?.logged_by?.photo}}
+            style={styles.avatarStyle}
+          />
+        ) : (
+            <Container width={10} backgroundColor={AppColors.transparent}>
+              <ImgPlaceholder
+                text={`${item?.logged_by?.first_name?.[0] ? Capitalize(item.logged_by?.first_name?.[0]) : ''} ${
+                  item?.logged_by?.last_name?.[0] ? Capitalize(item.logged_by?.last_name?.[0]) : ''
+                }`.trim()}
+                size={10}
+              />
+            </Container>
+        
+        )}
+        <Container width={70} backgroundColor={AppColors.transparent} marginLeft={2}>
+          <P numberOfLines={1} style={styles.titleText}>
               {item && item?.description}
             </P>
-          </View>
-        </View>
-      </View>
-
- 
-    </View>
-       
+        </Container>
+    </Container>   
   );
 };
 
-export default Index;
+export default ActivityCard;

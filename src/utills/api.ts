@@ -1,24 +1,83 @@
 import axios from "axios";
-import moment from "moment";
-import { getData, getStoredBusiness, storeData } from "./Methods";
-import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "react-query"
+import { getData, getStoreAboutMe, getStoredBusiness } from "./Methods";
+import { useQuery, useInfiniteQuery } from "react-query"
 import Config from "react-native-config";
-import { ABOUT_ME, RegisterTokenLoad, RequestTimeoffPayload } from "./payload";
+
+import {
+  ABOUT_ME,
+  EMPLOYEE_TIMEOFF,
+  EMPLOYEE_TIMEOFF_TAKEN,
+  PAYROLL_YEARS,
+  RegisterTokenLoad,
+  RequestTimeoffPayload,
+  EMPLOYEE_TIMEOFF_REQS,
+  ATTENDANCE_CONFIG,
+  ATTENDANCE_STATUS,
+  LOCATION_TYPE,
+  PAYSLIP_INFO,
+  PAYROLL_HISTORY,
+  MY_BUSINESS_ASSETS,
+  BENEFITS,
+  WHOS_OUT,
+  BIRTHDAYS,
+  JOB_ANNIVERSARY,
+  NEXT_OF_KINS,
+  EMERGENCY,
+  BANKS,
+  PENSION_PROVIDERS,
+  GET_ONBOARDING,
+  GET_EMPLOYEES,
+  GET_MY_TEAM_MEMBERS,
+  GET_DEPARTMENTS,
+  GET_TASK_BY_PK,
+  GET_TASKS,
+  GET_TEAM_TASKS,
+  GET_TASK_STATISTICS,
+  GET_ACTIVITY,
+  GET_COMMENTS,
+  EmergencyContactProps,
+  EditPassword,
+  OnboardingLoad,
+  CommentProps,
+  TaskLoad,
+  LoginLoad,
+  RemoveDeviceTokenLoad,
+  NOTIFICATIONS,
+  DOCUMENT,
+  BASIC_DETAILS,
+  EditProfileProps,
+  TaskStatisticFilter,
+  TaskDueDateFilter,
+  TaskProgressStatus,
+  TRAININGHISTORY,
+  TRAININGS,
+  verifyBank,
+  updatePensionAccountProps,
+  UpdateOnboardingLoad,
+  TaskUpdateLoad,
+} from "./payload";
 
 export const endPoint = Config.API_URL;
 //export const endPoint = 'https://api.bizedgeapp.com';
 
-export const employees_me = (business_id) => `/c/${business_id}/employees/me/`;
+export const employees_me = (business_id: string) => `/c/${business_id}/employees/me/`;
+
 export const APIFunction = {
-  employees: (business_id, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
-  team_members: (business_id, id, page = 1) => `/c/${business_id}/employees/${id}/team_members/?page=${page}`,
-  basic_details: (business_id, id) => `/c/${business_id}/employees/${id}/basic_detail/`,
-  login: async (fd) => {
+  employees: (business_id:string, page = 1, search = "") => `/c/${business_id}/employees/?page=${page}&search=${search}`,
+  employee_team_members: async (id:number, page = 1) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/team_members/?page=${page}`)
+  },  
+  login: async (fd?:LoginLoad) => {
     return postNoToken(`/accounts/auth/login/`, fd)
   },
-  next_of_kins: async (id) => {
+  next_of_kins: async (id:number) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz.business_id}/employees/${id}/next-of-kin/`)
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/next-of-kin/`)
+  },
+  basic_details: async (id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/basic_detail/`)
   },
   whos_out: async (category : string) => {
     let biz = await getStoredBusiness();
@@ -41,21 +100,45 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/emergency-contact/`)
   },
-  update_emergency: async (fd, id) => {
+  update_emergency: async (fd:EmergencyContactProps) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz?.business_id}/employees/${id}/update-emergency-contact/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-emergency-contact/`, fd)
   },
-  update_photo: (business_id, id) => `/c/${business_id}/employees/${id}/update-photo/`,
-  edit: async (fd, id) => {
+  // update_photo: (business_id: string | number, id: number) => `/c/${business_id}/employees/${id}/update-photo/`,
+  
+  update_photo: async (fd : FormData) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz.business_id}/employees/${id}/`, fd);
+    const user = await getStoreAboutMe()
+    return storeFilePut(`/c/${biz?.business_id}/employees/${user?.id}/update-photo/`,fd);
   },
-  trainings: (business_id, id) => `/c/${business_id}/employees/${id}/training/`,
-  training_hist: (business_id, id) => `/c/${business_id}/employees/${id}/training/history/`,
-  timeoff: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff/`,
-  timeoff_reqs: (business_id, id) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
-  timeoff_taken: (business_id, id, status) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
-  delete_timeoff: (business_id, id, timeoff_id) => `/c/${business_id}/employees/${id}/timeoff_requests/${timeoff_id}/`,
+
+  edit: async (fd:EditProfileProps) => {
+    let biz = await getStoredBusiness();
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/`, fd);
+  },
+
+// ​/employees​/{employee_pk}​/training​/
+  get_trainings: async (employee_id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/training/`);
+  },
+  // /employees/{employee_pk}/training/history/
+  get_training_hist: async ( employee_id: number) => {
+    let biz = await getStoredBusiness();
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/training/history/`);
+  },
+
+  // trainings: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/training/`,
+  // training_hist: (business_id: string, id: number) => `/c/${business_id}/employees/${id}/training/history/`,
+  
+  timeoff: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff/`,
+  timeoff_reqs: (business_id:string, id:number) => `/c/${business_id}/employees/${id}/timeoff_requests/`,
+  timeoff_taken: (business_id:string, id:number, status:string) => `/c/${business_id}/employees/${id}/timeoff_taken/?status=${status}`,
+  delete_timeoff: async (timeoff_id:number) => {
+    const user = await getStoreAboutMe()
+    const biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz?.business_id}/employees/${user?.id}/timeoff_requests/${timeoff_id}/`)
+  },
 
   employee_timeoff: async (id : number) => {
     let biz = await getStoredBusiness();
@@ -66,7 +149,7 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/timeoff_requests/`, fd)
   },
-  employee_timeoff_taken: async (id, status) => {
+  employee_timeoff_taken: async (id:number, status:string) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_taken/?status=${status}`)
   },
@@ -74,549 +157,475 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/${id}/timeoff_requests/`)
   },
-  job_anniversary: async (status, page = 1) => {
+  job_anniversary: async (status:string, page = 1) => {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
   },
   notifications: async (page = 1) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz.business_id}/employees/notifications/?page=${page}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/notifications/?page=${page}`)
   },
-  unseen_count: async (page = 1) => {
+  unseen_count: async () => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz.business_id}/employees/notifications/unseen_count/`)
+    return getAPIs(`/c/${biz?.business_id}/employees/notifications/unseen_count/`)
   },
-  change_password: async (fd) => postAPIs(`/accounts/auth/password/change/`, fd),
+  change_password: async (fd: EditPassword) => postAPIs(`/accounts/auth/password/change/`, fd),
+  
   pension_providers: async () => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz.business_id}/pension_providers/`)
+    return getAPIs(`/c/${biz?.business_id}/pension_providers/`)
   },
   banks: async () => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz.business_id}/banks/`)
+    return getAPIs(`/c/${biz?.business_id}/banks/`)
   },
-  update_next_of_kin: async (fd, id) => {
+  update_next_of_kin: async (fd:EmergencyContactProps) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz.business_id}/employees/${id}/update-next-of-kin/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update-next-of-kin/`, fd)
   },
-  update_pension: async (fd) => {
+  update_pension: async(fd:updatePensionAccountProps) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/employees/${fd.id}/update_pension_bank_account/`, fd)
   },
-  about_me: async (biz_id = null) => {
+  about_me: async (biz_id? : string) => {
     if(biz_id) return await getAPIs(`/c/${biz_id}/employees/me/`);
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/me/`);
   },
-  read_notification: async (id) => {
+  read_notification: async (id:number) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/employees/notifications/${id}/read/`)
+    return postAPIs(`/c/${biz?.business_id}/employees/notifications/${id}/read/`)
   },
-  bank_verification: async (fd) => {
+  bank_verification: async (fd:verifyBank) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/banks/account_number_validation/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/banks/account_number_validation/`, fd)
   },
   seen_all: async () => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/employees/notifications/seen_all/`)
+    return postAPIs(`/c/${biz?.business_id}/employees/notifications/seen_all/`)
   },
-  remove_photo: async (employee_id) => {
+  remove_photo: async (employee_id?:number) => {
     let biz = await getStoredBusiness();
-    return putAPIs(`/c/${biz.business_id}/employees/${employee_id}/delete-photo/`)
+    return putAPIs(`/c/${biz?.business_id}/employees/${employee_id}/delete-photo/`)
   },
-  employee_tasks: async (employee_id, completed = false) => {
+  employee_tasks: async (employee_id:number, completed = false) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employees/${employee_id}/onboarding_tasks/?is_completed=${completed}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/${employee_id}/onboarding_tasks/?is_completed=${completed}`)
   },
-  toggle_completed: async (employee_id, task_id, fd) => {
+  toggle_completed: async (employee_id:number, task_id:number, fd:any) => {
     let biz = await getStoredBusiness()
-    return putAPIs(`/c/${biz.business_id}/employees/${employee_id}/onboarding_tasks/${task_id}/toggle_completed/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/employees/${employee_id}/onboarding_tasks/${task_id}/toggle_completed/`, fd)
   },
-  employee_doc: async (id) => {
+  employee_doc: async (id:number) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employees/${id}/documents/`)
+    return getAPIs(`/c/${biz?.business_id}/employees/${id}/documents/`)
   },
-  report_asset: async (fd, id) => {
+  report_asset: async (fd:any, id:number) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/asset-management/assets/${id}/issues/report/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/asset-management/assets/${id}/issues/report/`, fd)
   },
   user_info: async () => {
     return getAPIs(`/accounts/auth/user/`)
   },
-  onboarded: async (employee_id) => {
+  complete_user_onboarding : async () => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/employees/${employee_id}/complete_user_onboarding/`)
+    let about = await getStoreAboutMe()
+    return postAPIs(`/c/${biz?.business_id}/employees/${about?.id}/complete_user_onboarding/`)
   },
-  attendance_config: async (limit) => {
+  attendance_config: async (limit = 1) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/v2/attendance/config/?page_size=${limit}`)
+    return getAPIs(`/c/${biz?.business_id}/v2/attendance/config/?page_size=${limit}`)
   },
   attendance_status: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/v2/attendance/status/`)
+    return getAPIs(`/c/${biz?.business_id}/v2/attendance/status/`)
   },
-  employee_clock_in: async (fd) => {
+  employee_clock_in: async (fd:any) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/v2/attendance/clock_in/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/v2/attendance/clock_in/`, fd)
   },
-  employee_clock_out: async (fd) => {
+  employee_clock_out: async (fd:any) => {
     let biz = await getStoredBusiness()
-    return postAPIs(`/c/${biz.business_id}/v2/attendance/clock_out/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/v2/attendance/clock_out/`, fd)
   },
-  payslip_info: async (date, payroll_id) => {
+  payslip_info: async (date:string, payroll_id:number) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employee_payroll_month_history/${date}/payslip/?payroll=${payroll_id}`)
+    return getAPIs(`/c/${biz?.business_id}/employee_payroll_month_history/${date}/payslip/?payroll=${payroll_id}`)
   },
-  payroll_history: async (year) => {
+  payroll_history: async (year:number) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/?year=${year}`)
+    return getAPIs(`/c/${biz?.business_id}/employee_payroll_year_history/?year=${year}`)
   },
   payroll_years: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/employee_payroll_year_history/years/`)
+    return getAPIs(`/c/${biz?.business_id}/employee_payroll_year_history/years/`)
   },
   location_type: async () => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/v2/attendance/location_type/`)
+    return getAPIs(`/c/${biz?.business_id}/v2/attendance/location_type/`)
   },
-  error_report: async (fd) => {
+  error_report: async (fd:any) => {
     return postNoToken('/mobile_error_report', fd)
   },
-  post_onboarding: async (fd) => {
+  post_onboarding: async (fd:OnboardingLoad) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/app_onboarding/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/app_onboarding/`, fd)
   },
-  update_onboarding: async (fd) => {
+  update_onboarding: async (fd:UpdateOnboardingLoad) => {
     let biz = await getStoredBusiness()
-    return putAPIs(`/c/${biz.business_id}/app_onboarding/${fd.id}/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/app_onboarding/${fd.id}/`, fd)
   },
-  get_onboarding: async (type) => {
-    let about_me = await getData("about_me")
-    let id = await about_me?.id
+  get_onboarding: async (type:string) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/app_onboarding/?${type}&employee_id=${id}`)
+    let user = await getStoreAboutMe()
+    return getAPIs(`/c/${biz?.business_id}/app_onboarding/?${type}&employee_id=${user?.id}`)
   },
-  post_task: async (fd) => {
+  post_task: async (fd:TaskLoad) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/tasks_app/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/tasks_app/`, fd)
   },
-  post_sub_Task: async (fd) => {
+  post_comment: async (fd:CommentProps) => {
     let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/sub_tasks_app/`, fd)
+    return postAPIs(`/c/${biz?.business_id}/tasks_app_comments/`, fd)
   },
-  post_comment: async (fd) => {
-    let biz = await getStoredBusiness();
-    return postAPIs(`/c/${biz.business_id}/tasks_app_comments/`, fd)
-  },
-  update_status: async (fd) => {
+  update_task_status: async (fd:TaskUpdateLoad) => {
     let biz = await getStoredBusiness()
-    return putAPIs(`/c/${biz.business_id}/tasks_app/${fd.id}/`, fd)
+    return putAPIs(`/c/${biz?.business_id}/tasks_app/${fd.id}/`, fd)
   },
-  delete_task: async (fd) => {
+  delete_task: async (id : number) => {
     let biz = await getStoredBusiness()
-    return deleteAPIs(`/c/${biz.business_id}/tasks_app/${fd}/`)
+    return deleteAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
-  update_sub_task: async (fd) => {
+  update_sub_task: async (fd:any) => {
     let biz = await getStoredBusiness()
-    return putAPIs(`/c/${biz.business_id}/sub_tasks_app/${fd.id}/`, fd)
-  },
-  get_to_dos: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me`)
-  },
-  get_all_task: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/${id}/`)
-  },
-  get_duetoday: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=duetoday`)
-  },
-  get_upcoming: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=upcoming`)
-  },
-  get_overdue: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&due_date_status=overdue`)
+    return putAPIs(`/c/${biz?.business_id}/sub_tasks_app/${fd.id}/`, fd)
   },
 
-  get_team_statistics: async (id) => {
+  get_tasks: async (
+    filter : TaskStatisticFilter = "",
+    due_date_status : TaskDueDateFilter = "",
+    status : TaskProgressStatus = "",
+    employee_id : number | "" = "",
+    page = 1,
+    limit = 20
+  ) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?department_id=${id}`)
-  },
-  get_team_duetoday: async (id) => {
-    let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=duetoday`)
-  },
-  get_team_upcoming: async (id) => {
-    let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=upcoming`)
-  },
-  get_team_overdue: async (id) => {
-    let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}&due_date_status=overdue`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_my_or_employees_tasks/?filter=${filter}&employee_id=${employee_id}&page=${page}&due_date_status=${due_date_status}&status=${status}&page_size=${limit}`)
   },
 
-  get_personal_tasks: async (id) => {
+
+  get_task_by_pk: async (id:number) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app/${id}/`)
   },
 
-  get_personal_due: async (id) => {
+  get_task_statistics: async (
+    filter : TaskStatisticFilter = "",
+    department_id : number | string = "",
+    employee_id : number | string = ""
+  ) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=duetoday`)
-  },
-  get_personal_upcoming: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=upcoming`)
-  },
-  get_personal_overdue: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=assigned_to_me&employee_id=${id}&due_date_status=overdue`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app/get_tasks_statistics/?filter=${filter}&employee_id=${employee_id}&department_id=${department_id}`)
   },
 
-  get_task_statistics: async () => {
+  get_team_tasks: async (
+    dept_id:number | "",
+    due_date_status : TaskDueDateFilter = "",
+    status : TaskProgressStatus = "",
+    page = 1,
+    limit = 20
+  ) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app/department_or_team_tasks/?department_id=${dept_id}&due_date_status=${due_date_status}&status=${status}&page=${page}&page_size=${limit}`)
   },
-  get_sent_statistics: async () => {
+  
+  get_activity: async (id:number,page = 1,limit = 20) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=created_by_me_and_sent`)
+    return getAPIs(`/c/${biz?.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}&page=${page}&page_size=${limit}`)
+  },
+  get_comments: async (id:number,page: number,limit = 20) => {
+    let biz = await getStoredBusiness()
+    return getAPIs(`/c/${biz?.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}&page=${page}&page_size=${limit}`)
   },
 
-  get_employee_statistics: async (id) => {
+  departments: async (page:number, search:string) => {
+    // const {user} = await getData('user') as currentCompanyType
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_tasks_statistics/?filter=assigned_to_me&employee_id=${id}`)
+    return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-
-  get_team_tasks: async (id) => {
+  get_employees: async (page = 1, search = "",limit = 20) => {
     let biz = await getStoredBusiness()
-    // const user = await getData("about_me")
-    return getAPIs(`/c/${biz.business_id}/tasks_app/department_or_team_tasks/?department_id=${id}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
   },
-  get_all_sent: async () => {
+  get_my_team_members: async (page = 1) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent`)
-  },
-  get_sent_duetoday: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=duetoday`)
-  },
-  get_sent_upcoming: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=upcoming`)
-  },
-  get_sent_overdue: async () => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app/get_my_or_employees_tasks/?filter=created_by_me_and_sent&due_date_status=overdue`)
-  },
-  get_activity: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app_activity/tasks_activity_order_by_date/?task_id=${id}`)
-  },
-  get_comments: async (id) => {
-    let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz.business_id}/tasks_app_comments/tasks_comment_order_by_date/?task_id=${id}`)
-  },
-
-  departments: async (page, search) => {
-    const user = await getData('user')
-    const business_id = user?.employee_user_memberships?.[0]?.business_id
-    return getAPIs(`/c/${business_id}/departments/?page=${page}&search=${search}`)
-  },
-  get_users: async (page = 1, search = "") => {
-    let user = await getData("user");
-    const business_id = user?.employee_user_memberships?.[0]?.business_id
-    return getAPIs(`/c/${business_id}/employees/?page=${page}&search=${search}`)
-  },
-  get_teams: async (page = 1) => {
-    const user = await getData('user')
-    const business_id = user?.employee_user_memberships?.[0]?.business_id
-    const about_me = await getData("about_me")
-    const id = about_me?.id
-    return getAPIs(`/c/${business_id}/employees/${id}/team_members/?page=${page}`)
+    let user = await getStoreAboutMe()
+    return getAPIs(`/c/${biz?.business_id}/employees/${user?.id}/team_members/?page=${page}`)
   },
   register_device_token : async (fd : RegisterTokenLoad) => {
     let biz = await getStoredBusiness()
     return postAPIs(`/c/${biz?.business_id}/firebase_notifications/`,fd)
   },
+  remove_device_token : async (fd : RemoveDeviceTokenLoad) => {
+    let biz = await getStoredBusiness()
+    return deleteAPIs(`/c/${biz?.business_id}/firebase_notifications/custom_destroy/`,fd)
+  },
 }
 
-export const useFetchAboutMe = () => {
-  return useQuery(ABOUT_ME,()=>APIFunction.about_me())
+export const useFetchAboutMe = (tab : string) => {
+  return useQuery(ABOUT_ME,()=>APIFunction.about_me(),{
+    enabled : tab === "main"
+  })
 }
 
-export const useFetchEmployeeTimeOff = (id) => {
-  return useQuery(["employee_timeoff", id], () => APIFunction.employee_timeoff(id), {
+export const useFetchEmployeeTimeOff = (id:number | string) => {
+  return useQuery([EMPLOYEE_TIMEOFF, id], () => APIFunction.employee_timeoff(id as number), {
     enabled: !!id
   })
 }
 
-export const useFetchEmployeeTimeOffTaken = (id, status) => {
-  return useQuery(["employee_timeoff_taken", id, status], () => APIFunction.employee_timeoff_taken(id, status), {
+export const useFetchEmployeeBasicDetails = (id?:number) => {
+  return useQuery([BASIC_DETAILS, id], () => APIFunction.basic_details(id as number), {
+    enabled: !!id
+  })
+}
+
+export const useFetchEmployeeTimeOffTaken = (id:number | string, status:string) => {
+  return useQuery([EMPLOYEE_TIMEOFF_TAKEN, id, status], () => APIFunction.employee_timeoff_taken(id as number, status), {
     enabled: !!id && !!status
   })
 }
 
-export const useFetchEmployeeTimeOffReqs = (id) => {
-  return useQuery(["employee_timeoff_reqs", id], () => APIFunction.employee_timeoff_reqs(id), {
+export const useFetchEmployeeTimeOffReqs = (id:number | string) => {
+  return useQuery([EMPLOYEE_TIMEOFF_REQS, id], () => APIFunction.employee_timeoff_reqs(id as number), {
     enabled: !!id
   })
 }
 
 export const useFetchPayrollYears = () => {
-  return useQuery("payroll_years", APIFunction.payroll_years)
+  return useQuery(PAYROLL_YEARS, APIFunction.payroll_years)
 }
 
-export const useFetchAttendanceConfig = (limit = 1) => {
-  return useQuery(["attendance_config", limit], () => APIFunction.attendance_config(limit))
+export const useFetchAttendanceConfig = (tab : string) => {
+  return useQuery([ATTENDANCE_CONFIG], () => APIFunction.attendance_config(),{
+    enabled : tab === "main"
+  })
 }
-export const useFetchAttendanceStatus = () => {
-  return useQuery("attendance_status", APIFunction.attendance_status)
+export const useFetchAttendanceStatus = (tab : string) => {
+  return useQuery(ATTENDANCE_STATUS, APIFunction.attendance_status,{
+    enabled : tab === "main"
+  })
 }
 export const useFetchLocationType = () => {
-  return useQuery("location_type", APIFunction.location_type)
+  return useQuery(LOCATION_TYPE, APIFunction.location_type)
 }
 
-export const useFetchPayslipInfo = (date, id) => {
-  return useQuery(["payslip_info", date, id], () => APIFunction.payslip_info(date, id), {
-    enabled: date !== null && date !== undefined && id !== null && id !== undefined
+export const useFetchPayslipInfo = (date:string, id:number | string) => {
+  return useQuery([PAYSLIP_INFO, date, id], () => APIFunction.payslip_info(date, id as number), {
+    enabled: !!date && !!id
   })
 }
 
-export const useFetchPayrollHistory = (year) => {
-  return useQuery(["payroll_history", year], () => APIFunction.payroll_history(year), {
-    enabled: year !== null && year !== undefined && year !== ""
+export const useFetchPayrollHistory = (year:number | string) => {
+  return useQuery([PAYROLL_HISTORY, year], () => APIFunction.payroll_history(year as number), {
+    enabled: !!year 
   })
 }
 
-export const useFetchAssets = (employee_pk) => {
-  return useQuery(["my_business_assests", employee_pk], () => APIFunction.my_business_assests(employee_pk), {
-    enabled: employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
+export const useFetchAssets = (employee_pk?:number) => {
+  return useQuery([MY_BUSINESS_ASSETS, employee_pk], () => APIFunction.my_business_assests(employee_pk as number), {
+    enabled: !!employee_pk 
   })
 }
 
-export const useFetchBenefits = (employee_pk) => {
-  return useQuery(["benefits", employee_pk], () => APIFunction.benefits(employee_pk), {
-    enabled: employee_pk !== null && employee_pk !== undefined && employee_pk !== ""
+export const useFetchBenefits = (employee_pk?:number|null) => {
+  return useQuery([BENEFITS, employee_pk], () => APIFunction.benefits(employee_pk as number), {
+    enabled: !!employee_pk 
+  })
+}
+export const useFetchDoc = (employee_pk?:number|null) => {
+  return useQuery([DOCUMENT, employee_pk], () => APIFunction.employee_doc(employee_pk as number), {
+    enabled: !!employee_pk 
   })
 }
 
 export const useFetchWhosOut = (category = "timeoff") => {
-  return useQuery(["whos_out", category], () => APIFunction.whos_out(category), {
-    enabled: category !== null && category !== undefined && category !== ""
+  return useQuery([WHOS_OUT, category], () => APIFunction.whos_out(category), {
+    enabled: !!category
   })
 }
 
 
-export const useFetchBirthdays = (status) => {
-  return useQuery(["birthdays", status], () => APIFunction.birthdays(status), {
-    enabled: status !== null && status !== undefined && status !== ""
+export const useFetchBirthdays = (status:string) => {
+  return useQuery([BIRTHDAYS, status], () => APIFunction.birthdays(status), {
+    enabled: !!status
   })
 }
 
-export const useFetchAnniversary = (status, page = 1) => {
-  return useQuery(["job_anniversary", status, page], () => APIFunction.job_anniversary(status, page), {
-    enabled: status !== null && status !== undefined && status !== ""
+export const useFetchAnniversary = (status:string, page = 1) => {
+  return useQuery([JOB_ANNIVERSARY, status, page], () => APIFunction.job_anniversary(status, page), {
+    enabled: !!status
   })
 }
 
-export const useFetchTasks = (employee_id, completed) => {
-  return useQuery(["employee_tasks", employee_id, completed], () => APIFunction.employee_tasks(employee_id, completed), {
-    enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== "" &&
-      completed !== null && completed !== undefined && completed !== ""
-    )
+export const useFetchKin = (employee_id?:number) => {
+  return useQuery([NEXT_OF_KINS, employee_id], () => APIFunction.next_of_kins(employee_id as number), {
+    enabled: !!employee_id
   })
 }
 
-export const useFetchKin = (employee_id) => {
-  return useQuery(["next_of_kins", employee_id], () => APIFunction.next_of_kins(employee_id), {
-    enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== ""
-    )
+export const useFetchEmergency = (employee_id?:number) => {
+  return useQuery([EMERGENCY, employee_id], () => APIFunction.emergency(employee_id as number), {
+    enabled: !!employee_id 
   })
 }
 
-export const useFetchEmergency = (employee_id) => {
-  return useQuery(["emergency", employee_id], () => APIFunction.emergency(employee_id), {
-    enabled: (
-      employee_id !== null && employee_id !== undefined && employee_id !== ""
-    )
-  })
-}
-
-export const useFetchBanking = (employee_id) => {
-  return useQuery("banks", APIFunction.banks)
+export const useFetchBanking = () => {
+  return useQuery(BANKS, APIFunction.banks)
 }
 
 export const useFetchProviders = () => {
-  return useQuery("pension_providers", APIFunction.pension_providers)
+  return useQuery(PENSION_PROVIDERS, APIFunction.pension_providers)
 }
 
-export const useFetchOnboarding = (type) => {
-  return useQuery(["get_onboarding",], () => APIFunction.get_onboarding(type), {
+export const useFetchOnboarding = (type:string) => {
+  return useQuery([GET_ONBOARDING], () => APIFunction.get_onboarding(type), {
     enabled: !!type
   }
 
   )
 }
-export const useFetchEmployees = (page, search) => {
-  return useInfiniteQuery(['get_users', page, search], () => APIFunction.get_users(page, search), {
-    getNextPageParam: (lastPage, allPages) => {
+export const useFetchEmployees = (tab:string,page: number, search: string) => {
+  return useInfiniteQuery([GET_EMPLOYEES,page, search], () => APIFunction.get_employees(page, search), {
+    enabled : !!tab,
+    getNextPageParam: (lastPage:any) => {
       return lastPage.next
     }
   }
   )
 }
 
-export const useFetchTeams = (page, id) => {
-  return useInfiniteQuery(['get_teams', page, id], () => APIFunction.get_teams(page, id), {
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.next
+
+export const useFetchEmployeeTeamMembers = (id : number | undefined,page:number) => {
+  return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page,id], () => APIFunction.employee_team_members(id as number,page), {
+    enabled : !!id, 
+    getNextPageParam: (lastPage:any) => {
+      return lastPage?.next
     }
   }
   )
 }
-export const useFetchDepartments = (page, search) => {
-  return useInfiniteQuery(["get_departments", page, search], () => APIFunction.departments(page, search), {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next
+
+export const useFetchTeams = (tab : string,page = 1) => {
+  return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page], () => APIFunction.get_my_team_members(page), {
+    enabled : !!tab, 
+    getNextPageParam: (lastPage:any) => {
+      return lastPage?.next
     }
-  })
-}
-export const useFetchTodos = (tab, index) => {
-  return useInfiniteQuery(['get_to_dos', tab], () => APIFunction.get_to_dos(tab, index), {
-    enabled: index === 0 && index !== null && index !== undefined
-  })
-}
-export const useFetchAllTask = (id) => {
-  return useInfiniteQuery(['get_all_task', id], () => APIFunction.get_all_task(id), {
-    enabled: id !== null && id !== undefined
-  })
-}
-export const useFetchDueToday = (tab, index) => {
-  return useInfiniteQuery(['get_duetoday', tab], () => APIFunction.get_duetoday(tab, index), {
-    enabled: index == 0 && tab === "Due Today" && tab !== null && tab !== undefined
-  })
-}
-export const useFetchUpcoming = (tab, index) => {
-  return useInfiniteQuery(['get_upcoming', tab], () => APIFunction.get_upcoming(tab, index), {
-    enabled: index === 0 && tab === "Upcoming" && tab !== null && tab !== undefined
-  })
-}
-export const useFetchOverDue = (tab, index) => {
-  return useInfiniteQuery(['get_overdue', tab], () => APIFunction.get_overdue(tab, index), {
-    enabled: index === 0 && tab === "Overdue" && tab !== null && tab !== undefined
-  })
-}
-export const useFetchAllSent = (tab, index) => {
-  return useInfiniteQuery(['get_all_sent', tab], () => APIFunction.get_all_sent(tab, index), {
-    enabled: index === 1 && index !== null && index !== undefined
-  })
-}
-export const useFetchAllSentDue = (tab, index) => {
-  return useInfiniteQuery(['get_sent_duetoday', tab], () => APIFunction.get_sent_duetoday(tab, index), {
-    enabled: index === 1 && tab === "Due Today" && tab !== null && tab !== undefined
-  })
-}
-export const useFetchAllSentUpcoming = (tab, index) => {
-  return useInfiniteQuery(['get_sent_upcoming', tab], () => APIFunction.get_sent_upcoming(tab, index), {
-    enabled: index === 1 && tab === "Upcoming" && tab !== null && tab !== undefined
-  })
-}
-export const useFetchAllSentOverdue = (tab, index) => {
-  return useInfiniteQuery(['get_sent_overdue', tab], () => APIFunction.get_sent_overdue(tab, index), {
-    enabled: index === 1 && tab === "Overdue" && tab !== null && tab !== undefined
-  })
-}
-export const useFetchPersonalTask = (tab, id) => {
-  return useInfiniteQuery(['get_personal_tasks', id], () => APIFunction.get_personal_tasks(id), {
-    enabled: tab === "All" && id !== null && id !== undefined,
-  })
-}
-export const useFetchPersonalDue = (tab, id) => {
-  return useInfiniteQuery(['get_personal_due', id], () => APIFunction.get_personal_due(id), {
-    enabled: tab === "Due Today" && id !== null && id !== undefined,
-  })
-}
-export const useFetchPersonalUpcoming = (tab, id) => {
-  return useInfiniteQuery(['get_personal_upcoming', id], () => APIFunction.get_personal_upcoming(id), {
-    enabled: tab === "Upcoming" && id !== null && id !== undefined,
-  })
-}
-export const useFetchPersonalOverdue = (tab, id) => {
-  return useInfiniteQuery(['get_personal_overdue', id], () => APIFunction.get_personal_overdue(id), {
-    enabled: tab === "Overdue" && id !== null && id !== undefined,
-  })
-}
-export const useFetchTeamTask = (tab, id) => {
-  return useInfiniteQuery(['get_team_tasks', id], () => APIFunction.get_team_tasks(id), {
-    enabled: tab === "All" && id !== null && id !== undefined
-  })
-}
-
-export const useFetchTeamDuetoday = (tab, id) => {
-  return useInfiniteQuery(['get_team_duetoday', id], () => APIFunction.get_team_duetoday(id), {
-    enabled: tab === "Due Today" && id !== null && id !== undefined
-  })
-}
-export const useFetchMyTeamUpcoming = (tab, id) => {
-  return useInfiniteQuery(['get_team_upcoming', id], () => APIFunction.get_team_upcoming(id), {
-    enabled: tab === "Upcoming" && id !== null && id !== undefined,
-
-  })
-}
-export const useFetchMyTeamOverdue = (tab, id) => {
-  return useInfiniteQuery(['get_team_overdue', id], () => APIFunction.get_team_overdue(id), {
-    enabled: tab === "Overdue" && id !== null && id !== undefined,
-  })
-}
-
-export const useFetchStatistics = () => {
-  return useQuery("get_task_statistics", APIFunction.get_task_statistics)
-}
-export const useFetchSentStatistics = () => {
-  return useQuery("get_sent_statistics", APIFunction.get_sent_statistics)
-}
-
-export const useFetchPeopleStatics = (id) => {
-  return useQuery(["get_employee_statistics", id], () => APIFunction.get_employee_statistics(id), {
-    enabled: id !== null && id !== undefined
-  },
-
+  }
   )
 }
-export const useFetchTeamStatistics = (id) => {
-  return useQuery(["get_team_statistics", id], () => APIFunction.get_team_statistics(id), {
-    enabled: id !== null && id !== undefined
-  },)
+
+export const useFetchNotifications = (page:number) => {
+  return useInfiniteQuery([NOTIFICATIONS, page], () => APIFunction.notifications(page), {
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
+    }
+  }
+  )
 }
 
-export const useFetchActivities = (id) => {
-  return useInfiniteQuery(["get_activity", id], () => APIFunction.get_activity(id), {
-    getNextPageParam: (lastPage, pages) => {
+
+export const useFetchDepartments = (tab : string,page:number, search:string) => {
+  return useInfiniteQuery([GET_DEPARTMENTS, page, search], () => APIFunction.departments(page, search), {
+    enabled : !!tab,
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
+    }
+  })
+}
+export const useFetchTaskByPK = (id?:number) => {
+  return useQuery([GET_TASK_BY_PK, id], () => APIFunction.get_task_by_pk(id as number), {
+    enabled: !!id
+  })
+}
+
+export const useFetchTodos = (
+  filter : TaskStatisticFilter = "", 
+  over_due_status : TaskDueDateFilter = "",
+  progress : TaskProgressStatus = "",
+  employee_id : number | "" = "", 
+  page  = 1
+) => {
+  return useInfiniteQuery([GET_TASKS, filter,employee_id,over_due_status,progress,page], () => APIFunction.get_tasks(filter,over_due_status,progress,employee_id,page), {
+    enabled: !!filter || !!employee_id || !!over_due_status || !!progress
+  })
+}
+
+export const useFetchTeamTask = (
+  tab : string,
+  dept_id : number | "" = "",
+  due_date_status : TaskDueDateFilter = "",
+  progress : TaskProgressStatus = "",
+  page : number = 1
+) => {
+  return useInfiniteQuery([GET_TEAM_TASKS, dept_id,due_date_status,progress,page], () => APIFunction.get_team_tasks(dept_id,due_date_status,progress,page), {
+    enabled: tab === "My Team" && !!dept_id
+  })
+}
+
+export const useFetchStatistics = (filter : TaskStatisticFilter = "",department_id : number | string = "",employee_id: number | string = "") => {
+  return useQuery([GET_TASK_STATISTICS,employee_id,filter,department_id], () => APIFunction.get_task_statistics(filter,department_id,employee_id,),{
+    enabled : !!employee_id || !!filter || !!department_id
+  })
+}
+export const useFetchTrainings = ( employee_id?: number) => {
+  return useQuery([TRAININGS, employee_id], () => APIFunction.get_trainings(employee_id as number),{
+    enabled: !!employee_id
+  });
+}
+export const useFetchTrainingsHist = ( employee_id?: number) => {
+  return useQuery([TRAININGHISTORY, employee_id], () => APIFunction.get_training_hist(employee_id as number),{
+    enabled: !!employee_id
+  });
+}
+// export const useFetchSentStatistics = () => {
+//   return useQuery(GET_SENT_STATISTICS, APIFunction.get_sent_statistics)
+// }
+
+// export const useFetchPeopleStatics = (id:number) => {
+//   return useQuery([GET_EMPLOYEE_STATISTICS, id], () => APIFunction.get_employee_statistics(id), {
+//     enabled: id !== null && id !== undefined
+//   },
+
+//   )
+// }
+// export const useFetchTeamStatistics = (id?:number) => {
+//   return useQuery([GET_TEAM_STATISTICS, id], () => APIFunction.get_team_statistics(id as number), {
+//     enabled: !!id
+//   },)
+// }
+
+export const useFetchActivities = (id:number | "",page:number) => {
+  return useInfiniteQuery([GET_ACTIVITY, id], () => APIFunction.get_activity(id as number,page), {
+    enabled : !!id,
+    getNextPageParam: (lastPage : any) => {
+      return lastPage?.next
+    }
+  })
+}
+export const useFetchComments = (id:number | "",page : number) => {
+  return useInfiniteQuery([GET_COMMENTS, id], () => APIFunction.get_comments(id as number,page), {
+    enabled : !!id,
+    getNextPageParam: (lastPage : any) => {
       return lastPage.next
     }
   })
 }
-export const useFetchComments = (id) => {
-  return useInfiniteQuery(["get_comments", id], () => APIFunction.get_comments(id), {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next
-    }
-  })
-}
-
-
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
+  //console.log("getAPIs",path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -645,7 +654,7 @@ export const getAPIs = async (path : string) => {
 };
 
 
-export const postAPIs = async (path : string, fd : any) => {
+export const postAPIs = async (path : string, fd? : any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -661,6 +670,7 @@ export const postAPIs = async (path : string, fd : any) => {
         resolve(result.data);
       })
       .catch(error => {
+        //console.log("postAPIs ERROR",error,path,fd)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -677,7 +687,7 @@ export const postAPIs = async (path : string, fd : any) => {
   });
 };
 
-export const deleteAPIs = async (path, fd) => {
+export const deleteAPIs = async (path : string,fd? : any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios.delete(
@@ -686,7 +696,8 @@ export const deleteAPIs = async (path, fd) => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${_token}`
-        }
+        },
+        data : fd
       }
     )
       .then(result => {
@@ -709,7 +720,7 @@ export const deleteAPIs = async (path, fd) => {
   });
 };
 
-export const putAPIs = async (path, fd) => {
+export const putAPIs = async (path:string, fd?:any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -725,6 +736,7 @@ export const putAPIs = async (path, fd) => {
         resolve(result.data);
       })
       .catch(error => {
+        console.log("putAPIs ERROR",error,_token)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
@@ -741,7 +753,7 @@ export const putAPIs = async (path, fd) => {
   });
 };
 
-export const postNoToken = (path, fd) => {
+export const postNoToken = (path:string, fd?:any) => {
   return new Promise((resolve, reject) => {
     axios
       .post(`${endPoint}${path}`, fd, {
@@ -764,7 +776,7 @@ export const postNoToken = (path, fd) => {
   });
 };
 
-export const storeFile = async (path, token, fd) => {
+export const storeFile = async (path:string, fd?:any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -781,9 +793,15 @@ export const storeFile = async (path, token, fd) => {
         resolve(res.data);
       })
       .catch(error => {
-        //logError(endPoint,path,error)
-        if (error.response) {
-          reject({ status: 500, msg: error.response.data });
+        if (
+          error.response && error.response.data && error.response.data.msg &&
+          error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
+        ) {
+          reject({ status: 400, msg: error.response.data.msg.detail });
+        } else if (
+          error?.response?.data &&
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
         } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
@@ -791,7 +809,7 @@ export const storeFile = async (path, token, fd) => {
   });
 };
 
-export const storeFilePut = async (path, token, fd) => {
+export const storeFilePut = async (path:string, fd?:any) => {
   let _token = await getData("token");
   return new Promise((resolve, reject) => {
     axios({
@@ -808,28 +826,18 @@ export const storeFilePut = async (path, token, fd) => {
         resolve(res.data);
       })
       .catch(error => {
-        if (error.response) {
-          reject({ status: 500, msg: error.response.data });
+        if (
+          error.response && error.response.data && error.response.data.msg &&
+          error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"
+        ) {
+          reject({ status: 400, msg: error.response.data.msg.detail });
+        } else if (
+          error?.response?.data &&
+          typeof error?.response?.data === "object") {
+          reject({ status: 400, msg: Object.values(error?.response?.data).toString() });
         } else {
           reject({ status: 500, msg: 'Something went wrong. Please retry.' });
         }
       });
   });
 };
-
-const refreshToken = async () => {
-  try {
-    let refresh = await getData("refresh")
-    let res = await axios.post(`${endPoint}/accounts/auth/token/refresh/`,
-      {
-        "refresh": refresh
-      }
-    );
-    await storeData('token_expiry', moment(new Date()).add(60, 'minutes'))
-    await storeData("token", res.data.access)
-  } catch (err) {
-  }
-}
-
-
-// ~/Desktop/myedge-mobile/.git/MERGE_MSG

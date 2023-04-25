@@ -7,5 +7,5 @@ export type ButtonProps = {
     isLoading? : boolean,
     loaderColor? : string,
     containerStyle? : ViewStyle,
-    textStyle? : TextStyle,
+    textStyle? : TextStyle | TextStyle[],
   }

@@ -11,10 +11,10 @@ export type TimeoffModalProps = {
     datePickerHandler : (action : string) => void
     onChangeText : (value : string) => void
 }
-type WorkDays = "Monday"| "Tuesday"| "Wednesday"| "Thursday"| "Friday"| "Saturday"| "Sunday"
+export type WorkDays = "Monday"| "Tuesday"| "Wednesday"| "Thursday"| "Friday"| "Saturday"| "Sunday"
 export type useFetchAboutMeData = {
     id?: number
-    employee_id? : 11
+    employee_id? : number
     photo? : string,
     title? : string,
     title_display? : string
@@ -26,10 +26,12 @@ export type useFetchAboutMeData = {
     marital_status?: string
     marital_status_display? : string
     gender? : string 
+    business_name? : string
+    business_logo? : string
     gender_display? : string
     nationality?:string,
     employee_job? : {
-        hire_date? :null
+        hire_date? :string
         start_date?: string
         work_type?: string,
         employee?:{
@@ -50,11 +52,81 @@ export type useFetchAboutMeData = {
         },
         work_days?: WorkDays[]
     }
-    // "phone_number1":"","phone_number2":"","birth_date":null,"type":"full_time","type_display":"Full time","level":null,"line_manager":{"id":3,"photo":null,"employee_id":"3","first_name":"Christy","middle_name":"","last_name":"Assam"},"address":{"id":1,"address1":"","address2":"","country":"NG","country_display":"Nigeria","state":"","city":"","postal_code":"","personal_email":null},"department":{"id":4,"name":"Communications"},"region":{"id":1,"name":"Remote"},"job":{"id":9,"title":"Social media manager"},"compensation":{"id":13,"amount":210526.32,"num_week_days":5.0,"amount_per":"","type":"full_time","work_hours":null,"start_date":"2023-03-13","end_date":null},"bank_account":null,"pension":null,"user_access_status":null,"completed_user_onboarding":true,"is_active":true,"terminated_at":null,"termination_reason":"","is_pension_applicable":false
+    phone_number1?: string,
+    phone_number2?: string,
+    birth_date?: string,
+    type?: string,
+    type_display?: string,
+    level?: string,
+    line_manager?: {
+        id?: number,
+        photo?: string,
+        employee_id?: string
+        first_name?: string
+        middle_name?: string
+        last_name?: string
+    },
+    address?: {
+        id?: number,
+        address1?: string,
+        address2?: string,
+        country?: string,
+        country_display?: string,
+        state?: string,
+        city?: string,
+        postal_code?: string,
+        personal_email?: string
+    },
+    department?: {
+        id?: number,
+        name?: string,
+    },
+    region?: {
+        id?: number,
+        name?: string
+    },
+    job?: {
+        id?: number
+        title?: string
+    },
+    compensation?: {
+        id?: number
+        amount?: number,
+        num_week_days?: number,
+        amount_per?: string,
+        type?: string,
+        work_hours?: string,
+        start_date?: string,
+        end_date?: string
+    },
+    bank_account?: {
+        bank? : {
+            code?: string,
+            id?: number,
+            name?:string
+        }
+        account_number?: string,
+        account_name?: string,
+        bank_name?:string
+    },
+    pension?: {
+        provider?: {
+            name?: string,
+            id?:number
+        }
+        pension_number? : string
+    },
+    user_access_status?: string,
+    completed_user_onboarding?: boolean,
+    is_active?: boolean,
+    terminated_at?: string,
+    termination_reason?: string,
+    is_pension_applicable?: boolean
 }
 
 export type useFetchAboutMeProps = {
     data? : useFetchAboutMeData
     isLoading : boolean
     isFetching : boolean
+    error : unknown
 }

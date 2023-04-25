@@ -1,257 +1,313 @@
 import {
-    View,
-    Image,
-    Text,
-    TouchableOpacity,
-    Platform,
+    ActivityIndicator,
 } from 'react-native'
-import React, { useState} from 'react'
-import { H1, P, TouchableWrapper} from '../../utills/components'
+import React, { useEffect } from 'react'
+import { Container, H1, P, TouchableWrapper} from '../../utills/components'
 import styles from './styles'
-import { Images } from '../../component2/image/Image';
 import AppColors from '../../utills/AppColors';
-import { ActionModal, UnCompletedModal, SentActionModal } from '../ContactModal';
 import moment from 'moment';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIFunction, } from '../../utills/api';
-import { storeData, Capitalize } from '../../utills/Methods';
-import { showFlashMessage } from '../SuccessFlash/index';
+import { Capitalize, getStoreAboutMe, ToastError, ToastSuccess } from '../../utills/Methods';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { FlatList } from 'react-native-gesture-handler';
-import { height } from 'react-native-dimension';
-import CommonStyles from '../../utills/CommonStyles';
 import { useNavigation } from '@react-navigation/native';
+import { DUE_STATUS, MenuListItem, TodoContentProps } from './types';
+import { width } from 'react-native-dimension';
+import CustomMenu from '../CustomMenu';
+import CustomIconButton from '../CustomIconButton';
+import { useDispatch } from 'react-redux';
+import { setCurrentTaskItem } from '../../Redux/Actions/Config';
+import { GET_TASKS, GET_TASK_STATISTICS, GET_TEAM_TASKS, TaskProgressLoad } from '../../utills/payload';
+import { RootNavigationProps } from '../../Routes/types';
+import WarningModal from '../WarningModal';
+import { useFetchAboutMeData } from '../TimeoffModal/types';
 
-interface TaskProps {
-    item: any;
-    index: number;
-    title: string;
-    isSent: boolean;
-    user: boolean;
-    id: number;
-    onPressHandle: () => void;
-    action: () => void;  
-    unDo: () => void;
-}
 
-const Index: React.FC<TaskProps> = ({ item, index, title, user, id }) => {
+
+const TodoContent = ({ item, index, title } : TodoContentProps) => {
     const queryClient = useQueryClient()
-    const navigation = useNavigation();
-    const [modal, setModal] = useState <boolean>(false)
-    const [completed, setCompleted] = useState<boolean>(false)
-    const [watch, setWatch] = useState<boolean>(false)
-    const [sentModal, setSent] = useState<boolean>(false)
-    const [loading, setLoading] = useState<boolean>(false);
+    const navigation = useNavigation<RootNavigationProps>();
+    const [visible,setVisible] = React.useState(false)
+    const [list,setList] = React.useState<MenuListItem[]>([])
+    const dispatch = useDispatch()
+    const [show,setShow] = React.useState(false)
+    const [about,setAbout] = React.useState<useFetchAboutMeData>()
+    
 
     const {
         mutateAsync,
-    } = useMutation(APIFunction.update_status)
+        isLoading
+    } = useMutation(APIFunction.update_task_status)
 
-    const deleteTask = useMutation(APIFunction.delete_task)
+   const {
+       mutateAsync : deleteTask,
+       isLoading : isDeleting
+   } = useMutation(APIFunction.delete_task)
 
-    const unDo = async (action: string) => {
+    const handleDelete = async () => {
         try {
-            let fd = {
-                status: action,
-                id: item.id
-            };
-            let res = await mutateAsync(fd);
-
-            if (res) {
-                await storeData('task updated', res);
-                queryClient.invalidateQueries();
-                }
-        } catch (err) {
-            
-        }
-}
-
-
-    const onPressHandler = async (action:string) => {
-        try {
-          let fd = {
-            status: action,
-              id: item.id
-          };
-          setLoading(true)
-          let res = await mutateAsync(fd);
-          if (res) {
-            await storeData('task updated', res);
-              queryClient.invalidateQueries();
-              setLoading(false)
-            setModal(false);
-            setCompleted(false);
-            setSent(false);
-            showFlashMessage({
-              title: `${' '} Task moved to ${action.toUpperCase()} ${' '} `,
-              duration: 5000,
-              type: 'task',
-              statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 10 : null,
-              backgroundColor: AppColors.newYellow,
-              actionType:"task",
-              action:()=>unDo(action==="Completed"?"In-progress":action==="In-progress"?"To-do":'To-do')
-            });
-            setWatch(!watch);
-          }
-        } catch (error) {
-       
-        }
-      }
-      
-
-    const handleDelete = async (id:number) => {
-        try {
-             await deleteTask.mutateAsync(id)
-            queryClient.invalidateQueries()
-            showFlashMessage({
-                title: `${' '} Task Deleted`,
-                duration: 8000,
-                type: 'task',
-                statusBarHeight: Platform.OS === "android" ? 7 : Platform.OS === "ios" ? 13 : null,
-                backgroundColor: AppColors.newYellow
-            })
-            setModal(false)
-            setSent(false)
-        } catch (error) {
+            if(!item?.id) return
+            await deleteTask(item?.id)
+            queryClient.invalidateQueries(GET_TASKS)
+            queryClient.invalidateQueries(GET_TASK_STATISTICS)
+            queryClient.invalidateQueries(GET_TEAM_TASKS)
+            setShow(false)
+            ToastSuccess("Task has been deleted.")
+        } catch (error : any) {
+            ToastError(error?.msg)
         }
 
     }
 
+    let due_status : DUE_STATUS = ""
+    if(moment(item?.due_date).isBefore(new Date())) due_status = "OVER_DUE"
+    if(moment(item?.due_date).isSame(new Date(), 'day')) due_status = "DUE_TODAY"
+    if(moment(item?.due_date).isAfter(new Date())) due_status = "UPCOMING"
+    if(!!!item?.due_date) due_status = "NO_DATE"
+  
 
-    const overDue = moment(item?.due_date).isBefore(new Date())
-    const dueToday = moment(item?.due_date).isSame(new Date(), 'day');
-    const noDate = item?.due_date === null
-   
-    
-    return (
-        <View style={styles.wrapper}>
-            <View style={styles.row}>
-                <>  
-                    <TouchableOpacity
-                        style={{height:height(5),marginBottom:height(1)}}
-                        onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
-                    >
-                        
-                    <H1 numberOfLines={1} style={styles.title}>{Capitalize(item?.title)}</H1>
-                </TouchableOpacity>
-                    <View>
-                    {
-                    index === 1 && title === "In Progress" || index === 1 && title === "Completed" ||user? null :
-                        index === 1 && title === "To-Do" || title === "Completed" ?
-                                <TouchableWrapper
-                                        size={4} 
-                                        style={CommonStyles.marginTop_1}
-                                    onPress={() => {
-                                        if (title === "Completed") {
-                                       return setCompleted(true)
-                                    }
-                                        setSent(true)
-                                    
-                            }}>
-                                <Ionicons name="ellipsis-vertical" size={15} color={AppColors.black3} />
-                            </TouchableWrapper> :
-                            <View style={styles.btn}>
-                                
-                                    <TouchableOpacity   
-                                    onPress={() => {
-                                        if (title === 'In Progress') {
-                                            onPressHandler("Completed")
-                                        }
-                                        onPressHandler('In-progress')
-                                    }}
-                                    style={styles.button}>
-                                    <H1 numberOfLines={1} style={styles.buttonText}>{`${title === 'In Progress' ? 'Complete task' : 'Start task'}`}</H1>
-                                </TouchableOpacity>
+    const navigationHandler = () => {
+        if(!item?.id && typeof item?.id !== "number") return
+        navigation.navigate("Menu",{screen : "TaskDetails",params : {id : item?.id}})
+    }
 
-                                <TouchableWrapper
-                                    onPress={() => {
-                                        setModal(true)
-                                        item.id
-                                    }}
-                                    style={styles.btnPart}>
-                                    <Ionicons name="chevron-down-outline" size={15} color={AppColors.black} />
-                                </TouchableWrapper>
-                            </View>
+    const openMenuHandler = () => {
+        if(title === "Completed") setList(["Undo completed"])
+        if(title === "To-Do") setList(["View task","Mark task as completed","Edit task","Delete task"])
+        if(title === "In Progress") setList(["View task","Mark task as completed","Mark task as not started","Edit task","Delete task"])
+        setVisible(true)
+    }
 
-                    }
-                </View>
-                     </>
+    const onDismiss = () => {
+        setVisible(false)
+        setShow(false)
+    }
 
-            </View>
-            <TouchableOpacity
-               onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
-                style={styles.author}>
-                <P color={AppColors.black3} >
+    const getAboutUser = async () => {
+        let user = await getStoreAboutMe()
+        if(!user) return
+        setAbout(user)
+    }
 
-                     {
-                        index === 1 ? 'To: ' : 'By: '
-                    }
-                    {
-                        !item?.assigned_to ? item?.department?.name:item?.assigned_to?.first_name ? item.assigned_to.first_name : ""} {item.assigned_to?.last_name ? item.assigned_to?.last_name : ''
-                    } 
-               
-                </P>
-            </TouchableOpacity>
-
-            {
-                title === "Completed" ? null :
-                    <TouchableOpacity
-                    onPress={() => navigation.navigate("TaskView" as never, {id,title, }as never)}
-                        style={styles.row1}>
-                        {dueToday ? <React.Fragment>            
-                            <Image source={{ uri: Images.DueFlag }} style={styles.flag} />
-                            <P style={styles.flagText}>DueToday</P>
-                        </React.Fragment> : overDue ? <React.Fragment>
-                            <Ionicons name="calendar-outline" size={12} color={AppColors.black3} />
-                            <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                            <Entypo name="dot-single" size={18} color={AppColors.red} />
-                            <P color={AppColors.red} fontSize={3.1}>Overdue</P>
-                        </React.Fragment> : noDate ? null :
-                            <React.Fragment>
-                                <Ionicons name="calendar-outline" size={12} color={AppColors.black3} />
-                                <P style={styles.date}>{moment(item?.due_date).format("MMMM D, YYYY")}</P>
-                                <Entypo name="dot-single" size={18} color={AppColors.yellow} />
-                                <P color={AppColors.yellow} fontSize={3.1}>Upcoming</P>
-                            </React.Fragment>
-                        }
-                    </TouchableOpacity>
+    const menuItemPressHandler = async (param : MenuListItem | "Claim task") => {
+        try{
+            setVisible(false)
+            if(param === "Delete task") return setShow(true)
+            if(param === "Edit task" && typeof item?.id === "number"){
+                return  navigation.navigate("Menu",{screen : "CreateTask", params : { task_id : item?.id }})
             }
+            if(param === "View task" && typeof item?.id === "number"){
+                return navigation.navigate("Menu",{screen : "TaskDetails",params : {id : item?.id}})
+            }
+            let assigned_to = item?.assigned_to?.id
+            let status : TaskProgressLoad = "To-do"
+            if(param === "Undo completed" || param === "Mark task as started") status = "In-progress"
+            if(param === "Mark task as not started") status = "To-do"
+            if(param === "Mark task as completed") status = "Completed"
+            if(param === "Claim task"){
+                status = "To-do"
+                assigned_to = about?.id
+            }
+            if(!item?.id || !item?.created_by?.id) return
+            let fd = {
+                title : item?.title || "",
+                created_by : item?.created_by?.id,
+                status : status,
+                id : item?.id,
+                assigned_to : assigned_to
+            }
+            
+            await mutateAsync(fd)
+            queryClient.invalidateQueries(GET_TASKS)
+            queryClient.invalidateQueries(GET_TASK_STATISTICS)
+            queryClient.invalidateQueries(GET_TEAM_TASKS)
+            if(param !== "Claim task"){
+                dispatch(setCurrentTaskItem({...item,
+                    status : status,
+                    old_status : item?.status
+                }))
+            }
+        }catch(err : any){
+            ToastError(err?.msg)
+        }
+    }
 
+    useEffect(()=>{
+        getAboutUser()
+    },[])
 
-            <View style={styles.subTaskRow}>
-                {
-                    !item?.sub_tasks_tasksapp?.title ? null :
-                        item?.sub_tasks_tasksapp?.length > 0 ?
-                            <FlatList
-                                data={Object.values(item?.sub_tasks_tasksapp)}
-                                renderItem={({ item }) =>
-                                    <View style={styles.content}>
-                                        <Entypo name="dot-single" size={30} color={AppColors.darkGray} />
-                                        <Text numberOfLines={1}
-                                            style={styles.sub}>{item?.title}</Text>
-                                    </View>
-                                }
-                                keyExtractor={(index) => index.toString()}
+    return (
+
+        <TouchableWrapper onPress={navigationHandler}
+            style={styles.row}
+        >
+            <Container width={90} backgroundColor={AppColors.transparent}
+                alignSelf="center"
+                direction="row"
+                horizontalAlignment='space-between'
+            >
+                <Container width={58} backgroundColor={AppColors.transparent}>
+                    <H1 color={AppColors.black1} bold="110" marginBottom={1}
+                        fontSize={3.3}
+                        numberOfLines={1}
+                    >{item?.title ? Capitalize(item?.title) : ""}</H1>
+                    {
+                        //TASK ASSIGNED TO ME OR TASK FOR MY TEAM SHOULD SHOW CREATED BY
+                        (index  === 0 || index  === 2 || index === undefined) && item?.created_by ? <P color={AppColors.black3} fontSize={3.1} marginBottom={1} numberOfLines={1}>
+                        {`By: ${item?.created_by?.first_name ? Capitalize(item?.created_by?.first_name) : ""} ${item?.created_by?.last_name ? Capitalize(item?.created_by?.last_name) : ""}`.trim()}
+                    </P> : null
+                    }
+                     {
+                         //TASKS I SENT SHOULD SHOW ASSIGN TO (DEPARTMENT NAME OR EMPLOYEE NAME)
+                        index  === 1 && item?.assigned_to ? <P color={AppColors.black3} fontSize={3.1} marginBottom={1} numberOfLines={1}>
+                        {`To: ${item?.assigned_to?.first_name ? Capitalize(item?.assigned_to?.first_name) : ""} ${item?.assigned_to?.last_name ? Capitalize(item?.assigned_to?.last_name) : ""}`.trim()}
+                    </P> : null
+                    }
+                    {
+                        //TASKS I SENT SHOULD SHOW ASSIGN TO (DEPARTMENT NAME OR EMPLOYEE NAME)
+                      index  === 1 && item?.department?.name && !item?.assigned_to ? <P color={AppColors.black3} fontSize={3.1} marginBottom={1} numberOfLines={1}>
+                        {`${"To"}: ${item?.department?.name ? Capitalize(item?.department?.name) : ""}`.trim()}
+                    </P> : null
+                    }
+                    {
+                        due_status === "DUE_TODAY" && title !== "Completed" ? <Container backgroundColor={AppColors.transparent} direction="row"
+                            verticalAlignment='center'
+                        >
+                            <Ionicons name={"flag"} 
+                                color={AppColors.pink}
                             />
-                            : null
+                            <P color={AppColors.black3} fontSize={3} marginLeft={3}>Due Today</P>
+                        </Container> : null
+                    }
+                   {
+                        due_status === "UPCOMING" && title !== "Completed"  ?  <Container backgroundColor={AppColors.transparent} 
+                        direction="row"
+                        verticalAlignment='center'
+                    >
+                        <Ionicons name={"calendar-outline"} 
+                            color={AppColors.black1}
+                        />
+                        <P 
+                            color={AppColors.black3} 
+                            fontSize={3} 
+                            marginLeft={2}
+                            marginRight={1}
+                        >{item?.due_date ? moment(item?.due_date).format("MMM DD, YYYY") : ""}</P>
+                        <Ionicons name={"ellipse"} 
+                            color={AppColors.yellow}
+                            size={width(1.5)}
+                        />
+                        <P color={AppColors.yellow} fontSize={3} marginLeft={1}>Upcoming</P>
+                    </Container> : null
+                   }
+                   {
+                        due_status === "OVER_DUE" && title !== "Completed" ?  <Container backgroundColor={AppColors.transparent} 
+                        direction="row"
+                        verticalAlignment='center'
+                    >
+                        <Ionicons name={"calendar-outline"} 
+                            color={AppColors.pink}
+                        />
+                        <P 
+                            color={AppColors.black3} 
+                            fontSize={3} 
+                            marginLeft={2}
+                            marginRight={1}
+                        >{item?.due_date ? moment(item?.due_date).format("MMM DD, YYYY") : ""}</P>
+                        <Ionicons name={"ellipse"} 
+                            color={AppColors.pink}
+                            size={width(1.5)}
+                        />
+                        <P color={AppColors.pink} fontSize={3} marginLeft={1}>Overdue</P>
+                    </Container> : null
+                   }
+                   {
+                        item?.sub_tasks_tasksapp && Array.isArray(item?.sub_tasks_tasksapp) ? <Container horizontalAlignment="flex-end" marginTop={2} backgroundColor={AppColors.transparent}>
+                        {
+                            item?.sub_tasks_tasksapp.map((sub_task,i)=><Container width={50} direction="row"
+                                verticalAlignment='center'
+                                marginBottom={2}
+                                backgroundColor={AppColors.transparent}
+                                key={i}
+                            >
+                                <Ionicons name={"ellipse"} 
+                                    color={AppColors.black2}
+                                    size={width(1.5)}
+                                />
+                                <Container width={48} marginLeft={1} backgroundColor={AppColors.transparent}>
+                                    <P numberOfLines={1} color={AppColors.black3} fontSize={3}>{sub_task?.title || sub_task?.description}</P>
+                                </Container>
+                            </Container>)
+                        }
+                    </Container> : null
+                   }
+                </Container>
+                {
+                    index !== undefined ? <React.Fragment>
+                            {
+                                title === "To-Do" && index === 0 ?  <Container backgroundColor={AppColors.transparent} width={30} direction="row" horizontalAlignment='space-between'>
+                                <Container width={23} backgroundColor={AppColors.transparent}>
+                                    <TouchableWrapper onPress={()=>menuItemPressHandler("Mark task as started")} style={styles.start_task_btn}
+                                        disabled={isLoading}
+                                    >
+                                        {
+                                            isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <H1 color={AppColors.black3} fontSize={3} textAlign='center'>Start task</H1>
+                                        }
+                                    </TouchableWrapper>
+                                </Container>
+                                <CustomMenu 
+                                    visible={visible}
+                                    onDismiss={onDismiss}
+                                    anchor={<Container backgroundColor={AppColors.transparent} width={6}>
+                                            <TouchableWrapper onPress={openMenuHandler} style={styles.menu_button} disabled={isLoading}>
+                                            <Ionicons name={"chevron-down-outline"} color={AppColors.black3}/>
+                                            </TouchableWrapper>
+                                        </Container>}
+                                    listItem={list}
+                                    onPressHandler={menuItemPressHandler}
+                                />
+                                </Container> : index === 2 && !item?.assigned_to?.id ? <Container verticalAlignment="center" width={23}>
+                                    <TouchableWrapper onPress={()=>menuItemPressHandler("Claim task")} style={styles.claim_task_btn}
+                                            disabled={isLoading}
+                                        >
+                                            {
+                                                isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <H1 color={AppColors.black3} fontSize={3} textAlign='center'>Claim task</H1>
+                                            }
+                                        </TouchableWrapper>
+                                </Container> : <CustomMenu 
+                                    visible={visible}
+                                    onDismiss={onDismiss}
+                                    anchor={isLoading ? <ActivityIndicator color={AppColors.green} size={width(4)} /> : <CustomIconButton 
+                                            icon={"dots-vertical"}
+                                            onPress={openMenuHandler}
+                                            color={AppColors.black3}
+                                            size={5}
+                                        />}
+                                    listItem={list}
+                                    onPressHandler={menuItemPressHandler}
+                                />
+                            }                        
+                    </React.Fragment> : null
                 }
-            </View>
-            <View style={styles.line1} />
-            <ActionModal isVisible={modal} onHide={() => setModal(false)} item={item}
-                onPressHandle={onPressHandler}
-                deleteHandler={() => handleDelete(item.id)}
-                loading={loading} title={title} />
-            <UnCompletedModal isVisible={completed} onHide={() => setCompleted(false)} onPressHandle={onPressHandler} />
-
-            <SentActionModal isVisible={sentModal} onHide={() => setSent(false)} item={item} onPressHandle={onPressHandler} 
-                deleteHandler={() => handleDelete(item.id)}
-                loading={loading}
-                title={title} 
-            />
-
-        </View>
+                {
+                show ?  <WarningModal
+                    isVisible={show}
+                    onHide={onDismiss}
+                    title={"Delete Task?"}
+                    sub_title={"Are you sure you want to delete this task?"}
+                    onPressHandler={handleDelete}
+                    loading={isDeleting}
+                    submitBtnText={"Yes, I am sure"}
+                    cancelBtnText={"No, go back"}
+                    icon={'alert-circle'}
+                    iconColor={AppColors.red2}
+              />  : null
+            }
+            </Container>        
+        </TouchableWrapper>
+            
+            
     )
 }
 
-export default Index
+export default TodoContent

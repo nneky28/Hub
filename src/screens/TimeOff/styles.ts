@@ -28,21 +28,18 @@ const styles = StyleSheet.create({
     marginLeft : width(24)
   },
   selectedHeading: {
-    fontSize: width(3.4),
-    paddingRight: width(5),
     color: AppColors.green, 
-    fontFamily: FontFamily.BlackSansBold
+   fontFamily: FontFamily.BlackSansBold
   },
   heading: {
     fontSize: width(3.4),
     color: AppColors.black1,
-    marginLeft: width(1),
-    marginRight: width(10),
+    // marginLeft: width(1),
+    // marginRight: width(10),
     fontFamily: FontFamily.BlackSansRegular
   },
   scrollViewContainer: {
-    paddingTop: height(2), 
-    width: width(90), 
+    paddingTop: height(1),
     justifyContent: 'space-between',
     flexDirection : "row"
   },
@@ -106,5 +103,13 @@ const styles = StyleSheet.create({
     marginTop: height(1.5),
     marginLeft: width(2)
   },
+  selected_tab : {
+    borderBottomWidth  : width(0.4),
+    borderColor : AppColors.green
+  },
+  deselected_tab : {
+    borderBottomWidth  : width(0.4),
+    borderColor : AppColors.grayBorder
+  }
 });
 export default styles;

@@ -6,7 +6,7 @@ import Button from '../../../components/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import AppColors from '../../../utills/AppColors';
 import { TouchableWrapper,Container } from '../../../utills/components';
-import { Images } from '../../../component2/image/Image';
+import { Images } from '../../../utills/Image';
 import CommonStyles from '../../../utills/CommonStyles';
 import { login } from '../../../Redux/Actions/Auth';
 import { setSecurityVisible } from '../../../Redux/Actions/Config';

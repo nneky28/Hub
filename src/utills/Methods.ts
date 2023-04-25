@@ -1,36 +1,33 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
+import { width } from 'react-native-dimension';
 import { showMessage } from 'react-native-flash-message';
 
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import { useFetchAboutMeData } from '../components/TimeoffModal/types';
 import type { RootState,AppDispatch } from '../Redux';
 import { StoredUserProps } from '../Routes/types';
+import AppColors from './AppColors';
+import { FontFamily } from './FontFamily';
 
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-
-// export function debounce(func : () => void, wait : number, immediate) {
-//   var timeout;
-//   return function () {
-//     var context = this, args = arguments;
-//     var later = function () {
-//       timeout = null;
-//       if (!immediate) func.apply(context, args);
-//     };
-//     var callNow = immediate && !timeout;
-//     clearTimeout(timeout);
-//     timeout = setTimeout(later, wait);
-//     if (callNow) func.apply(context, args);
-//   };
-// };
 
 export const ToastError = (msg:string) => {
   showMessage({
     message: 'Error',
     description: msg,
     type: 'danger',
+    titleStyle : {
+      fontFamily : FontFamily.BlackSansBold,
+      fontSize : width(4)
+    },
+    textStyle : {
+      fontFamily : FontFamily.BlackSansRegular,
+      fontSize : width(3.3)
+    }
   })
 };
 
@@ -44,6 +41,15 @@ export const ToastSuccess = (msg : string) => (
     message: 'Success',
     description: msg,
     type: 'success',
+    backgroundColor : AppColors.green,
+    titleStyle : {
+      fontFamily : FontFamily.BlackSansBold,
+      fontSize : width(4)
+    },
+    textStyle : {
+      fontFamily : FontFamily.BlackSansRegular,
+      fontSize : width(3.3)
+    }
   })
 );
 export type getStoredBusinessProps = {
@@ -53,10 +59,23 @@ export type getStoredBusinessProps = {
   currency? : string
   logo? : string
 }
+
 export const getStoredBusiness = async () : Promise<getStoredBusinessProps | null>  => {
-  let user : StoredUserProps | false | null = await getData("user");
-  if(!user || !user?.employee_user_memberships?.[0]) return null
+  let user : StoredUserProps | false | null | string = await getData("user");
+  if(typeof user === "string" || !user || !user?.employee_user_memberships?.[0] ) return null
   return user?.employee_user_memberships?.[0];
+}
+
+export const getStoreAboutMe = async () : Promise<useFetchAboutMeData | null>  => {
+  let user : useFetchAboutMeData | false | null | string = await getData("about_me");
+  if(typeof user === "string" || !user ) return null
+  return user;
+}
+
+export const getStoredUser = async () : Promise<StoredUserProps | null>  => {
+  let user : StoredUserProps | false | null | string = await getData("user");
+  if(typeof user === "string" || !user ) return null
+  return user;
 }
 
 export const storeData = async (key : string, value : any) => {
@@ -69,7 +88,7 @@ export const storeData = async (key : string, value : any) => {
   }
 };
 
-export const getData = async (key : string) : Promise<{[index : string] : any} | null |  false> => {
+export const getData = async (key : string) : Promise<{[index : string] : any} | null |  false | string> => {
   try {
     const jsonValue = await AsyncStorage.getItem(`@${key}`);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -94,9 +113,7 @@ export const getGreetingTime = () => {
 }
 
 type __flattenProps = {
-  res? : {
-    results? : any
-  }
+  results? : any
 }
 
 export const __flatten = (data:__flattenProps[]) => {

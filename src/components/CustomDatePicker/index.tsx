@@ -17,7 +17,7 @@ interface CustomDatePickerProps{
   containerStyle? : styleType
   value : string,
   placeholder?: string,
-
+  onChangeData? : (param : string) => void,
 }
 
 const CustomDatePicker = (props : CustomDatePickerProps) => {
@@ -70,6 +70,11 @@ const CustomDatePicker = (props : CustomDatePickerProps) => {
                 roundness: width(3) 
               }
             }
+            onChangeText={(text) => {
+              if(!props?.onChangeData) return
+              return props.onChangeData(text)
+  
+            }}
         />
     </TouchableOpacity>
     </>

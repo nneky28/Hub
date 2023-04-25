@@ -11,7 +11,7 @@ import { Keyboard } from 'react-native';
 type optionType = {label : string, value : string }
 
 interface DropDownProps{
-  options : string[],
+  options? : string[],
   setOpen? : (param : boolean) => void,
   inputWidth? : number,
   defaultValue : string,
