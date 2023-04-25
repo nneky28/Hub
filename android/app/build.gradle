@@ -142,8 +142,8 @@ android {
        applicationId "com.reactnativeboilerplacehermes"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 25
-        versionName "3.6"
+        versionCode 26
+        versionName "3.7"
         multiDexEnabled true //Add this line
         configurations.all {
             resolutionStrategy { force 'androidx.work:work-runtime:2.7.1' }
