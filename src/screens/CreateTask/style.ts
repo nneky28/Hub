@@ -12,41 +12,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: width(5),
 
     },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: height(5)
-    },
-    formRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height: height(5)
-    },
-    line: {
-        width: width(90),
-        height: 1,
-        backgroundColor: AppColors.blackgray,
-        marginTop: height(1)
-    },
-
-    button: {
-        width: width(50),
-        paddingVertical : height(0.5),
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: AppColors.gray1,
-        flexDirection: 'row',
-        borderRadius: width(2),
-    },
-    button1: {
-        width: width(42),
-        paddingVertical : height(1.2),
-        paddingHorizontal : width(2),
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: AppColors.gray1,
-        borderRadius: width(2),
-    },
     container: {
         marginTop: height(1.5),
         borderWidth: width(0.3),
@@ -55,6 +20,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         width: width(90)
+    },
+    button: {
+        width: width(50),
+        paddingVertical : height(0.5),
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: AppColors.gray1,
+        flexDirection: 'row',
+        borderRadius: width(2),
     },
     assign: {
         flexDirection: 'row',
@@ -65,6 +39,7 @@ const styles = StyleSheet.create({
         paddingBottom : height(1),
         justifyContent: 'space-around',
     },
+
     dueDate: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -72,24 +47,20 @@ const styles = StyleSheet.create({
         marginTop : height(0.5),
         marginBottom : height(0.5)
     },
-
-    btn: {
-        backgroundColor: '#BCEFFF',
-        paddingVertical: height(1.5),
-        borderRadius: width(1.5),
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: width(1),
-        padding: width(3.5),
-        maxWidth: width(30)
+    btnIcon: {
+        color: AppColors.black3,
+        fontSize: width(3.1),
+        padding: 5,
+        fontFamily: FontFamily.BlackSansBold
     },
-    btn2: {
-        paddingVertical: height(1.5),
-        borderRadius: width(1.5),
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: width(4.5),
-        maxWidth: width(45)
+    button1: {
+        width: width(42),
+        paddingVertical : height(1.2),
+        paddingHorizontal : width(2),
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: AppColors.gray1,
+        borderRadius: width(2),
     },
     date: {
         color: AppColors.black3,
@@ -97,35 +68,13 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.BlackSansBold
     },
 
-    btnIcon: {
-        color: AppColors.black3,
-        fontSize: width(3.1),
-        padding: 5,
-        fontFamily: FontFamily.BlackSansBold
-    },
-    attachIcon: {
-        resizeMode: 'contain',
-        width: width(8),
-        height: height(8)
-    },
-    addSubtask: {
-        marginTop: height(1.5),
-        borderWidth: width(0.3),
-        borderColor: AppColors.grayBorder,
-        borderRadius: width(2),
-        height: height(5),
-        justifyContent: 'center',
-        alignSelf: 'center',
-    },
     addBtn: {
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
 
     },
-    input: {
-        marginTop: height(1)
-    },
+   
     btnContainer: {
         alignItems: 'center',
         flexDirection: 'row',
@@ -135,33 +84,7 @@ const styles = StyleSheet.create({
         marginBottom : height(3)
 
     },
-    buttonStyle: {
-        borderRadius: width(3),
-        backgroundColor: '#EAF8FA',
-        width: width(90),
-        paddingVertical: height(1.8)
-    },
-    buttonStyle1: {
-        borderRadius: width(3),
-        borderColor: AppColors.transparent,
-        width: width(90),
-        // marginTop: height(1.5),
-        paddingVertical: height(1.8)
-    },
-    buttonText: {
-        color: AppColors.green,
-        fontFamily: FontFamily.BlackSansBold,
-        fontSize: width(3.5)
-    },
-    buttonText1: {
-        color: AppColors.white,
-        fontFamily: FontFamily.BlackSansBold,
-        fontSize: width(3.5)
-    },
-    close: {
-        marginTop: height(1),
-        marginLeft: width(3)
-    }
+
 });
 
 export default styles;

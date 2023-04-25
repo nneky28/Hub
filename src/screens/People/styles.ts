@@ -9,32 +9,7 @@ const styles = StyleSheet.create({
     flex : 1,
     alignItems: 'center',
   },
-  mainViewContainer2: {
-    backgroundColor: AppColors.white,
-    alignItems: 'center'
-  },
-  header: {
-    width: width(100),
-    paddingHorizontal: width(5),
-    marginTop: height(2),
-    marginBottom: height(1.5),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  leftIcon: {
-    width: width(5),
-    height: width(5),
-  },
-  rightIcon: {
-    width: width(5),
-    height: height(3),
-  },
-  screenTitle: {
-    fontSize: width(4),
-    color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold,
-  },
+
   scrollViewContainer: {
     paddingTop: height(1)
   },
@@ -45,21 +20,7 @@ const styles = StyleSheet.create({
     marginTop: height(1),
     elevation: 0,
   },
-  line2: {
-    width: '100%',
-    height: 1,
-    backgroundColor: AppColors.gray1,
-    elevation: 0,
-  },
-  animated: {
-    width: '80%',
-    backgroundColor: AppColors.green,
-    height: height(0.8),
-    marginTop: height(0.5),
-    borderTopRightRadius: 15,
-    borderTopLeftRadius: 15,
-    marginLeft: width(3.5)
-  },
+
   heading1: {
     fontSize: width(4),
     color: AppColors.black1,
@@ -94,13 +55,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: height(5),
     marginLeft: width(2),
-    //alignItems : "center"
   },
 
   flatListIcon: {
       height: height(2.5),
       width: width(4.5),
-     // color: AppColors.black1
   }, 
   iconAndTextContainer:{
       justifyContent: 'center',
@@ -113,42 +72,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansBold,
     color: AppColors.black2,
   },
-  downIcon: {
-    width: width(3),
-    height: width(3),
-  },
-  filterIconContainer: {
-    backgroundColor: AppColors.lightGreen,
-    paddingVertical: height(2.2),
-    paddingHorizontal: width(2.5),
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    borderRadius: 6,
-    marginTop: height(1.5),
-    marginLeft: width(2)
-  },
 
-  filterIconContainerIOS: {
-    backgroundColor: AppColors.lightGreen,
-    paddingVertical: height(1),
-    paddingHorizontal: width(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    borderRadius: 6,
-    marginTop: height(1.5),
-    marginLeft: width(2)
-  },
-
-  filterIcon: {
-    width: width(5),
-    height: height(2.5),
-  },
-  filterIconIOS: {
-    width: width(5),
-    height: height(2),
-  },
   subText: {
     fontSize: width(2.5),
     color: AppColors.black1,

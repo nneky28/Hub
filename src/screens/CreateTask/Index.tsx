@@ -175,16 +175,17 @@ const CreateTask = ({route, navigation}: RootMenuScreenProps) => {
         if (data?.assigned_to_id || data?.type === 'Departments') {
           dispatch(setCurrentTabIndex(1));
         }
-        navigation.navigate('TaskHome');
-        return ToastSuccess('Task has been created');
+        dispatch(setCurrentTabIndex(0));
+        ToastSuccess('Task has been created');
       }
-      await editHandler({...fd, id: task?.id});
+
+      await editHandler({...fd, id: task?.id!});
       queryClient.invalidateQueries(GET_TASK_STATISTICS);
       queryClient.invalidateQueries(GET_TASKS);
       queryClient.invalidateQueries(GET_TASK_BY_PK);
       queryClient.invalidateQueries(GET_TEAM_TASKS);
-      ToastSuccess('Your changes have been saved.');
       navigation.goBack();
+      ToastSuccess('Your changes have been saved.');
     } catch (err: any) {
       console.log('Error', err);
       ToastError(err?.msg);

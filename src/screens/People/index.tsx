@@ -91,9 +91,10 @@ export default function People({navigation}: RootScreenProps) {
     selected === 'Celebrations' ? 'active' : '',
   ) as useFetchAnniversaryProps;
 
-  const {data: upcomingANN, isFetching: upcomingANNFetching} = useFetchAnniversary(
+  const {data: upcomingANN, isFetching: upcomingANNFetching} =
+    useFetchAnniversary(
       selected === 'Celebrations' ? 'upcoming' : '',
-   ) as useFetchAnniversaryProps;
+    ) as useFetchAnniversaryProps;
 
   const {data: outData, isFetching: whosoutLoading} = useFetchWhosOut(
     selected === "Who's Out" ? 'timeoff' : '',
@@ -566,7 +567,6 @@ export default function People({navigation}: RootScreenProps) {
                         <Text numberOfLines={1} style={styles.heading2}>
                           {section.heading}
                         </Text>
-                        {/* <Image resizeMode="contain" source={downIcon} style={styles.downIcon} /> */}
                       </View>
                     );
                   }}

@@ -45,8 +45,7 @@ export default function Training() {
       if (allHistories && Array.isArray(allHistories)) {
         setHistories(allHistories);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

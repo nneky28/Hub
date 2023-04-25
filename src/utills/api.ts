@@ -736,7 +736,7 @@ export const putAPIs = async (path:string, fd?:any) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("putAPIs ERROR",error,path,fd)
+        console.log("putAPIs ERROR",error,_token)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"

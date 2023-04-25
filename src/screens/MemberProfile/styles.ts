@@ -9,36 +9,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex : 1
   },
-  titleContainer: {
-    alignSelf: 'center', 
-    justifyContent: 'center', 
-    width: width(65), 
-    alignItems: 'center',
-  },
-  header: {
-    width: width(100),
-    paddingHorizontal: width(5),
-    marginTop: height(2),
-    marginBottom: height(1.5),
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  leftIcon: {
-    width: width(5),
-    height: width(5),
-  },
-  screenTitle: {
-    fontSize: width(4),
-    color: AppColors.black1,
-    fontFamily: FontFamily.BlackSansBold,
-  },
-  line: {
-    width: '100%',
-    height: 1,
-    backgroundColor: AppColors.gray1,
-    marginTop: height(1),
-    elevation: 0,
-  },
+
+
   avatarStyle: {
     height: height(20),
     width: height(20),
@@ -78,28 +50,12 @@ const styles = StyleSheet.create({
       color: AppColors.black1,
       fontFamily: FontFamily.BlackSansRegular,
   },
-  profileListContainer: {
-    justifyContent: 'center',
-    paddingVertical: height(2.5),
-    backgroundColor: AppColors.white,
-    width: width(90),
-    paddingHorizontal: width(4),
-    borderColor: AppColors.grayBorder,
-    borderWidth: 1,
-    borderRadius: height(1.75),
-    alignSelf: 'center',
-    marginTop: height(2),
-  },
+
   userInfoContainer: {
     marginTop: height(3),
     marginBottom: height(2),
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  row: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
   },
   subHeading:{
     fontSize: width(3.5),
@@ -107,14 +63,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.BlackSansSemiBold,
     marginTop: height(2)
   },
-  saveBtnStyle: {
-    width: width(20),
-    height: height(5),
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    backgroundColor: AppColors.gray,
-    ...AppColors.noShadow,
-  },
+
   listItemContainer: {
     width: width(90),
     borderColor: AppColors.gray1,
