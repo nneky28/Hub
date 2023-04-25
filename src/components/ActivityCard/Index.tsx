@@ -28,7 +28,7 @@ const ActivityCard = ({ item } : ActivityCardProps) => {
         ) : (
             <Container width={10} backgroundColor={AppColors.transparent}>
               <ImgPlaceholder
-                text={`${item?.logged_by?.first_name?.[0] ? Capitalize(item.logged_by?.first_name?.[0]) : ''} ${
+                text={`${item?.logged_by?.first_name?.[0] ? Capitalize(item.logged_by?.first_name?.[0]) : ''}${
                   item?.logged_by?.last_name?.[0] ? Capitalize(item.logged_by?.last_name?.[0]) : ''
                 }`.trim()}
                 size={10}
