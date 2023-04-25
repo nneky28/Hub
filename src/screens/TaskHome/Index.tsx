@@ -108,9 +108,9 @@ const TaskHome = ({navigation}: RootScreenProps) => {
   );
 
   const setButtons = (i: number) => {
-    // if(currentTabIndex === i) return
+    if (currentTabIndex === i) return;
     dispatch(setCurrentTabIndex(i));
-    setCurrentTabIndex(i);
+    // setCurrentTabIndex(i);
     setActionTitle('To-Do');
     setTab('All');
     setOverDueStatus('');

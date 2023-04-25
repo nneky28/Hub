@@ -183,9 +183,10 @@ const CreateTask = ({route, navigation}: RootMenuScreenProps) => {
       queryClient.invalidateQueries(GET_TASKS);
       queryClient.invalidateQueries(GET_TASK_BY_PK);
       queryClient.invalidateQueries(GET_TEAM_TASKS);
-      navigation.goBack();
       ToastSuccess('Your changes have been saved.');
+      navigation.goBack();
     } catch (err: any) {
+      console.log('Error', err);
       ToastError(err?.msg);
     }
   };
