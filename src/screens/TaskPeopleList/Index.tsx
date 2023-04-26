@@ -13,6 +13,7 @@ import {
   useDebounce,
   PageLoader,
   EmptyStateWrapper,
+  Container,
 } from '../../utills/components';
 import SearchBox, {SearchBoxIOS} from '../../components/SearchBox/index';
 import AppColors from '../../utills/AppColors';
@@ -48,7 +49,6 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
   const [myTeam, setMyTeam] = useState<useFetchDepartmentsData>({name: ''});
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>('');
-  // const [text, setText] = useState<string>('');
   const searchTerm = useDebounce(search, 200);
   const [tab, setTab] = useState<Tab>('Employees');
   const [departments, setDepartments] = useState<useFetchDepartmentsData[]>([]);
@@ -62,9 +62,9 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
     hasNextPage: hasNextPage,
     isLoading: loading,
     isFetching,
+    fetchNextPage
   } = useFetchEmployees(
     tab === 'Employees' ? 'Employees' : '',
-    page,
     searchTerm,
   ) as useFetchEmployeesProps;
 
@@ -108,12 +108,12 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
       (!hasNextDeptPage && tab === 'Departments') ||
       isFetching ||
       fetchingDepartments
-    )
-      return;
-    setPage(page + 1);
+    ) return;
+    if(tab === "Employees") fetchNextPage();
+    if(tab === "Departments") setPage(page + 1)
   };
 
-  const mapDataToState = () => {
+  const mapDataToState = (param? : string) => {
     if (
       tab === 'Departments' &&
       departmentData?.pages &&
@@ -123,15 +123,14 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
       if (page > 1) return setDepartments([...departments, ...arr]);
       return setDepartments(arr);
     }
-    if (teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
+    if (param && teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
       let arr: useFetchEmployeesData[] = __flatten(teamData?.pages).filter(
         (el) => el?.first_name?.startsWith(searchTerm),
       );
-      setMembers(arr);
+      return setMembers(arr);
     }
     if (tab === 'Employees' && data?.pages && Array.isArray(data?.pages)) {
       let arr: useFetchEmployeesData[] = __flatten(data?.pages);
-      if (page > 1) return setEmployees([...employees, ...arr]);
       return setEmployees(arr);
     }
   };
@@ -158,7 +157,6 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
 
   const handleSearch = (item: string) => {
     setSearch(item);
-    // setText(item);
     setPage(1);
   };
 
@@ -181,8 +179,12 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
   }, []);
 
   useEffect(() => {
+    mapDataToState("team");
+  }, [teamData,tab,searchTerm]);
+
+  useEffect(() => {
     mapDataToState();
-  }, [teamData, data, departmentData, tab]);
+  }, [data, departmentData,tab]);
 
   useEffect(() => {
     aboutMe();
@@ -252,15 +254,17 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
                         ))}
                       </React.Fragment>
                     ) : null}
+                   <Container width={90} alignSelf="center">
                     <H1 marginBottom={2} fontSize={3.3} marginTop={2}>
-                      Others
-                    </H1>
+                        Others
+                      </H1>
+                   </Container>
                   </React.Fragment>
                 }
                 data={employees}
                 refreshControl={
                   <CustomRefreshControl
-                    loading={page === 1 && (isFetching || fetchingDepartments)}
+                    loading={(isFetching || fetchingDepartments)}
                     onRefresh={refreshHandler}
                   />
                 }

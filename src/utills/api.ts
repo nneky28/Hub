@@ -353,14 +353,14 @@ export const APIFunction = {
     let biz = await getStoredBusiness()
     return getAPIs(`/c/${biz?.business_id}/departments/?page=${page}&search=${search}`)
   },
-  get_employees: async (page = 1, search = "",limit = 20) => {
+  get_employees: async ({pageParam = 1, search = "",limit = 20}) => {
     let biz = await getStoredBusiness()
-    return getAPIs(`/c/${biz?.business_id}/employees/?page=${page}&search=${search}&page_size=${limit}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/?page=${pageParam}&search=${search}&page_size=${limit}`)
   },
-  get_my_team_members: async (page = 1) => {
+  get_my_team_members: async ({pageParam = 1}) => {
     let biz = await getStoredBusiness()
     let user = await getStoreAboutMe()
-    return getAPIs(`/c/${biz?.business_id}/employees/${user?.id}/team_members/?page=${page}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/${user?.id}/team_members/?page=${pageParam}`)
   },
   register_device_token : async (fd : RegisterTokenLoad) => {
     let biz = await getStoredBusiness()
@@ -495,13 +495,26 @@ export const useFetchOnboarding = (type:string) => {
 
   )
 }
-export const useFetchEmployees = (tab:string,page: number, search: string) => {
-  return useInfiniteQuery([GET_EMPLOYEES,page, search], () => APIFunction.get_employees(page, search), {
-    enabled : !!tab,
-    getNextPageParam: (lastPage:any) => {
-      return lastPage.next
+export const useFetchEmployees = (tab:string, search: string) => {
+  return useInfiniteQuery(
+    {
+      queryKey : [GET_EMPLOYEES, search],
+      queryFn : ({pageParam = 1}) => APIFunction.get_employees({pageParam, search}),
+      enabled : !!tab,
+      keepPreviousData : true,
+      getNextPageParam: (lastPage:any) => {
+        let nextPageParam = lastPage?.next?.match("page=[0-9]")?.[0]?.split("page=")?.[1] || undefined
+        return nextPageParam
+      }
     }
-  }
+
+    // [GET_EMPLOYEES, search], ({pageParam = 1}) => APIFunction.get_employees(pageParam, search), {
+    //   enabled : !!tab,
+    //   keepPreviousData : true,
+    //   getNextPageParam: (lastPage:any) => {
+    //     return lastPage?.next ? page : null
+    //   }
+    // }
   )
 }
 
@@ -516,13 +529,17 @@ export const useFetchEmployeeTeamMembers = (id : number | undefined,page:number)
   )
 }
 
-export const useFetchTeams = (tab : string,page = 1) => {
-  return useInfiniteQuery([GET_MY_TEAM_MEMBERS, page], () => APIFunction.get_my_team_members(page), {
-    enabled : !!tab, 
-    getNextPageParam: (lastPage:any) => {
-      return lastPage?.next
+export const useFetchTeams = (tab : string) => {
+  return useInfiniteQuery(
+    {
+      queryKey : [GET_MY_TEAM_MEMBERS],
+      queryFn : ({pageParam = 1}) => APIFunction.get_my_team_members({pageParam}),
+      enabled : !!tab, 
+      getNextPageParam: (lastPage:any) => {
+        let nextPageParam = lastPage?.next?.match("page=[0-9]")?.[0]?.split("page=")?.[1] || undefined
+        return nextPageParam
+      }
     }
-  }
   )
 }
 
@@ -625,7 +642,6 @@ export const useFetchComments = (id:number | "",page : number) => {
 
 export const getAPIs = async (path : string) => {
   let _token = await getData("token");
-  //console.log("getAPIs",path)
   return new Promise((resolve, reject) => {
     axios
       .get(`${endPoint}${path}`, {
@@ -670,7 +686,6 @@ export const postAPIs = async (path : string, fd? : any) => {
         resolve(result.data);
       })
       .catch(error => {
-        //console.log("postAPIs ERROR",error,path,fd)
         if (
           error.response && error.response.data &&
           error.response.data.detail && typeof (error.response.data.detail) === "string"
@@ -736,7 +751,6 @@ export const putAPIs = async (path:string, fd?:any) => {
         resolve(result.data);
       })
       .catch(error => {
-        console.log("putAPIs ERROR",error,_token)
         if (
           error.response && error.response.data && error.response.data.msg &&
           error.response.data.msg.detail && typeof (error.response.data.msg.detail) === "string"

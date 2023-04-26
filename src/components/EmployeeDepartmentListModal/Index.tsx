@@ -52,10 +52,10 @@ const EmployeeDepartmentListModal = ({ open, onHide, onPressHandler } : Employee
     const {
         data: employeeData,
         hasNextPage: hasNextPage,
-        isFetching
+        isFetching,
+        fetchNextPage
     } = useFetchEmployees(
         tab === "Employees" ? tab : "",
-        page, 
         searchTerm
     ) as useFetchEmployeesProps
 
@@ -73,7 +73,7 @@ const EmployeeDepartmentListModal = ({ open, onHide, onPressHandler } : Employee
     const mapDataToState = () => {
         if(tab === "Employees" && employeeData?.pages && Array.isArray(employeeData?.pages)){
             let arr : useFetchEmployeesData[] = __flatten(employeeData?.pages)
-            return page > 1 ? setEmployees([...employees,...arr]) : setEmployees(arr)
+            return setEmployees(arr)
         }
         if(tab === "Departments" && departmentData?.pages && Array.isArray(departmentData?.pages)){
             let arr : useFetchDepartmentsData[] = __flatten(departmentData?.pages)
@@ -86,7 +86,8 @@ const EmployeeDepartmentListModal = ({ open, onHide, onPressHandler } : Employee
             (tab === "Employees" && (!hasNextPage || isFetching)) || 
             (tab === "Departments" && (!hasNextDept || fetchingDepartments))
         ) return 
-            setPage(page + 1)
+        if(tab === "Employees") fetchNextPage()
+        if(tab === "Departments") setPage(page + 1)
     }
 
     const KeyExtractor = (item : useFetchDepartmentsData | useFetchEmployeesData, index : number) => `${item}${index}`.toString()

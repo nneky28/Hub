@@ -15,7 +15,7 @@ import {
   useAppSelector,
   useAppDispatch,
 } from '../utills/Methods';
-import codePush from 'react-native-code-push';
+//import codePush from 'react-native-code-push';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {login} from '../Redux/Actions/Auth';
@@ -401,12 +401,13 @@ const Routes = () => {
     </ErrorBoundary>
   );
 };
-let codePushOptions = {
-  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-  installMode: codePush.InstallMode.ON_NEXT_RESUME,
-  rollbackRetryOptions: {
-    delayInHours: 1 / 60,
-    maxRetryAttempts: 3,
-  },
-};
-export default codePush(codePushOptions)(Routes);
+// let codePushOptions = {
+//   checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+//   installMode: codePush.InstallMode.ON_NEXT_RESUME,
+//   rollbackRetryOptions: {
+//     delayInHours: 1 / 60,
+//     maxRetryAttempts: 3,
+//   },
+// };
+export default Routes
+//codePush(codePushOptions)(Routes);

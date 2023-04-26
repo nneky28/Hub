@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   avatarStyle: {
-    height: height(6),
+    height: height(5.5),
     width: height(5.5),
-    borderRadius: height(4.75),
+    borderRadius: width(50),
   },
   textContainer: {
     justifyContent: 'space-between',

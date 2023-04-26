@@ -113,10 +113,23 @@ export const getGreetingTime = () => {
 }
 
 type __flattenProps = {
-  results? : any
+  results? : any[]
+}[] | {
+  pages : {
+    results? : any[]
+  }[]
 }
 
-export const __flatten = (data:__flattenProps[]) => {
+export const __flatten = (data:__flattenProps) => {
+  if("pages" in data){
+    let arr : any[] = []
+    for(let index = 0; data.pages.length > index; index++){
+      arr.push(data.pages[index])
+    }
+    return arr.map((res:any) => res?.results || {})
+    .filter((arr) => Array.isArray(arr))
+    .flat();
+  }
   return data
     .map((res:any) => res?.results || {})
     .filter((arr) => Array.isArray(arr))

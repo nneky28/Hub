@@ -28,6 +28,7 @@ export type useFetchEmployeesProps = {
     isFetching : boolean
     hasNextPage : boolean
     isFetchingNextPage : boolean
+    fetchNextPage : () => void
 }
 export type TabType = "All" | "My Team" | "Who's Out" | "Celebrations"
 

@@ -24,7 +24,7 @@ import {
   ImgPlaceholder,
 } from '../../utills/components';
 import styles from './styles';
-import {Capitalize} from '../../utills/Methods';
+import {Capitalize, __flatten} from '../../utills/Methods';
 import {
   useFetchAnniversary,
   useFetchBirthdays,
@@ -65,7 +65,6 @@ export default function People({navigation}: RootScreenProps) {
   const [loading] = React.useState(true);
   const [search, setSearch] = React.useState('');
   const searchTerm = useDebounce(search, 300);
-  const [page, setPage] = React.useState(1);
   const tabs: TabType[] = ['All', 'My Team', "Who's Out", 'Celebrations'];
   const queryClient = useQueryClient();
 
@@ -81,9 +80,10 @@ export default function People({navigation}: RootScreenProps) {
     data: employeeData,
     hasNextPage,
     isFetching,
+    isLoading,
+    fetchNextPage
   } = useFetchEmployees(
     selected === 'All' ? selected : '',
-    page,
     searchTerm,
   ) as useFetchEmployeesProps;
 
@@ -104,9 +104,10 @@ export default function People({navigation}: RootScreenProps) {
     data: teamData,
     hasNextPage: hasNextTeamPage,
     isFetching: fetchingTeams,
+    fetchNextPage : fetchNextTeams,
+    isLoading : loadingTeams
   } = useFetchTeams(
     selected === 'My Team' ? selected : '',
-    page,
   ) as useFetchTeamsProps;
 
   const mapStateToData = () => {
@@ -116,10 +117,7 @@ export default function People({navigation}: RootScreenProps) {
       employeeData?.pages?.[0]?.results &&
       Array.isArray(employeeData?.pages?.[0]?.results)
     ) {
-      arr =
-        page === 1
-          ? employeeData?.pages?.[0]?.results
-          : [...personsList, ...employeeData?.pages?.[0]?.results];
+      arr = __flatten(employeeData?.pages)
       return setPersonsList(arr);
     }
     if (
@@ -127,10 +125,7 @@ export default function People({navigation}: RootScreenProps) {
       teamData?.pages?.[0]?.results &&
       Array.isArray(teamData?.pages?.[0]?.results)
     ) {
-      arr =
-        page === 1
-          ? teamData?.pages?.[0]?.results
-          : [...personsList, ...teamData?.pages?.[0]?.results];
+      arr = __flatten(teamData?.pages)
       return setPersonsList(arr);
     }
     if (
@@ -307,7 +302,6 @@ export default function People({navigation}: RootScreenProps) {
   };
 
   const handleSearch = (text: string) => {
-    setPage(1);
     setSearch(text);
   };
 
@@ -450,7 +444,6 @@ export default function People({navigation}: RootScreenProps) {
   const changeListViewHandler = () => setIsListView(!isListView);
 
   const onRefreshHandler = () => {
-    setPage(1);
     queryClient.invalidateQueries(GET_EMPLOYEES);
     queryClient.invalidateQueries(GET_MY_TEAM_MEMBERS);
   };
@@ -475,7 +468,8 @@ export default function People({navigation}: RootScreenProps) {
         (isFetching || !hasNextTeamPage || fetchingTeams))
     )
       return;
-    setPage(page + 1);
+      if(selected === 'All') fetchNextPage()
+      if(selected === "My Team") fetchNextTeams()
   };
 
   return (
@@ -495,7 +489,6 @@ export default function People({navigation}: RootScreenProps) {
                 onPress={() => {
                   setSearch('');
                   setSelected(item);
-                  setPage(1);
                 }}
                 key={index}
                 isText
@@ -536,9 +529,8 @@ export default function People({navigation}: RootScreenProps) {
               />
             </View>
           ) : null}
-          {page === 1 &&
-          (fetchingTeams ||
-            isFetching ||
+          { (loadingTeams ||
+            isLoading ||
             activeANNFetching ||
             upcomingANNFetching ||
             whosoutLoading ||
@@ -650,7 +642,7 @@ export default function People({navigation}: RootScreenProps) {
                     ListFooterComponent={ListFooterComponent}
                     refreshControl={
                       <CustomRefreshControl
-                        loading={(fetchingTeams || isFetching) && page === 1}
+                        loading={loadingTeams || isLoading}
                         onRefresh={onRefreshHandler}
                       />
                     }
@@ -675,7 +667,7 @@ export default function People({navigation}: RootScreenProps) {
                     onEndReached={onEndReached}
                     refreshControl={
                       <CustomRefreshControl
-                        loading={(fetchingTeams || isFetching) && page === 1}
+                        loading={loadingTeams || isLoading}
                         onRefresh={onRefreshHandler}
                       />
                     }
