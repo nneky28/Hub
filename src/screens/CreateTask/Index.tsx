@@ -187,7 +187,6 @@ const CreateTask = ({route, navigation}: RootMenuScreenProps) => {
       navigation.goBack();
       ToastSuccess('Your changes have been saved.');
     } catch (err: any) {
-      console.log('Error', err);
       ToastError(err?.msg);
     }
   };
