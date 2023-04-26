@@ -62,7 +62,7 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
     hasNextPage: hasNextPage,
     isLoading: loading,
     isFetching,
-    fetchNextPage
+    fetchNextPage,
   } = useFetchEmployees(
     tab === 'Employees' ? 'Employees' : '',
     searchTerm,
@@ -79,7 +79,6 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
     hasNextPage: hasNextDeptPage,
   } = useFetchDepartments(
     tab === 'Departments' ? 'Departments' : '',
-    page,
     searchTerm,
   ) as useFetchDepartmentsProps;
 
@@ -108,12 +107,13 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
       (!hasNextDeptPage && tab === 'Departments') ||
       isFetching ||
       fetchingDepartments
-    ) return;
-    if(tab === "Employees") fetchNextPage();
-    if(tab === "Departments") setPage(page + 1)
+    )
+      return;
+    if (tab === 'Employees') fetchNextPage();
+    if (tab === 'Departments') setPage(page + 1);
   };
 
-  const mapDataToState = (param? : string) => {
+  const mapDataToState = (param?: string) => {
     if (
       tab === 'Departments' &&
       departmentData?.pages &&
@@ -123,7 +123,12 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
       if (page > 1) return setDepartments([...departments, ...arr]);
       return setDepartments(arr);
     }
-    if (param && teamData && teamData?.pages && Array.isArray(teamData?.pages)) {
+    if (
+      param &&
+      teamData &&
+      teamData?.pages &&
+      Array.isArray(teamData?.pages)
+    ) {
       let arr: useFetchEmployeesData[] = __flatten(teamData?.pages).filter(
         (el) => el?.first_name?.startsWith(searchTerm),
       );
@@ -179,12 +184,12 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
   }, []);
 
   useEffect(() => {
-    mapDataToState("team");
-  }, [teamData,tab,searchTerm]);
+    mapDataToState('team');
+  }, [teamData, tab, searchTerm]);
 
   useEffect(() => {
     mapDataToState();
-  }, [data, departmentData,tab]);
+  }, [data, departmentData, tab]);
 
   useEffect(() => {
     aboutMe();
@@ -254,17 +259,17 @@ const TaskPeopleList = ({route, navigation}: RootMenuScreenProps) => {
                         ))}
                       </React.Fragment>
                     ) : null}
-                   <Container width={90} alignSelf="center">
-                    <H1 marginBottom={2} fontSize={3.3} marginTop={2}>
+                    <Container width={90} alignSelf="center">
+                      <H1 marginBottom={2} fontSize={3.3} marginTop={2}>
                         Others
                       </H1>
-                   </Container>
+                    </Container>
                   </React.Fragment>
                 }
                 data={employees}
                 refreshControl={
                   <CustomRefreshControl
-                    loading={(isFetching || fetchingDepartments)}
+                    loading={isFetching || fetchingDepartments}
                     onRefresh={refreshHandler}
                   />
                 }
