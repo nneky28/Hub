@@ -161,9 +161,9 @@ export const APIFunction = {
     let biz = await getStoredBusiness();
     return getAPIs(`/c/${biz?.business_id}/employees/dashboard/job_anniversary/?status=${status}&page=${page}`)
   },
-  notifications: async (page = 1) => {
+  notifications: async ({pageParam = 1}) => {
     let biz = await getStoredBusiness();
-    return getAPIs(`/c/${biz?.business_id}/employees/notifications/?page=${page}`)
+    return getAPIs(`/c/${biz?.business_id}/employees/notifications/?page=${pageParam}`)
   },
   unseen_count: async () => {
     let biz = await getStoredBusiness();
@@ -534,12 +534,16 @@ export const useFetchTeams = (tab : string) => {
   )
 }
 
-export const useFetchNotifications = (page:number) => {
-  return useInfiniteQuery([NOTIFICATIONS, page], () => APIFunction.notifications(page), {
-    getNextPageParam: (lastPage : any) => {
-      return lastPage?.next
+export const useFetchNotifications = () => {
+  return useInfiniteQuery(
+    {
+      queryKey : [NOTIFICATIONS],
+      queryFn : ({pageParam = 1}) => APIFunction.notifications({pageParam}),
+      getNextPageParam: (lastPage:any) => {
+        let nextPageParam = lastPage?.next?.match("page=[0-9]")?.[0]?.split("page=")?.[1] || undefined
+        return nextPageParam
+      }
     }
-  }
   )
 }
 
