@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { setCartItems } from '../../Redux/Actions/Config';
 import CartCard from '../CartCard/index'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CheckOutModal from '../CheckoutModal';
 
 
 const index = () => {
@@ -27,7 +28,7 @@ const index = () => {
   const cartItems = useAppSelector((state) => state.Config.cartItems);
   const totalPrice = cartItems.reduce((sum, item) => sum + (item.count * item.price), 0);
   const dispatch = useDispatch()
-
+  const [show, setShow] = useState(false);
   const vat = 7870
   const shippingFee = 5870
 
@@ -89,7 +90,10 @@ const index = () => {
       />
     );
   };
-
+  const onDismiss = () => {
+    dispatch(setCartItems([]))
+    setShow(false);
+  };
 
 
   return (
@@ -99,7 +103,6 @@ const index = () => {
         keyExtractor={KeyExtractor}
         renderItem={renderItem}
         ListEmptyComponent={ListEmptyComponent}
-      // ListFooterComponent={() =>}
       />
       {
         cartItems.length !== 0 &&
@@ -146,7 +149,7 @@ const index = () => {
           <View style={styles.line2} />
           <Button
             title="Checkout"
-            onPress={() => null}
+            onPress={() => setShow(true)}
             containerStyle={styles.btn}
             icon={
               <Feather name="arrow-right" size={15} style={styles.iconCheck} />
@@ -155,6 +158,18 @@ const index = () => {
 
         </>
       }
+
+      {show ? (
+        <CheckOutModal
+          isVisible={show}
+          onHide={onDismiss}
+          title={'Checkout Successfull'}
+          sub_title={'Check your email for product details'}
+          submitBtnText={'OKAY'}
+          icon={'checkmark-done-outline'}
+          iconColor={AppColors.black}
+        />
+      ) : null}
     </React.Fragment>
   );
 };

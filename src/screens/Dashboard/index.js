@@ -23,26 +23,28 @@ import { useAppSelector } from '../../utills/Methods';
 const index = ({ navigation, route }) => {
   const { liked } = route.params ?? {};
   const menu = ['All', 'Men', 'Women', 'Kids'];
-  const data = useAppSelector((state) => state.Config.isItemVisible);
+  const rawdata = useAppSelector((state) => state.Config.isItemVisible);
   const [currentTabIndex, setCurrentTabIndex] = React.useState(0);
   const [search, setSearch] = useState('');
   const searchTerm = useDebounce(search, 200);
+  const [selectedText, setSelectedText] = useState([]);
+
+  const data = rawdata.filter(item => item.title.startsWith(search))
 
   const savedItems = data.filter((el) => {
     return el.favourite === true
   }
   )
-  console.log("search", search)
 
   const setButtons = (i) => {
     setCurrentTabIndex(i);
   };
 
-  const handleSearch = (item) => {
-    const selectedText = data.filter(
-      (el) => el?.first_name?.startsWith(searchTerm),
-    );
-    setSearch(selectedText);
+
+
+  const handleSearch = (text) => {
+    setSearch(text);
+
   };
 
   const KeyExtractor = (item, index) =>
@@ -88,6 +90,7 @@ const index = ({ navigation, route }) => {
           <View style={styles.searchBoxContainer}>
             <SearchBox
               title="Search anything"
+              onChangeText={setSearch}
               containerStyle={styles.searchBoxStyle}
               onSubmitEditing={handleSearch}
               value={search}
@@ -106,6 +109,7 @@ const index = ({ navigation, route }) => {
           <View style={styles.searchBoxContainer}>
             <SearchBoxIOS
               title="Search anything"
+              onChangeText={setSearch}
               containerStyle={styles.searchBoxStyle}
               onSubmitEditing={handleSearch}
               value={search}
