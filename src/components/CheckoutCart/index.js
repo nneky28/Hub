@@ -165,7 +165,7 @@ const index = () => {
           onHide={onDismiss}
           title={'Checkout Successfull'}
           sub_title={'Check your email for product details'}
-          submitBtnText={'OKAY'}
+          submitBtnText={'CLOSE'}
           icon={'checkmark-done-outline'}
           iconColor={AppColors.black}
         />

@@ -67,7 +67,7 @@ const index = ({ navigation, route }) => {
   };
 
   return (
-    <ScreenWrapper scrollEnabled={true}>
+    <ScreenWrapper>
       <View style={styles.mainCon}>
         <Container>
           <View style={styles.header}>
@@ -79,82 +79,14 @@ const index = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity>
-              <TouchableWrapper>
+              <TouchableOpacity>
                 <Ionicons name={'notifications-outline'} size={width(6)} />
-              </TouchableWrapper>
+              </TouchableOpacity>
             </TouchableOpacity>
           </View>
         </Container>
         <SizedBox height={1} />
-        {Platform.OS === 'android' ? (
-          <View style={styles.searchBoxContainer}>
-            <SearchBox
-              title="Search anything"
-              onChangeText={setSearch}
-              containerStyle={styles.searchBoxStyle}
-              onSubmitEditing={handleSearch}
-              value={search}
-            />
-            <Container>
-              <TouchableOpacity style={styles.filterIcon} onPress={handleSearch}>
-                <Image
-                  resizeMode="contain"
-                  source={filterIcon}
-                  style={styles.filterIcons}
-                />
-              </TouchableOpacity>
-            </Container>
-          </View>
-        ) : (
-          <View style={styles.searchBoxContainer}>
-            <SearchBoxIOS
-              title="Search anything"
-              onChangeText={setSearch}
-              containerStyle={styles.searchBoxStyle}
-              onSubmitEditing={handleSearch}
-              value={search}
-            />
-            <Container style={styles.filterIcon}>
-              <TouchableOpacity style={styles.filterIconContainerIOS}>
-                <Image
-                  resizeMode="contain"
-                  source={filterIcon}
-                  style={styles.filterIcons}
-                />
-              </TouchableOpacity>
-            </Container>
-          </View>
-        )}
 
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            flexDirection: 'row',
-            width: width(95),
-          }}
-          style={styles.threeButtonCont}>
-          {menu.map((item, i) => (
-            <TouchableWrapper
-              onPress={() => {
-                setButtons(i);
-              }}
-              style={
-                currentTabIndex === i ? styles.animatedView : styles.button
-              }
-              key={i}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  currentTabIndex === i && styles.buttonText1,
-                ]}>
-                {item}
-              </Text>
-            </TouchableWrapper>
-          ))}
-        </ScrollView>
 
 
         <FlatList
@@ -168,6 +100,77 @@ const index = ({ navigation, route }) => {
           numColumns={2}
           columnWrapperStyle={styles.rowFlat}
           ListEmptyComponent={ListEmptyComponent}
+          ListHeaderComponent={() => <>
+            {Platform.OS === 'android' ? (
+              <View style={styles.searchBoxContainer}>
+                <SearchBox
+                  title="Search anything"
+                  onChangeText={setSearch}
+                  containerStyle={styles.searchBoxStyle}
+                  onSubmitEditing={handleSearch}
+                  value={search}
+                />
+                <Container>
+                  <TouchableOpacity style={styles.filterIcon} >
+                    <Image
+                      resizeMode="contain"
+                      source={filterIcon}
+                      style={styles.filterIcons}
+                    />
+                  </TouchableOpacity>
+                </Container>
+              </View>
+            ) : (
+              <View style={styles.searchBoxContainer}>
+                <SearchBoxIOS
+                  title="Search anything"
+                  onChangeText={setSearch}
+                  containerStyle={styles.searchBoxStyle}
+                  onSubmitEditing={handleSearch}
+                  value={search}
+                />
+                <Container style={styles.filterIcon}>
+                  <TouchableOpacity style={styles.filterIconContainerIOS}>
+                    <Image
+                      resizeMode="contain"
+                      source={filterIcon}
+                      style={styles.filterIcons}
+                    />
+                  </TouchableOpacity>
+                </Container>
+              </View>
+            )}
+
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                flexDirection: 'row',
+                width: width(95),
+              }}
+              style={styles.threeButtonCont}>
+              {menu.map((item, i) => (
+                <TouchableWrapper
+                  onPress={() => {
+                    setButtons(i);
+                  }}
+                  style={
+                    currentTabIndex === i ? styles.animatedView : styles.button
+                  }
+                  key={i}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      currentTabIndex === i && styles.buttonText1,
+                    ]}>
+                    {item}
+                  </Text>
+                </TouchableWrapper>
+              ))}
+            </ScrollView>
+          </>}
         />
 
       </View>

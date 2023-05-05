@@ -1,6 +1,17 @@
 <resources>
-    <string name="app_name">MyEdge</string>
-    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="false" translatable="false">ASK_JAVASCRIPT</string>
-    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
-    <string moduleConfig="true" name="CodePushDeploymentKey">@string/ANDROID_CODE_PUSH_KEY</string>
+    <string name="app_name">Hub</string>
+    <string
+    name="appCenterCrashes_whenToSendCrashes"
+    moduleConfig="false"
+    translatable="false"
+  >ASK_JAVASCRIPT</string>
+    <string
+    name="appCenterAnalytics_whenToEnableAnalytics"
+    moduleConfig="true"
+    translatable="false"
+  >ALWAYS_SEND</string>
+    <string
+    moduleConfig="true"
+    name="CodePushDeploymentKey"
+  >@string/ANDROID_CODE_PUSH_KEY</string>
 </resources>

@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start', 
     flexDirection: 'row', 
     alignItems: 'center',
-    paddingHorizontal:width(5)
+    // paddingHorizontal:width(1)
   },
   searchBoxStyle: {
     width: width(75), 

@@ -118,14 +118,14 @@ const index = ({ navigation }) => {
           containerStyle={styles.btn1}
           textStyle={styles.text}
           logo={<Image source={googleIcon} style={styles.logo} />}
-          onPress={() => null}
+          onPress={handleSubmit}
         />
 
         <Button
           title="Sign Up with Facebook"
           containerStyle={styles.btn2}
           logo={<Image source={fbkIcon} style={styles.logo} />}
-          onPress={() => null}
+          onPress={handleSubmit}
         />
 
 

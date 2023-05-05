@@ -9,6 +9,7 @@ import TabBar from './TabBar';
 import {getData} from '../utills/Methods';
 import codePush from 'react-native-code-push';
 import LandingPage from '../screens/LandingPage';
+import Settings from '../screens/Settings';
 import Loader from '../components/Loader';
 
 const Stack = createStackNavigator();
@@ -47,6 +48,7 @@ const Routes = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Settings" component={Settings} />
         {isDataPresent && (
           <Stack.Screen
             name="Dashboard"
@@ -66,7 +68,7 @@ const Routes = () => {
                 />
 
                 <Tab.Screen name="Cart" component={CartScreen} />
-                <Tab.Screen name="Settings" component={DetailsScreen} />
+                <Tab.Screen name="Settings" component={Settings} />
               </Tab.Navigator>
             )}
           />
