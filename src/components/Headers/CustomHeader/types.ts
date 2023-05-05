@@ -15,38 +15,11 @@ export type HeaderWithBackButtonProps =  {
     rightButtonText? : never
     bottomTextStyle? : TextStyle
     onSubmitHandler? : never
-    isLoading? : never
-} | {
-    headerContainerStyle? : ViewStyle
-    headerText? : string
-    headerTextStyle? : TextStyle
-    rightIcon? : never
-    iconStyle? : TextStyle
-    onPressHandler? : () => void
-    subHeaderText? : string
-    rightText? : string
-    rightButtonText? : never
-    subHeaderTextStyle? : TextStyle
-    bottomText? : string
-    bottomTextStyle? : TextStyle
-    onSubmitHandler? : never
-    isLoading? : never
-} | {
-    headerContainerStyle? : ViewStyle
-    headerText? : string
-    headerTextStyle? : TextStyle
-    rightIcon? : never
-    iconStyle? : TextStyle
-    onPressHandler? : (param?:string) => void
-    subHeaderText? : string
-    rightText? : never
-    rightButtonText : string
-    subHeaderTextStyle? : TextStyle
-    onSubmitHandler : () => void
-    isLoading : boolean
-    buttonTextColor? : string
-    bottomText? : string
-    bottomTextStyle? : TextStyle
+    isLoading?: never,
+    backHandler?: boolean
+iconRight?:IconSource,
+    rightIconColor?: string,
+    
 }
 
 export type HomePageHeaderProps = {

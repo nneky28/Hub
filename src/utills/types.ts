@@ -1,5 +1,4 @@
 
-import React from "react"
 import { ImageResizeMode, ImageSourcePropType, LayoutChangeEvent, TextStyle, ViewStyle } from "react-native"
 import { DateData } from "react-native-calendars/src/types"
 
@@ -26,15 +25,12 @@ export type SizedBoxProps = {
   height?: number;
   size?:number,
   backgroundColor?: string;
-  style?: ViewStyle
+  style?: {}
 }
-export type BackHandlerProps = {
-  onPress? : () => void
-  style? : ViewStyle
-}
+
 export type CustomWebViewProps = {
   web_url : string
-  show? : boolean
+  show : boolean
   setShow : () => void
 }
 export type OnboardModalProps = {
@@ -48,16 +44,40 @@ export type onNavigationStateChangeProps = {
   ),
   auth: any,
 }
-export type TouchWrapProps = {
-  onPress : (param? : any) => void
-  rippleColor? : string,
-  height? : number,
-  width? : number
-  justifyContent?: string;
-  alignItems?: string;
-  style?: ViewStyle,
-  children:React.ReactNode
+
+export type PTagProps = {
+  fontSize? : number,
+  textAlign? : "auto" | "left" | "right" | "center" | "justify",
+  lineHeight? : number,
+  color? : string,
+  underline? : 'none' | 'underline' | 'line-through',
+  lineColor? : string,
+  marginTop? : number,
+  marginLeft? : number,
+  marginBottom? : number,
+  marginRight? : number,
+  style? : TextStyle,
+  numberOfLines? : number,
+  children : React.ReactNode
 }
+
+export type HTagProps = {
+  fontSize? : number,
+  textAlign? : "auto" | "left" | "right" | "center" | "justify",
+  lineHeight? : number,
+  color? : string,
+  underline? : 'none' | 'underline' | 'line-through',
+  lineColor? : string,
+  marginTop? : number,
+  marginLeft? : number,
+  marginBottom? : number,
+  marginRight? : number,
+  style? : TextStyle,
+  numberOfLines? : number,
+  children : React.ReactNode,
+  bold? : boldType
+}
+
 export type AppButtonProp = {
   text: string;
   onPress: (param?: any) => void;
@@ -146,39 +166,10 @@ export type ContainerProps = {
   children?: React.ReactNode;
 }
 
-export type PTagProps = {
-    fontSize? : number,
-    textAlign? : "auto" | "left" | "right" | "center" | "justify",
-    lineHeight? : number,
-    color? : string,
-    underline? : 'none' | 'underline' | 'line-through',
-    lineColor? : string,
-    marginTop? : number,
-    marginLeft? : number,
-    marginBottom? : number,
-    marginRight? : number,
-    style? : TextStyle,
-    numberOfLines? : number,
-    children : React.ReactNode
+export type BackHandlerProps = {
+  onPress? : () => void
+  style? : ViewStyle
 }
-
-export type HTagProps = {
-    fontSize? : number,
-    textAlign? : "auto" | "left" | "right" | "center" | "justify",
-    lineHeight? : number,
-    color? : string,
-    underline? : 'none' | 'underline' | 'line-through',
-    lineColor? : string,
-    marginTop? : number,
-    marginLeft? : number,
-    marginBottom? : number,
-    marginRight? : number,
-    style? : TextStyle,
-    numberOfLines? : number,
-    children : React.ReactNode,
-    bold? : boldType
-  }
-
   export interface KeyboardAwareWrapperProps {
     children : React.ReactNode
   }
@@ -194,15 +185,15 @@ export type HTagProps = {
   
 
 export type DatePickerModalProps = {
-    show? : boolean
+    show : boolean
     setShow : (param : boolean) => void
-    type? : "dob"
-    current? : string
+    type? : string
+    current : string
     header? : string
-    mode? : "time" | "date" | "datetime"
-    onChangeData? : (param : string | Date) => void
+    mode : "time" | "date" | "datetime"
+   
+    onChangeData : (param : string | Date) => void
 }
-
 export type CustomCalenderProps = {
     setShow : (param : false | DateData) => void
     date : string
@@ -226,16 +217,16 @@ export type DateModeProps = "text-field" | "calendar"
 
  export type ItemListModalProps = {
   setOpen : () => void,
-  loading? : boolean,
+  loading : boolean,
   data : readonly any[],
   open : boolean,
   onPressHandler : (param : any) => void,
   header_1 : string,
   header_2 : string,
   sub_text : string,
-  getMore? : boolean,
-  setPage? : (param : number) => void,
-  page? : number,
+  getMore : boolean,
+  setPage : (param : number) => void,
+  page : number,
   saving? : boolean,
   type? : string,
   buttonTitle? : string,
@@ -268,6 +259,7 @@ export type DateModeProps = "text-field" | "calendar"
      item : any,
      onPress : () => void
 }
+// export type UserPINActionType = "create" | "confirm" | "NoMobilePIN" | "HasMobilePIN" | "reset"
 
 export type UserPINComponentProps = {
   action : UserPINActionType,
@@ -292,12 +284,6 @@ export type CordType = {
       y? : number
   }
 }
-
-export type CustomFallBackScreenProps = {
-  error : Error
-  resetError : () => void
-}
-
 export type TouchableWrapperProps = {
   onPress : (param? : any) => void
   rippleColor? : string,
@@ -363,10 +349,4 @@ export type ImageWrapProps = {
   padding? : number
   children? : React.ReactNode
   fit? : ImageResizeMode
-}
-export type RoundedProps = {
-  size? : number
-  backgroundColor? : string
-  children? : React.ReactNode
-  radius? : number
 }

@@ -1,4 +1,5 @@
-import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE, SETCURRENTTASKITEM } from '../Types';
+import { itemList } from '../../utills/dummydata';
+import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE, SETITEMVISIBLE, SETCARTITEMS } from '../Types';
 const intialState = {
   isLoaderVisible: false,
   isSecurityVisible: false,
@@ -6,7 +7,8 @@ const intialState = {
   currentTaskTabIndex: 0,
   scrollPosition: { x: 0, y: 0 },
   isModalVisible: false,
-  task : {}
+  isItemVisible: itemList,
+  cartItems: []
 };
 const reducer = (state = intialState, action) => {
   switch (action.type) {
@@ -46,10 +48,16 @@ const reducer = (state = intialState, action) => {
         isModalVisible: action.payload,
       };
     }
-    case SETCURRENTTASKITEM: {
+    case SETITEMVISIBLE: {
       return {
         ...state,
-        task : action.payload,
+        isItemVisible: action.payload,
+      };
+    }
+    case SETCARTITEMS: {
+      return {
+        ...state,
+        cartItems: action.payload,
       };
     }
     default:

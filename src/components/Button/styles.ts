@@ -7,18 +7,20 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
-    backgroundColor: AppColors.green,
-    width: '80%',
+    borderRadius: 7,
+    backgroundColor: AppColors.black,
+    width: '85%',
     alignSelf: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
     margin: 8,
+   marginLeft:width(4),
     ...AppColors.shadowStyles,
   },
   text: {
     color: AppColors.white,
-    fontSize: width(4),
-    fontFamily : FontFamily.BlackSansSemiBold
+    fontSize: width(3.5),
+    fontFamily:FontFamily.MontserratRegular
   },
+
 });
 export default styles;

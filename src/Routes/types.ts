@@ -1,12 +1,10 @@
 import { BottomTabNavigationProp, BottomTabScreenProps } from "@react-navigation/bottom-tabs"
 import { DrawerNavigationProp, DrawerScreenProps } from "@react-navigation/drawer"
 import { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native"
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
-import { useFetchAboutMeData } from "../components/TimeoffModal/types"
-import { CreateTaskParams } from "../screens/CreateTask/types"
-import { TaskDetailsParams } from "../screens/TaskDetails/types"
-import { TaskPeopleListParams } from "../screens/TaskPeopleList/types"
-import { TeamTaskHomeParam } from "../screens/TeamTaskHome/types"
+import { StackScreenProps } from "@react-navigation/stack"
+// import { useFetchAboutMeData } from "../components/TimeoffModal/types"
+
+
 
 
 type ParamsType = {
@@ -43,21 +41,6 @@ export type AuthScreenList = {
     Login : undefined
 }
 
-export type MenuScreenList = {
-    TimeOff : undefined
-    PayslipBreakDown : ParamsType | undefined
-    Benefits : undefined
-    Documents : undefined
-    Trainings : undefined
-    TaskOnboarding : undefined
-    CreateTask : CreateTaskParams | undefined
-    TeamTaskHome : TeamTaskHomeParam | undefined
-    TaskPeopleList : TaskPeopleListParams | undefined
-    TaskLandingPage : undefined
-    TaskHome : undefined
-    PayslipHistory : undefined
-    TaskDetails : TaskDetailsParams
-}
 
 export type OnboardScreenList = {
     LandingPage : undefined
@@ -70,9 +53,6 @@ export type OnboardScreenList = {
 
 export type TabScreenList = {
     Home : NavigatorScreenParams<HomeScreenList>
-    Menu : NavigatorScreenParams<MenuScreenList>
-    People : NavigatorScreenParams<PeopleScreenList>
-    Profile : NavigatorScreenParams<ProfileScreenList>
 }
 
 export type DrawerStackList = {
@@ -90,7 +70,7 @@ export type RootNavigationProps = CompositeNavigationProp<
     DrawerNavigationProp<DrawerStackList>
 >
 
-export type RootMenuNavigationProps = StackNavigationProp<MenuScreenList>
+
 
 export type RootAuthScreenProps = StackScreenProps<AuthScreenList>
 
@@ -98,7 +78,7 @@ export type RootOnboardScreenProps = StackScreenProps<OnboardScreenList>
 
 export type RootHomeScreenProps = StackScreenProps<HomeScreenList>
 
-export type RootMenuScreenProps = StackScreenProps<MenuScreenList>
+
 
 
 
@@ -126,11 +106,7 @@ export type PushNotificationData = {
     ttl? : number
 }
 
-// export type ScreenDeterminateReturn = {
-//     screen : "TaskDetails",
-//     stack : "Menu",
-//     params : ParamsType | TaskDetailsParams
-// }
+
 
 
 export type UserMembershipProps = {
@@ -151,4 +127,4 @@ export type StoredUserProps = {
     
 }
 
-export type StoredAboutMeProps = useFetchAboutMeData
+// export type StoredAboutMeProps = useFetchAboutMeData

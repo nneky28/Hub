@@ -1,4 +1,4 @@
-import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE, SETCURRENTTASKITEM } from '../Types';
+import { SCROLLTOPOSITION, SETBOTTOMTABBARVISIBLE, SETLOADERVISIBLE, SETSECURITYVISIBLE, SETCURRENTTASKTABINDEX, SETMODALVISIBLE, SETITEMVISIBLE, SETCARTITEMS } from '../Types';
 
 export const setLoaderVisible = (payload) => {
   return {
@@ -40,10 +40,16 @@ export const setModalVisible = (payload) => {
     payload: payload,
   };
 };
-
-export const setCurrentTaskItem = (payload) => {
+export const setItemVisible = (payload) => {
   return {
-    type: SETCURRENTTASKITEM,
+    type: SETITEMVISIBLE,
+    payload: payload,
+  };
+};
+
+export const setCartItems = (payload) => {
+  return {
+    type: SETCARTITEMS,
     payload: payload,
   };
 };

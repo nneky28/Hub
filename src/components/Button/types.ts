@@ -7,5 +7,7 @@ export type ButtonProps = {
     isLoading? : boolean,
     loaderColor? : string,
     containerStyle? : ViewStyle,
-    textStyle? : TextStyle | TextStyle[],
+  textStyle?: TextStyle,
+  icon?: React.ReactNode,
+  logo?: React.ReactNode,
   }

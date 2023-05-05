@@ -1,8 +1,8 @@
-import {LOGIN, LOGOUT} from '../Types';
+import { LOGIN, LOGOUT } from '../Types';
 const intialState = {
   user: null,
   isLogin: false,
-  route : "splash"
+  route: "onboard"
 };
 const reducer = (state = intialState, action) => {
   switch (action.type) {
