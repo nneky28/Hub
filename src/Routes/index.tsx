@@ -46,6 +46,7 @@ const Routes = () => {
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Dashboard} />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="Settings" component={Settings} />

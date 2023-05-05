@@ -23,12 +23,6 @@ const index = ({ navigation }) => {
     email: "",
     password: ""
   })
-  const auth = useAppSelector((state) => state.Auth);
-  const dispatch = useDispatch();
-
-  const about_me = {
-    first_name: "Ezema"
-  }
 
   const handleSubmit = async () => {
     try {
@@ -50,7 +44,6 @@ const index = ({ navigation }) => {
       };
       setLoading(true);
       let res = await storeData('sign up details', fd);
-      console.log('res', res)
       setLoading(false)
       ToastSuccess('Sign up was successful');
       return navigation.navigate("Dashboard")
