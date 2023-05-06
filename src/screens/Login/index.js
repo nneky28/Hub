@@ -45,7 +45,7 @@ const index = ({ navigation }) => {
       setLoading(true);
       let res = await storeData('sign up details', fd);
       setLoading(false)
-      navigation.navigate("Dashboard")
+      navigation.navigate("Home")
       ToastSuccess('Sign up was successful');
     } catch (error) {
 
