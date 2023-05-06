@@ -14,10 +14,9 @@ import { getData } from '../../utills/Methods';
 const index = ({ navigation }) => {
   const [isDataPresent, setIsDataPresent] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
   const handleNavigation = () => {
     if (isDataPresent) {
-      return navigation.navigate('Dashboard')
+      return navigation.navigate("HomeTabs", { screen: "Home" })
     }
     navigation.navigate("Login")
   }

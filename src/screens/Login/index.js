@@ -45,7 +45,7 @@ const index = ({ navigation }) => {
       setLoading(true);
       let res = await storeData('sign up details', fd);
       setLoading(false)
-      navigation.navigate("Home")
+      navigation.navigate("HomeTabs", { screen: "Home" })
       ToastSuccess('Sign up was successful');
     } catch (error) {
 

@@ -4,10 +4,28 @@ import ScreenWrapper from '../../components/ScreenWrapper'
 import { HeaderWithBackButton } from '../../components/Headers/CustomHeader'
 import { width, height } from 'react-native-dimension'
 import { FontFamily } from '../../utills/FontFamily'
+import Button from '../../components/Button'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ToastSuccess } from '../../utills/Methods'
 
 const index = ({ navigation }) => {
+    const logoutMethod = async () => {
+        try {
+            let keys = await AsyncStorage.getAllKeys();
+            await Promise.all([
+                AsyncStorage.multiRemove(keys),
+                navigation.navigate('Login')
+            ]);
+            ToastSuccess('Successfully logged out');
+        } catch (error) {
+            // Handle any errors that occurred during the logout process
+            console.error(error);
+            ToastError('Error logging out');
+        }
+    };
+
     return (
-        <ScreenWrapper scrollEnabled={true}>
+        <ScreenWrapper>
             <HeaderWithBackButton
                 headerText="Settings"
                 backHandler
@@ -17,6 +35,11 @@ const index = ({ navigation }) => {
             />
             <View style={styles.mainCon}>
                 <Text>Settings Screen.</Text>
+                <Button
+                    title='Log Out'
+                    onPress={logoutMethod}
+                    containerStyle={styles.btn}
+                />
             </View>
         </ScreenWrapper>
     )
@@ -34,9 +57,10 @@ const styles = StyleSheet.create({
     },
     mainCon: {
         flex: 1,
-        paddingHorizontal: width(2),
-        width: width(100),
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
+    btn: {
+        width: width(50)
+    }
 })
