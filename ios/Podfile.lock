@@ -388,12 +388,7 @@ PODS:
     - FirebaseCoreExtension (= 10.7.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (1.10.3):
-    - React-Core
-  - RNNotifee (7.7.0-0):
-    - React-Core
-    - RNNotifee/NotifeeCore (= 7.7.0-0)
-  - RNNotifee/NotifeeCore (7.7.0-0):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNPDF (0.12.2):
     - React
@@ -487,7 +482,6 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNPDF (from `../node_modules/react-native-view-pdf`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -614,8 +608,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNNotifee:
-    :path: "../node_modules/@notifee/react-native"
   RNPDF:
     :path: "../node_modules/react-native-view-pdf"
   RNReanimated:
@@ -640,7 +632,7 @@ SPEC CHECKSUMS:
   CodePush: f509246638a5ebe5209b08351e48a95093d1f307
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: fa8275d5086566e22a26ddc385ab5772e7f9b1bd
-  FBReactNativeSpec: eefdd4803b631fe83e8cc2e34decf136975fc20f
+  FBReactNativeSpec: 9f23b802077a3349462247ac111950129e741381
   Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
   FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
   FirebaseCoreExtension: f17247ba8c61e4d3c8d136b5e2de3cb4ac6a85b6
@@ -693,8 +685,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFBApp: b0f0c53ed8a00395ceb4863910a2c1ff6e24d9f6
   RNFBMessaging: e683adf735d2afb847bce161dce0e4006e88a3a2
-  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNNotifee: 499f5fbf13df4690bdc35f0a276c6210e822e23f
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNPDF: cec73ef87dec104e902bd38b1f47c6f611ee4698
   RNReanimated: bd6be32488d65cc66a843de8214c2fee49f761a6
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
