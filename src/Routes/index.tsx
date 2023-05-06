@@ -46,13 +46,13 @@ const Routes = () => {
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Dashboard} />
+        <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="Settings" component={Settings} />
         {isDataPresent && (
           <Stack.Screen
-            name="Dashboard"
+            name="Home"
             component={() => (
               <Tab.Navigator
                 tabBar={(props) => <TabBar {...props} />}
@@ -61,7 +61,7 @@ const Routes = () => {
                   tabBarHideOnKeyboard: true,
                   unmountOnBlur: true,
                 }}>
-                <Tab.Screen name="Home" component={Dashboard} />
+                <Tab.Screen name="Dashboard" component={Dashboard} />
                 <Tab.Screen
                   name="Saved"
                   component={Dashboard}
